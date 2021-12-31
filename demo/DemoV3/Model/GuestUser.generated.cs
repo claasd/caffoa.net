@@ -1,6 +1,8 @@
+using System;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using System;
+using System.Collections.Immutable;
+using System.Linq;
 
 namespace DemoV3.Model {
     /// AUTOGENERED BY caffoa ///
@@ -8,6 +10,35 @@ namespace DemoV3.Model {
     public partial class GuestUser : AnyUser, AnyCompleteUser {
         public const string GuestUserObjectName = "guestUser";
 
+        [JsonProperty("email", Required = Required.Always)]
+        public virtual string Email { get; set; }
+
+        // constant values for "type"
+        public const string TypeGuestValue = "guest";
+
+        /// <summary>
+        /// immutable array containing all allowed values for "type"
+        /// </summary>
+        public static readonly ImmutableArray<string> AllowedValuesForType = ImmutableArray.Create<string>(TypeGuestValue);
+
+        [JsonIgnore]
+        private string _type = "guest";
+
+        [JsonProperty("type", Required = Required.Always)]
+        public virtual string Type {
+            get {
+                return _type;
+            }
+            set {
+                if (!AllowedValuesForType.Contains(value))
+                {
+                    var allowedValues = string.Join(", ", AllowedValuesForType.Select(v => v.ToString()));
+                    throw new ArgumentOutOfRangeException("type",
+                        $"{value} is not allowed. Allowed values: [{allowedValues}]");
+                }
+                _type = value;
+            }
+        }
 
         public GuestUser ToGuestUser() {
             var item = new GuestUser();
@@ -19,7 +50,8 @@ namespace DemoV3.Model {
         /// Replaces all fields with the data of the passed object
         /// </summary>
         public void UpdateWithGuestUser(GuestUser other) {
-            
+            Email = other.Email;
+			Type = other.Type;
         }
 
         /// <summary>

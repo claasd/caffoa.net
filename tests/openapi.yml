@@ -9,7 +9,7 @@ components:
     fancyString:
       type: string
       description: A fancy string with description
-  
+    
     error:
       type: object
       properties:
@@ -27,7 +27,7 @@ components:
       type: object
       properties:
         name:
-          type: string
+          $ref: "#/components/schemas/fancyString"
         address:
           $ref: "base.openapi.yml#/components/schemas/address"
         birthdate:
@@ -40,11 +40,12 @@ components:
             type: string
         type:
           type: string
-          enum: [simple]
+          enum: [ simple ]
           default: simple
         ageGroup:
           type: integer
-          enum: [18,40,70,120]
+          enum: [ 18,40,70,120 ]
+          nullable: true
           default: 40
 
       required:
@@ -85,6 +86,8 @@ components:
         mapping:
           simple: "#/components/schemas/user"
           guest: "#/components/schemas/guestUser"
+      required:
+        - type
 
     anyCompleteUser:
       oneOf:
@@ -95,6 +98,8 @@ components:
         mapping:
           simple: "#/components/schemas/userWithId"
           guest: "#/components/schemas/guestUser"
+      required:
+        - type
 
 
     pricing:
@@ -106,7 +111,7 @@ components:
             - 32.99
             - 33.99
             - 44.99
-            - null
+          nullable: true
 
   responses:
     error:

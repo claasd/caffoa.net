@@ -1,18 +1,28 @@
 config:
   clearGeneratedFiles: true
   duplicates: once # once, overwrite (default)
-  #  routePrefix: api/
-  errorNamespace: Demov3.Errors
+  routePrefix: api/
+  useDateOnly: false
   requestBodyType: # overwrite the JSON type that is passed to the method for some operations
     - type: JObject
+      import: Newtonsoft.Json.Linq
       filter: # the type is overwritten if one of the filters match
         operations:
           - user-patch
         methods:
           - patch
-  imports:
-    - System
+  
 services:
+  - apiPath: tests\base.openapi.yml
+    model:
+      namespace: DemoV3.Model
+      targetFolder: ./demo/DemoV3/Model
+      
+  - apiPath: tests\base.openapi.yml
+    model:
+      namespace: DemoV3.Model
+      targetFolder: ./demo/DemoV3/Model/XY
+
   - apiPath: tests\openapi.yml
     model:
       namespace: DemoV3.Model

@@ -37,11 +37,31 @@ public class SchemaItemFormatter
         return "";
     }
 
-    public string Imports(List<string>? configImports)
+    public string Imports(List<string>? modelImports, List<string>? configImports)
     {
         var imports = new List<string>();
+        var hasArray = _item.Properties?.FirstOrDefault(p => p.IsArray) != null;
+        if (hasArray)
+        {
+            imports.Add("System.Collections.Generic");
+            imports.Add("System.Linq");
+        }
+        
+        var hasEnums = _item.Properties?.FirstOrDefault(p => p.Enums.Count > 0) != null;
+        if (hasEnums)
+        {
+            imports.Add("System.Collections.Immutable");
+            imports.Add("System.Linq");
+        }
+
+        var hasDates = _item.Properties?.FirstOrDefault(p => p.TypeName.StartsWith("DateOnly")) != null;
+        if(hasDates)
+            imports.Add("Caffoa.JsonConverter");
+
+        if (modelImports != null)
+            imports.AddRange(modelImports);
         if (configImports != null)
             imports.AddRange(configImports);
-        return imports.Count > 0 ? string.Join("", imports.Select(i => $"using {i};\n")) : "";
+        return imports.Count > 0 ? string.Join("", imports.Distinct().Select(i => $"using {i};\n")) : "";
     }
 }

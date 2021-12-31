@@ -1,4 +1,6 @@
+using System.Globalization;
 using System.Text;
+using CdIts.Caffoa.Cli.Errors;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 
@@ -24,6 +26,22 @@ public static class Extensions
         return schema.Type is "string" or "integer" or "number" or "boolean";
     }
     
+    public static bool IsArray(this OpenApiSchema schema)
+    {
+        return schema.Type is "array";
+    }
+
+    public static string GetArrayType(this OpenApiSchema schema, Func<string, string> classNameFunc)
+    {
+        var item = schema.Items;
+        if (item.Reference != null)
+            return classNameFunc(item.Reference.Name());
+        if (item.IsPrimitiveType())
+            return item.TypeName();
+        throw new CaffoaParserError(
+            $"Cannot parse array trees: the array item should be declared in own schema directly under 'components'");
+    }
+
     public static string TypeName(this OpenApiSchema schema)
     {
         var type = schema.Type;
@@ -32,7 +50,8 @@ public static class Extensions
         return type switch
         {
             "string" when format == "uuid" => $"Guid{suffix}",
-            "string" when format is "date-time" or "date" => $"DateTime{suffix}",
+            "string" when format is "date-time" => $"DateTime{suffix}",
+            "string" when format is "date" => $"DateOnly{suffix}",
             "integer" when format == "int64" => $"long{suffix}",
             "integer" when format == "uint64" => $"ulong{suffix}",
             "integer" when format == "uint32" => $"uint{suffix}",
@@ -46,36 +65,52 @@ public static class Extensions
 
     public static string? DefaultAsString(this OpenApiSchema schema)
     {
-        switch (schema.Default)
+        return AnyValue(schema.Default);
+    }
+
+    public static string? AnyValue(IOpenApiAny any)
+    {
+        switch (any)
         {
             case OpenApiString str:
                 return $"\"{str.Value}\"";
             case OpenApiBoolean boolean:
                 return boolean.Value ? "true" : "false";
             case OpenApiDouble dbl:
-                return dbl.ToString();
+                return dbl.Value.ToString(CultureInfo.InvariantCulture);
             case OpenApiFloat flt:
-                return flt.ToString();
+                return flt.Value.ToString(CultureInfo.InvariantCulture);
             case OpenApiInteger integer:
-                return integer.ToString();
+                return integer.Value.ToString();
             case OpenApiLong vLong:
-                return vLong.ToString();
+                return vLong.Value.ToString();
             default:
                 return null;
         }
+    }
+    public static List<string?> EnumsAsStrings(this OpenApiSchema schema)
+    {
+        return schema.Enum.Select(AnyValue).ToList();
     }
 
     public static string FormatDict(this string str, IDictionary<string, object> values)
     {
         var i = 0;
         var newFormatString = new StringBuilder(str);
-        var keyToInt = new Dictionary<string,int>();
-        foreach (var (key, value) in values)
+        var keyToInt = new Dictionary<string, int>();
+        foreach (var key in values.Keys)
         {
             newFormatString = newFormatString.Replace("{" + key + "}", "{" + i + "}");
             keyToInt.Add(key, i);
-            i++;                    
+            i++;
         }
-        return string.Format(newFormatString.ToString(), values.OrderBy(x => keyToInt[x.Key]).Select(x => x.Value).ToArray());
+
+        return string.Format(newFormatString.ToString(),
+            values.OrderBy(x => keyToInt[x.Key]).Select(x => x.Value).ToArray());
+    }
+    
+    public static string Name(this OpenApiReference reference)
+    {
+        return reference.Id.Split("/").Last();
     }
 }

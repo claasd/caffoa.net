@@ -1,3 +1,4 @@
+using System;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 {IMPORTS}
@@ -5,6 +6,7 @@ namespace {NAMESPACE} {{
     {DESCRIPTION}[JsonObject(MemberSerialization.OptIn)]
     public partial class {NAME}{PARENTS} {{
         public const string {NAME}ObjectName = "{RAWNAME}";
+
 {PROPERTIES}
 
         public {NAME} To{NAME}() {{

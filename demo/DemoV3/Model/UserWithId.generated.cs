@@ -1,6 +1,6 @@
+using System;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using System;
 
 namespace DemoV3.Model {
     /// AUTOGENERED BY caffoa ///
@@ -8,6 +8,11 @@ namespace DemoV3.Model {
     public partial class UserWithId : User, AnyCompleteUser {
         public const string UserWithIdObjectName = "userWithId";
 
+        [JsonProperty("id")]
+        public virtual string Id { get; set; }
+
+        [JsonProperty("registrationDate")]
+        public virtual DateTime RegistrationDate { get; set; }
 
         public UserWithId ToUserWithId() {
             var item = new UserWithId();
@@ -19,7 +24,9 @@ namespace DemoV3.Model {
         /// Replaces all fields with the data of the passed object
         /// </summary>
         public void UpdateWithUserWithId(UserWithId other) {
-            
+            UpdateWithUser(other);
+			Id = other.Id;
+			RegistrationDate = other.RegistrationDate;
         }
 
         /// <summary>

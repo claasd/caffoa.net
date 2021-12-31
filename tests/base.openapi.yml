@@ -33,3 +33,7 @@ paths:
   "/dummy":
     get:
       description: dummy
+      responses: 
+        200:
+          description: dummy
+        

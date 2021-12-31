@@ -1,6 +1,6 @@
+using System;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using System;
 
 namespace DemoV3.Model {
     /// AUTOGENERED BY caffoa ///
@@ -8,6 +8,17 @@ namespace DemoV3.Model {
     public partial class Error {
         public const string ErrorObjectName = "error";
 
+        /// <summary>
+		/// Single string based code describing the error.
+		/// </summary>
+		[JsonProperty("status", Required = Required.Always)]
+        public virtual string Status { get; set; }
+
+        /// <summary>
+		/// Human readable error message.
+		/// </summary>
+		[JsonProperty("message", Required = Required.Always)]
+        public virtual string Message { get; set; }
 
         public Error ToError() {
             var item = new Error();
@@ -19,7 +30,8 @@ namespace DemoV3.Model {
         /// Replaces all fields with the data of the passed object
         /// </summary>
         public void UpdateWithError(Error other) {
-            
+            Status = other.Status;
+			Message = other.Message;
         }
 
         /// <summary>
