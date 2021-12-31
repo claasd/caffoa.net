@@ -1,0 +1,35 @@
+openapi: "3.0.2"
+info:
+  title: Dummy API
+  version: "1.0"
+
+
+components:
+
+  schemas:
+
+    address:
+      type: object
+      properties:
+        street:
+          type: string
+        postalCode:
+          type: string
+        city:
+          type: string
+        country:
+          type: string
+        flags:
+          type: object
+          additionalProperties:
+            type: string
+      required:
+        - street
+        - postalCode
+        - city
+        - country
+
+paths:
+  "/dummy":
+    get:
+      description: dummy

@@ -1,0 +1,220 @@
+openapi: "3.0.2"
+info:
+  title: Demo API
+  version: "1.0"
+
+
+components:
+  schemas:
+    fancyString:
+      type: string
+      description: A fancy string with description
+  
+    error:
+      type: object
+      properties:
+        status:
+          type: string
+          description: Single string based code describing the error.
+        message:
+          type: string
+          description: Human readable error message.
+      required:
+        - status
+        - message
+
+    user:
+      type: object
+      properties:
+        name:
+          type: string
+        address:
+          $ref: "base.openapi.yml#/components/schemas/address"
+        birthdate:
+          type: string
+          format: date
+          nullable: true
+        emails:
+          type: array
+          items:
+            type: string
+        type:
+          type: string
+          enum: [simple]
+          default: simple
+        ageGroup:
+          type: integer
+          enum: [18,40,70,120]
+          default: 40
+
+      required:
+        - type
+        - name
+
+    guestUser:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+        type:
+          type: string
+          enum: [ guest ]
+          default: guest
+      required:
+        - type
+        - email
+
+    userWithId:
+      allOf:
+        - $ref: "#/components/schemas/user"
+        - type: object
+          properties:
+            id:
+              type: string
+            registrationDate:
+              type: string
+              format: date-time
+
+    anyUser:
+      oneOf:
+        - $ref: "#/components/schemas/user"
+        - $ref: "#/components/schemas/guestUser"
+      discriminator:
+        propertyName: type
+        mapping:
+          simple: "#/components/schemas/user"
+          guest: "#/components/schemas/guestUser"
+
+    anyCompleteUser:
+      oneOf:
+        - $ref: "#/components/schemas/userWithId"
+        - $ref: "#/components/schemas/guestUser"
+      discriminator:
+        propertyName: type
+        mapping:
+          simple: "#/components/schemas/userWithId"
+          guest: "#/components/schemas/guestUser"
+
+
+    pricing:
+      type: object
+      properties:
+        price:
+          type: number
+          enum:
+            - 32.99
+            - 33.99
+            - 44.99
+            - null
+
+  responses:
+    error:
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/error"
+paths:
+  "/users":
+    get:
+      tags:
+        - user
+      operationId: users-get
+      description: get information about the users
+      responses:
+        "200":
+          description: return user object
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/anyCompleteUser"
+        "400":
+          $ref: "#/components/responses/error"
+    post:
+      operationId: user-post
+      description: create or update a user without return test
+      requestBody:
+        description: a full user
+        content:
+          application/json:
+            schema:
+              oneOf:
+                - $ref: "#/components/schemas/user"
+                - $ref: "#/components/schemas/guestUser"
+              discriminator:
+                propertyName: type
+                mapping:
+                  simple: "#/components/schemas/user"
+                  guest: "#/components/schemas/guestUser"
+      responses:
+        "201":
+          description: User was created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/anyCompleteUser"
+  "/users/{userId}":
+    parameters:
+      - name: userId
+        in: path
+        required: true
+        description: the user id.
+        schema:
+          type: string
+
+    put:
+      operationId: user-put
+      description: create or update a user
+      requestBody:
+        description: a full user
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/anyUser"
+
+      responses:
+        "200":
+          description: User was updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/anyCompleteUser"
+        "201":
+          description: User was created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/anyCompleteUser"
+
+    patch:
+      operationId: user-patch
+      description: update a user
+      requestBody:
+        description: a full user
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/user"
+
+      responses:
+        "200":
+          description: User was updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/userWithId"
+    get:
+      tags:
+        - user
+      operationId: user-get
+      description: get information about the users
+      responses:
+        "200":
+          description: return user object
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/userWithId"
