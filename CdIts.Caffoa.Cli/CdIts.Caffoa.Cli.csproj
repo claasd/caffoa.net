@@ -8,6 +8,7 @@
         <TargetFramework>netcoreapp3.1</TargetFramework>
         <LangVersion>10</LangVersion>
         <RepositoryUrl>https://github.com/claasd/caffoa.net.git</RepositoryUrl>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <Authors>claasd</Authors>
     </PropertyGroup>
 

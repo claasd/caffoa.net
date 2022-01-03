@@ -8,6 +8,7 @@
         <IsPackable>true</IsPackable>
         <RepositoryUrl>https://github.com/claasd/caffoa.net.git</RepositoryUrl>
         <Authors>claasd</Authors>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <TargetFramework>netstandard2.0</TargetFramework>
     </PropertyGroup>
     <ItemGroup>
