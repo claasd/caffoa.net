@@ -18,7 +18,10 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "actions", "actions", "{8AB164C2-88E8-4C75-BD39-71BCA01F2B37}"
 	ProjectSection(SolutionItems) = preProject
 		.github\workflows\publish.yml = .github\workflows\publish.yml
+		.github\workflows\build.yml = .github\workflows\build.yml
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CdIts.Caffoa.Abstractions", "CdIts.Caffoa.Abstractions\CdIts.Caffoa.Abstractions.csproj", "{1FAA8813-9041-4A2F-A074-15ADAAA57F70}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -38,6 +41,10 @@ Global
 		{EE4DC45D-A9FA-4B03-918D-F5BBED802E24}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EE4DC45D-A9FA-4B03-918D-F5BBED802E24}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EE4DC45D-A9FA-4B03-918D-F5BBED802E24}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1FAA8813-9041-4A2F-A074-15ADAAA57F70}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1FAA8813-9041-4A2F-A074-15ADAAA57F70}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1FAA8813-9041-4A2F-A074-15ADAAA57F70}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1FAA8813-9041-4A2F-A074-15ADAAA57F70}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{8AB164C2-88E8-4C75-BD39-71BCA01F2B37} = {F5DAF376-0D55-4D08-A5B0-DAA3EA4C4E9A}
