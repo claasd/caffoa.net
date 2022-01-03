@@ -54,5 +54,4 @@ public class FunctionConfig
         get => _interfaceTargetFolder ?? TargetFolder;
         set => _interfaceTargetFolder = value;
     }
-    public List<string> Imports { get; set; } = new();
 }
