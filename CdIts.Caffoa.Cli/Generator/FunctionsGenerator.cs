@@ -93,7 +93,7 @@ public class FunctionsGenerator
         parameter["VALUE"] = variable;
         parameter["DISC"] = model.Disriminator;
         parameter["CASES_ALLOWED_VALUES"] = string.Join(", ", model.Mapping.Keys.Select(k => $"\"{k}\""));
-        parameter["CASES"] = string.Join("\n\t\t\t\t\t", cases.Select(c=>$"{c},"));
+        parameter["CASES"] = string.Join("\n                    ", cases.Select(c=>$"{c},"));
         return file.FormatDict(parameter);
     }
 

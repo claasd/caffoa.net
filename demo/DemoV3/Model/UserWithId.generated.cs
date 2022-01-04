@@ -4,7 +4,7 @@ using Newtonsoft.Json.Linq;
 
 namespace DemoV3.Model {
     /// AUTOGENERED BY caffoa ///
-	[JsonObject(MemberSerialization.OptIn)]
+    [JsonObject(MemberSerialization.OptIn)]
     public partial class UserWithId : User, AnyCompleteUser {
         public const string UserWithIdObjectName = "userWithId";
 
@@ -25,8 +25,8 @@ namespace DemoV3.Model {
         /// </summary>
         public void UpdateWithUserWithId(UserWithId other) {
             UpdateWithUser(other);
-			Id = other.Id;
-			RegistrationDate = other.RegistrationDate;
+            Id = other.Id;
+            RegistrationDate = other.RegistrationDate;
         }
 
         /// <summary>

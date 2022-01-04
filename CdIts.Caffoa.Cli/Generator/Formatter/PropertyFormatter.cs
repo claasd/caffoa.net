@@ -17,8 +17,8 @@ public class PropertyFormatter
     {
         if (_property.Description is null)
             return "";
-        var itemDesc = _property.Description.Trim().Replace("\n", "\n\t\t/// ");
-        return $"/// <summary>\n\t\t/// {itemDesc}\n\t\t/// </summary>\n\t\t";
+        var itemDesc = _property.Description.Trim().Replace("\n", "\n        /// ");
+        return $"/// <summary>\n        /// {itemDesc}\n        /// </summary>\n        ";
     }
 
     public string JsonProperty()
@@ -54,7 +54,7 @@ public class PropertyFormatter
         if (!_property.TypeName.StartsWith("DateOnly"))
             return "";
         if(_net60)
-            return "[JsonConverter(typeof(CaffoaDateOnlyConverter))]\n\t\t";
-        return "[JsonConverter(typeof(CaffoaDateConverter))]\n\t\t";
+            return "[JsonConverter(typeof(CaffoaDateOnlyConverter))]\n        ";
+        return "[JsonConverter(typeof(CaffoaDateConverter))]\n        ";
     }
 }

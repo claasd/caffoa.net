@@ -8,21 +8,21 @@ using Caffoa.JsonConverter;
 
 namespace DemoV3.Model {
     /// AUTOGENERED BY caffoa ///
-	[JsonObject(MemberSerialization.OptIn)]
+    [JsonObject(MemberSerialization.OptIn)]
     public partial class User : AnyUser {
         public const string UserObjectName = "user";
 
         /// <summary>
-		/// A fancy string with description
-		/// </summary>
-		[JsonProperty("name", Required = Required.Always)]
+        /// A fancy string with description
+        /// </summary>
+        [JsonProperty("name", Required = Required.Always)]
         public virtual string Name { get; set; }
 
         [JsonProperty("address")]
         public virtual Address Address { get; set; }
 
         [JsonConverter(typeof(CaffoaDateConverter))]
-		[JsonProperty("birthdate")]
+        [JsonProperty("birthdate")]
         public virtual DateTime? Birthdate { get; set; }
 
         [JsonProperty("emails")]
@@ -57,9 +57,9 @@ namespace DemoV3.Model {
 
         // constant values for "ageGroup"
         public const int AgeGroup18Value = 18;
-		public const int AgeGroup40Value = 40;
-		public const int AgeGroup70Value = 70;
-		public const int AgeGroup120Value = 120;
+        public const int AgeGroup40Value = 40;
+        public const int AgeGroup70Value = 70;
+        public const int AgeGroup120Value = 120;
 
         /// <summary>
         /// immutable array containing all allowed values for "ageGroup"
@@ -96,11 +96,11 @@ namespace DemoV3.Model {
         /// </summary>
         public void UpdateWithUser(User other) {
             Name = other.Name;
-			Address = other.Address?.ToAddress();
-			Birthdate = other.Birthdate;
-			Emails = other.Emails.ToList();
-			Type = other.Type;
-			AgeGroup = other.AgeGroup;
+            Address = other.Address?.ToAddress();
+            Birthdate = other.Birthdate;
+            Emails = other.Emails.ToList();
+            Type = other.Type;
+            AgeGroup = other.AgeGroup;
         }
 
         /// <summary>

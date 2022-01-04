@@ -15,11 +15,11 @@ public class SchemaItemFormatter
     {
         get
         {
-            var description = "/// AUTOGENERED BY caffoa ///\n\t";
+            var description = "/// AUTOGENERED BY caffoa ///\n    ";
             if (_item.Description is null)
                 return description;
-            var itemDesc = _item.Description.Trim().Replace("\n", "\n\t/// ");
-            description += $"/// <summary>\n\t/// {itemDesc}\n\t/// </summary>\n\t";
+            var itemDesc = _item.Description.Trim().Replace("\n", "\n    /// ");
+            description += $"/// <summary>\n    /// {itemDesc}\n    /// </summary>\n    ";
             return description;
         }
     }

@@ -63,7 +63,7 @@ namespace DemoV3
                 var task = discriminator switch
                 {
                     "simple" => _factory.Instance(request).UserPostAsync(_jsonParser.ToObject<User>(jObject)),
-					"guest" => _factory.Instance(request).UserPostAsync(_jsonParser.ToObject<GuestUser>(jObject)),
+                    "guest" => _factory.Instance(request).UserPostAsync(_jsonParser.ToObject<GuestUser>(jObject)),
                     _ => throw _errorHandler.WrongContent("type", discriminator, new [] { "simple", "guest" })
                 };
                 var result = await task;
@@ -88,7 +88,7 @@ namespace DemoV3
                 var task = discriminator switch
                 {
                     "simple" => _factory.Instance(request).UserPutAsync(userId, _jsonParser.ToObject<User>(jObject)),
-					"guest" => _factory.Instance(request).UserPutAsync(userId, _jsonParser.ToObject<GuestUser>(jObject)),
+                    "guest" => _factory.Instance(request).UserPutAsync(userId, _jsonParser.ToObject<GuestUser>(jObject)),
                     _ => throw _errorHandler.WrongContent("type", discriminator, new [] { "simple", "guest" })
                 };
                 var (result, code) = await task;

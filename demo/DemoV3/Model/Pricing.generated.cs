@@ -6,14 +6,14 @@ using System.Linq;
 
 namespace DemoV3.Model {
     /// AUTOGENERED BY caffoa ///
-	[JsonObject(MemberSerialization.OptIn)]
+    [JsonObject(MemberSerialization.OptIn)]
     public partial class Pricing {
         public const string PricingObjectName = "pricing";
 
         // constant values for "price"
         public const double Price32_99Value = 32.99;
-		public const double Price33_99Value = 33.99;
-		public const double Price44_99Value = 44.99;
+        public const double Price33_99Value = 33.99;
+        public const double Price44_99Value = 44.99;
 
         /// <summary>
         /// immutable array containing all allowed values for "price"

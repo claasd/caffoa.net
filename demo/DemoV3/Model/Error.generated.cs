@@ -4,20 +4,20 @@ using Newtonsoft.Json.Linq;
 
 namespace DemoV3.Model {
     /// AUTOGENERED BY caffoa ///
-	[JsonObject(MemberSerialization.OptIn)]
+    [JsonObject(MemberSerialization.OptIn)]
     public partial class Error {
         public const string ErrorObjectName = "error";
 
         /// <summary>
-		/// Single string based code describing the error.
-		/// </summary>
-		[JsonProperty("status", Required = Required.Always)]
+        /// Single string based code describing the error.
+        /// </summary>
+        [JsonProperty("status", Required = Required.Always)]
         public virtual string Status { get; set; }
 
         /// <summary>
-		/// Human readable error message.
-		/// </summary>
-		[JsonProperty("message", Required = Required.Always)]
+        /// Human readable error message.
+        /// </summary>
+        [JsonProperty("message", Required = Required.Always)]
         public virtual string Message { get; set; }
 
         public Error ToError() {
@@ -31,7 +31,7 @@ namespace DemoV3.Model {
         /// </summary>
         public void UpdateWithError(Error other) {
             Status = other.Status;
-			Message = other.Message;
+            Message = other.Message;
         }
 
         /// <summary>

@@ -17,46 +17,46 @@ namespace DemoV3
     {
         /// <summary>
         /// get information about the users
-		/// 200 -> return user object
-		/// 400 -> Error
+        /// 200 -> return user object
+        /// 400 -> Error
         /// </summary>
         Task<IEnumerable<AnyCompleteUser>> UsersGetAsync();
 
         /// <summary>
         /// create or update a user without return test
-		/// 201 -> User was created
+        /// 201 -> User was created
         /// </summary>
         Task<AnyCompleteUser> UserPostAsync(User payload);
 
         /// <summary>
         /// create or update a user without return test
-		/// 201 -> User was created
+        /// 201 -> User was created
         /// </summary>
         Task<AnyCompleteUser> UserPostAsync(GuestUser payload);
 
         /// <summary>
         /// create or update a user
-		/// 200 -> User was updated
-		/// 201 -> User was created
+        /// 200 -> User was updated
+        /// 201 -> User was created
         /// </summary>
         Task<(AnyCompleteUser, int)> UserPutAsync(string userId, User payload);
 
         /// <summary>
         /// create or update a user
-		/// 200 -> User was updated
-		/// 201 -> User was created
+        /// 200 -> User was updated
+        /// 201 -> User was created
         /// </summary>
         Task<(AnyCompleteUser, int)> UserPutAsync(string userId, GuestUser payload);
 
         /// <summary>
         /// update a user
-		/// 200 -> User was updated
+        /// 200 -> User was updated
         /// </summary>
         Task<UserWithId> UserPatchAsync(string userId, JObject payload);
 
         /// <summary>
         /// get information about the users
-		/// 200 -> return user object
+        /// 200 -> return user object
         /// </summary>
         Task<UserWithId> UserGetAsync(string userId);
 

@@ -82,7 +82,7 @@ public class ModelGenerator
             updateCommands.Add(sb.ToString());
         }
 
-        return string.Join("\n\t\t\t", updateCommands);
+        return string.Join("\n            ", updateCommands);
     }
 
     private string FormatProperties(SchemaItem item)
@@ -134,10 +134,10 @@ public class ModelGenerator
         var allowedNames = new List<string>(enums.Keys);
         if(property.Nullable)
             allowedNames.Add("null");
-        format["ENUMS"] = string.Join("\n\t\t", enumDefs);
+        format["ENUMS"] = string.Join("\n        ", enumDefs);
         format["ENUM_LIST_NAME"] = $"AllowedValuesFor{propName}";
         format["ENUM_NAMES"] = string.Join(", ", allowedNames);
-        format["NO_CHECK_MSG"] = _config.CheckEnums!.Value ? "" : "// set checkEnums=true in config file to have a value check here //\n\t\t\t\t";
+        format["NO_CHECK_MSG"] = _config.CheckEnums!.Value ? "" : "// set checkEnums=true in config file to have a value check here //\n                ";
         format["NO_CHECK"] = _config.CheckEnums!.Value ? "" : "// ";
         format["NULL_HANDLING"] = property.Nullable ? "v == null ? \"null\" : " : "";
         return file.FormatDict(format);

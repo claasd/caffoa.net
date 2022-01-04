@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace DemoV3.Model {
     /// AUTOGENERED BY caffoa ///
-	[JsonObject(MemberSerialization.OptIn)]
+    [JsonObject(MemberSerialization.OptIn)]
     public partial class GuestUser : AnyUser, AnyCompleteUser {
         public const string GuestUserObjectName = "guestUser";
 
@@ -51,7 +51,7 @@ namespace DemoV3.Model {
         /// </summary>
         public void UpdateWithGuestUser(GuestUser other) {
             Email = other.Email;
-			Type = other.Type;
+            Type = other.Type;
         }
 
         /// <summary>

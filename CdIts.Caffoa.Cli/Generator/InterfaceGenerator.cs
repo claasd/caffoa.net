@@ -45,7 +45,7 @@ public class InterfaceGenerator
                 format["RESULT"] = GetResponseType(endpoint);
                 format["NAME"] = endpoint.Name;
                 format["PARAMS"] = parameter;
-                format["DOC"] = string.Join("\n\t\t/// ", endpoint.DocumentationLines);
+                format["DOC"] = string.Join("\n        /// ", endpoint.DocumentationLines);
                 var formatted = file.FormatDict(format);
                 methods.Add(formatted);
             }

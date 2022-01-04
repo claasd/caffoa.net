@@ -4,7 +4,7 @@ using Newtonsoft.Json.Linq;
 
 namespace DemoV3.Model {
     /// AUTOGENERED BY caffoa ///
-	[JsonObject(MemberSerialization.OptIn)]
+    [JsonObject(MemberSerialization.OptIn)]
     public partial class Address {
         public const string AddressObjectName = "address";
 
@@ -34,10 +34,10 @@ namespace DemoV3.Model {
         /// </summary>
         public void UpdateWithAddress(Address other) {
             Street = other.Street;
-			PostalCode = other.PostalCode;
-			City = other.City;
-			Country = other.Country;
-			Flags = other.Flags;
+            PostalCode = other.PostalCode;
+            City = other.City;
+            Country = other.Country;
+            Flags = other.Flags;
         }
 
         /// <summary>
