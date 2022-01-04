@@ -11,6 +11,13 @@ Currently considered alpha state. If something does not work that you feel shoul
 
 It uses [OpenAPI.NET](https://github.com/microsoft/OpenAPI.NET) for parsing the openapi spec.
 
+# Required nuget packages
+
+You will need to install the following nuget packages:
+* `Microsoft.NET.Sdk.Functions` obviously
+* `Microsoft.Azure.Functions.Extensions` for function dependency injection
+* `CdIts.Caffoa` for caffoa interfaces and default implementations
+
 # Usage
 
 As code generation needs a lot of configuration, all configuration is done using a config file in yaml format.
@@ -47,6 +54,8 @@ If oyu have a different yml file, or have it in a different directory, you can p
 ```bash
 dotnet caffoa --configfile /path/to/caffoa.yml
 ```
+
+
 
 ## Created Azure Function template:
 
@@ -97,6 +106,8 @@ namespace MyNamespace {
     }
 }
 ```
+
+
 
 Now implement all the logic in your implementation of the interface. You can now change your API, and regenerate the generated files without overwriting your code.
 
@@ -175,8 +186,9 @@ Caffoa takes over a lot of boilerplate code for you. Furthermore, it forces you 
 
 # Dependency Injection
 
-For simple straightforward use, you only need to pass four Factory as Dependency Injection. You can, however, change the behavior of parsing, serialisation and error handling through DI.
-The constructor of your generated class takes three optional interfaces, that you can overwrite. Simply create an implementation of either the interface, or inherit one of the Default implementations if you only need to change a small portion.
+For simple straightforward use, you only need to pass your factory as Dependency Injection. You can, however, change the behavior of parsing, serialisation and error handling through DI.
+The constructor of the generated function class takes three optional interfaces, that you can overwrite. 
+Simply create an implementation of either [one of the the interfaces](https://github.com/claasd/caffoa.net/tree/main/CdIts.Caffoa.Abstractions), or inherit one of the [default implementations](https://github.com/claasd/caffoa.net/tree/main/CdIts.Caffoa/Defaults) if you only need to change a small portion.
 * `ICaffoaErrorHandler` / `CaffoaDefaultErrorHandler`: handles errors that may occur during parsing. Default implementation returns BadRequest with a human readable error string
 * `ICaffoaJsonParser` / `DefaultCaffoaJsonParser`: Parses incoming JSON objects to model objects.
 * `ICaffoaResultHandler` / `CaffoaDefaultResultHandler`: Creates Json and result code actions from objects. Overwrite if you want to customize your JSON output.
