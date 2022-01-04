@@ -65,6 +65,7 @@ public class FunctionsGenerator
         parameters["RESULT"] = result;
         parameters["CALL"] = call;
         parameters["PARAM_NAMES"] = string.Join("", endpoint.Parameters.Select(p => $", {p.TypeName} {p.Name}"));
+        parameters["ADDITIONAL_ERROR_INFOS"] = string.Join("",endpoint.Parameters.Select(p=>$", (\"{p.Name}\", {p.Name})"));
         return file.FormatDict(parameters);
     }
 

@@ -46,8 +46,7 @@ namespace DemoV3
             } catch(CaffoaClientError err) {
                 return err.Result;
             } catch (Exception e) {
-                _errorHandler.LogException(e, request, "UsersGet", "api/users", "get");
-		        throw;
+                return _errorHandler.HandleFunctionException(e, request, "UsersGet", "api/users", "get");
             }
         }
         /// <summary>
@@ -72,8 +71,7 @@ namespace DemoV3
             } catch(CaffoaClientError err) {
                 return err.Result;
             } catch (Exception e) {
-                _errorHandler.LogException(e, request, "UserPost", "api/users", "post");
-		        throw;
+                return _errorHandler.HandleFunctionException(e, request, "UserPost", "api/users", "post");
             }
         }
         /// <summary>
@@ -98,8 +96,7 @@ namespace DemoV3
             } catch(CaffoaClientError err) {
                 return err.Result;
             } catch (Exception e) {
-                _errorHandler.LogException(e, request, "UserPut", "api/users/{userId}", "put");
-		        throw;
+                return _errorHandler.HandleFunctionException(e, request, "UserPut", "api/users/{userId}", "put", ("userId", userId));
             }
         }
         /// <summary>
@@ -116,8 +113,7 @@ namespace DemoV3
             } catch(CaffoaClientError err) {
                 return err.Result;
             } catch (Exception e) {
-                _errorHandler.LogException(e, request, "UserPatch", "api/users/{userId}", "patch");
-		        throw;
+                return _errorHandler.HandleFunctionException(e, request, "UserPatch", "api/users/{userId}", "patch", ("userId", userId));
             }
         }
         /// <summary>
@@ -134,8 +130,7 @@ namespace DemoV3
             } catch(CaffoaClientError err) {
                 return err.Result;
             } catch (Exception e) {
-                _errorHandler.LogException(e, request, "UserGet", "api/users/{userId}", "get");
-		        throw;
+                return _errorHandler.HandleFunctionException(e, request, "UserGet", "api/users/{userId}", "get", ("userId", userId));
             }
         }
     }

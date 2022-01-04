@@ -3,22 +3,28 @@ using Newtonsoft.Json;
 
 namespace Caffoa.Defaults;
 
+/// <summary>
+/// Default Result handler. Returns a JsonResult or StatusResult.
+/// can optionally take a JsonSerializerSettings.
+/// All results are routed through <see cref="Handle"/>.
+/// If you need to enhance all results with headers or other data, you can overwrite Handle.
+/// </summary>
 public class DefaultCaffoaResultHandler : ICaffoaResultHandler
 {
-    private JsonSerializerSettings _serializerSettings;
+    protected JsonSerializerSettings SerializerSettings { get; set; }
 
     public DefaultCaffoaResultHandler()
     {
-        _serializerSettings = null;
+        SerializerSettings = null;
     }
 
     public DefaultCaffoaResultHandler(JsonSerializerSettings serializerSettings)
     {
-        _serializerSettings = serializerSettings;
+        SerializerSettings = serializerSettings;
     }
 
     public virtual IActionResult Json(object data, int statusCode)
-        => Handle(new JsonResult(data) { StatusCode = statusCode, SerializerSettings = _serializerSettings });
+        => Handle(new JsonResult(data) { StatusCode = statusCode, SerializerSettings = SerializerSettings });
 
 
     public virtual IActionResult StatusCode(int statusCode)

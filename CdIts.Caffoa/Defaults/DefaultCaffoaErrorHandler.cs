@@ -1,9 +1,14 @@
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
 namespace Caffoa.Defaults;
 
+/// <summary>
+/// Default error handler for errors that require handling either by the generated function, or by
+/// <see cref="DefaultCaffoaJsonParser"/>.
+/// </summary>
 public class DefaultCaffoaErrorHandler : ICaffoaErrorHandler
 {
     private readonly ILogger _logger;
@@ -26,14 +31,18 @@ public class DefaultCaffoaErrorHandler : ICaffoaErrorHandler
         return new DefaultCaffoaClientError($"Error during JSON parsing of payload: {inner.Message}", err);
     }
 
-    public virtual CaffoaClientError WrongContent(string type, object value, string[] allowedValues)
+    public virtual CaffoaClientError WrongContent(string fieldName, object value, string[] allowedValues)
     {
         var allowedValuesString = string.Join(", ", allowedValues);
         var valueString = value == null ? "<null>" : value.ToString();
-        return new DefaultCaffoaClientError($"Error during JSON parsing of payload: Could not find correct value to parse for discriminator '{type}'. Must be one of [{allowedValuesString}], not '{valueString}'");
+        return new DefaultCaffoaClientError($"Error during JSON parsing of payload: Could not find correct value to parse for discriminator '{fieldName}'. Must be one of [{allowedValuesString}], not '{valueString}'");
     }
 
-    public virtual void LogException(Exception e, HttpRequest request, string functionName, string route, string operation,
+    /// <summary>
+    /// Does nat handle the error. Instead, all information about the request is logged and then the error
+    /// is thrown. This results in an Internal server error and the exception is passed to ApplicationInsights.
+    /// </summary>
+    public virtual IActionResult HandleFunctionException(Exception e, HttpRequest request, string functionName, string route, string operation,
         params (string, object)[] namedParams)
     {
         var debugInformation = new Dictionary<string,  string>();
@@ -48,6 +57,7 @@ public class DefaultCaffoaErrorHandler : ICaffoaErrorHandler
         }
         debugInformation["Payload"] = GetPayloadForExceptionLogging(request);
         _logger.LogCritical(JsonConvert.SerializeObject(debugInformation));
+        throw e;
     }
     
     public virtual string GetPayloadForExceptionLogging(HttpRequest req)
