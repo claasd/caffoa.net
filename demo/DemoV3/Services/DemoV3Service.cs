@@ -6,7 +6,6 @@ using Caffoa;
 using DemoV3.Errors;
 using DemoV3.Model;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;

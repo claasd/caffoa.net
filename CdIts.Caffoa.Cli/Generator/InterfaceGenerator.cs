@@ -20,8 +20,8 @@ public class InterfaceGenerator
     {
         var imports = new List<string>();
         endpoints.ForEach(e=>imports.AddRange(e.Imports));
-        
-        imports.AddRange(_config.Imports);
+        if(_config.Imports != null)
+            imports.AddRange(_config.Imports);
         if (_modelNamespace != null)
             imports.Add(_modelNamespace);
         var targetFolder = _functionConfig.InterfaceTargetFolder;

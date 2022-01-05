@@ -9,7 +9,7 @@ public class CaffoaConfig
     
     public bool? UseDateOnly { get; set; }
     
-    public List<string>? Imports = new();
+    public List<string>? Imports;
     public List<RequestBodyTypeConfig>? RequestBodyType { get; set; }
 
     public CaffoaGlobalConfig MergedWith(CaffoaGlobalConfig general)

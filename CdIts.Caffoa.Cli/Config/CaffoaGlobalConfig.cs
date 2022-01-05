@@ -8,5 +8,6 @@ public class CaffoaGlobalConfig : CaffoaConfig
     {
         CheckEnums = true;
         UseDateOnly = false;
+        Imports = new List<string>();
     }
 }
