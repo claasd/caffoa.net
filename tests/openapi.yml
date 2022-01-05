@@ -112,6 +112,15 @@ components:
             - 33.99
             - 44.99
           nullable: true
+        taxes:
+          type: object
+          additionalProperties: 
+            description: "List of taxes for different country-codes"
+            format: double
+            type: number
+          example: 
+            "DE": 19.0
+            "AT" : 19.0
 
   responses:
     error:
@@ -138,6 +147,7 @@ paths:
                   $ref: "#/components/schemas/anyCompleteUser"
         "400":
           $ref: "#/components/responses/error"
+    
     post:
       operationId: user-post
       description: create or update a user without return test
@@ -223,3 +233,29 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/userWithId"
+
+  "/users/born-before/{date}":
+    parameters:
+      - name: date
+        schema:
+          type: string
+          format: date
+        in: path
+        required: true
+    
+    get:
+      tags:
+        - user
+      operationId: users-get-by-birthdate
+      description: get
+      responses:
+        "200":
+          description: return user object
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/user"
+        "400":
+          $ref: "#/components/responses/error"
