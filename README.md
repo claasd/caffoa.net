@@ -7,7 +7,7 @@
 Tool to autogenerate azure function templates for .NET from openapi declaration.
 Instead of generating stubs, the goal is to be able to change the api and re-generate the files without overwriting your code.
 
-Currently considered alpha state. If something does not work that you feel should work, create a ticket with your openapi spec.
+If something does not work that you feel should work, create a ticket with your openapi spec.
 
 It uses [OpenAPI.NET](https://github.com/microsoft/OpenAPI.NET) for parsing the openapi spec.
 
