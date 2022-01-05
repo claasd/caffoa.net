@@ -1,8 +1,9 @@
 using System;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using System.Collections.Immutable;
+using System.Collections.Generic;
 using System.Linq;
+using System.Collections.Immutable;
 
 namespace DemoV3.Model {
     /// AUTOGENERED BY caffoa ///
@@ -39,6 +40,9 @@ namespace DemoV3.Model {
             }
         }
 
+        [JsonProperty("taxes")]
+        public virtual Dictionary<string, double> Taxes { get; set; } = new Dictionary<string, double>();
+
         public Pricing ToPricing() {
             var item = new Pricing();
             item.UpdateWithPricing(this);
@@ -50,6 +54,7 @@ namespace DemoV3.Model {
         /// </summary>
         public void UpdateWithPricing(Pricing other) {
             Price = other.Price;
+            Taxes = other.Taxes;
         }
 
         /// <summary>

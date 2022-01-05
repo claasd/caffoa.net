@@ -133,5 +133,22 @@ namespace DemoV3
                 return _errorHandler.HandleFunctionException(e, request, "UserGet", "api/users/{userId}", "get", ("userId", userId));
             }
         }
+        /// <summary>
+        /// auto-generated function invocation.
+        ///</summary>
+        [FunctionName("UsersGetByBirthdateAsync")]
+        public async Task<IActionResult> UsersGetByBirthdateAsync(
+            [HttpTrigger(AuthorizationLevel.Function, "get", Route = "api/users/born-before/{date}")]
+            HttpRequest request, DateTime date)
+        {
+            try {
+                var result = await _factory.Instance(request).UsersGetByBirthdateAsync(date);
+                return _resultHandler.Json(result, 200);
+            } catch(CaffoaClientError err) {
+                return err.Result;
+            } catch (Exception e) {
+                return _errorHandler.HandleFunctionException(e, request, "UsersGetByBirthdate", "api/users/born-before/{date}", "get", ("date", date));
+            }
+        }
     }
 }

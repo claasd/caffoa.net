@@ -1,10 +1,12 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Caffoa;
 using DemoV3.Errors;
 using DemoV3.Model;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
@@ -40,6 +42,12 @@ namespace DemoV3.Services
             result.AddRange(await _users.List());
             result.AddRange(await _guests.List());
             return result;
+        }
+
+        public async Task<IEnumerable<User>> UsersGetByBirthdateAsync(DateTime date)
+        {
+            var users = await _users.List();
+            return users.Where(u => u.Birthdate >= date);
         }
 
         public async Task<AnyCompleteUser> UserPostAsync(User payload)

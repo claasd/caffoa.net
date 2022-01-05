@@ -40,7 +40,7 @@ public class SchemaItemFormatter
     public string Imports(List<string>? modelImports, List<string>? configImports)
     {
         var imports = new List<string>();
-        var hasArray = _item.Properties?.FirstOrDefault(p => p.IsArray) != null;
+        var hasArray = _item.Properties?.FirstOrDefault(p => p.IsArray || p.IsMap) != null;
         if (hasArray)
         {
             imports.Add("System.Collections.Generic");

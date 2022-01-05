@@ -60,5 +60,12 @@ namespace DemoV3
         /// </summary>
         Task<UserWithId> UserGetAsync(string userId);
 
+        /// <summary>
+        /// get
+        /// 200 -> return user object
+        /// 400 -> Error
+        /// </summary>
+        Task<IEnumerable<User>> UsersGetByBirthdateAsync(DateTime date);
+
     }
 }

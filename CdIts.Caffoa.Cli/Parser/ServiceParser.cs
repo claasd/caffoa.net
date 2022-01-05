@@ -50,7 +50,7 @@ public class ServiceParser
     {
         foreach (var (name, apiSchema) in schemas)
         {
-            if (!apiSchema.IsPrimitiveType())
+            if (!apiSchema.IsPrimitiveType() && !apiSchema.HasOnlyAdditionalProperties())
                 continue;
             var className = ClassName(name);
             _knownTypes[className] = apiSchema;

@@ -24,6 +24,7 @@ public class ObjectParser
             (schema, _item.Parent) = UpdateSchemaForAllOff(schema.AllOf);
         if (schema.OneOf.Count > 0)
             _item.Interface = ExtractInterface(schema.OneOf, schema.Discriminator);
+        
         else if (schema.Properties.Count > 0)
             _item.Properties =
                 schema.Properties.Select(item => ParseProperty(item.Key, item.Value, schema.Required.Contains(item.Key))).ToList();
@@ -49,17 +50,31 @@ public class ObjectParser
             property.Nullable = !required;
             property.IsOtherSchema = true;
         }
-        else if(schema.Type == "array")
+        else if(schema.IsArray())
         {
             property.IsArray = true;
             property.TypeName = schema.GetArrayType(_classNameFunc);
         }
-        else
+        else if (schema.AdditionalProperties != null)
         {
-            property.TypeName = schema.TypeName();
-            property.Default = schema.DefaultAsString();
-            property.Enums = schema.EnumsAsStrings();
+            if (schema.Properties.Count > 0)
+                throw new CaffoaParserError(
+                    "object with properties and additional properties are currently not supported.");
+            property.TypeName = schema.AdditionalProperties.TypeName();
+            property.IsMap = true;
         }
+        else if (schema.Properties == null)
+        {
+            throw new CaffoaParserError(
+                "object without any properties are currently not supported.");
+        }
+            else
+            {
+                property.TypeName = schema.TypeName();
+                property.Default = schema.DefaultAsString();
+                property.Enums = schema.EnumsAsStrings();
+            }
+        
         return property;
     }
 

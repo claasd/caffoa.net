@@ -25,6 +25,11 @@ public static class Extensions
     {
         return schema.Type is "string" or "integer" or "number" or "boolean";
     }
+
+    public static bool HasOnlyAdditionalProperties(this OpenApiSchema schema)
+    {
+        return schema.Type == "object" && schema.AdditionalProperties != null && schema.Properties.Count == 0;
+    }
     
     public static bool IsArray(this OpenApiSchema schema)
     {

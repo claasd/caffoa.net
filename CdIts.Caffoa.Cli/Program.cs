@@ -53,7 +53,7 @@ try
             {
                 var endpoints = parser.GenerateEndpoints();
                 var interfaceGenerator =
-                    new InterfaceGenerator(service.Function, service.Model?.Namespace);
+                    new InterfaceGenerator(service.Function, localConfig, service.Model?.Namespace);
                 interfaceGenerator.GenerateInterface(endpoints);
                 var functionsGenerator =
                     new FunctionsGenerator(service.Function, localConfig, service.Model?.Namespace);

@@ -6,11 +6,13 @@ namespace CdIts.Caffoa.Cli.Generator;
 public class InterfaceGenerator
 {
     private readonly FunctionConfig _functionConfig;
+    private readonly CaffoaConfig _config;
     private readonly string? _modelNamespace;
 
-    public InterfaceGenerator(FunctionConfig service, string? modelNamespace)
+    public InterfaceGenerator(FunctionConfig service, CaffoaConfig config, string? modelNamespace)
     {
         _functionConfig = service;
+        _config = config;
         _modelNamespace = modelNamespace;
     }
 
@@ -18,6 +20,8 @@ public class InterfaceGenerator
     {
         var imports = new List<string>();
         endpoints.ForEach(e=>imports.AddRange(e.Imports));
+        
+        imports.AddRange(_config.Imports);
         if (_modelNamespace != null)
             imports.Add(_modelNamespace);
         var targetFolder = _functionConfig.InterfaceTargetFolder;
@@ -56,7 +60,13 @@ public class InterfaceGenerator
 
     private List<string> GetParams(EndPointModel endpoint)
     {
-        var parameter = endpoint.Parameters.Select(p => $"{p.TypeName} {p.Name}").ToList();
+        var allParams = endpoint.Parameters;
+        allParams.ForEach(p=>p.TypeName = p.TypeName.Replace("DateOnly", "DateTime"));
+        var parameter = allParams.Select(p =>
+        {
+            var typeName = p.TypeName.Replace("DateOnly", "DateTime");
+            return $"{typeName} {p.Name}";
+        }).ToList();
         if (endpoint.HasRequestBody)
         {
             if (endpoint.RequestBodyType is SelectionBodyModel selection)

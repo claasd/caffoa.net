@@ -15,7 +15,9 @@ public class PropertyData
     public bool Nullable { get; set; }
     public string? Description { get; set; }
     public bool IsArray { get; set; }
+    public bool IsMap { get; set; }
     public string? Default { get; set; }
     public bool IsOtherSchema { get; set; }
     public List<string?> Enums { get; set; } = new();
+    
 }

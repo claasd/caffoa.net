@@ -36,6 +36,9 @@ public class PropertyFormatter
         var name = _net60 ? _property.TypeName : _property.TypeName.Replace("DateOnly", "DateTime");
         if (_property.IsArray)
             return $"ICollection<{name}>";
+        if (_property.IsMap)
+            return $"Dictionary<string, {name}>";
+
         return name;
     }
 
@@ -44,6 +47,8 @@ public class PropertyFormatter
         var name = _net60 ? _property.TypeName : _property.TypeName.Replace("DateOnly", "DateTime");
         if (_property.IsArray)
             return $" = new List<{name}>();";
+        if (_property.IsMap)
+            return $" = new Dictionary<string, {name}>();";
         if (_property.Default != null)
             return $" = {_property.Default};";
         if (!_property.Nullable && _property.IsOtherSchema)

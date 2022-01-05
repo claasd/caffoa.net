@@ -20,8 +20,11 @@ public class FunctionsGenerator
     {
         var imports = new List<string>();
         endpoints.ForEach(e => imports.AddRange(e.Imports));
+        if(_functionConfig.InterfaceNamespace != _functionConfig.Namespace)
+            imports.Add(_functionConfig.InterfaceNamespace);
         if (_modelNamespace != null)
             imports.Add(_modelNamespace);
+        
         var name = _functionConfig.FunctionsName;
         Directory.CreateDirectory(_functionConfig.TargetFolder);
         var file = Templates.GetTemplate("FunctionsTemplate.tpl");

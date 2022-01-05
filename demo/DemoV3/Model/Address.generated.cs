@@ -1,6 +1,8 @@
 using System;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace DemoV3.Model {
     /// AUTOGENERED BY caffoa ///
@@ -21,7 +23,7 @@ namespace DemoV3.Model {
         public virtual string Country { get; set; }
 
         [JsonProperty("flags")]
-        public virtual object Flags { get; set; }
+        public virtual Dictionary<string, string> Flags { get; set; } = new Dictionary<string, string>();
 
         public Address ToAddress() {
             var item = new Address();

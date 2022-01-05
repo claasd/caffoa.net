@@ -1,6 +1,7 @@
 using System.Text;
 using System.Text.RegularExpressions;
 using CdIts.Caffoa.Cli.Config;
+using CdIts.Caffoa.Cli.Errors;
 using CdIts.Caffoa.Cli.Generator.Formatter;
 using CdIts.Caffoa.Cli.Model;
 
@@ -65,6 +66,9 @@ public class ModelGenerator
         {
             updateCommands.Add($"UpdateWith{schemaItem.Parent}(other);");
         }
+
+        if (schemaItem.Properties is null)
+            throw new CaffoaParserError($"No properties defined for object {schemaItem.Name}");
         foreach (var property in schemaItem.Properties!)
         {
             var name = property.Name.ToCamelCase();
