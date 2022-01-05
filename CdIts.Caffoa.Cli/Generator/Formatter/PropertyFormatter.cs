@@ -46,6 +46,9 @@ public class PropertyFormatter
             return $" = new List<{name}>();";
         if (_property.Default != null)
             return $" = {_property.Default};";
+        if (!_property.Nullable && _property.IsOtherSchema)
+            return $" = new ${name}();";
+          
         return addSemicolonEnEmpty ? ";" : "";
     }
 
