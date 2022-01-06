@@ -39,14 +39,14 @@ Then, install and call the tool:
 
 ```bash
 dotnet new tool-manifest
-dotnet tool install cdits.caffoa.cli --version 1.0.0-alpha.3
+dotnet tool install cdits.caffoa.cli
 dotnet caffoa
 ```
 
 instead of installing it locally, you can install it in the global tool repo:
 
 ```bash
-dotnet tool install cdits.caffoa.cli --version 1.0.0-alpha.3 --global
+dotnet tool install cdits.caffoa.cli --global
 dotnet caffoa
 ```
 
