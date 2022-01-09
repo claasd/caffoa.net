@@ -211,3 +211,6 @@ namespace MyNamespace {
     }
 }
 ```
+
+# Changelog
+The changelog is [here](changelog.md)

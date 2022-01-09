@@ -132,7 +132,7 @@ public class FunctionsGenerator
         if (codes.Count == 0)
             return ("_resultHandler.Handle(result)", "var result = ");
         if (codes.Count == 1 && typeName is null)
-            return ($"_resultHandler.StatusCode({codes[0]});", "");
+            return ($"_resultHandler.StatusCode({codes[0]})", "");
         if (codes.Count == 1)
             return ($"_resultHandler.Json(result, {codes[0]})", "var result = ");
         if (typeName is null)

@@ -9,7 +9,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionItems", "SolutionIt
 		caffoa.yml = caffoa.yml
 		.gitignore = .gitignore
 		LICENSE = LICENSE
-		README.md = README.md
+		readme.md = readme.md
+		changelog.md = changelog.md
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DemoV3", "demo\DemoV3\DemoV3.csproj", "{382FB737-ADE4-40B3-B8B6-631B1D58A819}"
