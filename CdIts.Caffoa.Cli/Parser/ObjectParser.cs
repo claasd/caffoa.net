@@ -62,7 +62,7 @@ public class ObjectParser
                     "object with properties and additional properties are currently not supported.");
             if (schema.AdditionalProperties.Reference != null)
             {
-                property.TypeName = schema.AdditionalProperties.Reference.Name().FirstCharUpper();
+                property.TypeName = _classNameFunc(schema.AdditionalProperties.Reference.Name());
             }
             else
             {
