@@ -135,6 +135,24 @@ components:
 paths:
   "/users":
     get:
+      parameters:
+        - name: offset
+          schema: 
+            type: integer
+            default: 0
+          required: false
+          in: query
+        - name: limit
+          schema:
+            type: integer
+            default: 1000
+          required: false
+          in: query
+        - name: filter
+          schema:
+            type: string
+          required: false
+          in: query          
       tags:
         - user
       operationId: users-get

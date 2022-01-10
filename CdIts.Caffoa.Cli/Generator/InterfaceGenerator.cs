@@ -19,8 +19,8 @@ public class InterfaceGenerator
     public void GenerateInterface(List<EndPointModel> endpoints)
     {
         var imports = new List<string>();
-        endpoints.ForEach(e=>imports.AddRange(e.Imports));
-        if(_config.Imports != null)
+        endpoints.ForEach(e => imports.AddRange(e.Imports));
+        if (_config.Imports != null)
             imports.AddRange(_config.Imports);
         if (_modelNamespace != null)
             imports.Add(_modelNamespace);
@@ -60,11 +60,28 @@ public class InterfaceGenerator
 
     private List<string> GetParams(EndPointModel endpoint)
     {
-        var parameter = endpoint.Parameters.Select(p =>
+        var parameter = endpoint.Parameters.Where(p => !p.IsQueryParameter).Select(p =>
         {
             var typeName = p.TypeName.Replace("DateOnly", "DateTime");
             return $"{typeName} {p.Name}";
         }).ToList();
+        if (_config.ParseQueryParameters is true)
+        {
+            var queryParameter = endpoint.Parameters.Where(p => p.IsQueryParameter).ToList();
+            var orderedParams = queryParameter.Where(p => p.DefaultValue == null && p.Required).ToList();
+            orderedParams.AddRange(queryParameter.Where(e => e.DefaultValue != null || !e.Required));
+            parameter.AddRange(orderedParams.Select(p =>
+            {
+                var typeName = p.TypeName.Replace("DateOnly", "DateTime");
+                var result = $"{typeName} {p.Name}";
+                if (p.DefaultValue != null)
+                    result += $" = {p.DefaultValue}";
+                else if (!p.Required)
+                    result += $" = null";
+                return result;
+            }));
+        }
+
         if (endpoint.HasRequestBody)
         {
             if (endpoint.RequestBodyType is SelectionBodyModel selection)
@@ -107,6 +124,7 @@ public class InterfaceGenerator
                 // TODO: log warning "Returning different objects is not supported"
                 return "<IActionResult>";
             }
+
             typeName = response.TypeName;
             if (response.Unknown)
                 typeName = "IActionResult";

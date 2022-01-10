@@ -20,7 +20,7 @@ namespace DemoV3
         /// 200 -> return user object
         /// 400 -> Error
         /// </summary>
-        Task<IEnumerable<AnyCompleteUser>> UsersGetAsync();
+        Task<IEnumerable<AnyCompleteUser>> UsersGetAsync(int offset = 0, int limit = 1000, string filter = null);
 
         /// <summary>
         /// create or update a user without return test

@@ -24,14 +24,13 @@ namespace DemoV3
         private readonly ICaffoaErrorHandler _errorHandler;
         private readonly ICaffoaJsonParser _jsonParser;
         private readonly ICaffoaResultHandler _resultHandler;
-        private readonly ICaffoaConverter _converter;
-        public DemoV3Functions(ILogger<DemoV3Functions> logger, ICaffoaFactory<IDemoV3Service> factory, ICaffoaErrorHandler errorHandler = null, ICaffoaJsonParser jsonParser = null, ICaffoaResultHandler resultHandler = null, ICaffoaConverter converter = null) {
+        
+        public DemoV3Functions(ILogger<DemoV3Functions> logger, ICaffoaFactory<IDemoV3Service> factory, ICaffoaErrorHandler errorHandler = null, ICaffoaJsonParser jsonParser = null, ICaffoaResultHandler resultHandler = null) {
             _logger = logger;
             _factory = factory;
             _errorHandler = errorHandler ?? new DefaultCaffoaErrorHandler(_logger);            
             _jsonParser = jsonParser ?? new DefaultCaffoaJsonParser(_errorHandler);
             _resultHandler = resultHandler ?? new DefaultCaffoaResultHandler();
-            _converter = converter ?? new DefaultCaffoaConverter();
         }
         /// <summary>
         /// auto-generated function invocation.
@@ -140,10 +139,10 @@ namespace DemoV3
         [FunctionName("UsersGetByBirthdateAsync")]
         public async Task<IActionResult> UsersGetByBirthdateAsync(
             [HttpTrigger(AuthorizationLevel.Function, "get", Route = "api/users/born-before/{date}")]
-            HttpRequest request, string date)
+            HttpRequest request, DateTime date)
         {
             try {
-                var result = await _factory.Instance(request).UsersGetByBirthdateAsync(_converter.ToDate(date, nameof(date)));
+                var result = await _factory.Instance(request).UsersGetByBirthdateAsync(date);
                 return _resultHandler.Json(result, 200);
             } catch(CaffoaClientError err) {
                 return err.Result;

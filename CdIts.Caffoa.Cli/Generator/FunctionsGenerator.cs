@@ -24,9 +24,9 @@ public class FunctionsGenerator
             imports.Add(_functionConfig.InterfaceNamespace);
         if (_modelNamespace != null)
             imports.Add(_modelNamespace);
-        var extraVars = new List<string>();
+        var extraVars = new List<(string, string)>();
         if (_config.ParseParameters.HasValue && _config.ParseParameters.Value)
-            extraVars.Add("converter");
+            extraVars.Add(("converter", "_errorHandler"));
         var name = _functionConfig.FunctionsName;
         Directory.CreateDirectory(_functionConfig.TargetFolder);
         var file = Templates.GetTemplate("FunctionsTemplate.tpl");
@@ -36,9 +36,9 @@ public class FunctionsGenerator
         format["INTERFACE"] = _functionConfig.InterfaceName;
         format["IMPORTS"] = string.Join("", imports.Distinct().Select(i => $"using {i};\n"));
         format["METHODS"] = GenerateFunctionMethods(endpoints);
-        format["ADDITIONAL_VARIABLES"] = string.Join("\n        ", extraVars.Select(it => $"private readonly ICaffoa{it.FirstCharUpper()} _{it};"));
-        format["ADDITIONAL_INTERFACES"] = string.Join("", extraVars.Select(it => $", ICaffoa{it.FirstCharUpper()} {it} = null"));
-        format["ADDITIONAL_INITS"] = string.Join("", extraVars.Select(it => $"            _{it} = {it} ?? new DefaultCaffoa{it.FirstCharUpper()}();\n"));
+        format["ADDITIONAL_VARIABLES"] = string.Join("\n        ", extraVars.Select(it => $"private readonly ICaffoa{it.Item1.FirstCharUpper()} _{it.Item1};"));
+        format["ADDITIONAL_INTERFACES"] = string.Join("", extraVars.Select(it => $", ICaffoa{it.Item1.FirstCharUpper()} {it.Item1} = null"));
+        format["ADDITIONAL_INITS"] = string.Join("", extraVars.Select(it => $"            _{it.Item1} = {it.Item1} ?? new DefaultCaffoa{it.Item1.FirstCharUpper()}({it.Item2});\n"));
         var formatted = file.FormatDict(format);
         File.WriteAllText(Path.Combine(_functionConfig.TargetFolder, name + ".generated.cs"), formatted);
     }
@@ -67,10 +67,15 @@ public class FunctionsGenerator
             call = FormatCall(endpoint, variable, ParseParameters(endpoint), true);
         }
         IEnumerable<string> pathParams;
+        var filteredParams = endpoint.Parameters.Where(p => !p.IsQueryParameter);
         if(_config.ParseParameters.HasValue && _config.ParseParameters.Value)
-            pathParams = endpoint.Parameters.Select(p => $", string {p.Name}");
+            pathParams = filteredParams.Select(p => $", string {p.Name}");
         else
-            pathParams = endpoint.Parameters.Select(p => $", {p.TypeName} {p.Name}");
+            pathParams = filteredParams.Select(p =>
+            {
+                var type = p.TypeName.Replace("DateOnly", "DateTime");
+                return $", {type} {p.Name}";
+            });
 
         parameters["NAME"] = endpoint.Name;
         parameters["OPERATION"] = endpoint.Operation;
@@ -78,7 +83,7 @@ public class FunctionsGenerator
         parameters["RESULT"] = result;
         parameters["CALL"] = call;
         parameters["PARAM_NAMES"] = string.Join("", pathParams);
-        parameters["ADDITIONAL_ERROR_INFOS"] = string.Join("",endpoint.Parameters.Select(p=>$", (\"{p.Name}\", {p.Name})"));;
+        parameters["ADDITIONAL_ERROR_INFOS"] = string.Join("",endpoint.Parameters.Where(p=>!p.IsQueryParameter).Select(p=>$", (\"{p.Name}\", {p.Name})"));;
         return file.FormatDict(parameters);
     }
 
@@ -122,17 +127,19 @@ public class FunctionsGenerator
 
     private IList<string> BuildCallParameterList(EndPointModel endpoint)
     {
+        var filtered = endpoint.Parameters.Where(p => !p.IsQueryParameter);
         if(_config.ParseParameters is true)
-            return endpoint.Parameters.Select(p =>
+            return filtered.Select(p =>
             {
                 if (p.TypeName == "string")
                     return $"{p.Name}";
                 if(p.TypeName == "DateOnly")
-                    return $"_converter.ToDate({p.Name})";
-                return $"_converter.To{p.TypeName.FirstCharUpper()}({p.Name})";
-                
+                    return $"_converter.ParseDate({p.Name}, nameof({p.Name}))";
+                if(p.TypeName == "DateTime")
+                    return $"_converter.ParseDateTime({p.Name}, nameof({p.Name}))";
+                return $"_converter.Parse<{p.TypeName}>({p.Name}, nameof({p.Name}))";
             }).ToList();
-        return endpoint.Parameters.Select(p => $"{p.Name}").ToList();
+        return filtered.Select(p => p.Name).ToList();
     }
 
 

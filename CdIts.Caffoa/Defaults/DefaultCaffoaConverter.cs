@@ -5,14 +5,14 @@ namespace Caffoa.Defaults;
 
 public class DefaultCaffoaConverter : ICaffoaConverter
 {
-    private ICaffoaErrorHandler _errorHandler;
+    private readonly ICaffoaErrorHandler _errorHandler;
 
     public DefaultCaffoaConverter(ICaffoaErrorHandler errorHandler)
     {
         _errorHandler = errorHandler;
     }
 
-    public DateTime ToDate(string parameter, string parameterName)
+    public DateTime ParseDate(string parameter, string parameterName)
     {
         try
         {
@@ -24,7 +24,7 @@ public class DefaultCaffoaConverter : ICaffoaConverter
         }
     }
 
-    public DateTime ToDateTime(string parameter, string parameterName)
+    public DateTime ParseDateTime(string parameter, string parameterName)
     {
         try
         {
@@ -32,7 +32,19 @@ public class DefaultCaffoaConverter : ICaffoaConverter
         }
         catch (Exception e)
         {
-            throw _errorHandler.ParameterConvertError(parameterName, "date", e);
+            throw _errorHandler.ParameterConvertError(parameterName, "date-time", e);
+        }
+    }
+
+    public T Parse<T>(string parameter, string parameterName) 
+    {
+        try
+        {
+            return (T)Convert.ChangeType(parameter, typeof(T));
+        }
+        catch (Exception e)
+        {
+            throw _errorHandler.ParameterConvertError(parameterName, nameof(T), e);
         }
     }
 }

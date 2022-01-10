@@ -35,12 +35,12 @@ namespace DemoV3.Services
             }
         }
 
-        public async Task<IEnumerable<AnyCompleteUser>> UsersGetAsync()
+        public async Task<IEnumerable<AnyCompleteUser>> UsersGetAsync(int offset = 0, int limit = 1000, string filter = null)
         {
             var result = new List<AnyCompleteUser>();
             result.AddRange(await _users.List());
             result.AddRange(await _guests.List());
-            return result;
+            return result.Skip(offset).Take(limit);
         }
 
         public async Task<IEnumerable<User>> UsersGetByBirthdateAsync(DateTime date)

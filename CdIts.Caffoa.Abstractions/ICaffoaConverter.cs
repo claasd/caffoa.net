@@ -2,6 +2,8 @@ namespace Caffoa;
 
 public interface ICaffoaConverter
 {
-    DateTime ToDate(string parameter, string parameterName);
-    DateTime ToDateTime(string parameter, string parameterName);
+    DateTime ParseDate(string parameter, string parameterName);
+    DateTime ParseDateTime(string parameter, string parameterName);
+    
+    T Parse<T>(string parameter, string parameterName);
 }
