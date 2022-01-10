@@ -63,8 +63,7 @@ public class ObjectParser
             if (schema.AdditionalProperties.Reference != null 
                 && schema.AdditionalProperties.Reference.IsLocal)
             {
-                var referenceId = schema.AdditionalProperties.Reference.Id;
-                property.TypeName = string.Concat(referenceId[0].ToString().ToUpper(), referenceId.AsSpan(1));
+                property.TypeName = schema.AdditionalProperties.Reference.Id.FirstCharUpper();
             }
             else
             {
