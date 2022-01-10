@@ -3,6 +3,7 @@ config:
   duplicates: once # once, overwrite (default)
   routePrefix: api/
   useDateOnly: false
+  parseParameters: true # if set to true, the parameter parsing is not left to Functions, but is done by caffoa, opening up the possibility to give back better error messages
   requestBodyType: # overwrite the JSON type that is passed to the method for some operations
     - type: JObject
       import: Newtonsoft.Json.Linq

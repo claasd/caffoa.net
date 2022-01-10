@@ -24,7 +24,9 @@ public class FunctionsGenerator
             imports.Add(_functionConfig.InterfaceNamespace);
         if (_modelNamespace != null)
             imports.Add(_modelNamespace);
-        
+        var extraVars = new List<string>();
+        if (_config.ParseParameters.HasValue && _config.ParseParameters.Value)
+            extraVars.Add("converter");
         var name = _functionConfig.FunctionsName;
         Directory.CreateDirectory(_functionConfig.TargetFolder);
         var file = Templates.GetTemplate("FunctionsTemplate.tpl");
@@ -34,6 +36,9 @@ public class FunctionsGenerator
         format["INTERFACE"] = _functionConfig.InterfaceName;
         format["IMPORTS"] = string.Join("", imports.Distinct().Select(i => $"using {i};\n"));
         format["METHODS"] = GenerateFunctionMethods(endpoints);
+        format["ADDITIONAL_VARIABLES"] = string.Join("\n        ", extraVars.Select(it => $"private readonly ICaffoa{it.FirstCharUpper()} _{it};"));
+        format["ADDITIONAL_INTERFACES"] = string.Join("", extraVars.Select(it => $", ICaffoa{it.FirstCharUpper()} {it} = null"));
+        format["ADDITIONAL_INITS"] = string.Join("", extraVars.Select(it => $"            _{it} = {it} ?? new DefaultCaffoa{it.FirstCharUpper()}();\n"));
         var formatted = file.FormatDict(format);
         File.WriteAllText(Path.Combine(_functionConfig.TargetFolder, name + ".generated.cs"), formatted);
     }
@@ -61,14 +66,19 @@ public class FunctionsGenerator
         {
             call = FormatCall(endpoint, variable, ParseParameters(endpoint), true);
         }
+        IEnumerable<string> pathParams;
+        if(_config.ParseParameters.HasValue && _config.ParseParameters.Value)
+            pathParams = endpoint.Parameters.Select(p => $", string {p.Name}");
+        else
+            pathParams = endpoint.Parameters.Select(p => $", {p.TypeName} {p.Name}");
 
         parameters["NAME"] = endpoint.Name;
         parameters["OPERATION"] = endpoint.Operation;
         parameters["PATH"] = _config.RoutePrefix + endpoint.Route;
         parameters["RESULT"] = result;
         parameters["CALL"] = call;
-        parameters["PARAM_NAMES"] = string.Join("", endpoint.Parameters.Select(p => $", {p.TypeName} {p.Name}"));
-        parameters["ADDITIONAL_ERROR_INFOS"] = string.Join("",endpoint.Parameters.Select(p=>$", (\"{p.Name}\", {p.Name})"));
+        parameters["PARAM_NAMES"] = string.Join("", pathParams);
+        parameters["ADDITIONAL_ERROR_INFOS"] = string.Join("",endpoint.Parameters.Select(p=>$", (\"{p.Name}\", {p.Name})"));;
         return file.FormatDict(parameters);
     }
 
@@ -85,7 +95,7 @@ public class FunctionsGenerator
         var file = Templates.GetTemplate("FunctionsSwitchMethod.tpl");
         var parameter = new Dictionary<string, object>();
         var cases = new List<string>();
-        var callParams = endpoint.Parameters.Select(p => $"{p.Name}").ToList();
+        var callParams = BuildCallParameterList(endpoint);
         foreach (var (key, type) in model!.Mapping)
         {
             var caseParams = new List<string>(callParams);
@@ -102,14 +112,29 @@ public class FunctionsGenerator
 
     private IEnumerable<string> ParseParameters(EndPointModel endpoint)
     {
-        var callParams = endpoint.Parameters.Select(p => $"{p.Name}").ToList();
+        var callParams = BuildCallParameterList(endpoint);
         if (endpoint.HasRequestBody && endpoint.RequestBodyType is SimpleBodyModel simple)
             callParams.Add($"await _jsonParser.Parse<{simple.TypeName}>(request.Body)");
         else if (endpoint.HasRequestBody)
             callParams.Add($"request.Body");
         return callParams;
     }
-    
+
+    private IList<string> BuildCallParameterList(EndPointModel endpoint)
+    {
+        if(_config.ParseParameters is true)
+            return endpoint.Parameters.Select(p =>
+            {
+                if (p.TypeName == "string")
+                    return $"{p.Name}";
+                if(p.TypeName == "DateOnly")
+                    return $"_converter.ToDate({p.Name})";
+                return $"_converter.To{p.TypeName.FirstCharUpper()}({p.Name})";
+                
+            }).ToList();
+        return endpoint.Parameters.Select(p => $"{p.Name}").ToList();
+    }
+
 
     private (string, string) GenerateResult(EndPointModel endpoint)
     {

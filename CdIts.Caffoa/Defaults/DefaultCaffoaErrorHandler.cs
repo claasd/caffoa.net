@@ -31,6 +31,14 @@ public class DefaultCaffoaErrorHandler : ICaffoaErrorHandler
         return new DefaultCaffoaClientError($"Error during JSON parsing of payload: {inner.Message}", err);
     }
 
+    public CaffoaClientError ParameterConvertError(string fieldName, string type, Exception err)
+    {
+        var inner = err;
+        while (inner.InnerException != null)
+            inner = inner.InnerException;
+        return new DefaultCaffoaClientError($"Error during parameter conversion of filed {fieldName} to type {type}: {inner.Message}", err);
+    }
+
     public virtual CaffoaClientError WrongContent(string fieldName, object value, string[] allowedValues)
     {
         var allowedValuesString = string.Join(", ", allowedValues);

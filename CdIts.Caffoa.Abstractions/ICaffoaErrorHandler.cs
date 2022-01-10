@@ -20,6 +20,12 @@ public interface ICaffoaErrorHandler
     CaffoaClientError JsonParseError(Exception err);
     
     /// <summary>
+    /// is called when the spec requires a certain type, but the parsing of the payload failed.
+    /// The passed Exception is the exception that raised by <see cref="ICaffoaJsonParser"/> 
+    /// </summary>
+    CaffoaClientError ParameterConvertError(string fieldName, string type, Exception err);
+    
+    /// <summary>
     /// Is called when the function cannot decide which implementation to use.
     /// This only happens when OneOf is used, and the discriminator is missing or not recognized.
     /// See https://swagger.io/docs/specification/data-models/inheritance-and-polymorphism/
@@ -42,4 +48,6 @@ public interface ICaffoaErrorHandler
     /// <param name="namedParams">a list of values that are part of the route</param>
     IActionResult HandleFunctionException(Exception e, HttpRequest request, string functionName, string route, string operation,
         params (string, object)[] namedParams);
+
+    
 }

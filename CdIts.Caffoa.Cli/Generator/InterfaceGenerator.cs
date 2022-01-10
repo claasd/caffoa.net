@@ -60,9 +60,7 @@ public class InterfaceGenerator
 
     private List<string> GetParams(EndPointModel endpoint)
     {
-        var allParams = endpoint.Parameters;
-        allParams.ForEach(p=>p.TypeName = p.TypeName.Replace("DateOnly", "DateTime"));
-        var parameter = allParams.Select(p =>
+        var parameter = endpoint.Parameters.Select(p =>
         {
             var typeName = p.TypeName.Replace("DateOnly", "DateTime");
             return $"{typeName} {p.Name}";

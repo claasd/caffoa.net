@@ -22,14 +22,14 @@ namespace {NAMESPACE}
         private readonly ICaffoaErrorHandler _errorHandler;
         private readonly ICaffoaJsonParser _jsonParser;
         private readonly ICaffoaResultHandler _resultHandler;
-        
-        public {CLASSNAME}(ILogger<{CLASSNAME}> logger, ICaffoaFactory<{INTERFACE}> factory, ICaffoaErrorHandler errorHandler = null, ICaffoaJsonParser jsonParser = null, ICaffoaResultHandler resultHandler = null) {{
+        {ADDITIONAL_VARIABLES}
+        public {CLASSNAME}(ILogger<{CLASSNAME}> logger, ICaffoaFactory<{INTERFACE}> factory, ICaffoaErrorHandler errorHandler = null, ICaffoaJsonParser jsonParser = null, ICaffoaResultHandler resultHandler = null{ADDITIONAL_INTERFACES}) {{
             _logger = logger;
             _factory = factory;
             _errorHandler = errorHandler ?? new DefaultCaffoaErrorHandler(_logger);            
             _jsonParser = jsonParser ?? new DefaultCaffoaJsonParser(_errorHandler);
             _resultHandler = resultHandler ?? new DefaultCaffoaResultHandler();
-        }}
+{ADDITIONAL_INITS}        }}
 {METHODS}
     }}
 }}
