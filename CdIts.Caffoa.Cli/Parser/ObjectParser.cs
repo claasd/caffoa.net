@@ -60,7 +60,16 @@ public class ObjectParser
             if (schema.Properties.Count > 0)
                 throw new CaffoaParserError(
                     "object with properties and additional properties are currently not supported.");
-            property.TypeName = schema.AdditionalProperties.TypeName();
+            if (schema.AdditionalProperties.Reference != null 
+                && schema.AdditionalProperties.Reference.IsLocal)
+            {
+                var referenceId = schema.AdditionalProperties.Reference.Id;
+                property.TypeName = string.Concat(referenceId[0].ToString().ToUpper(), referenceId.AsSpan(1));
+            }
+            else
+            {
+                property.TypeName = schema.AdditionalProperties.TypeName();
+            }
             property.IsMap = true;
         }
         else if (schema.Properties == null)
@@ -68,12 +77,12 @@ public class ObjectParser
             throw new CaffoaParserError(
                 "object without any properties are currently not supported.");
         }
-            else
-            {
-                property.TypeName = schema.TypeName();
-                property.Default = schema.DefaultAsString();
-                property.Enums = schema.EnumsAsStrings();
-            }
+        else
+        {
+            property.TypeName = schema.TypeName();
+            property.Default = schema.DefaultAsString();
+            property.Enums = schema.EnumsAsStrings();
+        }
         
         return property;
     }
