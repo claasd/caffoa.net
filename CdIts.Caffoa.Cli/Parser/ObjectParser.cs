@@ -60,10 +60,9 @@ public class ObjectParser
             if (schema.Properties.Count > 0)
                 throw new CaffoaParserError(
                     "object with properties and additional properties are currently not supported.");
-            if (schema.AdditionalProperties.Reference != null 
-                && schema.AdditionalProperties.Reference.IsLocal)
+            if (schema.AdditionalProperties.Reference != null)
             {
-                property.TypeName = schema.AdditionalProperties.Reference.Id.FirstCharUpper();
+                property.TypeName = schema.AdditionalProperties.Reference.Name();
             }
             else
             {
