@@ -1,4 +1,5 @@
 using CdIts.Caffoa.Cli.Config;
+using CdIts.Caffoa.Cli.Generator.Formatter;
 using CdIts.Caffoa.Cli.Model;
 
 namespace CdIts.Caffoa.Cli.Generator;
@@ -67,10 +68,7 @@ public class InterfaceGenerator
         }).ToList();
         if (_config.ParseQueryParameters is true)
         {
-            var queryParameter = endpoint.Parameters.Where(p => p.IsQueryParameter).ToList();
-            var orderedParams = queryParameter.Where(p => p.DefaultValue == null && p.Required).ToList();
-            orderedParams.AddRange(queryParameter.Where(e => e.DefaultValue != null || !e.Required));
-            parameter.AddRange(orderedParams.Select(p =>
+            parameter.AddRange(endpoint.QueryParameters().Select(p =>
             {
                 var typeName = p.TypeName.Replace("DateOnly", "DateTime");
                 var result = $"{typeName} {p.Name}";

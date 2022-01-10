@@ -39,6 +39,11 @@ public class DefaultCaffoaErrorHandler : ICaffoaErrorHandler
         return new DefaultCaffoaClientError($"Error during parameter conversion of filed {fieldName} to type {type}: {inner.Message}", err);
     }
 
+    public CaffoaClientError RequiredQueryParamMissing(string parameterName)
+    {
+        return new DefaultCaffoaClientError($"The parameter '{parameterName}' is required, but was not found in the query");
+    }
+
     public virtual CaffoaClientError WrongContent(string fieldName, object value, string[] allowedValues)
     {
         var allowedValuesString = string.Join(", ", allowedValues);

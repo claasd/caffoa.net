@@ -1,4 +1,6 @@
+using System.Text;
 using CdIts.Caffoa.Cli.Config;
+using CdIts.Caffoa.Cli.Generator.Formatter;
 using CdIts.Caffoa.Cli.Model;
 
 namespace CdIts.Caffoa.Cli.Generator;
@@ -25,7 +27,7 @@ public class FunctionsGenerator
         if (_modelNamespace != null)
             imports.Add(_modelNamespace);
         var extraVars = new List<(string, string)>();
-        if (_config.ParseParameters.HasValue && _config.ParseParameters.Value)
+        if (_config.ParseParameters is true || _config.ParseQueryParameters is true)
             extraVars.Add(("converter", "_errorHandler"));
         var name = _functionConfig.FunctionsName;
         Directory.CreateDirectory(_functionConfig.TargetFolder);
@@ -81,10 +83,44 @@ public class FunctionsGenerator
         parameters["OPERATION"] = endpoint.Operation;
         parameters["PATH"] = _config.RoutePrefix + endpoint.Route;
         parameters["RESULT"] = result;
+        parameters["QUERY_VARIABLES"] = GenerateQueryVariables(endpoint);
         parameters["CALL"] = call;
         parameters["PARAM_NAMES"] = string.Join("", pathParams);
-        parameters["ADDITIONAL_ERROR_INFOS"] = string.Join("",endpoint.Parameters.Where(p=>!p.IsQueryParameter).Select(p=>$", (\"{p.Name}\", {p.Name})"));;
+        parameters["ADDITIONAL_ERROR_INFOS"] = string.Join("",endpoint.Parameters.Where(p=>!p.IsQueryParameter).Select(p=>$", (\"{p.Name}\", {p.Name})"));
         return file.FormatDict(parameters);
+    }
+
+    private string GenerateQueryVariables(EndPointModel endpoint)
+    {
+        if (_config.ParseQueryParameters is not true) 
+            return "";
+        var parameters = new List<string>();
+        foreach (var parameter in endpoint.Parameters.Where(p => p.IsQueryParameter))
+        {
+            var sb = new StringBuilder();
+            var typeName = parameter.TypeName.Replace("DateOnly", "DateTime");
+            sb.Append($"{typeName} {parameter.Name}");
+            if (parameter.DefaultValue != null)
+                sb.Append($" = {parameter.DefaultValue}");
+            else if (!parameter.Required)
+                sb.Append($" = null");
+            sb.Append(";\n                ");
+            sb.Append($"if(request.Query.TryGetValue(\"{parameter.Name}\", out var {parameter.Name}QueryValue))");
+            sb.Append("\n                    ");
+            sb.Append($"{parameter.Name} = ");
+            sb.Append(FormatConversion(parameter.TypeName.Trim('?'), $"{parameter.Name}QueryValue", parameter.Name));
+            sb.Append(";\n                ");
+            if (parameter.Required && parameter.DefaultValue is null)
+            {
+                sb.Append("else\n                    ");
+                sb.Append($"throw _errorHandler.RequiredQueryParamMissing(\"{parameter.Name}\");");
+                sb.Append("\n                ");
+            }
+            
+            parameters.Add(sb.ToString());
+        }
+        return string.Join("", parameters);
+
     }
 
     private string FormatCall(EndPointModel endpoint, string variable, IEnumerable<string> parameters, bool addAwait)
@@ -127,19 +163,29 @@ public class FunctionsGenerator
 
     private IList<string> BuildCallParameterList(EndPointModel endpoint)
     {
-        var filtered = endpoint.Parameters.Where(p => !p.IsQueryParameter);
-        if(_config.ParseParameters is true)
-            return filtered.Select(p =>
-            {
-                if (p.TypeName == "string")
-                    return $"{p.Name}";
-                if(p.TypeName == "DateOnly")
-                    return $"_converter.ParseDate({p.Name}, nameof({p.Name}))";
-                if(p.TypeName == "DateTime")
-                    return $"_converter.ParseDateTime({p.Name}, nameof({p.Name}))";
-                return $"_converter.Parse<{p.TypeName}>({p.Name}, nameof({p.Name}))";
-            }).ToList();
-        return filtered.Select(p => p.Name).ToList();
+        var filtered = endpoint.Parameters.Where(p => !p.IsQueryParameter).ToList();
+        List<string> result;
+        if (_config.ParseParameters is true)
+            result = filtered.Select(p => FormatConversion(p.TypeName, p.Name, p.Name)).ToList();
+        else
+            result = filtered.Select(p => p.Name).ToList();
+        if (_config.ParseQueryParameters is true)
+        {
+            result.AddRange(endpoint.QueryParameters().Select(p=>p.Name));
+        }
+
+        return result;
+    }
+
+    private string FormatConversion(string typeName, string variableName, string objectName)
+    {
+        if (typeName == "string")
+            return $"{variableName}";
+        if(typeName == "DateOnly")
+            return $"_converter.ParseDate({variableName}, nameof({objectName}))";
+        if(typeName == "DateTime")
+            return $"_converter.ParseDateTime({variableName}, nameof({objectName}))";
+        return $"_converter.Parse<{typeName}>({variableName}, nameof({objectName}))";
     }
 
 

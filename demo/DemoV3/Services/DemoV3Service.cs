@@ -35,7 +35,7 @@ namespace DemoV3.Services
             }
         }
 
-        public async Task<IEnumerable<AnyCompleteUser>> UsersGetAsync(int offset = 0, int limit = 1000, string filter = null)
+        public async Task<IEnumerable<AnyCompleteUser>> UsersGetAsync(int offset = 0, int limit = 1000)
         {
             var result = new List<AnyCompleteUser>();
             result.AddRange(await _users.List());
@@ -47,6 +47,15 @@ namespace DemoV3.Services
         {
             var users = await _users.List();
             return users.Where(u => u.Birthdate >= date);
+        }
+
+        public async Task<IEnumerable<User>> UsersSearchByDateAsync(DateTime before, DateTime after, int? maxResults = null)
+        {
+            var users = await _users.List();
+            var results = users.Where(u => u.Birthdate < before && u.Birthdate > after);
+            if (maxResults is > 0)
+                results = results.Take(maxResults.Value);
+            return results;
         }
 
         public async Task<AnyCompleteUser> UserPostAsync(User payload)

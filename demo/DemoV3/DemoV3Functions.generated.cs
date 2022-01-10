@@ -24,13 +24,14 @@ namespace DemoV3
         private readonly ICaffoaErrorHandler _errorHandler;
         private readonly ICaffoaJsonParser _jsonParser;
         private readonly ICaffoaResultHandler _resultHandler;
-        
-        public DemoV3Functions(ILogger<DemoV3Functions> logger, ICaffoaFactory<IDemoV3Service> factory, ICaffoaErrorHandler errorHandler = null, ICaffoaJsonParser jsonParser = null, ICaffoaResultHandler resultHandler = null) {
+        private readonly ICaffoaConverter _converter;
+        public DemoV3Functions(ILogger<DemoV3Functions> logger, ICaffoaFactory<IDemoV3Service> factory, ICaffoaErrorHandler errorHandler = null, ICaffoaJsonParser jsonParser = null, ICaffoaResultHandler resultHandler = null, ICaffoaConverter converter = null) {
             _logger = logger;
             _factory = factory;
             _errorHandler = errorHandler ?? new DefaultCaffoaErrorHandler(_logger);            
             _jsonParser = jsonParser ?? new DefaultCaffoaJsonParser(_errorHandler);
             _resultHandler = resultHandler ?? new DefaultCaffoaResultHandler();
+            _converter = converter ?? new DefaultCaffoaConverter(_errorHandler);
         }
         /// <summary>
         /// auto-generated function invocation.
@@ -41,7 +42,13 @@ namespace DemoV3
             HttpRequest request)
         {
             try {
-                var result = await _factory.Instance(request).UsersGetAsync();
+                int offset = 0;
+                if(request.Query.TryGetValue("offset", out var offsetQueryValue))
+                    offset = _converter.Parse<int>(offsetQueryValue, nameof(offset));
+                int limit = 1000;
+                if(request.Query.TryGetValue("limit", out var limitQueryValue))
+                    limit = _converter.Parse<int>(limitQueryValue, nameof(limit));
+                var result = await _factory.Instance(request).UsersGetAsync(offset, limit);
                 return _resultHandler.Json(result, 200);
             } catch(CaffoaClientError err) {
                 return err.Result;
@@ -148,6 +155,36 @@ namespace DemoV3
                 return err.Result;
             } catch (Exception e) {
                 return _errorHandler.HandleFunctionException(e, request, "UsersGetByBirthdate", "api/users/born-before/{date}", "get", ("date", date));
+            }
+        }
+        /// <summary>
+        /// auto-generated function invocation.
+        ///</summary>
+        [FunctionName("UsersSearchByDateAsync")]
+        public async Task<IActionResult> UsersSearchByDateAsync(
+            [HttpTrigger(AuthorizationLevel.Function, "get", Route = "api/users/filter/byAge")]
+            HttpRequest request)
+        {
+            try {
+                DateTime before;
+                if(request.Query.TryGetValue("before", out var beforeQueryValue))
+                    before = _converter.ParseDate(beforeQueryValue, nameof(before));
+                else
+                    throw _errorHandler.RequiredQueryParamMissing("before");
+                DateTime after;
+                if(request.Query.TryGetValue("after", out var afterQueryValue))
+                    after = _converter.ParseDate(afterQueryValue, nameof(after));
+                else
+                    throw _errorHandler.RequiredQueryParamMissing("after");
+                int? maxResults = null;
+                if(request.Query.TryGetValue("maxResults", out var maxResultsQueryValue))
+                    maxResults = _converter.Parse<int>(maxResultsQueryValue, nameof(maxResults));
+                var result = await _factory.Instance(request).UsersSearchByDateAsync(before, after, maxResults);
+                return _resultHandler.Json(result, 200);
+            } catch(CaffoaClientError err) {
+                return err.Result;
+            } catch (Exception e) {
+                return _errorHandler.HandleFunctionException(e, request, "UsersSearchByDate", "api/users/filter/byAge", "get");
             }
         }
     }
