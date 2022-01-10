@@ -28,6 +28,9 @@ namespace DemoV3.Model {
         [JsonProperty("emails")]
         public virtual ICollection<string> Emails { get; set; } = new List<string>();
 
+        [JsonProperty("descriptions")]
+        public virtual Dictionary<string, string> Descriptions { get; set; } = new Dictionary<string, string>();
+
         // constant values for "type"
         public const string TypeSimpleValue = "simple";
 
@@ -99,6 +102,7 @@ namespace DemoV3.Model {
             Address = other.Address?.ToAddress();
             Birthdate = other.Birthdate;
             Emails = other.Emails.ToList();
+            Descriptions = other.Descriptions;
             Type = other.Type;
             AgeGroup = other.AgeGroup;
         }

@@ -23,7 +23,7 @@ namespace DemoV3.Model {
         public virtual string Country { get; set; }
 
         [JsonProperty("flags")]
-        public virtual Dictionary<string, string> Flags { get; set; } = new Dictionary<string, string>();
+        public virtual Dictionary<string, Flags> Flags { get; set; } = new Dictionary<string, Flags>();
 
         public Address ToAddress() {
             var item = new Address();

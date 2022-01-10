@@ -38,6 +38,9 @@ components:
           type: array
           items:
             type: string
+        descriptions:
+          additionalProperties: 
+            $ref: "#/components/schemas/fancyString"
         type:
           type: string
           enum: [ simple ]

@@ -9,8 +9,12 @@ components:
   schemas:
     flags:
       type: object
-      additionalProperties:
-        type: string
+      properties: 
+        id:
+          type: string
+        desc: 
+          type: string
+          
     address:
       type: object
       properties:
@@ -23,7 +27,8 @@ components:
         country:
           type: string
         flags:
-          $ref: "#/components/schemas/flags"
+          additionalProperties: 
+            $ref: "#/components/schemas/flags"
       required:
         - street
         - postalCode
