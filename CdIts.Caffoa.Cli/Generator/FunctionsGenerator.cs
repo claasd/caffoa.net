@@ -26,9 +26,16 @@ public class FunctionsGenerator
             imports.Add(_functionConfig.InterfaceNamespace);
         if (_modelNamespace != null)
             imports.Add(_modelNamespace);
-        var extraVars = new List<(string, string)>();
+        var extraVars = new List<AdditionalInterfaceModel>();
         if (_config.ParseParameters is true || _config.ParseQueryParameters is true)
-            extraVars.Add(("converter", "_errorHandler"));
+        {
+            extraVars.Add(new AdditionalInterfaceModel()
+            {
+                VariableName = "converter",
+                ParameterType = "ICaffoaConverter",
+                Initializer = "converter ?? new DefaultCaffoaConverter(_errorHandler)"
+            });
+        }
         var name = _functionConfig.FunctionsName;
         Directory.CreateDirectory(_functionConfig.TargetFolder);
         var file = Templates.GetTemplate("FunctionsTemplate.tpl");
@@ -38,9 +45,9 @@ public class FunctionsGenerator
         format["INTERFACE"] = _functionConfig.InterfaceName;
         format["IMPORTS"] = string.Join("", imports.Distinct().Select(i => $"using {i};\n"));
         format["METHODS"] = GenerateFunctionMethods(endpoints);
-        format["ADDITIONAL_VARIABLES"] = string.Join("\n        ", extraVars.Select(it => $"private readonly ICaffoa{it.Item1.FirstCharUpper()} _{it.Item1};"));
-        format["ADDITIONAL_INTERFACES"] = string.Join("", extraVars.Select(it => $", ICaffoa{it.Item1.FirstCharUpper()} {it.Item1} = null"));
-        format["ADDITIONAL_INITS"] = string.Join("", extraVars.Select(it => $"            _{it.Item1} = {it.Item1} ?? new DefaultCaffoa{it.Item1.FirstCharUpper()}({it.Item2});\n"));
+        format["ADDITIONAL_VARIABLES"] = string.Join("\n        ", extraVars.Select(it => $"private readonly {it.ParameterType} _{it.VariableName};"));
+        format["ADDITIONAL_INTERFACES"] = string.Join("", extraVars.Select(it => $", {it.ParameterType} {it.VariableName} = null"));
+        format["ADDITIONAL_INITS"] = string.Join("", extraVars.Select(it => $"            _{it.VariableName} = {it.Initializer};\n"));
         var formatted = file.FormatDict(format);
         File.WriteAllText(Path.Combine(_functionConfig.TargetFolder, name + ".generated.cs"), formatted);
     }
