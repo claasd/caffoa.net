@@ -170,12 +170,12 @@ namespace DemoV3
                 if(request.Query.TryGetValue("before", out var beforeQueryValue))
                     before = _converter.ParseDateOnly(beforeQueryValue, nameof(before));
                 else
-                    throw _errorHandler.RequiredQueryParamMissing("before");
+                    throw _errorHandler.RequiredQueryParameterMissing("before");
                 DateOnly after;
                 if(request.Query.TryGetValue("after", out var afterQueryValue))
                     after = _converter.ParseDateOnly(afterQueryValue, nameof(after));
                 else
-                    throw _errorHandler.RequiredQueryParamMissing("after");
+                    throw _errorHandler.RequiredQueryParameterMissing("after");
                 int? maxResults = null;
                 if(request.Query.TryGetValue("maxResults", out var maxResultsQueryValue))
                     maxResults = _converter.Parse<int>(maxResultsQueryValue, nameof(maxResults));

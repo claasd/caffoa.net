@@ -120,7 +120,7 @@ public class FunctionsGenerator
             if (parameter.Required && parameter.DefaultValue is null)
             {
                 sb.Append("else\n                    ");
-                sb.Append($"throw _errorHandler.RequiredQueryParamMissing(\"{parameter.Name}\");");
+                sb.Append($"throw _errorHandler.RequiredQueryParameterMissing(\"{parameter.Name}\");");
                 sb.Append("\n                ");
             }
             

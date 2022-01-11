@@ -27,9 +27,9 @@ public interface ICaffoaErrorHandler
     
     /// <summary>
     /// is called when the spec requires a certain type, but the parsing of the payload failed.
-    /// The passed Exception is the exception that raised by <see cref="ICaffoaJsonParser"/> 
+    /// The passed Exception is the exception that raised during type conversion by <see cref="ICaffoaConverter"/> 
     /// </summary>
-    CaffoaClientError RequiredQueryParamMissing(string parameterName);
+    CaffoaClientError RequiredQueryParameterMissing(string parameterName);
     
     /// <summary>
     /// Is called when the function cannot decide which implementation to use.
