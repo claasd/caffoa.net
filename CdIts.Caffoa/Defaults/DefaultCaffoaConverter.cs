@@ -2,6 +2,9 @@ using System.Globalization;
 
 namespace Caffoa.Defaults;
 
+/// <summary>
+/// Converter that uses the default converter elements and raises an CaffoaClientError on failure
+/// </summary>
 public class DefaultCaffoaConverter : ICaffoaConverter
 {
     private readonly ICaffoaErrorHandler _errorHandler;

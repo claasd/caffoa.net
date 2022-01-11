@@ -17,7 +17,7 @@ namespace DemoV3.Services
     {
         private readonly UserRepository<UserWithId> _users = new UserRepository<UserWithId>();
         private readonly UserRepository<GuestUser> _guests = new UserRepository<GuestUser>();
-        private IContractResolver _responseContractResolver = new RemoveRequiredContractResolver();
+        private readonly IContractResolver _responseContractResolver = new RemoveRequiredContractResolver();
         public IDemoV3Service Instance(HttpRequest request)
         {
             return this;
