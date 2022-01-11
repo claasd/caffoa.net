@@ -23,7 +23,7 @@ public class ParameterObject
     public string GetTypeName(CaffoaConfig config)
     {
         // only generate DateOnly parameters if type converting is not done by functions
-        return GetTypeName(config.UseDateOnly is true && config.ParseParameters is true);
+        return GetTypeName(config.UseDateOnly is true && config.ParsePathParameters is true);
     }
     
     public string GetTypeName(bool useDateOnly)

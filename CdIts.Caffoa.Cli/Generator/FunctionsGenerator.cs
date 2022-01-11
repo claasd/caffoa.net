@@ -27,7 +27,7 @@ public class FunctionsGenerator
         if (_modelNamespace != null)
             imports.Add(_modelNamespace);
         var extraVars = new List<AdditionalInterfaceModel>();
-        if (_config.ParseParameters is true || _config.ParseQueryParameters is true)
+        if (_config.ParsePathParameters is true || _config.ParseQueryParameters is true)
         {
             extraVars.Add(new AdditionalInterfaceModel()
             {
@@ -77,7 +77,7 @@ public class FunctionsGenerator
         }
         IEnumerable<string> pathParams;
         var filteredParams = endpoint.Parameters.Where(p => !p.IsQueryParameter);
-        if(_config.ParseParameters is true)
+        if(_config.ParsePathParameters is true)
             pathParams = filteredParams.Select(p => $", string {p.Name}");
         else
             pathParams = filteredParams.Select(p =>
@@ -172,7 +172,7 @@ public class FunctionsGenerator
     {
         var filtered = endpoint.Parameters.Where(p => !p.IsQueryParameter).ToList();
         List<string> result;
-        if (_config.ParseParameters is true)
+        if (_config.ParsePathParameters is true)
             result = filtered.Select(p => FormatConversion(p.GetTypeName(_config), p.Name, p.Name)).ToList();
         else
             result = filtered.Select(p => p.Name).ToList();

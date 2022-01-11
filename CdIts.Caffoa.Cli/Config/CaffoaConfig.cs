@@ -7,7 +7,7 @@ public class CaffoaConfig
     public string? Suffix { get; set; }
     public string? RoutePrefix { get; set; }
     public bool? UseDateOnly { get; set; }
-    public bool? ParseParameters { get; set; }
+    public bool? ParsePathParameters { get; set; }
     public bool? ParseQueryParameters { get; set; }
     
     public List<string>? Imports;
@@ -26,7 +26,7 @@ public class CaffoaConfig
             UseDateOnly = UseDateOnly ?? general.UseDateOnly,
             Duplicates = general.Duplicates,
             ClearGeneratedFiles = general.ClearGeneratedFiles,
-            ParseParameters = ParseParameters ?? general.ParseParameters,
+            ParsePathParameters = ParsePathParameters ?? general.ParsePathParameters,
             ParseQueryParameters = ParseQueryParameters ?? general.ParseQueryParameters
         };
     }

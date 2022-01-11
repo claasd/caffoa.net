@@ -3,7 +3,7 @@ config:
   duplicates: once # once, overwrite (default)
   routePrefix: api/
   useDateOnly: true
-  parseParameters: true # if set to true, the parameter parsing is not left to Functions, but is done by caffoa, opening up the possibility to give back better error messages
+  parsePathParameters: true # if set to true, the parameter parsing is not left to Functions, but is done by caffoa, opening up the possibility to give back better error messages
   parseQueryParameters: true # if set to true, caffoa will parse required and optional parameters that are defined for query
   requestBodyType: # overwrite the JSON type that is passed to the method for some operations
     - type: JObject
