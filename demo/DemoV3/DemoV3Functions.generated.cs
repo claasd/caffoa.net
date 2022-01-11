@@ -146,10 +146,10 @@ namespace DemoV3
         [FunctionName("UsersGetByBirthdateAsync")]
         public async Task<IActionResult> UsersGetByBirthdateAsync(
             [HttpTrigger(AuthorizationLevel.Function, "get", Route = "api/users/born-before/{date}")]
-            HttpRequest request, DateTime date)
+            HttpRequest request, string date)
         {
             try {
-                var result = await _factory.Instance(request).UsersGetByBirthdateAsync(date);
+                var result = await _factory.Instance(request).UsersGetByBirthdateAsync(_converter.ParseDateOnly(date, nameof(date)));
                 return _resultHandler.Json(result, 200);
             } catch(CaffoaClientError err) {
                 return err.Result;
@@ -166,14 +166,14 @@ namespace DemoV3
             HttpRequest request)
         {
             try {
-                DateTime before;
+                DateOnly before;
                 if(request.Query.TryGetValue("before", out var beforeQueryValue))
-                    before = _converter.ParseDate(beforeQueryValue, nameof(before));
+                    before = _converter.ParseDateOnly(beforeQueryValue, nameof(before));
                 else
                     throw _errorHandler.RequiredQueryParamMissing("before");
-                DateTime after;
+                DateOnly after;
                 if(request.Query.TryGetValue("after", out var afterQueryValue))
-                    after = _converter.ParseDate(afterQueryValue, nameof(after));
+                    after = _converter.ParseDateOnly(afterQueryValue, nameof(after));
                 else
                     throw _errorHandler.RequiredQueryParamMissing("after");
                 int? maxResults = null;

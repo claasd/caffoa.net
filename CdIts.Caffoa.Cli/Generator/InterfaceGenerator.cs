@@ -63,14 +63,14 @@ public class InterfaceGenerator
     {
         var parameter = endpoint.Parameters.Where(p => !p.IsQueryParameter).Select(p =>
         {
-            var typeName = p.TypeName.Replace("DateOnly", "DateTime");
+            var typeName = p.GetTypeName(_config);
             return $"{typeName} {p.Name}";
         }).ToList();
         if (_config.ParseQueryParameters is true)
         {
             parameter.AddRange(endpoint.QueryParameters().Select(p =>
             {
-                var typeName = p.TypeName.Replace("DateOnly", "DateTime");
+                var typeName = p.GetTypeName(_config);
                 var result = $"{typeName} {p.Name}";
                 if (p.DefaultValue != null)
                     result += $" = {p.DefaultValue}";

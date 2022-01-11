@@ -25,7 +25,20 @@ public class DefaultCaffoaConverter : ICaffoaConverter
             throw _errorHandler.ParameterConvertError(parameterName, "date", e);
         }
     }
-
+#if NET6_0    
+    public DateOnly ParseDateOnly(string parameter, string parameterName)
+    {
+        try
+        {
+            return DateOnly.ParseExact(parameter, "yyyy-MM-dd", CultureInfo.InvariantCulture);
+        }
+        catch (Exception e)
+        {
+            throw _errorHandler.ParameterConvertError(parameterName, "date", e);
+        }
+    }
+#endif
+    
     public DateTime ParseDateTime(string parameter, string parameterName)
     {
         try

@@ -77,12 +77,12 @@ public class FunctionsGenerator
         }
         IEnumerable<string> pathParams;
         var filteredParams = endpoint.Parameters.Where(p => !p.IsQueryParameter);
-        if(_config.ParseParameters.HasValue && _config.ParseParameters.Value)
+        if(_config.ParseParameters is true)
             pathParams = filteredParams.Select(p => $", string {p.Name}");
         else
             pathParams = filteredParams.Select(p =>
             {
-                var type = p.TypeName.Replace("DateOnly", "DateTime");
+                var type = p.GetTypeName(_config); // Invalid cast from 'System.String' to 'System.DateOnly' by Azure functions
                 return $", {type} {p.Name}";
             });
 
@@ -105,7 +105,7 @@ public class FunctionsGenerator
         foreach (var parameter in endpoint.Parameters.Where(p => p.IsQueryParameter))
         {
             var sb = new StringBuilder();
-            var typeName = parameter.TypeName.Replace("DateOnly", "DateTime");
+            var typeName = parameter.GetTypeName(_config);
             sb.Append($"{typeName} {parameter.Name}");
             if (parameter.DefaultValue != null)
                 sb.Append($" = {parameter.DefaultValue}");
@@ -115,7 +115,7 @@ public class FunctionsGenerator
             sb.Append($"if(request.Query.TryGetValue(\"{parameter.Name}\", out var {parameter.Name}QueryValue))");
             sb.Append("\n                    ");
             sb.Append($"{parameter.Name} = ");
-            sb.Append(FormatConversion(parameter.TypeName.Trim('?'), $"{parameter.Name}QueryValue", parameter.Name));
+            sb.Append(FormatConversion(parameter.GetTypeName(_config).Trim('?'), $"{parameter.Name}QueryValue", parameter.Name));
             sb.Append(";\n                ");
             if (parameter.Required && parameter.DefaultValue is null)
             {
@@ -173,7 +173,7 @@ public class FunctionsGenerator
         var filtered = endpoint.Parameters.Where(p => !p.IsQueryParameter).ToList();
         List<string> result;
         if (_config.ParseParameters is true)
-            result = filtered.Select(p => FormatConversion(p.TypeName, p.Name, p.Name)).ToList();
+            result = filtered.Select(p => FormatConversion(p.GetTypeName(_config), p.Name, p.Name)).ToList();
         else
             result = filtered.Select(p => p.Name).ToList();
         if (_config.ParseQueryParameters is true)
@@ -188,6 +188,8 @@ public class FunctionsGenerator
     {
         if (typeName == "string")
             return $"{variableName}";
+        if(typeName == "DateOnly" && _config.UseDateOnly is true)
+            return $"_converter.ParseDateOnly({variableName}, nameof({objectName}))";
         if(typeName == "DateOnly")
             return $"_converter.ParseDate({variableName}, nameof({objectName}))";
         if(typeName == "DateTime")

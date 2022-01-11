@@ -11,7 +11,9 @@ public interface ICaffoaConverter
     /// <param name="parameter">the input string</param>
     /// <param name="parameterName">the name of the variable as defined in the openapi spec</param>
     DateTime ParseDate(string parameter, string parameterName);
-
+#if NET6_0
+    DateOnly ParseDateOnly(string date, string dateName);
+#endif
     /// <summary>
     /// Should parse openapi date-time ISO format into DateTime
     /// </summary>

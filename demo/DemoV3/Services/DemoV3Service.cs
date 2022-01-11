@@ -43,13 +43,13 @@ namespace DemoV3.Services
             return result.Skip(offset).Take(limit);
         }
 
-        public async Task<IEnumerable<User>> UsersGetByBirthdateAsync(DateTime date)
+        public async Task<IEnumerable<User>> UsersGetByBirthdateAsync(DateOnly date)
         {
             var users = await _users.List();
             return users.Where(u => u.Birthdate >= date);
         }
 
-        public async Task<IEnumerable<User>> UsersSearchByDateAsync(DateTime before, DateTime after, int? maxResults = null)
+        public async Task<IEnumerable<User>> UsersSearchByDateAsync(DateOnly before, DateOnly after, int? maxResults = null)
         {
             var users = await _users.List();
             var results = users.Where(u => u.Birthdate < before && u.Birthdate > after);

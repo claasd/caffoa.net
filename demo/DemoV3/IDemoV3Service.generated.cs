@@ -65,14 +65,14 @@ namespace DemoV3
         /// 200 -> return user object
         /// 400 -> Error
         /// </summary>
-        Task<IEnumerable<User>> UsersGetByBirthdateAsync(DateTime date);
+        Task<IEnumerable<User>> UsersGetByBirthdateAsync(DateOnly date);
 
         /// <summary>
         /// get
         /// 200 -> return user object
         /// 400 -> Error
         /// </summary>
-        Task<IEnumerable<User>> UsersSearchByDateAsync(DateTime before, DateTime after, int? maxResults = null);
+        Task<IEnumerable<User>> UsersSearchByDateAsync(DateOnly before, DateOnly after, int? maxResults = null);
 
     }
 }
