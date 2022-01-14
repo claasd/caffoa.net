@@ -54,7 +54,4 @@ public interface ICaffoaErrorHandler
     /// <param name="namedParams">a list of values that are part of the route</param>
     IActionResult HandleFunctionException(Exception e, HttpRequest request, string functionName, string route, string operation,
         params (string, object)[] namedParams);
-
-
-    
 }
