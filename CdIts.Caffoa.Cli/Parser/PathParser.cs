@@ -49,10 +49,7 @@ public class PathParser
                 {
                     foreach (var requestConfig in _config.RequestBodyType)
                     {
-                        var opFilter = requestConfig.Filter.Operations;
-                        var methodFilter = requestConfig.Filter.Methods;
-                        if ((methodFilter != null && methodFilter.Contains(result.Operation))
-                            || (opFilter != null && opFilter.Contains(operationItem.OperationId)))
+                        if(requestConfig.Filter.Contains(operation, operationItem))
                         {
                             result.RequestBodyType = new SimpleBodyModel(requestConfig.Type);
                             if (requestConfig.Import != null)
@@ -62,11 +59,15 @@ public class PathParser
                 }
             }
 
-
             foreach (var (response, responseItem) in operationItem.Responses)
             {
                 result.DocumentationLines.Add($"{response} -> {responseItem.Description}");
                 result.Responses.Add(ParseResponse(response, responseItem));
+            }
+            
+            if (_config.DurableClient != null && _config.DurableClient.Contains(operation, operationItem))
+            {
+                result.DurableClient = true;
             }
         }
         catch (CaffoaParserError e)

@@ -17,6 +17,7 @@ You will need to install the following nuget packages:
 * `Microsoft.NET.Sdk.Functions` obviously
 * `Microsoft.Azure.Functions.Extensions` for function dependency injection
 * `CdIts.Caffoa` for caffoa interfaces and default implementations
+* Optional: `Microsoft.Azure.WebJobs.Extensions.DurableTask` if you want to inject `[DurableClient]` into your methods
 
 # Usage
 
@@ -140,11 +141,17 @@ config:
   requestBodyType: # you can override the request body type for specific operations or methods
     type: JObject # the body type that JSON should be de-serialized to
     import: Newtonsoft.Json.Linq # optional import for the type
-    filter: # filter for the operations/methods where this type should be used 
-      operations: # a list on specific operations that should use this type
+    filter: # filter for the operations/methods where this type should be used
+      all: true # optional, uses this type for all functions
+      operations: # a optional list of specific operations that should use this type
         - user-patch
-      methods: # list of specific methods that should use this type. All operations that use this method will use the specified type
+      methods: # a optional list of specific methods that should use this type. All operations that use this method will use the specified type
         - patch
+  durableClient: # inject "[DurableClient] IDurableOrchestrationClient durableClient" into functions 
+    all: true # optional, uses this type for all functions
+  operations: # a optional list of specific operations that should get a durableClient
+    - long-running-function
+
 services:
   - apiPath: userservice.openapi.yml
     config:
@@ -153,8 +160,11 @@ services:
       checkEnums: # overrides the config element from the global config
       routePrefix: # overrides the config element from the global config
       useDateOnly: # overrides the config element from the global config
+      parsePathParameters: # overrides the config element from the global config
+      parseQueryParameters: # overrides the config element from the global config
       imports: # overrides the imports from the global config
       requestBodyType: # overrides the imports from the global config
+      durableClient: # overrides the imports from the global config
     function:
       name: MyClassName
       namespace: MyNamespace

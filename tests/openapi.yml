@@ -312,4 +312,14 @@ paths:
                 items:
                   $ref: "#/components/schemas/user"
         "400":
-          $ref: "#/components/responses/error"          
+          $ref: "#/components/responses/error"
+  
+  /startLongRunningFunction:
+    post:
+      operationId: long-running-function
+      description: start a long running function via durable functions
+      responses: 
+        202:
+          description: started long running function
+      
+  
