@@ -33,7 +33,7 @@ public class PathParser
     {
         if (operationItem.OperationId is null)
             throw new CaffoaParserError($"Operation ID must be set on '{operation} {path}'");
-        var name = operationItem.OperationId.ToCamelCase();
+        var name = operationItem.OperationId.ToObjectName();
         var result = new EndPointModel(operation.ToString(), name, path.Trim('/'));
         try
         {
