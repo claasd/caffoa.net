@@ -145,8 +145,19 @@ public class PathParser
 
     public List<ParameterObject> ParseParameter(IList<OpenApiParameter> parameters)
     {
-        return parameters.Where(p => p.In == ParameterLocation.Path)
-            .Select(p => new ParameterObject(p.Name, p.Schema.TypeName(), p.Description))
+        return parameters.Where(p => p.In is ParameterLocation.Path or ParameterLocation.Query)
+            .Select(p =>
+            {
+                var defaultValue = p.Schema.DefaultAsString();
+                p.Schema.Nullable = !p.Required && defaultValue == null;
+                var result =  new ParameterObject(p.Name, p.Schema.TypeName(), p.Description,
+                    p.In == ParameterLocation.Query)
+                {
+                    DefaultValue = defaultValue,
+                    Required = p.Required
+                };
+                return result;
+            })
             .ToList();
     }
 }

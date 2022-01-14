@@ -1,4 +1,5 @@
 using CdIts.Caffoa.Cli.Config;
+using CdIts.Caffoa.Cli.Generator.Formatter;
 using CdIts.Caffoa.Cli.Model;
 
 namespace CdIts.Caffoa.Cli.Generator;
@@ -19,8 +20,8 @@ public class InterfaceGenerator
     public void GenerateInterface(List<EndPointModel> endpoints)
     {
         var imports = new List<string>();
-        endpoints.ForEach(e=>imports.AddRange(e.Imports));
-        if(_config.Imports != null)
+        endpoints.ForEach(e => imports.AddRange(e.Imports));
+        if (_config.Imports != null)
             imports.AddRange(_config.Imports);
         if (_modelNamespace != null)
             imports.Add(_modelNamespace);
@@ -60,13 +61,25 @@ public class InterfaceGenerator
 
     private List<string> GetParams(EndPointModel endpoint)
     {
-        var allParams = endpoint.Parameters;
-        allParams.ForEach(p=>p.TypeName = p.TypeName.Replace("DateOnly", "DateTime"));
-        var parameter = allParams.Select(p =>
+        var parameter = endpoint.Parameters.Where(p => !p.IsQueryParameter).Select(p =>
         {
-            var typeName = p.TypeName.Replace("DateOnly", "DateTime");
+            var typeName = p.GetTypeName(_config);
             return $"{typeName} {p.Name}";
         }).ToList();
+        if (_config.ParseQueryParameters is true)
+        {
+            parameter.AddRange(endpoint.QueryParameters().Select(p =>
+            {
+                var typeName = p.GetTypeName(_config);
+                var result = $"{typeName} {p.Name}";
+                if (p.DefaultValue != null)
+                    result += $" = {p.DefaultValue}";
+                else if (!p.Required)
+                    result += $" = null";
+                return result;
+            }));
+        }
+
         if (endpoint.HasRequestBody)
         {
             if (endpoint.RequestBodyType is SelectionBodyModel selection)
@@ -109,6 +122,7 @@ public class InterfaceGenerator
                 // TODO: log warning "Returning different objects is not supported"
                 return "<IActionResult>";
             }
+
             typeName = response.TypeName;
             if (response.Unknown)
                 typeName = "IActionResult";

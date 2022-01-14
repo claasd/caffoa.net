@@ -21,9 +21,9 @@ namespace DemoV3.Model {
         [JsonProperty("address")]
         public virtual Address Address { get; set; }
 
-        [JsonConverter(typeof(CaffoaDateConverter))]
+        [JsonConverter(typeof(CaffoaDateOnlyConverter))]
         [JsonProperty("birthdate")]
-        public virtual DateTime? Birthdate { get; set; }
+        public virtual DateOnly? Birthdate { get; set; }
 
         [JsonProperty("emails")]
         public virtual ICollection<string> Emails { get; set; } = new List<string>();

@@ -22,5 +22,4 @@ public interface ICaffoaResultHandler
     /// Is only called if neither <see cref="Json"/> nor <see cref="StatusCode"/> is called.
     /// </summary>
     IActionResult Handle(IActionResult input);
-    
 }

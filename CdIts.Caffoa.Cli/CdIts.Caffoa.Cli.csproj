@@ -18,21 +18,21 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="CommandLineParser" Version="2.8.0"/>
-        <PackageReference Include="Microsoft.OpenApi.Readers" Version="1.2.3"/>
-        <PackageReference Include="YamlDotNet" Version="11.2.1"/>
+        <PackageReference Include="CommandLineParser" Version="2.8.0" />
+        <PackageReference Include="Microsoft.OpenApi.Readers" Version="1.2.3" />
+        <PackageReference Include="YamlDotNet" Version="11.2.1" />
     </ItemGroup>
 
     <ItemGroup>
-        <EmbeddedResource Include="data\FunctionsMethod.tpl"/>
-        <EmbeddedResource Include="data\FunctionsSwitchMethod.tpl"/>
-        <EmbeddedResource Include="data\FunctionsTemplate.tpl"/>
-        <EmbeddedResource Include="data\InterfaceMethod.tpl"/>
-        <EmbeddedResource Include="data\InterfaceTemplate.tpl"/>
-        <EmbeddedResource Include="data\ModelEnumPropertyTemplate.tpl"/>
-        <EmbeddedResource Include="data\ModelInterfaceTemplate.tpl"/>
-        <EmbeddedResource Include="data\ModelPropertyTemplate.tpl"/>
-        <EmbeddedResource Include="data\ModelTemplate.tpl"/>
+        <EmbeddedResource Include="data\FunctionsMethod.tpl" />
+        <EmbeddedResource Include="data\FunctionsSwitchMethod.tpl" />
+        <EmbeddedResource Include="data\FunctionsTemplate.tpl" />
+        <EmbeddedResource Include="data\InterfaceMethod.tpl" />
+        <EmbeddedResource Include="data\InterfaceTemplate.tpl" />
+        <EmbeddedResource Include="data\ModelEnumPropertyTemplate.tpl" />
+        <EmbeddedResource Include="data\ModelInterfaceTemplate.tpl" />
+        <EmbeddedResource Include="data\ModelPropertyTemplate.tpl" />
+        <EmbeddedResource Include="data\ModelTemplate.tpl" />
     </ItemGroup>
 
 </Project>

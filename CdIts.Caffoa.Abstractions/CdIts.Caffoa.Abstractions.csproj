@@ -9,11 +9,11 @@
         <RepositoryUrl>https://github.com/claasd/caffoa.net.git</RepositoryUrl>
         <Authors>claasd</Authors>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
-        <TargetFramework>netstandard2.0</TargetFramework>
         <Description>CAFFOA is a tool to autogenerate azure function templates for .NET from openapi declaration.
             Instead of generating stubs, the goal is to be able to change the api and re-generate the files without overwriting your code.
 
             This is the library that contains Interfaces and abstract classes.</Description>
+        <TargetFrameworks>net6.0;netstandard2.0</TargetFrameworks>
     </PropertyGroup>
     <ItemGroup>
         <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.2.0" />

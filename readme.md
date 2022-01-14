@@ -132,7 +132,9 @@ config:
   suffix: "Suf" # A suffix that is added to all model classes
   checkEnums: true # set to false to disalbe the generated checks for enums in models
   routePrefix: "api/" # a route prefix that is added to all routes in function
-  useDateOnly: false # you can set this to true if you use net6.0 and want date types to be de-serialized as DateOnly instead of DateTime. 
+  useDateOnly: false # you can set this to true if you use net6.0 and want date types to be de-serialized as DateOnly instead of DateTime.
+  parsePathParameters: true # if set to true, the parameter parsing is not left to Functions, but is done by caffoa, opening up the possibility to give back better error messages
+  parseQueryParameters: true # if set to true, caffoa will parse required and optional parameters that are defined for query
   imports: # a list of imports that will be added to most generated classes
     - MySpecialNamespace
   requestBodyType: # you can override the request body type for specific operations or methods
@@ -194,7 +196,7 @@ Simply create an implementation of either [one of the the interfaces](https://gi
 * `ICaffoaErrorHandler` / `CaffoaDefaultErrorHandler`: handles errors that may occur during parsing. Default implementation returns BadRequest with a human readable error string
 * `ICaffoaJsonParser` / `DefaultCaffoaJsonParser`: Parses incoming JSON objects to model objects.
 * `ICaffoaResultHandler` / `CaffoaDefaultResultHandler`: Creates Json and result code actions from objects. Overwrite if you want to customize your JSON output.
-
+* `ICaffoaConverter` / `DefaultCaffoaConverter`: Converts incoming string parameters to the required type, if either `parsePathParameters`or `parseQueryParameters` are set to true. 
 Then, add your implementation through DI:
 
 ```c#

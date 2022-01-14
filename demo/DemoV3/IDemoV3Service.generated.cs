@@ -20,7 +20,7 @@ namespace DemoV3
         /// 200 -> return user object
         /// 400 -> Error
         /// </summary>
-        Task<IEnumerable<AnyCompleteUser>> UsersGetAsync();
+        Task<IEnumerable<AnyCompleteUser>> UsersGetAsync(int offset = 0, int limit = 1000);
 
         /// <summary>
         /// create or update a user without return test
@@ -65,7 +65,14 @@ namespace DemoV3
         /// 200 -> return user object
         /// 400 -> Error
         /// </summary>
-        Task<IEnumerable<User>> UsersGetByBirthdateAsync(DateTime date);
+        Task<IEnumerable<User>> UsersGetByBirthdateAsync(DateOnly date);
+
+        /// <summary>
+        /// get
+        /// 200 -> return user object
+        /// 400 -> Error
+        /// </summary>
+        Task<IEnumerable<User>> UsersSearchByDateAsync(DateOnly before, DateOnly after, int? maxResults = null);
 
     }
 }

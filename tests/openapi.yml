@@ -135,6 +135,19 @@ components:
 paths:
   "/users":
     get:
+      parameters:
+        - name: offset
+          schema: 
+            type: integer
+            default: 0
+          required: false
+          in: query
+        - name: limit
+          schema:
+            type: integer
+            default: 1000
+          required: false
+          in: query
       tags:
         - user
       operationId: users-get
@@ -262,3 +275,41 @@ paths:
                   $ref: "#/components/schemas/user"
         "400":
           $ref: "#/components/responses/error"
+
+  "/users/filter/byAge":
+    parameters:
+      - name: before
+        schema:
+          type: string
+          format: date
+        in: query
+        required: true
+      - name: after
+        schema:
+          type: string
+          format: date
+          default: "1950-01-01"
+        in: query
+        required: true
+      - name: maxResults
+        schema: 
+          type: integer
+        required: false
+        in: query
+    
+    get:
+      tags:
+        - user
+      operationId: users-search-by-date
+      description: get
+      responses:
+        "200":
+          description: return user object
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/user"
+        "400":
+          $ref: "#/components/responses/error"          
