@@ -1,5 +1,8 @@
 # caffoa changelog
 
+### 1.0.4
+* Handle special chars in properties, classes and operations
+
 ### 1.0.3
 * Allow for properties other than basic types in additionalProperties
 
