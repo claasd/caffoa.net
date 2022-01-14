@@ -13,6 +13,9 @@ namespace DemoV3.Model {
         [JsonProperty("street", Required = Required.Always)]
         public virtual string Street { get; set; }
 
+        [JsonProperty("street.extra")]
+        public virtual string StreetExtra { get; set; }
+
         [JsonProperty("postalCode", Required = Required.Always)]
         public virtual string PostalCode { get; set; }
 
@@ -36,6 +39,7 @@ namespace DemoV3.Model {
         /// </summary>
         public void UpdateWithAddress(Address other) {
             Street = other.Street;
+            StreetExtra = other.StreetExtra;
             PostalCode = other.PostalCode;
             City = other.City;
             Country = other.Country;

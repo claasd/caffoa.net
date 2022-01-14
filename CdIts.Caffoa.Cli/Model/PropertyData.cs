@@ -5,7 +5,7 @@ public class PropertyData
     public PropertyData(string name, bool required)
     {
         Name = name;
-        TypeName = name.ToCamelCase();
+        TypeName = name.ToObjectName();
         Required = required;
     }
 

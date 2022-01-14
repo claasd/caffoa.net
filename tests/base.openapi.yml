@@ -20,6 +20,9 @@ components:
       properties:
         street:
           type: string
+        street.extra:
+          type: string
+          nullable: true
         postalCode:
           type: string
         city:
