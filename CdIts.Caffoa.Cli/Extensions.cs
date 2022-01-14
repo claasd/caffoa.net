@@ -14,7 +14,7 @@ public static class Extensions
         var name = str.Replace("-", "_");
         name = name.Replace(".", "_");
         name = Regex.Replace(name, @"[^\w]", "");
-        var parts = name.Replace("-", "_").Split('_');
+        var parts = name.Split('_');
         return string.Join("", parts.Select(part => part.FirstCharUpper()));
     }
     
