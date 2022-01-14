@@ -36,7 +36,7 @@ public class ModelGenerator
         parameters["NAMESPACE"] = _service.Model!.Namespace;
         parameters["NAME"] = item.ClassName;
         parameters["DESCRIPTION"] = formatter.Description;
-        parameters["TYPE"] = item.Interface?.Discriminator?.ToCamelCase() ?? "";
+        parameters["TYPE"] = item.Interface?.Discriminator?.ToObjectName() ?? "";
         var formatted = file.FormatDict(parameters);
         File.WriteAllText(Path.Combine(_service.Model.TargetFolder, fileName), formatted);
     }
@@ -71,7 +71,7 @@ public class ModelGenerator
             throw new CaffoaParserError($"No properties defined for object {schemaItem.Name}");
         foreach (var property in schemaItem.Properties!)
         {
-            var name = property.Name.ToCamelCase();
+            var name = property.Name.ToObjectName();
             var sb = new StringBuilder();
             sb.Append($"{name} = other.{name}");
             if (property.IsArray)
@@ -80,7 +80,7 @@ public class ModelGenerator
             {
                 if (property.Nullable)
                     sb.Append('?');
-                sb.Append($".To{property.TypeName.ToCamelCase()}()");
+                sb.Append($".To{property.TypeName.ToObjectName()}()");
             }
             sb.Append(';');
             updateCommands.Add(sb.ToString());
@@ -100,7 +100,7 @@ public class ModelGenerator
             format["JSON_EXTRA"] = formatter.JsonTags();
             format["JSON_PROPERTY_EXTRA"] = formatter.JsonProperty();
             format["TYPE"] = formatter.Type();
-            format["NAMEUPPER"] = property.Name.ToCamelCase();
+            format["NAMEUPPER"] = property.Name.ToObjectName();
             format["NAMELOWER"] = property.Name;
             if (property.Enums.Count > 0)
             {
@@ -122,12 +122,12 @@ public class ModelGenerator
     { 
         var file = Templates.GetTemplate("ModelEnumPropertyTemplate.tpl");
         var enums = new Dictionary<string, string>();
-        var propName = property.Name.ToCamelCase();
+        var propName = property.Name.ToObjectName();
         foreach (var value in property.Enums)
         {
             if(value == null)
                 continue;
-            var cleaned = value.Replace("\"", "").ToCamelCase();
+            var cleaned = value.Replace("\"", "").FirstCharUpper();
             cleaned = Regex.Replace(cleaned, @"[^A-Za-z0-9]+", "_");
             var name = $"{propName}{cleaned}Value";
             enums[name] = value;

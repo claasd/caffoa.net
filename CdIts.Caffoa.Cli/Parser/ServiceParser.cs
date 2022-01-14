@@ -77,6 +77,6 @@ public class ServiceParser
 
     private string ClassName(string name)
     {
-        return _service.Config?.Prefix + name.ToCamelCase() + _service.Config?.Suffix;
+        return _service.Config?.Prefix + name.ToObjectName() + _service.Config?.Suffix;
     }
 }

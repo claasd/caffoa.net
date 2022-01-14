@@ -1,5 +1,6 @@
 using System.Globalization;
 using System.Text;
+using System.Text.RegularExpressions;
 using CdIts.Caffoa.Cli.Errors;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
@@ -8,12 +9,15 @@ namespace CdIts.Caffoa.Cli;
 
 public static class Extensions
 {
-    public static string ToCamelCase(this string str)
+    public static string ToObjectName(this string str)
     {
-        var parts = str.Replace('-', '_').Split('_');
+        var name = str.Replace("-", "_");
+        name = name.Replace(".", "_");
+        name = Regex.Replace(name, @"[^\w]", "");
+        var parts = name.Split('_');
         return string.Join("", parts.Select(part => part.FirstCharUpper()));
     }
-
+    
     public static string FirstCharUpper(this string str)
     {
         if (str.Length > 1)

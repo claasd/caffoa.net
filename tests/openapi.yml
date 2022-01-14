@@ -249,7 +249,7 @@ paths:
     get:
       tags:
         - user
-      operationId: users-get-by-birthdate
+      operationId: users.get.by.birthdate
       description: get
       responses:
         "200":
