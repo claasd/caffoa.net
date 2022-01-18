@@ -26,6 +26,10 @@ services:
       targetFolder: ./demo/DemoV3/Model/XY
 
   - apiPath: tests\openapi.yml
+    config: 
+      durableClient:
+        operations:
+          - long-running-function
     model:
       namespace: DemoV3.Model
       targetFolder: ./demo/DemoV3/Model
@@ -33,3 +37,4 @@ services:
       targetFolder: demo/DemoV3
       namespace: DemoV3
       name: DemoV3
+      

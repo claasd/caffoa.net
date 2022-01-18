@@ -20,8 +20,10 @@ public class InterfaceGenerator
     public void GenerateInterface(List<EndPointModel> endpoints)
     {
         var imports = new List<string>();
-        endpoints.ForEach(e => imports.AddRange(e.Imports));
-        if (_config.Imports != null)
+        if(endpoints.FirstOrDefault(e=>e.DurableClient) != null)
+            imports.Add("Microsoft.Azure.WebJobs.Extensions.DurableTask");
+        endpoints.ForEach(e=>imports.AddRange(e.Imports));
+        if(_config.Imports != null)
             imports.AddRange(_config.Imports);
         if (_modelNamespace != null)
             imports.Add(_modelNamespace);
@@ -79,6 +81,9 @@ public class InterfaceGenerator
                 return result;
             }));
         }
+        
+        if(endpoint.DurableClient)
+            parameter.Insert(0, "IDurableOrchestrationClient orchestrationClient");
 
         if (endpoint.HasRequestBody)
         {
@@ -104,6 +109,7 @@ public class InterfaceGenerator
                 parameter.Add("Stream stream");
             }
         }
+        
 
         return new List<string>() { string.Join(", ", parameter) };
     }

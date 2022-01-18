@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Azure.WebJobs.Extensions.DurableTask;
 using Newtonsoft.Json.Linq;
 using DemoV3.Model;
 
@@ -73,6 +74,12 @@ namespace DemoV3
         /// 400 -> Error
         /// </summary>
         Task<IEnumerable<User>> UsersSearchByDateAsync(DateOnly before, DateOnly after, int? maxResults = null);
+
+        /// <summary>
+        /// start a long running function via durable functions
+        /// 202 -> started long running function
+        /// </summary>
+        Task LongRunningFunctionAsync(IDurableOrchestrationClient orchestrationClient);
 
     }
 }

@@ -9,10 +9,9 @@ public class CaffoaConfig
     public bool? UseDateOnly { get; set; }
     public bool? ParsePathParameters { get; set; }
     public bool? ParseQueryParameters { get; set; }
-    
-    public List<string>? Imports;
+    public List<string>? Imports { get; set; }
     public List<RequestBodyTypeConfig>? RequestBodyType { get; set; }
-
+    public FilterConfig? DurableClient { get; set; }
     public CaffoaGlobalConfig MergedWith(CaffoaGlobalConfig general)
     {
         return new CaffoaGlobalConfig()
@@ -27,7 +26,8 @@ public class CaffoaConfig
             Duplicates = general.Duplicates,
             ClearGeneratedFiles = general.ClearGeneratedFiles,
             ParsePathParameters = ParsePathParameters ?? general.ParsePathParameters,
-            ParseQueryParameters = ParseQueryParameters ?? general.ParseQueryParameters
+            ParseQueryParameters = ParseQueryParameters ?? general.ParseQueryParameters,
+            DurableClient = DurableClient ?? general.DurableClient
         };
     }
 }

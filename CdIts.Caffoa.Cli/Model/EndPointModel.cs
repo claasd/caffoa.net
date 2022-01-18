@@ -12,6 +12,7 @@ public class EndPointModel
     public bool HasRequestBody { get; set; }
     public IBodyModel RequestBodyType { get; set; } = new NullBodyModel();
     public List<string> Imports { get; } = new();
+    public bool DurableClient { get; set; }
 
     public EndPointModel(string operation, string name, string route)
     {

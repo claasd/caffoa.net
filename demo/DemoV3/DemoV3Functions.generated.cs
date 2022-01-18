@@ -11,6 +11,7 @@ using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Extensions.Logging;
 
+using Microsoft.Azure.WebJobs.Extensions.DurableTask;
 using Newtonsoft.Json.Linq;
 using DemoV3.Model;
 
@@ -185,6 +186,23 @@ namespace DemoV3
                 return err.Result;
             } catch (Exception e) {
                 return _errorHandler.HandleFunctionException(e, request, "UsersSearchByDate", "api/users/filter/byAge", "get");
+            }
+        }
+        /// <summary>
+        /// auto-generated function invocation.
+        ///</summary>
+        [FunctionName("LongRunningFunctionAsync")]
+        public async Task<IActionResult> LongRunningFunctionAsync(
+            [HttpTrigger(AuthorizationLevel.Function, "post", Route = "api/startLongRunningFunction")]
+            HttpRequest request, [DurableClient] IDurableOrchestrationClient durableClient)
+        {
+            try {
+                await _factory.Instance(request).LongRunningFunctionAsync(durableClient);
+                return _resultHandler.StatusCode(202);
+            } catch(CaffoaClientError err) {
+                return err.Result;
+            } catch (Exception e) {
+                return _errorHandler.HandleFunctionException(e, request, "LongRunningFunction", "api/startLongRunningFunction", "post");
             }
         }
     }

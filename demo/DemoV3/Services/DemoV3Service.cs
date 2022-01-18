@@ -6,6 +6,7 @@ using Caffoa;
 using DemoV3.Errors;
 using DemoV3.Model;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Azure.WebJobs.Extensions.DurableTask;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
@@ -56,6 +57,11 @@ namespace DemoV3.Services
             if (maxResults is > 0)
                 results = results.Take(maxResults.Value);
             return results;
+        }
+
+        public Task LongRunningFunctionAsync(IDurableOrchestrationClient orchestrationClient)
+        {
+            return Task.CompletedTask;
         }
 
         public async Task<AnyCompleteUser> UserPostAsync(User payload)

@@ -21,11 +21,15 @@ public class FunctionsGenerator
     public void GenerateFunctions(List<EndPointModel> endpoints)
     {
         var imports = new List<string>();
+        if(endpoints.FirstOrDefault(e=>e.DurableClient) != null)
+            imports.Add("Microsoft.Azure.WebJobs.Extensions.DurableTask");
         endpoints.ForEach(e => imports.AddRange(e.Imports));
         if(_functionConfig.InterfaceNamespace != _functionConfig.Namespace)
             imports.Add(_functionConfig.InterfaceNamespace);
         if (_modelNamespace != null)
             imports.Add(_modelNamespace);
+        if(endpoints.FirstOrDefault(e=>e.RequestBodyType is SelectionBodyModel) != null)
+            imports.Add("Newtonsoft.Json.Linq");
         var extraVars = new List<AdditionalInterfaceModel>();
         if (_config.ParsePathParameters is true || _config.ParseQueryParameters is true)
         {
@@ -75,16 +79,19 @@ public class FunctionsGenerator
         {
             call = FormatCall(endpoint, variable, ParseParameters(endpoint), true);
         }
-        IEnumerable<string> pathParams;
+        List<string> pathParams;
         var filteredParams = endpoint.Parameters.Where(p => !p.IsQueryParameter);
         if(_config.ParsePathParameters is true)
-            pathParams = filteredParams.Select(p => $", string {p.Name}");
+            pathParams = filteredParams.Select(p => $", string {p.Name}").ToList();
         else
             pathParams = filteredParams.Select(p =>
             {
                 var type = p.GetTypeName(_config); // Invalid cast from 'System.String' to 'System.DateOnly' by Azure functions
                 return $", {type} {p.Name}";
-            });
+            }).ToList();
+
+        if(endpoint.DurableClient)
+            pathParams.Add(", [DurableClient] IDurableOrchestrationClient durableClient");
 
         parameters["NAME"] = endpoint.Name;
         parameters["OPERATION"] = endpoint.Operation;
@@ -180,7 +187,8 @@ public class FunctionsGenerator
         {
             result.AddRange(endpoint.QueryParameters().Select(p=>p.Name));
         }
-
+        if(endpoint.DurableClient)
+            result.Insert(0, "durableClient");
         return result;
     }
 
