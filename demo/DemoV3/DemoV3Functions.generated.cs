@@ -194,7 +194,7 @@ namespace DemoV3
         [FunctionName("LongRunningFunctionAsync")]
         public async Task<IActionResult> LongRunningFunctionAsync(
             [HttpTrigger(AuthorizationLevel.Function, "post", Route = "api/startLongRunningFunction")]
-            HttpRequest request,  [DurableClient] IDurableOrchestrationClient durableClient)
+            HttpRequest request, [DurableClient] IDurableOrchestrationClient durableClient)
         {
             try {
                 await _factory.Instance(request).LongRunningFunctionAsync(durableClient);

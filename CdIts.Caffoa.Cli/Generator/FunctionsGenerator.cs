@@ -28,6 +28,8 @@ public class FunctionsGenerator
             imports.Add(_functionConfig.InterfaceNamespace);
         if (_modelNamespace != null)
             imports.Add(_modelNamespace);
+        if(endpoints.FirstOrDefault(e=>e.RequestBodyType is SelectionBodyModel) != null)
+            imports.Add("Newtonsoft.Json.Linq");
         var extraVars = new List<AdditionalInterfaceModel>();
         if (_config.ParsePathParameters is true || _config.ParseQueryParameters is true)
         {
