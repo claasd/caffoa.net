@@ -155,6 +155,10 @@ public class FunctionsGenerator
         {
             var caseParams = new List<string>(callParams);
             caseParams.Add($"_jsonParser.ToObject<{type}>(jObject)");
+            if (_config.ParseQueryParameters is true)
+            {
+                caseParams.AddRange(endpoint.QueryParameters().Select(p=>p.Name));
+            }
             var call = FormatCall(endpoint, "", caseParams, false);
             cases.Add($"\"{key}\" => {call}");
         }
@@ -172,10 +176,14 @@ public class FunctionsGenerator
             callParams.Add($"await _jsonParser.Parse<{simple.TypeName}>(request.Body)");
         else if (endpoint.HasRequestBody)
             callParams.Add($"request.Body");
+        if (_config.ParseQueryParameters is true)
+        {
+            callParams.AddRange(endpoint.QueryParameters().Select(p=>p.Name));
+        }
         return callParams;
     }
 
-    private IList<string> BuildCallParameterList(EndPointModel endpoint)
+    private List<string> BuildCallParameterList(EndPointModel endpoint)
     {
         var filtered = endpoint.Parameters.Where(p => !p.IsQueryParameter).ToList();
         List<string> result;
@@ -183,10 +191,6 @@ public class FunctionsGenerator
             result = filtered.Select(p => FormatConversion(p.GetTypeName(_config), p.Name, p.Name)).ToList();
         else
             result = filtered.Select(p => p.Name).ToList();
-        if (_config.ParseQueryParameters is true)
-        {
-            result.AddRange(endpoint.QueryParameters().Select(p=>p.Name));
-        }
         if(endpoint.DurableClient)
             result.Insert(0, "durableClient");
         return result;
