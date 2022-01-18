@@ -68,9 +68,14 @@ public class InterfaceGenerator
             var typeName = p.GetTypeName(_config);
             return $"{typeName} {p.Name}";
         }).ToList();
+        
+        if(endpoint.DurableClient)
+            parameter.Insert(0, "IDurableOrchestrationClient orchestrationClient");
+
+        var queryParameters = new List<string>();
         if (_config.ParseQueryParameters is true)
         {
-            parameter.AddRange(endpoint.QueryParameters().Select(p =>
+            queryParameters.AddRange(endpoint.QueryParameters().Select(p =>
             {
                 var typeName = p.GetTypeName(_config);
                 var result = $"{typeName} {p.Name}";
@@ -82,9 +87,6 @@ public class InterfaceGenerator
             }));
         }
         
-        if(endpoint.DurableClient)
-            parameter.Insert(0, "IDurableOrchestrationClient orchestrationClient");
-
         if (endpoint.HasRequestBody)
         {
             if (endpoint.RequestBodyType is SelectionBodyModel selection)
@@ -94,6 +96,7 @@ public class InterfaceGenerator
                 {
                     var localParameter = new List<string>(parameter);
                     localParameter.Add($"{value} payload");
+                    localParameter.AddRange(queryParameters);
                     methods.Add(string.Join(", ", localParameter));
                 }
 
@@ -109,8 +112,7 @@ public class InterfaceGenerator
                 parameter.Add("Stream stream");
             }
         }
-        
-
+        parameter.AddRange(queryParameters);
         return new List<string>() { string.Join(", ", parameter) };
     }
 
