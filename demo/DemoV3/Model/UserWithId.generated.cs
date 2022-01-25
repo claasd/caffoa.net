@@ -1,6 +1,7 @@
 using System;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using DemoV3.Model.Base;
 
 namespace DemoV3.Model {
     /// AUTOGENERED BY caffoa ///

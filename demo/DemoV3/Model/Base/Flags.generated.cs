@@ -2,7 +2,7 @@ using System;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace DemoV3.Model {
+namespace DemoV3.Model.Base {
     /// AUTOGENERED BY caffoa ///
     [JsonObject(MemberSerialization.OptIn)]
     public partial class Flags {

@@ -6,6 +6,7 @@ Additionally, you can individualize the parsing, by implementing your own logic.
 * new option: use `parseQueryParameters` to parse query parameters and add them to the interface parameters.
 Additionally, required path options then raise an error via the ErrorHandler interface when empty.
 * possibility to add DurableClient interface to function invocation and interfaces to use durable functions
+* Bugfix: imports are now added to Functions, if they are specified in the configs section. 
 
 ### 1.0.4
 * Handle special chars in properties, classes and operations

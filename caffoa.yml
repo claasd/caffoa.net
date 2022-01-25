@@ -17,8 +17,8 @@ config:
 services:
   - apiPath: tests\base.openapi.yml
     model:
-      namespace: DemoV3.Model
-      targetFolder: ./demo/DemoV3/Model
+      namespace: DemoV3.Model.Base
+      targetFolder: ./demo/DemoV3/Model/Base
       
   - apiPath: tests\base.openapi.yml
     model:
@@ -27,6 +27,8 @@ services:
 
   - apiPath: tests\openapi.yml
     config: 
+      imports: 
+        - DemoV3.Model.Base
       durableClient:
         operations:
           - long-running-function

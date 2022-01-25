@@ -26,6 +26,8 @@ public class FunctionsGenerator
         endpoints.ForEach(e => imports.AddRange(e.Imports));
         if(_functionConfig.InterfaceNamespace != _functionConfig.Namespace)
             imports.Add(_functionConfig.InterfaceNamespace);
+        if(_config.Imports != null)
+            imports.AddRange(_config.Imports);
         if (_modelNamespace != null)
             imports.Add(_modelNamespace);
         if(endpoints.FirstOrDefault(e=>e.RequestBodyType is SelectionBodyModel) != null)

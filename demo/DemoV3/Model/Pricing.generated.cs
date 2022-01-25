@@ -4,6 +4,7 @@ using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 using System.Linq;
 using System.Collections.Immutable;
+using DemoV3.Model.Base;
 
 namespace DemoV3.Model {
     /// AUTOGENERED BY caffoa ///
