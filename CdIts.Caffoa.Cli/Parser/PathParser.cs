@@ -61,6 +61,8 @@ public class PathParser
 
             foreach (var (response, responseItem) in operationItem.Responses)
             {
+                if (responseItem is null)
+                    throw new CaffoaParserError($"Missing Response configuration for Response '{response}' (maybe a wrong reference?)");
                 result.DocumentationLines.Add($"{response} -> {responseItem.Description}");
                 result.Responses.Add(ParseResponse(response, responseItem));
             }
