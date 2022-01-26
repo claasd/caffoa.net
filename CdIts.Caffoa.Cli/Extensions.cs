@@ -17,6 +17,11 @@ public static class Extensions
         var parts = name.Split('_');
         return string.Join("", parts.Select(part => part.FirstCharUpper()));
     }
+
+    public static string ToSystemNewLine(this string str)
+    {
+        return str.Replace("\r\n", "\n").Replace("\n", Environment.NewLine);
+    }
     
     public static string FirstCharUpper(this string str)
     {

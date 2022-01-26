@@ -37,7 +37,7 @@ public class InterfaceGenerator
         format["IMPORTS"] = string.Join("", imports.Distinct().Select(i => $"using {i};\n"));
         format["METHODS"] = GenerateInterfaceMethods(endpoints);
         var formatted = file.FormatDict(format);
-        File.WriteAllText(Path.Combine(targetFolder, name + ".generated.cs"), formatted);
+        File.WriteAllText(Path.Combine(targetFolder, name + ".generated.cs"), formatted.ToSystemNewLine());
     }
 
     private string GenerateInterfaceMethods(List<EndPointModel> endpoints)
