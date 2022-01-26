@@ -56,7 +56,6 @@ public class ModelGenerator
         parameters["PROPERTIES"] = FormatProperties(item);
         parameters["DESCRIPTION"] = formatter.Description;
         var formatted = file.FormatDict(parameters);
-        formatted = formatted.Replace("\r\n", "\n").Replace("\n", Environment.NewLine);
         File.WriteAllText(Path.Combine(_service.Model.TargetFolder, fileName), formatted.ToSystemNewLine());
     }
 
