@@ -38,7 +38,7 @@ public class ModelGenerator
         parameters["DESCRIPTION"] = formatter.Description;
         parameters["TYPE"] = item.Interface?.Discriminator?.ToObjectName() ?? "";
         var formatted = file.FormatDict(parameters);
-        File.WriteAllText(Path.Combine(_service.Model.TargetFolder, fileName), formatted);
+        File.WriteAllText(Path.Combine(_service.Model.TargetFolder, fileName), formatted.ToSystemNewLine());
     }
 
     private void WriteModelClass(SchemaItem item, List<SchemaItem> interfaces)
@@ -56,7 +56,7 @@ public class ModelGenerator
         parameters["PROPERTIES"] = FormatProperties(item);
         parameters["DESCRIPTION"] = formatter.Description;
         var formatted = file.FormatDict(parameters);
-        File.WriteAllText(Path.Combine(_service.Model.TargetFolder, fileName), formatted);
+        File.WriteAllText(Path.Combine(_service.Model.TargetFolder, fileName), formatted.ToSystemNewLine());
     }
 
     private string FormatPropertyUpdates(SchemaItem schemaItem)

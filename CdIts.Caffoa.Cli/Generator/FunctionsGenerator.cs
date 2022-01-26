@@ -55,7 +55,7 @@ public class FunctionsGenerator
         format["ADDITIONAL_INTERFACES"] = string.Join("", extraVars.Select(it => $", {it.ParameterType} {it.VariableName} = null"));
         format["ADDITIONAL_INITS"] = string.Join("", extraVars.Select(it => $"            _{it.VariableName} = {it.Initializer};\n"));
         var formatted = file.FormatDict(format);
-        File.WriteAllText(Path.Combine(_functionConfig.TargetFolder, name + ".generated.cs"), formatted);
+        File.WriteAllText(Path.Combine(_functionConfig.TargetFolder, name + ".generated.cs"), formatted.ToSystemNewLine());
     }
 
     private string GenerateFunctionMethods(List<EndPointModel> endpoints)
