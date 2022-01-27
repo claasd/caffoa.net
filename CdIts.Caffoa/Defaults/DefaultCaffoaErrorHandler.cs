@@ -70,7 +70,7 @@ public class DefaultCaffoaErrorHandler : ICaffoaErrorHandler
         }
         debugInformation["Payload"] = GetPayloadForExceptionLogging(request);
         _logger.LogCritical(JsonConvert.SerializeObject(debugInformation));
-        throw e;
+        throw;
     }
     
     public virtual string GetPayloadForExceptionLogging(HttpRequest req)
