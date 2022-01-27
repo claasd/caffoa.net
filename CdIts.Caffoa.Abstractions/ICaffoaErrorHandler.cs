@@ -44,14 +44,16 @@ public interface ICaffoaErrorHandler
     /// <summary>
     /// Is called when an exception was thrown and was not handled.
     /// The Handler can either handle the exception and return an IActionResult, or can do some logging
-    /// and rethrow the error or throw a different error.
+    /// return false to let the caller rethrow the initial exception.
     /// </summary>
     /// <param name="e">The Exception that occured</param>
+    /// <param name="result">The result that should be returned it the exception was handled</param>
     /// <param name="request">The request object</param>
     /// <param name="functionName">the function name that was called</param>
     /// <param name="route">the route (e.g. api/getSomething/{user}</param>
     /// <param name="operation">the method (e.g. post, get, patch ...)</param>
     /// <param name="namedParams">a list of values that are part of the route</param>
-    IActionResult HandleFunctionException(Exception e, HttpRequest request, string functionName, string route, string operation,
+    bool TryHandleFunctionException(Exception e, out IActionResult result, HttpRequest request,
+        string functionName, string route, string operation,
         params (string, object)[] namedParams);
 }

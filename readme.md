@@ -102,7 +102,7 @@ using Microsoft.Extensions.DependencyInjection;
 namespace MyNamespace {
     public class Startup : FunctionsStartup     {
         public override void Configure(IFunctionsHostBuilder builder) {
-            builder.Services.AddSingleton<ICaffoaFactory<IMyClassNameService>, MyFactory>();
+            builder.Services.AddScoped<ICaffoaFactory<IMyClassNameService>, MyFactory>();
         }
     }
 }
@@ -217,8 +217,8 @@ using Microsoft.Extensions.DependencyInjection;
 namespace MyNamespace {
     public class Startup : FunctionsStartup     {
         public override void Configure(IFunctionsHostBuilder builder) {
-            builder.Services.AddSingleton<ICaffoaFactory<IMyClassNameService>, MyFactory>();
-            builder.Services.AddSingleton<ICaffoaResultHandler, MyResultHandler>();
+            builder.Services.AddScoped<ICaffoaFactory<IMyClassNameService>, MyFactory>();
+            builder.Services.AddScoped<ICaffoaResultHandler, MyResultHandler>();
         }
     }
 }

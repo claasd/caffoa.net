@@ -55,7 +55,7 @@ public class DefaultCaffoaErrorHandler : ICaffoaErrorHandler
     /// Does nat handle the error. Instead, all information about the request is logged and then the error
     /// is thrown. This results in an Internal server error and the exception is passed to ApplicationInsights.
     /// </summary>
-    public virtual IActionResult HandleFunctionException(Exception e, HttpRequest request, string functionName, string route, string operation,
+    public virtual bool TryHandleFunctionException(Exception e, out IActionResult result, HttpRequest request, string functionName, string route, string operation,
         params (string, object)[] namedParams)
     {
         var debugInformation = new Dictionary<string,  string>();
@@ -70,7 +70,8 @@ public class DefaultCaffoaErrorHandler : ICaffoaErrorHandler
         }
         debugInformation["Payload"] = GetPayloadForExceptionLogging(request);
         _logger.LogCritical(JsonConvert.SerializeObject(debugInformation));
-        throw;
+        result = null;
+        return false;
     }
     
     public virtual string GetPayloadForExceptionLogging(HttpRequest req)

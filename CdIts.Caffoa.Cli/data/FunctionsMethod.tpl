@@ -12,6 +12,8 @@
             }} catch(CaffoaClientError err) {{
                 return err.Result;
             }} catch (Exception e) {{
-                return _errorHandler.HandleFunctionException(e, request, "{NAME}", "{PATH}", "{OPERATION}"{ADDITIONAL_ERROR_INFOS});
+                if(_errorHandler.TryHandleFunctionException(e, out var errorHandlerResult, request, "{NAME}", "{PATH}", "{OPERATION}"{ADDITIONAL_ERROR_INFOS}))
+                    return errorHandlerResult;
+                throw;
             }}
         }}

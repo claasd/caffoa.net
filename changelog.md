@@ -7,6 +7,7 @@ Additionally, you can individualize the parsing, by implementing your own logic.
 Additionally, required path options then raise an error via the ErrorHandler interface when empty.
 * possibility to add DurableClient interface to function invocation and interfaces to use durable functions
 * Bugfix: imports are now added to Functions, if they are specified in the configs section. 
+* Change: The the HandleErrorMessage of IErrorHandler does now return a bool to indicate if the exception was handled.
 
 ### 1.0.4
 * Handle special chars in properties, classes and operations

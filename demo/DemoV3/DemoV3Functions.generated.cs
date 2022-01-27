@@ -55,7 +55,9 @@ namespace DemoV3
             } catch(CaffoaClientError err) {
                 return err.Result;
             } catch (Exception e) {
-                return _errorHandler.HandleFunctionException(e, request, "UsersGet", "api/users", "get");
+                if(_errorHandler.TryHandleFunctionException(e, out var errorHandlerResult, request, "UsersGet", "api/users", "get"))
+                    return errorHandlerResult;
+                throw;
             }
         }
         /// <summary>
@@ -80,7 +82,9 @@ namespace DemoV3
             } catch(CaffoaClientError err) {
                 return err.Result;
             } catch (Exception e) {
-                return _errorHandler.HandleFunctionException(e, request, "UserPost", "api/users", "post");
+                if(_errorHandler.TryHandleFunctionException(e, out var errorHandlerResult, request, "UserPost", "api/users", "post"))
+                    return errorHandlerResult;
+                throw;
             }
         }
         /// <summary>
@@ -105,7 +109,9 @@ namespace DemoV3
             } catch(CaffoaClientError err) {
                 return err.Result;
             } catch (Exception e) {
-                return _errorHandler.HandleFunctionException(e, request, "UserPut", "api/users/{userId}", "put", ("userId", userId));
+                if(_errorHandler.TryHandleFunctionException(e, out var errorHandlerResult, request, "UserPut", "api/users/{userId}", "put", ("userId", userId)))
+                    return errorHandlerResult;
+                throw;
             }
         }
         /// <summary>
@@ -122,7 +128,9 @@ namespace DemoV3
             } catch(CaffoaClientError err) {
                 return err.Result;
             } catch (Exception e) {
-                return _errorHandler.HandleFunctionException(e, request, "UserPatch", "api/users/{userId}", "patch", ("userId", userId));
+                if(_errorHandler.TryHandleFunctionException(e, out var errorHandlerResult, request, "UserPatch", "api/users/{userId}", "patch", ("userId", userId)))
+                    return errorHandlerResult;
+                throw;
             }
         }
         /// <summary>
@@ -139,7 +147,9 @@ namespace DemoV3
             } catch(CaffoaClientError err) {
                 return err.Result;
             } catch (Exception e) {
-                return _errorHandler.HandleFunctionException(e, request, "UserGet", "api/users/{userId}", "get", ("userId", userId));
+                if(_errorHandler.TryHandleFunctionException(e, out var errorHandlerResult, request, "UserGet", "api/users/{userId}", "get", ("userId", userId)))
+                    return errorHandlerResult;
+                throw;
             }
         }
         /// <summary>
@@ -156,7 +166,9 @@ namespace DemoV3
             } catch(CaffoaClientError err) {
                 return err.Result;
             } catch (Exception e) {
-                return _errorHandler.HandleFunctionException(e, request, "UsersGetByBirthdate", "api/users/born-before/{date}", "get", ("date", date));
+                if(_errorHandler.TryHandleFunctionException(e, out var errorHandlerResult, request, "UsersGetByBirthdate", "api/users/born-before/{date}", "get", ("date", date)))
+                    return errorHandlerResult;
+                throw;
             }
         }
         /// <summary>
@@ -186,7 +198,9 @@ namespace DemoV3
             } catch(CaffoaClientError err) {
                 return err.Result;
             } catch (Exception e) {
-                return _errorHandler.HandleFunctionException(e, request, "UsersSearchByDate", "api/users/filter/byAge", "get");
+                if(_errorHandler.TryHandleFunctionException(e, out var errorHandlerResult, request, "UsersSearchByDate", "api/users/filter/byAge", "get"))
+                    return errorHandlerResult;
+                throw;
             }
         }
         /// <summary>
@@ -203,7 +217,9 @@ namespace DemoV3
             } catch(CaffoaClientError err) {
                 return err.Result;
             } catch (Exception e) {
-                return _errorHandler.HandleFunctionException(e, request, "LongRunningFunction", "api/startLongRunningFunction", "post");
+                if(_errorHandler.TryHandleFunctionException(e, out var errorHandlerResult, request, "LongRunningFunction", "api/startLongRunningFunction", "post"))
+                    return errorHandlerResult;
+                throw;
             }
         }
     }
