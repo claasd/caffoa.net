@@ -134,6 +134,7 @@ config:
   checkEnums: true # set to false to disalbe the generated checks for enums in models
   routePrefix: "api/" # a route prefix that is added to all routes in function
   useDateOnly: false # you can set this to true if you use net6.0 and want date types to be de-serialized as DateOnly instead of DateTime.
+  splitByTags: false # if set to true, multiple function files and interfaces will be generated, based on the first tag of each path item
   parsePathParameters: true # if set to true, the parameter parsing is not left to Functions, but is done by caffoa, opening up the possibility to give back better error messages
   parseQueryParameters: true # if set to true, caffoa will parse required and optional parameters that are defined for query
   imports: # a list of imports that will be added to most generated classes
@@ -160,6 +161,7 @@ services:
       checkEnums: # overrides the config element from the global config
       routePrefix: # overrides the config element from the global config
       useDateOnly: # overrides the config element from the global config
+      splitByTags: # overrides the config element from the global config
       parsePathParameters: # overrides the config element from the global config
       parseQueryParameters: # overrides the config element from the global config
       imports: # overrides the imports from the global config
