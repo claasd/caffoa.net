@@ -7,33 +7,18 @@ using DemoV3.Errors;
 using DemoV3.Model;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Azure.WebJobs.Extensions.DurableTask;
-using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using Newtonsoft.Json.Serialization;
 
 namespace DemoV3.Services
 {
     
-    public class DemoV3Service : IDemoV3Service, ICaffoaFactory<IDemoV3Service>
+    public class DemoV3UserService : IDemoV3UserService, ICaffoaFactory<IDemoV3UserService>
     {
         private readonly UserRepository<UserWithId> _users = new UserRepository<UserWithId>();
         private readonly UserRepository<GuestUser> _guests = new UserRepository<GuestUser>();
-        private readonly IContractResolver _responseContractResolver = new RemoveRequiredContractResolver();
-        public IDemoV3Service Instance(HttpRequest request)
+        public IDemoV3UserService Instance(HttpRequest request)
         {
             return this;
-        }
-
-        public JsonSerializerSettings ResponseSerializerSettings
-        {
-            get
-            {
-                return new JsonSerializerSettings()
-                {
-                    ContractResolver = _responseContractResolver,
-                    DateTimeZoneHandling = DateTimeZoneHandling.Utc
-                };
-            }
         }
 
         public async Task<IEnumerable<AnyCompleteUser>> UsersGetAsync(int offset = 0, int limit = 1000)

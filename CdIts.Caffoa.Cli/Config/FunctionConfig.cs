@@ -54,4 +54,29 @@ public class FunctionConfig
         get => _interfaceTargetFolder ?? TargetFolder;
         set => _interfaceTargetFolder = value;
     }
+
+    public string GetInterfaceName(string prefix)
+    {
+        var name = _interfaceName;
+        if (name == null)
+            name = $"I{Name}{prefix}Service";
+        else if (name.Contains("{Tag}"))
+            name = name.Replace("{Tag}", prefix);
+        else
+            name = $"{prefix}{name}";
+        return name;
+    }
+    
+    public string GetFunctionName(string prefix)
+    {
+        var name = _functionsName;
+        if (name == null)
+            name = $"{Name}{prefix}Functions";
+        else if (name.Contains("{Tag}"))
+            name = name.Replace("{Tag}", prefix);
+        else
+            name = $"{prefix}{name}";
+        return name;
+    }
+    
 }
