@@ -19,6 +19,22 @@ public class InterfaceGenerator
 
     public void GenerateInterface(List<EndPointModel> endpoints)
     {
+        if (_config.SplitByTag is true)
+        {
+            var tags = endpoints.Select(e => e.Tag).Distinct();
+            foreach (var tag in tags)
+            {
+                GenerateInterface(endpoints.Where(e=>e.Tag == tag).ToList(), tag.ToObjectName());
+            }
+        }
+        else
+        {
+            GenerateInterface(endpoints, "");
+        }
+    }
+
+    public void GenerateInterface(List<EndPointModel> endpoints, string namePrefix)
+    {
         var imports = new List<string>();
         if(endpoints.FirstOrDefault(e=>e.DurableClient) != null)
             imports.Add("Microsoft.Azure.WebJobs.Extensions.DurableTask");
@@ -28,7 +44,7 @@ public class InterfaceGenerator
         if (_modelNamespace != null)
             imports.Add(_modelNamespace);
         var targetFolder = _functionConfig.InterfaceTargetFolder;
-        var name = _functionConfig.InterfaceName;
+        var name = _functionConfig.GetInterfaceName(namePrefix);
         Directory.CreateDirectory(targetFolder);
         var file = Templates.GetTemplate("InterfaceTemplate.tpl");
         var format = new Dictionary<string, object>();
@@ -37,7 +53,7 @@ public class InterfaceGenerator
         format["IMPORTS"] = string.Join("", imports.Distinct().Select(i => $"using {i};\n"));
         format["METHODS"] = GenerateInterfaceMethods(endpoints);
         var formatted = file.FormatDict(format);
-        File.WriteAllText(Path.Combine(targetFolder, name + ".generated.cs"), formatted.ToSystemNewLine());
+        File.WriteAllText(Path.Combine(targetFolder, $"{name}.generated.cs"), formatted.ToSystemNewLine());
     }
 
     private string GenerateInterfaceMethods(List<EndPointModel> endpoints)

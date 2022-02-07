@@ -6,6 +6,7 @@ public class CaffoaConfig
     public string? Prefix { get; set; }
     public string? Suffix { get; set; }
     public string? RoutePrefix { get; set; }
+    public bool? SplitByTag { get; set; }
     public bool? UseDateOnly { get; set; }
     public bool? ParsePathParameters { get; set; }
     public bool? ParseQueryParameters { get; set; }
@@ -27,7 +28,8 @@ public class CaffoaConfig
             ClearGeneratedFiles = general.ClearGeneratedFiles,
             ParsePathParameters = ParsePathParameters ?? general.ParsePathParameters,
             ParseQueryParameters = ParseQueryParameters ?? general.ParseQueryParameters,
-            DurableClient = DurableClient ?? general.DurableClient
+            DurableClient = DurableClient ?? general.DurableClient,
+            SplitByTag = SplitByTag ?? general.SplitByTag
         };
     }
 }
