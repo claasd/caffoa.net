@@ -3,7 +3,7 @@ using System.Reflection;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 
-namespace DemoV3.Services
+namespace DemoV3.Handler
 {
     /// <summary>
     /// Example how to ignore all required attributes

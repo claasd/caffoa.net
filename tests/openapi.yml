@@ -165,6 +165,8 @@ paths:
           $ref: "#/components/responses/error"
     
     post:
+      tags:
+        - user
       operationId: user-post
       description: create or update a user without return test
       requestBody:
@@ -197,6 +199,8 @@ paths:
           type: string
 
     put:
+      tags:
+        - user
       operationId: user-put
       description: create or update a user
       requestBody:
@@ -221,6 +225,8 @@ paths:
                 $ref: "#/components/schemas/anyCompleteUser"
 
     patch:
+      tags:
+        - user
       operationId: user-patch
       description: update a user
       requestBody:
@@ -322,8 +328,9 @@ paths:
           type: string
           format: uuid
         required: true
-
-    "post":
+    post:
+      tags: 
+        - maintainance
       operationId: long-running-function
       description: start a long running function via durable functions
       responses:

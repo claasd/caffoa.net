@@ -20,6 +20,22 @@ public class FunctionsGenerator
 
     public void GenerateFunctions(List<EndPointModel> endpoints)
     {
+        if (_config.SplitByTag is true)
+        {
+            var tags = endpoints.Select(e => e.Tag).Distinct();
+            foreach (var tag in tags)
+            {
+                GenerateFunctions(endpoints.Where(e=>e.Tag == tag).ToList(), tag.ToObjectName());
+            }
+        }
+        else
+        {
+            GenerateFunctions(endpoints, "");
+        }
+    }
+    
+    public void GenerateFunctions(List<EndPointModel> endpoints, string namePrefix)
+    {
         var imports = new List<string>();
         if(endpoints.FirstOrDefault(e=>e.DurableClient) != null)
             imports.Add("Microsoft.Azure.WebJobs.Extensions.DurableTask");
@@ -42,20 +58,20 @@ public class FunctionsGenerator
                 Initializer = "converter ?? new DefaultCaffoaConverter(_errorHandler)"
             });
         }
-        var name = _functionConfig.FunctionsName;
+        var name = _functionConfig.GetFunctionName(namePrefix);
         Directory.CreateDirectory(_functionConfig.TargetFolder);
         var file = Templates.GetTemplate("FunctionsTemplate.tpl");
         var format = new Dictionary<string, object>();
         format["NAMESPACE"] = _functionConfig.Namespace;
         format["CLASSNAME"] = name;
-        format["INTERFACE"] = _functionConfig.InterfaceName;
+        format["INTERFACE"] = _functionConfig.GetInterfaceName(namePrefix);
         format["IMPORTS"] = string.Join("", imports.Distinct().Select(i => $"using {i};\n"));
         format["METHODS"] = GenerateFunctionMethods(endpoints);
         format["ADDITIONAL_VARIABLES"] = string.Join("\n        ", extraVars.Select(it => $"private readonly {it.ParameterType} _{it.VariableName};"));
         format["ADDITIONAL_INTERFACES"] = string.Join("", extraVars.Select(it => $", {it.ParameterType} {it.VariableName} = null"));
         format["ADDITIONAL_INITS"] = string.Join("", extraVars.Select(it => $"            _{it.VariableName} = {it.Initializer};\n"));
         var formatted = file.FormatDict(format);
-        File.WriteAllText(Path.Combine(_functionConfig.TargetFolder, name + ".generated.cs"), formatted.ToSystemNewLine());
+        File.WriteAllText(Path.Combine(_functionConfig.TargetFolder, $"{name}.generated.cs"), formatted.ToSystemNewLine());
     }
 
     private string GenerateFunctionMethods(List<EndPointModel> endpoints)
