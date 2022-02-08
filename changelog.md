@@ -2,6 +2,7 @@
 
 ### 1.2.0
 * new option: `splitByTag`. When this config option is set to true, multiple interfaces and function classes will be generated based on the first tag of each path
+* Fix: Use proper Guid Parsing
 
 ### 1.1.0
 * new option: use `parsePathParameters` to let caffoa handle the path parameter parsing instead of azure functions.
