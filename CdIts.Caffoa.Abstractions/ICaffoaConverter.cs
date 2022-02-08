@@ -22,6 +22,13 @@ public interface ICaffoaConverter
     DateTime ParseDateTime(string parameter, string parameterName);
     
     /// <summary>
+    /// Should parse openapi uuid format string into a Guid
+    /// </summary>
+    /// <param name="parameter">the input string</param>
+    /// <param name="parameterName">the name of the variable as defined in the openapi spec</param>
+    Guid ParseGuid(string parameter, string parameterName);
+    
+    /// <summary>
     /// Should parse all other items supported by openapi (e.g. int, uint, long, ulong, Guid)
     /// </summary>
     /// <param name="parameter">the input string</param>

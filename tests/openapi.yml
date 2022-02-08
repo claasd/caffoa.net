@@ -39,7 +39,7 @@ components:
           items:
             type: string
         descriptions:
-          additionalProperties: 
+          additionalProperties:
             $ref: "#/components/schemas/fancyString"
         type:
           type: string
@@ -117,13 +117,13 @@ components:
           nullable: true
         taxes:
           type: object
-          additionalProperties: 
+          additionalProperties:
             description: "List of taxes for different country-codes"
             format: double
             type: number
-          example: 
+          example:
             "DE": 19.0
-            "AT" : 19.0
+            "AT": 19.0
 
   responses:
     error:
@@ -137,7 +137,7 @@ paths:
     get:
       parameters:
         - name: offset
-          schema: 
+          schema:
             type: integer
             default: 0
           required: false
@@ -298,7 +298,7 @@ paths:
         in: query
         required: true
       - name: maxResults
-        schema: 
+        schema:
           type: integer
         required: false
         in: query
@@ -320,13 +320,20 @@ paths:
         "400":
           $ref: "#/components/responses/error"
   
-  /startLongRunningFunction:
+  /startLongRunningFunction/{id}:
+    parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
     post:
       tags: 
         - maintainance
       operationId: long-running-function
       description: start a long running function via durable functions
-      responses: 
+      responses:
         202:
           description: started long running function
       

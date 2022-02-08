@@ -224,6 +224,8 @@ public class FunctionsGenerator
             return $"_converter.ParseDate({variableName}, nameof({objectName}))";
         if(typeName == "DateTime")
             return $"_converter.ParseDateTime({variableName}, nameof({objectName}))";
+        if(typeName == "Guid")
+            return $"_converter.ParseGuid({variableName}, nameof({objectName}))";
         return $"_converter.Parse<{typeName}>({variableName}, nameof({objectName}))";
     }
 
