@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using Caffoa;
 using Microsoft.AspNetCore.Http;
@@ -7,7 +8,7 @@ namespace DemoV3.Services;
 
 public class MaintainanceService : IDemoV3MaintainanceService, ICaffoaFactory<IDemoV3MaintainanceService>
 {
-    public Task LongRunningFunctionAsync(IDurableOrchestrationClient orchestrationClient)
+    public Task LongRunningFunctionAsync(IDurableOrchestrationClient orchestrationClient, Guid id)
     {
         return Task.CompletedTask;
     }
