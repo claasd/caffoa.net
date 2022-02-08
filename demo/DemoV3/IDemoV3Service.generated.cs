@@ -80,7 +80,7 @@ namespace DemoV3
         /// start a long running function via durable functions
         /// 202 -> started long running function
         /// </summary>
-        Task LongRunningFunctionAsync(IDurableOrchestrationClient orchestrationClient);
+        Task LongRunningFunctionAsync(IDurableOrchestrationClient orchestrationClient, Guid id);
 
     }
 }

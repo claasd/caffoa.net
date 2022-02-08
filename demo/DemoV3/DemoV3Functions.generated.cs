@@ -208,16 +208,16 @@ namespace DemoV3
         ///</summary>
         [FunctionName("LongRunningFunctionAsync")]
         public async Task<IActionResult> LongRunningFunctionAsync(
-            [HttpTrigger(AuthorizationLevel.Function, "post", Route = "api/startLongRunningFunction")]
-            HttpRequest request, [DurableClient] IDurableOrchestrationClient durableClient)
+            [HttpTrigger(AuthorizationLevel.Function, "post", Route = "api/startLongRunningFunction/{id}")]
+            HttpRequest request, string id, [DurableClient] IDurableOrchestrationClient durableClient)
         {
             try {
-                await _factory.Instance(request).LongRunningFunctionAsync(durableClient);
+                await _factory.Instance(request).LongRunningFunctionAsync(durableClient, _converter.ParseGuid(id, nameof(id)));
                 return _resultHandler.StatusCode(202);
             } catch(CaffoaClientError err) {
                 return err.Result;
             } catch (Exception e) {
-                if(_errorHandler.TryHandleFunctionException(e, out var errorHandlerResult, request, "LongRunningFunction", "api/startLongRunningFunction", "post"))
+                if(_errorHandler.TryHandleFunctionException(e, out var errorHandlerResult, request, "LongRunningFunction", "api/startLongRunningFunction/{id}", "post", ("id", id)))
                     return errorHandlerResult;
                 throw;
             }

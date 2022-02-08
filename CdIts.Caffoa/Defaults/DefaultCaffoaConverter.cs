@@ -50,12 +50,24 @@ public class DefaultCaffoaConverter : ICaffoaConverter
             throw _errorHandler.ParameterConvertError(parameterName, "date-time", e);
         }
     }
+    
+    public Guid ParseGuid(string parameter, string parameterName) 
+    {
+        try
+        {
+            return Guid.Parse(parameter);
+        }
+        catch (Exception e)
+        {
+            throw _errorHandler.ParameterConvertError(parameterName, "uuid", e);
+        }
+    }
 
     public T Parse<T>(string parameter, string parameterName) 
     {
         try
         {
-            return (T)Convert.ChangeType(parameter, typeof(T));
+            return (T)Convert.ChangeType(parameter, typeof(T), CultureInfo.InvariantCulture);
         }
         catch (Exception e)
         {
