@@ -4,5 +4,6 @@ namespace DemoV3.Model {
     
     public interface AnyCompleteUser {
         string Type { get; }
+        AnyCompleteUser ToAnyCompleteUser(); 
     }
 }

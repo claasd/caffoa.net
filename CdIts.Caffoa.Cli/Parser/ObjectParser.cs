@@ -87,6 +87,8 @@ public class ObjectParser
 
     private InterfaceModel ExtractInterface(IList<OpenApiSchema> schemaOneOf, OpenApiDiscriminator openApiDiscriminator)
     {
+        if(openApiDiscriminator?.PropertyName is null)
+            throw new CaffoaParserError("cannot create oneOf interface without discriminator property");
         var model = new InterfaceModel
         {
             Discriminator = openApiDiscriminator.PropertyName

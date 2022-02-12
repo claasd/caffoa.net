@@ -21,6 +21,8 @@ namespace DemoV3.Model {
             return item;
         }
 
+        public virtual AnyCompleteUser ToAnyCompleteUser() => ToUserWithId();
+
         /// <summary>
         /// Replaces all fields with the data of the passed object
         /// </summary>

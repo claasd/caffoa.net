@@ -46,7 +46,7 @@ public class SchemaItemFormatter
             imports.Add("System.Collections.Generic");
             imports.Add("System.Linq");
         }
-        
+
         var hasEnums = _item.Properties?.FirstOrDefault(p => p.Enums.Count > 0) != null;
         if (hasEnums)
         {
@@ -55,7 +55,7 @@ public class SchemaItemFormatter
         }
 
         var hasDates = _item.Properties?.FirstOrDefault(p => p.TypeName.StartsWith("DateOnly")) != null;
-        if(hasDates)
+        if (hasDates)
             imports.Add("Caffoa.JsonConverter");
 
         if (modelImports != null)
@@ -63,5 +63,13 @@ public class SchemaItemFormatter
         if (configImports != null)
             imports.AddRange(configImports);
         return imports.Count > 0 ? string.Join("", imports.Distinct().Select(i => $"using {i};\n")) : "";
+    }
+
+    public string InterfaceMethods(List<SchemaItem> interfaces)
+    {
+        var implementations = interfaces
+            .Where(i => i.Interface != null && i.Interface.Children.Contains(_item.ClassName))
+            .Select(i => $"\n        public virtual {i.ClassName} To{i.ClassName}() => To{this._item.ClassName}();\n");
+        return string.Join("", implementations);
     }
 }

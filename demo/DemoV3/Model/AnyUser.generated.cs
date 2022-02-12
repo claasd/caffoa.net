@@ -4,5 +4,6 @@ namespace DemoV3.Model {
     
     public interface AnyUser {
         string Type { get; }
+        AnyUser ToAnyUser(); 
     }
 }
