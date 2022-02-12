@@ -47,6 +47,10 @@ namespace DemoV3.Model {
             return item;
         }
 
+        public virtual AnyUser ToAnyUser() => ToGuestUser();
+
+        public virtual AnyCompleteUser ToAnyCompleteUser() => ToGuestUser();
+
         /// <summary>
         /// Replaces all fields with the data of the passed object
         /// </summary>

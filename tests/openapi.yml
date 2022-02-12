@@ -124,7 +124,17 @@ components:
           example:
             "DE": 19.0
             "AT": 19.0
-
+    longRunningfunctionStatus:
+      type: object
+      properties: 
+        status:
+          type: string
+          enum:
+            - running
+            - success
+            - failure
+        result:
+          $ref: "#/components/schemas/anyUser"
   responses:
     error:
       description: Error
@@ -336,5 +346,9 @@ paths:
       responses:
         202:
           description: started long running function
+          content: 
+            'application/json':
+              schema:
+                $ref: "#/components/schemas/longRunningfunctionStatus"
       
   

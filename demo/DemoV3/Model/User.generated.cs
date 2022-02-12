@@ -95,6 +95,8 @@ namespace DemoV3.Model {
             return item;
         }
 
+        public virtual AnyUser ToAnyUser() => ToUser();
+
         /// <summary>
         /// Replaces all fields with the data of the passed object
         /// </summary>

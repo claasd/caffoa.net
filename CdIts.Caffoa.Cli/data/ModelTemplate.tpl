@@ -14,7 +14,7 @@ namespace {NAMESPACE} {{
             item.UpdateWith{NAME}(this);
             return item;
         }}
-
+{INTERFACE_METHODS}
         /// <summary>
         /// Replaces all fields with the data of the passed object
         /// </summary>

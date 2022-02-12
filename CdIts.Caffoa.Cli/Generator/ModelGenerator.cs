@@ -51,6 +51,7 @@ public class ModelGenerator
         parameters["IMPORTS"] = formatter.Imports(_service.Model.Imports, _config.Imports);
         parameters["NAME"] = item.ClassName;
         parameters["PARENTS"] = formatter.Parents(interfaces);
+        parameters["INTERFACE_METHODS"] = formatter.InterfaceMethods(interfaces);
         parameters["RAWNAME"] = item.Name;
         parameters["UPDATEPROPS"] = FormatPropertyUpdates(item);
         parameters["PROPERTIES"] = FormatProperties(item);
