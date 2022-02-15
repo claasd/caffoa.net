@@ -31,7 +31,6 @@
         <EmbeddedResource Include="data\InterfaceTemplate.tpl" />
         <EmbeddedResource Include="data\ModelEnumPropertyTemplate.tpl" />
         <EmbeddedResource Include="data\ModelInterfaceTemplate.tpl" />
-        <EmbeddedResource Include="data\ModelLEgacyEnumPropertyTemplate.tpl" />
         <EmbeddedResource Include="data\ModelPropertyTemplate.tpl" />
         <EmbeddedResource Include="data\ModelTemplate.tpl" />
     </ItemGroup>
