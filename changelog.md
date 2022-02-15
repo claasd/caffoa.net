@@ -1,6 +1,9 @@
 # caffoa changelog
 
 ### 1.2.0
+* added CLI builds for net6 and net5 for systems that can have net6/net5 without dotnetcore3.1 runtimes
+
+### 1.2.0
 * new option: `splitByTag`. When this config option is set to true, multiple interfaces and function classes will be generated based on the first tag of each path
 * Fix: Use proper Guid Parsing.
 * Model interfaces now have a To{INTERFACENAME}() method, allowing oneOf objects as part of other objects.
