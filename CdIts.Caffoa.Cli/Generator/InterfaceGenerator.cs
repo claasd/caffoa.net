@@ -113,6 +113,11 @@ public class InterfaceGenerator
                     var localParameter = new List<string>(parameter);
                     localParameter.Add($"{value} payload");
                     localParameter.AddRange(queryParameters);
+                    if (_config.WithCancellation is true)
+                    {
+                        localParameter.Add("CancellationToken cancellationToken = default");
+                    }
+
                     methods.Add(string.Join(", ", localParameter));
                 }
 
@@ -129,6 +134,10 @@ public class InterfaceGenerator
             }
         }
         parameter.AddRange(queryParameters);
+        if (_config.WithCancellation is true)
+        {
+            parameter.Add("CancellationToken cancellationToken = default");
+        }
         return new List<string>() { string.Join(", ", parameter) };
     }
 
