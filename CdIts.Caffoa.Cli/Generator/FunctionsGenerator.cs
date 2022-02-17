@@ -177,6 +177,11 @@ public class FunctionsGenerator
             {
                 caseParams.AddRange(endpoint.QueryParameters().Select(p=>p.Name));
             }
+
+            if (_config.WithCancellation is true)
+            {
+                caseParams.Add("request.HttpContext.RequestAborted");
+            }
             var call = FormatCall(endpoint, "", caseParams, false);
             cases.Add($"\"{key}\" => {call}");
         }
@@ -197,6 +202,11 @@ public class FunctionsGenerator
         if (_config.ParseQueryParameters is true)
         {
             callParams.AddRange(endpoint.QueryParameters().Select(p=>p.Name));
+        }
+
+        if (_config.WithCancellation is true)
+        {
+            callParams.Add("request.HttpContext.RequestAborted");
         }
         return callParams;
     }

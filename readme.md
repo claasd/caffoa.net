@@ -137,6 +137,7 @@ config:
   splitByTag: false # if set to true, multiple function files and interfaces will be generated, based on the first tag of each path item
   parsePathParameters: true # if set to true, the parameter parsing is not left to Functions, but is done by caffoa, opening up the possibility to give back better error messages
   parseQueryParameters: true # if set to true, caffoa will parse required and optional parameters that are defined for query
+  withCancellation: false # if set to true, caffoa will add a CancellationToken to all interface methods. It will be triggered when the HTTP Request gets aborted (for example by the client).
   imports: # a list of imports that will be added to most generated classes
     - MySpecialNamespace
   requestBodyType: # you can override the request body type for specific operations or methods
