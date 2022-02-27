@@ -13,43 +13,6 @@ namespace DemoV3.Model {
     public partial class User : AnyUser {
         public const string UserObjectName = "user";
 
-        public static class TypeValues {
-            // constant values for "type"
-            public const string Simple = "simple";
-    
-            /// immutable array containing all allowed values for "type"
-            public static readonly ImmutableArray<string> AllowedValues = ImmutableArray.Create<string>(Simple);
-        }
-        
-        [Obsolete("Will be removed in a future version of caffoa. Use TypeValues.Simple instead.")]
-        public const string TypeSimpleValue = TypeValues.Simple;
-
-        [Obsolete("Will be removed in a future version of caffoa. Use TypeValues.AllowedValues instead")]
-        public static ImmutableArray<string> AllowedValuesForType { get => TypeValues.AllowedValues; }
-
-        public static class AgeGroupValues {
-            // constant values for "ageGroup"
-            public const int _18 = 18;
-            public const int _40 = 40;
-            public const int _70 = 70;
-            public const int _120 = 120;
-    
-            /// immutable array containing all allowed values for "ageGroup"
-            public static readonly ImmutableArray<int?> AllowedValues = ImmutableArray.Create<int?>(_18, _40, _70, _120, null);
-        }
-        
-        [Obsolete("Will be removed in a future version of caffoa. Use AgeGroupValues._18 instead.")]
-        public const int AgeGroup18Value = AgeGroupValues._18;
-        [Obsolete("Will be removed in a future version of caffoa. Use AgeGroupValues._40 instead.")]
-        public const int AgeGroup40Value = AgeGroupValues._40;
-        [Obsolete("Will be removed in a future version of caffoa. Use AgeGroupValues._70 instead.")]
-        public const int AgeGroup70Value = AgeGroupValues._70;
-        [Obsolete("Will be removed in a future version of caffoa. Use AgeGroupValues._120 instead.")]
-        public const int AgeGroup120Value = AgeGroupValues._120;
-
-        [Obsolete("Will be removed in a future version of caffoa. Use AgeGroupValues.AllowedValues instead")]
-        public static ImmutableArray<int?> AllowedValuesForAgeGroup { get => AgeGroupValues.AllowedValues; }
-
         /// <summary>
         /// A fancy string with description
         /// </summary>
@@ -74,9 +37,7 @@ namespace DemoV3.Model {
 
         [JsonProperty("type", Required = Required.Always)]
         public virtual string Type {
-            get {
-                return _type;
-            }
+            get => _type;
             set {
                 if (!TypeValues.AllowedValues.Contains(value))
                 {
@@ -93,9 +54,7 @@ namespace DemoV3.Model {
 
         [JsonProperty("ageGroup")]
         public virtual int? AgeGroup {
-            get {
-                return _ageGroup;
-            }
+            get => _ageGroup;
             set {
                 if (!AgeGroupValues.AllowedValues.Contains(value))
                 {

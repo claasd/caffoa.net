@@ -11,20 +11,6 @@ namespace DemoV3.Model {
     public partial class GuestUser : AnyUser, AnyCompleteUser {
         public const string GuestUserObjectName = "guestUser";
 
-        public static class TypeValues {
-            // constant values for "type"
-            public const string Guest = "guest";
-    
-            /// immutable array containing all allowed values for "type"
-            public static readonly ImmutableArray<string> AllowedValues = ImmutableArray.Create<string>(Guest);
-        }
-        
-        [Obsolete("Will be removed in a future version of caffoa. Use TypeValues.Guest instead.")]
-        public const string TypeGuestValue = TypeValues.Guest;
-
-        [Obsolete("Will be removed in a future version of caffoa. Use TypeValues.AllowedValues instead")]
-        public static ImmutableArray<string> AllowedValuesForType { get => TypeValues.AllowedValues; }
-
         [JsonProperty("email", Required = Required.Always)]
         public virtual string Email { get; set; }
 
@@ -33,9 +19,7 @@ namespace DemoV3.Model {
 
         [JsonProperty("type", Required = Required.Always)]
         public virtual string Type {
-            get {
-                return _type;
-            }
+            get => _type;
             set {
                 if (!TypeValues.AllowedValues.Contains(value))
                 {

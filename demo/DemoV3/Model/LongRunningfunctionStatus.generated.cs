@@ -11,34 +11,12 @@ namespace DemoV3.Model {
     public partial class LongRunningfunctionStatus {
         public const string LongRunningfunctionStatusObjectName = "longRunningfunctionStatus";
 
-        public static class StatusValues {
-            // constant values for "status"
-            public const string Running = "running";
-            public const string Success = "success";
-            public const string Failure = "failure";
-    
-            /// immutable array containing all allowed values for "status"
-            public static readonly ImmutableArray<string> AllowedValues = ImmutableArray.Create<string>(Running, Success, Failure);
-        }
-        
-        [Obsolete("Will be removed in a future version of caffoa. Use StatusValues.Running instead.")]
-        public const string StatusRunningValue = StatusValues.Running;
-        [Obsolete("Will be removed in a future version of caffoa. Use StatusValues.Success instead.")]
-        public const string StatusSuccessValue = StatusValues.Success;
-        [Obsolete("Will be removed in a future version of caffoa. Use StatusValues.Failure instead.")]
-        public const string StatusFailureValue = StatusValues.Failure;
-
-        [Obsolete("Will be removed in a future version of caffoa. Use StatusValues.AllowedValues instead")]
-        public static ImmutableArray<string> AllowedValuesForStatus { get => StatusValues.AllowedValues; }
-
         [JsonIgnore]
         private string _status;
 
         [JsonProperty("status")]
         public virtual string Status {
-            get {
-                return _status;
-            }
+            get => _status;
             set {
                 if (!StatusValues.AllowedValues.Contains(value))
                 {

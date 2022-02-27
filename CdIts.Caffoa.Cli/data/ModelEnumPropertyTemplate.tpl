@@ -3,9 +3,7 @@
 
         {DESCRIPTION}{JSON_EXTRA}[JsonProperty("{NAMELOWER}"{JSON_PROPERTY_EXTRA})]
         public virtual {TYPE} {NAMEUPPER} {{
-            get {{
-                return _{NAMELOWER};
-            }}
+            get => _{NAMELOWER};
             set {{
                 {NO_CHECK_MSG}{NO_CHECK}if (!{NAMEUPPER}Values.AllowedValues.Contains(value))
                 {NO_CHECK}{{

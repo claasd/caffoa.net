@@ -23,8 +23,11 @@ public class ModelGenerator
         Directory.CreateDirectory(_service.Model!.TargetFolder);
         var interfaces = objects.Where(o => o.Interface != null).ToList();
         var classes = objects.Where(o => o.Interface == null).ToList();
+        var enumClasses = objects.Where(o => o.Properties != null && o.Properties.Any(p=>p.Enums.Any())).ToList();
+        enumClasses.ForEach(WriteEnumClasses);
         interfaces.ForEach(WriteModelInterface);
         classes.ForEach(c => WriteModelClass(c, interfaces));
+        
     }
 
     private void WriteModelInterface(SchemaItem item)
@@ -55,7 +58,6 @@ public class ModelGenerator
         parameters["RAWNAME"] = item.Name;
         parameters["UPDATEPROPS"] = FormatPropertyUpdates(item);
         parameters["PROPERTIES"] = FormatProperties(item);
-        parameters["ENUM_CLASSES"] = FormatEnumClasses(item);
         parameters["DESCRIPTION"] = formatter.Description;
         var formatted = file.FormatDict(parameters);
         File.WriteAllText(Path.Combine(_service.Model.TargetFolder, fileName), formatted.ToSystemNewLine());
@@ -122,15 +124,12 @@ public class ModelGenerator
         return string.Join("\n\n", properties);
     }
     
-    private string FormatEnumClasses(SchemaItem item)
+    private void WriteEnumClasses(SchemaItem item)
     {
-        var enumClasses = new List<string>();
         foreach (var property in item.Properties!.Where(p=>p.Enums.Any()))
         {
-            enumClasses.Add(FormatEnumClass(property) + "\n\n");
+            WriteEnumClass(property, item.ClassName);
         }
-
-        return string.Join("", enumClasses);
     }
 
     private string FormatEnumProperty(PropertyData property, Dictionary<string, object> format)
@@ -144,7 +143,7 @@ public class ModelGenerator
         return file.FormatDict(format);
     }
     
-    private string FormatEnumClass(PropertyData property)
+    private void WriteEnumClass(PropertyData property, string className)
     {
         var file = Templates.GetTemplate("ModelEnumPropertyClassTemplate.tpl");
         var enums = new Dictionary<string, string>();
@@ -165,13 +164,15 @@ public class ModelGenerator
 
         var type = property.TypeName.Trim('?');
         var enumDefs = enums.Select(item => $"public const {type} {item.Key} = {item.Value};");
-        var obsoleteEnumDefs = obsoleteEnums.Select(item => $"[Obsolete(\"Will be removed in a future version of caffoa. Use {item.Value} instead.\")]\n        public const {type} {item.Key} = {item.Value};");
+        var obsoleteEnumDefs = obsoleteEnums.Select(item => $"[Obsolete(\"Will be removed in a future version of caffoa. Use {className}.{item.Value} instead.\")]\n        public const {type} {item.Key} = {item.Value};");
         var allowedNames = new List<string>(enums.Keys);
         if (property.Nullable)
             allowedNames.Add("null");
         var formatter = new PropertyFormatter(property, false);
         var format = new Dictionary<string, object>
         {
+            ["NAMESPACE"] = _service.Model!.Namespace,
+            ["CLASS"] = className,
             ["OBSOLETE_LIST_NAME"] = $"AllowedValuesFor{propName}",
             ["OBSOLETE_ENUMS"] = string.Join("\n        ", obsoleteEnumDefs),
             ["NAMEUPPER"] = propName,
@@ -180,6 +181,9 @@ public class ModelGenerator
             ["ENUMS"] = string.Join("\n            ", enumDefs),
             ["ENUM_NAMES"] = string.Join(", ", allowedNames)
         };
-        return file.FormatDict(format);
+        string fileName = $"{className}.{propName}Values.generated.cs";
+        var formatted = file.FormatDict(format);
+        File.WriteAllText(Path.Combine(_service.Model!.TargetFolder, fileName), formatted.ToSystemNewLine());
+        
     }
 }

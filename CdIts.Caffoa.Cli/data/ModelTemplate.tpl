@@ -7,7 +7,7 @@ namespace {NAMESPACE} {{
     public partial class {NAME}{PARENTS} {{
         public const string {NAME}ObjectName = "{RAWNAME}";
 
-{ENUM_CLASSES}{PROPERTIES}
+{PROPERTIES}
 
         public {NAME} To{NAME}() {{
             var item = new {NAME}();
