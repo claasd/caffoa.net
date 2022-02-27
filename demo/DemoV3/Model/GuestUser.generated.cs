@@ -11,16 +11,22 @@ namespace DemoV3.Model {
     public partial class GuestUser : AnyUser, AnyCompleteUser {
         public const string GuestUserObjectName = "guestUser";
 
+        public static class TypeValues {
+            // constant values for "type"
+            public const string Guest = "guest";
+    
+            /// immutable array containing all allowed values for "type"
+            public static readonly ImmutableArray<string> AllowedValues = ImmutableArray.Create<string>(Guest);
+        }
+        
+        [Obsolete("Will be removed in a future version of caffoa. Use TypeValues.Guest instead.")]
+        public const string TypeGuestValue = TypeValues.Guest;
+
+        [Obsolete("Will be removed in a future version of caffoa. Use TypeValues.AllowedValues instead")]
+        public static ImmutableArray<string> AllowedValuesForType { get => TypeValues.AllowedValues; }
+
         [JsonProperty("email", Required = Required.Always)]
         public virtual string Email { get; set; }
-
-        // constant values for "type"
-        public const string TypeGuestValue = "guest";
-
-        /// <summary>
-        /// immutable array containing all allowed values for "type"
-        /// </summary>
-        public static readonly ImmutableArray<string> AllowedValuesForType = ImmutableArray.Create<string>(TypeGuestValue);
 
         [JsonIgnore]
         private string _type = "guest";
@@ -31,9 +37,9 @@ namespace DemoV3.Model {
                 return _type;
             }
             set {
-                if (!AllowedValuesForType.Contains(value))
+                if (!TypeValues.AllowedValues.Contains(value))
                 {
-                    var allowedValues = string.Join(", ", AllowedValuesForType.Select(v => v.ToString()));
+                    var allowedValues = string.Join(", ", TypeValues.AllowedValues.Select(v => v.ToString()));
                     throw new ArgumentOutOfRangeException("type",
                         $"{value} is not allowed. Allowed values: [{allowedValues}]");
                 }

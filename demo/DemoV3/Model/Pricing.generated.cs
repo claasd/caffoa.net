@@ -12,15 +12,25 @@ namespace DemoV3.Model {
     public partial class Pricing {
         public const string PricingObjectName = "pricing";
 
-        // constant values for "price"
-        public const double Price32_99Value = 32.99;
-        public const double Price33_99Value = 33.99;
-        public const double Price44_99Value = 44.99;
+        public static class PriceValues {
+            // constant values for "price"
+            public const double _32_99 = 32.99;
+            public const double _33_99 = 33.99;
+            public const double _44_99 = 44.99;
+    
+            /// immutable array containing all allowed values for "price"
+            public static readonly ImmutableArray<double?> AllowedValues = ImmutableArray.Create<double?>(_32_99, _33_99, _44_99, null);
+        }
+        
+        [Obsolete("Will be removed in a future version of caffoa. Use PriceValues._32_99 instead.")]
+        public const double Price32_99Value = PriceValues._32_99;
+        [Obsolete("Will be removed in a future version of caffoa. Use PriceValues._33_99 instead.")]
+        public const double Price33_99Value = PriceValues._33_99;
+        [Obsolete("Will be removed in a future version of caffoa. Use PriceValues._44_99 instead.")]
+        public const double Price44_99Value = PriceValues._44_99;
 
-        /// <summary>
-        /// immutable array containing all allowed values for "price"
-        /// </summary>
-        public static readonly ImmutableArray<double?> AllowedValuesForPrice = ImmutableArray.Create<double?>(Price32_99Value, Price33_99Value, Price44_99Value, null);
+        [Obsolete("Will be removed in a future version of caffoa. Use PriceValues.AllowedValues instead")]
+        public static ImmutableArray<double?> AllowedValuesForPrice { get => PriceValues.AllowedValues; }
 
         [JsonIgnore]
         private double? _price;
@@ -31,9 +41,9 @@ namespace DemoV3.Model {
                 return _price;
             }
             set {
-                if (!AllowedValuesForPrice.Contains(value))
+                if (!PriceValues.AllowedValues.Contains(value))
                 {
-                    var allowedValues = string.Join(", ", AllowedValuesForPrice.Select(v => v == null ? "null" : v.ToString()));
+                    var allowedValues = string.Join(", ", PriceValues.AllowedValues.Select(v => v == null ? "null" : v.ToString()));
                     throw new ArgumentOutOfRangeException("price",
                         $"{value} is not allowed. Allowed values: [{allowedValues}]");
                 }

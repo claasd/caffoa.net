@@ -13,6 +13,43 @@ namespace DemoV3.Model {
     public partial class User : AnyUser {
         public const string UserObjectName = "user";
 
+        public static class TypeValues {
+            // constant values for "type"
+            public const string Simple = "simple";
+    
+            /// immutable array containing all allowed values for "type"
+            public static readonly ImmutableArray<string> AllowedValues = ImmutableArray.Create<string>(Simple);
+        }
+        
+        [Obsolete("Will be removed in a future version of caffoa. Use TypeValues.Simple instead.")]
+        public const string TypeSimpleValue = TypeValues.Simple;
+
+        [Obsolete("Will be removed in a future version of caffoa. Use TypeValues.AllowedValues instead")]
+        public static ImmutableArray<string> AllowedValuesForType { get => TypeValues.AllowedValues; }
+
+        public static class AgeGroupValues {
+            // constant values for "ageGroup"
+            public const int _18 = 18;
+            public const int _40 = 40;
+            public const int _70 = 70;
+            public const int _120 = 120;
+    
+            /// immutable array containing all allowed values for "ageGroup"
+            public static readonly ImmutableArray<int?> AllowedValues = ImmutableArray.Create<int?>(_18, _40, _70, _120, null);
+        }
+        
+        [Obsolete("Will be removed in a future version of caffoa. Use AgeGroupValues._18 instead.")]
+        public const int AgeGroup18Value = AgeGroupValues._18;
+        [Obsolete("Will be removed in a future version of caffoa. Use AgeGroupValues._40 instead.")]
+        public const int AgeGroup40Value = AgeGroupValues._40;
+        [Obsolete("Will be removed in a future version of caffoa. Use AgeGroupValues._70 instead.")]
+        public const int AgeGroup70Value = AgeGroupValues._70;
+        [Obsolete("Will be removed in a future version of caffoa. Use AgeGroupValues._120 instead.")]
+        public const int AgeGroup120Value = AgeGroupValues._120;
+
+        [Obsolete("Will be removed in a future version of caffoa. Use AgeGroupValues.AllowedValues instead")]
+        public static ImmutableArray<int?> AllowedValuesForAgeGroup { get => AgeGroupValues.AllowedValues; }
+
         /// <summary>
         /// A fancy string with description
         /// </summary>
@@ -32,14 +69,6 @@ namespace DemoV3.Model {
         [JsonProperty("descriptions")]
         public virtual Dictionary<string, string> Descriptions { get; set; } = new Dictionary<string, string>();
 
-        // constant values for "type"
-        public const string TypeSimpleValue = "simple";
-
-        /// <summary>
-        /// immutable array containing all allowed values for "type"
-        /// </summary>
-        public static readonly ImmutableArray<string> AllowedValuesForType = ImmutableArray.Create<string>(TypeSimpleValue);
-
         [JsonIgnore]
         private string _type = "simple";
 
@@ -49,26 +78,15 @@ namespace DemoV3.Model {
                 return _type;
             }
             set {
-                if (!AllowedValuesForType.Contains(value))
+                if (!TypeValues.AllowedValues.Contains(value))
                 {
-                    var allowedValues = string.Join(", ", AllowedValuesForType.Select(v => v.ToString()));
+                    var allowedValues = string.Join(", ", TypeValues.AllowedValues.Select(v => v.ToString()));
                     throw new ArgumentOutOfRangeException("type",
                         $"{value} is not allowed. Allowed values: [{allowedValues}]");
                 }
                 _type = value;
             }
         }
-
-        // constant values for "ageGroup"
-        public const int AgeGroup18Value = 18;
-        public const int AgeGroup40Value = 40;
-        public const int AgeGroup70Value = 70;
-        public const int AgeGroup120Value = 120;
-
-        /// <summary>
-        /// immutable array containing all allowed values for "ageGroup"
-        /// </summary>
-        public static readonly ImmutableArray<int?> AllowedValuesForAgeGroup = ImmutableArray.Create<int?>(AgeGroup18Value, AgeGroup40Value, AgeGroup70Value, AgeGroup120Value, null);
 
         [JsonIgnore]
         private int? _ageGroup = 40;
@@ -79,9 +97,9 @@ namespace DemoV3.Model {
                 return _ageGroup;
             }
             set {
-                if (!AllowedValuesForAgeGroup.Contains(value))
+                if (!AgeGroupValues.AllowedValues.Contains(value))
                 {
-                    var allowedValues = string.Join(", ", AllowedValuesForAgeGroup.Select(v => v == null ? "null" : v.ToString()));
+                    var allowedValues = string.Join(", ", AgeGroupValues.AllowedValues.Select(v => v == null ? "null" : v.ToString()));
                     throw new ArgumentOutOfRangeException("ageGroup",
                         $"{value} is not allowed. Allowed values: [{allowedValues}]");
                 }
