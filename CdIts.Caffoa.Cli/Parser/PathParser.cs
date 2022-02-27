@@ -41,7 +41,7 @@ public class PathParser
         {
             result.Parameters.AddRange(baseParams);
             result.Parameters.AddRange(ParseParameter(operationItem.Parameters));
-            if(operationItem.Description != null)
+            if (operationItem.Description != null)
                 result.DocumentationLines = operationItem.Description.Split("\n").ToList();
             if (operationItem.RequestBody != null)
             {
@@ -51,7 +51,7 @@ public class PathParser
                 {
                     foreach (var requestConfig in _config.RequestBodyType)
                     {
-                        if(requestConfig.Filter.Contains(operation, operationItem))
+                        if (requestConfig.Filter.Contains(operation, operationItem))
                         {
                             result.RequestBodyType = new SimpleBodyModel(requestConfig.Type);
                             if (requestConfig.Import != null)
@@ -64,11 +64,12 @@ public class PathParser
             foreach (var (response, responseItem) in operationItem.Responses)
             {
                 if (responseItem is null)
-                    throw new CaffoaParserError($"Missing Response configuration for Response '{response}' (maybe a wrong reference?)");
+                    throw new CaffoaParserError(
+                        $"Missing Response configuration for Response '{response}' (maybe a wrong reference?)");
                 result.DocumentationLines.Add($"{response} -> {responseItem.Description}");
                 result.Responses.Add(ParseResponse(response, responseItem));
             }
-            
+
             if (_config.DurableClient != null && _config.DurableClient.Contains(operation, operationItem))
             {
                 result.DurableClient = true;
@@ -155,7 +156,7 @@ public class PathParser
             {
                 var defaultValue = p.Schema.DefaultAsString();
                 p.Schema.Nullable = !p.Required && defaultValue == null;
-                var result =  new ParameterObject(p.Name, p.Schema.TypeName(), p.Description,
+                var result = new ParameterObject(p.Name, p.Schema.TypeName(), p.Description,
                     p.In == ParameterLocation.Query)
                 {
                     DefaultValue = defaultValue,

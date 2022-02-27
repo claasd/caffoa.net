@@ -14,6 +14,7 @@ public class CaffoaConfig
     public List<string>? Imports { get; set; }
     public List<RequestBodyTypeConfig>? RequestBodyType { get; set; }
     public FilterConfig? DurableClient { get; set; }
+
     public CaffoaGlobalConfig MergedWith(CaffoaGlobalConfig general)
     {
         return new CaffoaGlobalConfig()

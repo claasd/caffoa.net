@@ -66,7 +66,7 @@ public class FunctionConfig
             name = $"{prefix}{name}";
         return name;
     }
-    
+
     public string GetFunctionName(string prefix)
     {
         var name = _functionsName;
@@ -78,5 +78,4 @@ public class FunctionConfig
             name = $"{prefix}{name}";
         return name;
     }
-    
 }

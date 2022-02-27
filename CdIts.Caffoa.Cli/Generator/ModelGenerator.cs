@@ -24,7 +24,7 @@ public class ModelGenerator
         var interfaces = objects.Where(o => o.Interface != null).ToList();
         var classes = objects.Where(o => o.Interface == null).ToList();
         interfaces.ForEach(WriteModelInterface);
-        classes.ForEach(c=>WriteModelClass(c, interfaces));
+        classes.ForEach(c => WriteModelClass(c, interfaces));
     }
 
     private void WriteModelInterface(SchemaItem item)
@@ -83,6 +83,7 @@ public class ModelGenerator
                     sb.Append('?');
                 sb.Append($".To{property.TypeName.ToObjectName()}()");
             }
+
             sb.Append(';');
             updateCommands.Add(sb.ToString());
         }
@@ -116,17 +117,18 @@ public class ModelGenerator
                 properties.Add(formatted);
             }
         }
+
         return string.Join("\n\n", properties);
     }
 
-    private string FormatEnumProperty(PropertyData property, Dictionary<string,object> format)
-    { 
+    private string FormatEnumProperty(PropertyData property, Dictionary<string, object> format)
+    {
         var file = Templates.GetTemplate("ModelEnumPropertyTemplate.tpl");
         var enums = new Dictionary<string, string>();
         var propName = property.Name.ToObjectName();
         foreach (var value in property.Enums)
         {
-            if(value == null)
+            if (value == null)
                 continue;
             var cleaned = value.Replace("\"", "").FirstCharUpper();
             cleaned = Regex.Replace(cleaned, @"[^A-Za-z0-9]+", "_");
@@ -137,12 +139,14 @@ public class ModelGenerator
         var type = property.TypeName.Trim('?');
         var enumDefs = enums.Select(item => $"public const {type} {item.Key} = {item.Value};");
         var allowedNames = new List<string>(enums.Keys);
-        if(property.Nullable)
+        if (property.Nullable)
             allowedNames.Add("null");
         format["ENUMS"] = string.Join("\n        ", enumDefs);
         format["ENUM_LIST_NAME"] = $"AllowedValuesFor{propName}";
         format["ENUM_NAMES"] = string.Join(", ", allowedNames);
-        format["NO_CHECK_MSG"] = _config.CheckEnums!.Value ? "" : "// set checkEnums=true in config file to have a value check here //\n                ";
+        format["NO_CHECK_MSG"] = _config.CheckEnums!.Value
+            ? ""
+            : "// set checkEnums=true in config file to have a value check here //\n                ";
         format["NO_CHECK"] = _config.CheckEnums!.Value ? "" : "// ";
         format["NULL_HANDLING"] = property.Nullable ? "v == null ? \"null\" : " : "";
         return file.FormatDict(format);

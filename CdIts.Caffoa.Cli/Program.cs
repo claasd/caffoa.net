@@ -14,10 +14,7 @@ using Parser = CommandLine.Parser;
 var configPath = "";
 
 Parser.Default.ParseArguments<CommandLineOptions>(args)
-    .WithParsed(o =>
-    {
-        configPath = o.ConfigPath;
-    });
+    .WithParsed(o => { configPath = o.ConfigPath; });
 try
 {
     var deserializer = new DeserializerBuilder()
@@ -30,11 +27,10 @@ try
         var files = Directory.GetFiles(".", "*.generated.cs", SearchOption.AllDirectories);
         foreach (var file in files)
         {
-            File.Delete(file);    
+            File.Delete(file);
         }
-        
     }
-        
+
     foreach (var service in settings.Services)
     {
         try
@@ -94,4 +90,5 @@ catch (Exception e)
     return 1;
 #endif
 }
+
 return 0;

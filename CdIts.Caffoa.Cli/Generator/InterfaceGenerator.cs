@@ -24,7 +24,7 @@ public class InterfaceGenerator
             var tags = endpoints.Select(e => e.Tag).Distinct();
             foreach (var tag in tags)
             {
-                GenerateInterface(endpoints.Where(e=>e.Tag == tag).ToList(), tag.ToObjectName());
+                GenerateInterface(endpoints.Where(e => e.Tag == tag).ToList(), tag.ToObjectName());
             }
         }
         else
@@ -36,10 +36,10 @@ public class InterfaceGenerator
     public void GenerateInterface(List<EndPointModel> endpoints, string namePrefix)
     {
         var imports = new List<string>();
-        if(endpoints.FirstOrDefault(e=>e.DurableClient) != null)
+        if (endpoints.FirstOrDefault(e => e.DurableClient) != null)
             imports.Add("Microsoft.Azure.WebJobs.Extensions.DurableTask");
-        endpoints.ForEach(e=>imports.AddRange(e.Imports));
-        if(_config.Imports != null)
+        endpoints.ForEach(e => imports.AddRange(e.Imports));
+        if (_config.Imports != null)
             imports.AddRange(_config.Imports);
         if (_modelNamespace != null)
             imports.Add(_modelNamespace);
@@ -84,8 +84,8 @@ public class InterfaceGenerator
             var typeName = p.GetTypeName(_config);
             return $"{typeName} {p.Name}";
         }).ToList();
-        
-        if(endpoint.DurableClient)
+
+        if (endpoint.DurableClient)
             parameter.Insert(0, "IDurableOrchestrationClient orchestrationClient");
 
         var queryParameters = new List<string>();
@@ -102,7 +102,7 @@ public class InterfaceGenerator
                 return result;
             }));
         }
-        
+
         if (endpoint.HasRequestBody)
         {
             if (endpoint.RequestBodyType is SelectionBodyModel selection)
@@ -133,12 +133,14 @@ public class InterfaceGenerator
                 parameter.Add("Stream stream");
             }
         }
+
         parameter.AddRange(queryParameters);
         if (_config.WithCancellation is true)
         {
             parameter.Add("CancellationToken cancellationToken = default");
         }
-        return new List<string>() { string.Join(", ", parameter) };
+
+        return new List<string>() {string.Join(", ", parameter)};
     }
 
     private string GetResponseType(EndPointModel endpoint)

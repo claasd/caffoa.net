@@ -53,7 +53,7 @@ public class PropertyFormatter
             return $" = {_property.Default};";
         if (!_property.Nullable && _property.IsOtherSchema)
             return $" = new {name}();";
-          
+
         return addSemicolonEnEmpty ? ";" : "";
     }
 
@@ -61,7 +61,7 @@ public class PropertyFormatter
     {
         if (!_property.TypeName.StartsWith("DateOnly"))
             return "";
-        if(_net60)
+        if (_net60)
             return "[JsonConverter(typeof(CaffoaDateOnlyConverter))]\n        ";
         return "[JsonConverter(typeof(CaffoaDateConverter))]\n        ";
     }

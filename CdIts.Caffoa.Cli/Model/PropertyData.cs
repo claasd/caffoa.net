@@ -19,5 +19,4 @@ public class PropertyData
     public string? Default { get; set; }
     public bool IsOtherSchema { get; set; }
     public List<string?> Enums { get; set; } = new();
-    
 }

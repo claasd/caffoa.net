@@ -22,7 +22,7 @@ public static class Extensions
     {
         return str.Replace("\r\n", "\n").Replace("\n", Environment.NewLine);
     }
-    
+
     public static string FirstCharUpper(this string str)
     {
         if (str.Length > 1)
@@ -39,7 +39,7 @@ public static class Extensions
     {
         return schema.Type == "object" && schema.AdditionalProperties != null && schema.Properties.Count == 0;
     }
-    
+
     public static bool IsArray(this OpenApiSchema schema)
     {
         return schema.Type is "array";
@@ -102,6 +102,7 @@ public static class Extensions
                 return null;
         }
     }
+
     public static List<string?> EnumsAsStrings(this OpenApiSchema schema)
     {
         return schema.Enum.Select(AnyValue).ToList();
@@ -122,7 +123,7 @@ public static class Extensions
         return string.Format(newFormatString.ToString(),
             values.OrderBy(x => keyToInt[x.Key]).Select(x => x.Value).ToArray());
     }
-    
+
     public static string Name(this OpenApiReference reference)
     {
         return reference.Id.Split("/").Last();

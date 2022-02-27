@@ -13,6 +13,7 @@ public class ServiceParser
     private OpenApiDocument _document;
     private readonly Dictionary<string, OpenApiSchema> _knownTypes = new();
     public static List<string> Duplicates = new();
+
     public ServiceParser(ServiceConfig service, CaffoaGlobalConfig config)
     {
         _service = service;
@@ -29,7 +30,8 @@ public class ServiceParser
     {
         var schemas = _document.Components.Schemas;
         if (_service.Model!.Includes.Count > 0)
-            schemas = schemas.Where(p => _service.Model.Includes.Contains(p.Key)).ToDictionary(p => p.Key, p => p.Value);
+            schemas = schemas.Where(p => _service.Model.Includes.Contains(p.Key))
+                .ToDictionary(p => p.Key, p => p.Value);
         schemas = schemas.Where(p => !_service.Model.Excludes.Contains(p.Key)).ToDictionary(p => p.Key, p => p.Value);
         ParseSimpleTypes(schemas);
         return ParseObjects(schemas);
@@ -39,13 +41,14 @@ public class ServiceParser
     {
         var endpoints = new List<EndPointModel>();
         var parser = new PathParser(_config, ClassName);
-        foreach(var (path, pathItem) in _document.Paths)
+        foreach (var (path, pathItem) in _document.Paths)
         {
             endpoints.AddRange(parser.Parse(path, pathItem));
         }
+
         return endpoints;
     }
-    
+
     private void ParseSimpleTypes(IDictionary<string, OpenApiSchema> schemas)
     {
         foreach (var (name, apiSchema) in schemas)

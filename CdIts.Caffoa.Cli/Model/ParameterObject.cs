@@ -25,7 +25,7 @@ public class ParameterObject
         // only generate DateOnly parameters if type converting is not done by functions
         return GetTypeName(config.UseDateOnly is true && config.ParsePathParameters is true);
     }
-    
+
     public string GetTypeName(bool useDateOnly)
     {
         return useDateOnly ? TypeName : TypeName.Replace("DateOnly", "DateTime");
