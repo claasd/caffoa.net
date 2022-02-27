@@ -14,7 +14,8 @@ components:
           type: string
         desc: 
           type: string
-          
+      additionalProperties: false
+    
     address:
       type: object
       properties:

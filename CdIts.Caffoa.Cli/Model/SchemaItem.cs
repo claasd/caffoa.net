@@ -14,4 +14,5 @@ public class SchemaItem
     public List<PropertyData>? Properties { get; set; }
     public string? Parent { get; set; }
     public string? Description { get; set; }
+    public bool AdditionalPropertiesAllowed{ get; set; }
 }

@@ -10,8 +10,7 @@ public class ObjectParser
     private readonly SchemaItem _item;
     private readonly IDictionary<string, OpenApiSchema> _knownTypes;
 
-    public ObjectParser(SchemaItem item, IDictionary<string, OpenApiSchema> knownTypes,
-        Func<string, string> classNameGenerator)
+    public ObjectParser(SchemaItem item, IDictionary<string, OpenApiSchema> knownTypes, Func<string, string> classNameGenerator)
     {
         _item = item;
         _knownTypes = knownTypes;
@@ -25,11 +24,15 @@ public class ObjectParser
             (schema, _item.Parent) = UpdateSchemaForAllOff(schema.AllOf);
         if (schema.OneOf.Count > 0)
             _item.Interface = ExtractInterface(schema.OneOf, schema.Discriminator);
-
+        
         else if (schema.Properties.Count > 0)
+        {
             _item.Properties =
                 schema.Properties
                     .Select(item => ParseProperty(item.Key, item.Value, schema.Required.Contains(item.Key))).ToList();
+            _item.AdditionalPropertiesAllowed = schema.AdditionalPropertiesAllowed;
+        }
+
         _item.Description = schema.Description;
         return _item;
     }
@@ -52,7 +55,7 @@ public class ObjectParser
             property.Nullable = !required;
             property.IsOtherSchema = true;
         }
-        else if (schema.IsArray())
+        else if(schema.IsArray())
         {
             property.IsArray = true;
             property.TypeName = schema.GetArrayType(_classNameFunc);
@@ -70,7 +73,6 @@ public class ObjectParser
             {
                 property.TypeName = schema.AdditionalProperties.TypeName();
             }
-
             property.IsMap = true;
         }
         else if (schema.Properties == null)
@@ -84,13 +86,13 @@ public class ObjectParser
             property.Default = schema.DefaultAsString();
             property.Enums = schema.EnumsAsStrings();
         }
-
+        
         return property;
     }
 
     private InterfaceModel ExtractInterface(IList<OpenApiSchema> schemaOneOf, OpenApiDiscriminator openApiDiscriminator)
     {
-        if (openApiDiscriminator?.PropertyName is null)
+        if(openApiDiscriminator?.PropertyName is null)
             throw new CaffoaParserError("cannot create oneOf interface without discriminator property");
         var model = new InterfaceModel
         {

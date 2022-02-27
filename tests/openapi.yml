@@ -12,6 +12,7 @@ components:
     
     error:
       type: object
+      additionalProperties: false
       properties:
         status:
           type: string
@@ -126,6 +127,7 @@ components:
             "AT": 19.0
     longRunningfunctionStatus:
       type: object
+      additionalProperties: true
       properties: 
         status:
           type: string

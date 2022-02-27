@@ -11,6 +11,7 @@ public class CaffoaConfig
     public bool? WithCancellation { get; set; }
     public bool? ParsePathParameters { get; set; }
     public bool? ParseQueryParameters { get; set; }
+    public bool? GenericAdditionalProperties { get; set; }
     public List<string>? Imports { get; set; }
     public List<RequestBodyTypeConfig>? RequestBodyType { get; set; }
     public FilterConfig? DurableClient { get; set; }
@@ -30,6 +31,7 @@ public class CaffoaConfig
             ClearGeneratedFiles = general.ClearGeneratedFiles,
             ParsePathParameters = ParsePathParameters ?? general.ParsePathParameters,
             ParseQueryParameters = ParseQueryParameters ?? general.ParseQueryParameters,
+            GenericAdditionalProperties = GenericAdditionalProperties ?? general.GenericAdditionalProperties,
             DurableClient = DurableClient ?? general.DurableClient,
             SplitByTag = SplitByTag ?? general.SplitByTag,
             WithCancellation = WithCancellation ?? general.WithCancellation,

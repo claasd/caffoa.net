@@ -1,3 +1,4 @@
+using CdIts.Caffoa.Cli.Config;
 using CdIts.Caffoa.Cli.Model;
 
 namespace CdIts.Caffoa.Cli.Generator.Formatter;
@@ -5,10 +6,12 @@ namespace CdIts.Caffoa.Cli.Generator.Formatter;
 public class SchemaItemFormatter
 {
     private readonly SchemaItem _item;
+    private readonly CaffoaConfig _config;
 
-    public SchemaItemFormatter(SchemaItem item)
+    public SchemaItemFormatter(SchemaItem item, CaffoaConfig config)
     {
         _item = item;
+        _config = config;
     }
 
     public object Description
@@ -41,7 +44,8 @@ public class SchemaItemFormatter
     {
         var imports = new List<string>();
         var hasArray = _item.Properties?.FirstOrDefault(p => p.IsArray || p.IsMap) != null;
-        if (hasArray)
+        var hasExtension = _item.AdditionalPropertiesAllowed && _config.GenericAdditionalProperties is true;
+        if (hasArray || hasExtension)
         {
             imports.Add("System.Collections.Generic");
             imports.Add("System.Linq");
@@ -71,5 +75,12 @@ public class SchemaItemFormatter
             .Where(i => i.Interface != null && i.Interface.Children.Contains(_item.ClassName))
             .Select(i => $"\n        public virtual {i.ClassName} To{i.ClassName}() => To{this._item.ClassName}();\n");
         return string.Join("", implementations);
+    }
+
+    public string GenericAdditionalProperties()
+    {
+        if (_item.AdditionalPropertiesAllowed && _config.GenericAdditionalProperties is true)
+            return "\n        [JsonExtensionData]\n        public Dictionary<string, JToken> AdditionalProperties;\n";
+        return "";
     }
 }

@@ -8,7 +8,7 @@ namespace {NAMESPACE} {{
         public const string {NAME}ObjectName = "{RAWNAME}";
 
 {PROPERTIES}
-
+{ADDITIONAL_PROPS}
         public {NAME} To{NAME}() {{
             var item = new {NAME}();
             item.UpdateWith{NAME}(this);
