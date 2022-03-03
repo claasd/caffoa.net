@@ -23,6 +23,7 @@ public class CaffoaConfig
     public List<string>? Imports { get; set; }
     public List<RequestBodyTypeConfig>? RequestBodyType { get; set; }
     public FilterConfig? DurableClient { get; set; }
+    public string? FunctionNamePrefix { get; set; }
 
     public CaffoaGlobalConfig MergedWith(CaffoaGlobalConfig general)
     {
@@ -43,7 +44,8 @@ public class CaffoaConfig
             GenericAdditionalPropertiesType = GenericAdditionalPropertiesType ?? general.GenericAdditionalPropertiesType,
             DurableClient = DurableClient ?? general.DurableClient,
             SplitByTag = SplitByTag ?? general.SplitByTag,
-            WithCancellation = WithCancellation ?? general.WithCancellation
+            WithCancellation = WithCancellation ?? general.WithCancellation,
+            FunctionNamePrefix = FunctionNamePrefix ?? general.FunctionNamePrefix
         };
     }
 }

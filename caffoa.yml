@@ -32,7 +32,8 @@ services:
       targetFolder: ./demo/DemoV3/Model/XY
 
   - apiPath: tests\openapi.yml
-    config: 
+    config:
+#      functionNamePrefix: Func
       imports: 
         - DemoV3.Model.Base
       durableClient:

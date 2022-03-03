@@ -155,7 +155,7 @@ config:
     all: true # optional, uses this type for all functions
     operations: # a optional list of specific operations that should get a durableClient
       - long-running-function
-
+  functionNamePrefix: Pre_ # adds a prefix to all function names (Not interfaces). Useful if you have multiple APIs in one function that have identical operation IDs
 services:
   - apiPath: userservice.openapi.yml
     config:
@@ -173,6 +173,7 @@ services:
       imports: # overrides the config element from the global config
       requestBodyType: # overrides the config element from the global config
       durableClient: # overrides the config element from the global config
+      functionNamePrefix: # overrides the config element from the global config
     function:
       name: MyClassName
       namespace: MyNamespace
