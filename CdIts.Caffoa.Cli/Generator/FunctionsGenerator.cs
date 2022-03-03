@@ -118,7 +118,8 @@ public class FunctionsGenerator
         if (endpoint.DurableClient)
             pathParams.Add(", [DurableClient] IDurableOrchestrationClient durableClient");
 
-        parameters["NAME"] = $"{_config.FunctionNamePrefix}{endpoint.Name}";
+        parameters["NAME"] = endpoint.Name;
+        parameters["PREFIX"] = _config.FunctionNamePrefix ?? "";
         parameters["OPERATION"] = endpoint.Operation;
         parameters["PATH"] = _config.RoutePrefix + endpoint.Route;
         parameters["RESULT"] = result;
