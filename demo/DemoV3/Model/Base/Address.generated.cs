@@ -28,6 +28,9 @@ namespace DemoV3.Model.Base {
         [JsonProperty("flags")]
         public virtual Dictionary<string, Flags> Flags { get; set; } = new Dictionary<string, Flags>();
 
+        [JsonExtensionData]
+        public Dictionary<string, JObject> AdditionalProperties;
+
         public Address ToAddress() {
             var item = new Address();
             item.UpdateWithAddress(this);
@@ -44,6 +47,7 @@ namespace DemoV3.Model.Base {
             City = other.City;
             Country = other.Country;
             Flags = other.Flags;
+            AdditionalProperties = other.AdditionalProperties != null ? new Dictionary<string, JObject>(other.AdditionalProperties) : null;
         }
 
         /// <summary>

@@ -27,9 +27,12 @@ public class ObjectParser
             _item.Interface = ExtractInterface(schema.OneOf, schema.Discriminator);
 
         else if (schema.Properties.Count > 0)
-            _item.Properties =
-                schema.Properties
-                    .Select(item => ParseProperty(item.Key, item.Value, schema.Required.Contains(item.Key))).ToList();
+        {
+            _item.Properties = schema.Properties
+                .Select(item => ParseProperty(item.Key, item.Value, schema.Required.Contains(item.Key))).ToList();
+            _item.AdditionalPropertiesAllowed = schema.AdditionalPropertiesAllowed;
+        }
+
         _item.Description = schema.Description;
         return _item;
     }

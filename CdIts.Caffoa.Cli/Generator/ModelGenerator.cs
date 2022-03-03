@@ -31,7 +31,7 @@ public class ModelGenerator
     {
         var file = Templates.GetTemplate("ModelInterfaceTemplate.tpl");
         var fileName = $"{item.ClassName}.generated.cs";
-        var formatter = new SchemaItemFormatter(item);
+        var formatter = new SchemaItemFormatter(item, _config);
         var parameters = new Dictionary<string, object>();
         parameters["NAMESPACE"] = _service.Model!.Namespace;
         parameters["NAME"] = item.ClassName;
@@ -44,7 +44,7 @@ public class ModelGenerator
     private void WriteModelClass(SchemaItem item, List<SchemaItem> interfaces)
     {
         var file = Templates.GetTemplate("ModelTemplate.tpl");
-        var formatter = new SchemaItemFormatter(item);
+        var formatter = new SchemaItemFormatter(item, _config);
         var fileName = $"{item.ClassName}.generated.cs";
         var parameters = new Dictionary<string, object>();
         parameters["NAMESPACE"] = _service.Model!.Namespace;
@@ -55,6 +55,7 @@ public class ModelGenerator
         parameters["RAWNAME"] = item.Name;
         parameters["UPDATEPROPS"] = FormatPropertyUpdates(item);
         parameters["PROPERTIES"] = FormatProperties(item);
+        parameters["ADDITIONAL_PROPS"] = formatter.GenericAdditionalProperties();
         parameters["DESCRIPTION"] = formatter.Description;
         var formatted = file.FormatDict(parameters);
         File.WriteAllText(Path.Combine(_service.Model.TargetFolder, fileName), formatted.ToSystemNewLine());
@@ -88,6 +89,9 @@ public class ModelGenerator
             updateCommands.Add(sb.ToString());
         }
 
+        if (schemaItem.AdditionalPropertiesAllowed && _config.GenericAdditionalProperties is true)
+            updateCommands.Add(
+                $"AdditionalProperties = other.AdditionalProperties != null ? new Dictionary<string, {_config.GenericAdditionalPropertiesType}>(other.AdditionalProperties) : null;");
         return string.Join("\n            ", updateCommands);
     }
 
