@@ -7,6 +7,7 @@ config:
   parsePathParameters: true # if set to true, the parameter parsing is not left to Functions, but is done by caffoa, opening up the possibility to give back better error messages
   parseQueryParameters: true # if set to true, caffoa will parse required and optional parameters that are defined for query
   genericAdditionalProperties: false # if set to true, a dictionary for additional properties will be generated
+  genericAdditionalPropertiesType: object
   requestBodyType: # overwrite the JSON type that is passed to the method for some operations
     - type: JObject
       import: Newtonsoft.Json.Linq
@@ -20,6 +21,7 @@ services:
   - apiPath: tests\base.openapi.yml
     config:
       genericAdditionalProperties: true
+#      genericAdditionalPropertiesType: object
     model:
       namespace: DemoV3.Model.Base
       targetFolder: ./demo/DemoV3/Model/Base

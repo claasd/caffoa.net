@@ -91,7 +91,7 @@ public class ModelGenerator
 
         if (schemaItem.AdditionalPropertiesAllowed && _config.GenericAdditionalProperties is true)
             updateCommands.Add(
-                "AdditionalProperties = other.AdditionalProperties != null ? new Dictionary<string, JToken>(other.AdditionalProperties) : null;");
+                $"AdditionalProperties = other.AdditionalProperties != null ? new Dictionary<string, {_config.GenericAdditionalPropertiesType}>(other.AdditionalProperties) : null;");
         return string.Join("\n            ", updateCommands);
     }
 

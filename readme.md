@@ -138,6 +138,7 @@ config:
   parsePathParameters: true # if set to true, the parameter parsing is not left to Functions, but is done by caffoa, opening up the possibility to give back better error messages
   parseQueryParameters: true # if set to true, caffoa will parse required and optional parameters that are defined for query
   genericAdditionalProperties: false # if set to true, a dictionary for additional properties will be generated if additionalProperties is set to true or not set at all (true is default)
+  genericAdditionalPropertiesType: JObject # defaults to JObject, but a different type can be used for the additionalProperties dictionary
   withCancellation: false # if set to true, caffoa will add a CancellationToken to all interface methods. It will be triggered when the HTTP Request gets aborted (for example by the client).
   imports: # a list of imports that will be added to most generated classes
     - MySpecialNamespace
@@ -167,6 +168,7 @@ services:
       parsePathParameters: # overrides the config element from the global config
       parseQueryParameters: # overrides the config element from the global config
       genericAdditionalProperties: # overrides the config element from the global config
+      genericAdditionalPropertiesType: # overrides the config element from the global config
       withCancellation: # overrides the config element from the global config
       imports: # overrides the config element from the global config
       requestBodyType: # overrides the config element from the global config

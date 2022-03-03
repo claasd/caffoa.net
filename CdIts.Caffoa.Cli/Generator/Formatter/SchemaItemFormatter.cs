@@ -80,7 +80,7 @@ public class SchemaItemFormatter
     public string GenericAdditionalProperties()
     {
         if (_item.AdditionalPropertiesAllowed && _config.GenericAdditionalProperties is true)
-            return "\n        [JsonExtensionData]\n        public Dictionary<string, JToken> AdditionalProperties;\n";
+            return $"\n        [JsonExtensionData]\n        public Dictionary<string, {_config.GenericAdditionalPropertiesType}> AdditionalProperties;\n";
         return "";
     }
 }

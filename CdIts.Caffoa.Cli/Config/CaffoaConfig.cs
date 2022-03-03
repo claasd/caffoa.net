@@ -2,6 +2,7 @@ namespace CdIts.Caffoa.Cli.Config;
 
 public class CaffoaConfig
 {
+    private string? _genericAdditionalPropertiesType;
     public bool? CheckEnums { get; set; }
     public string? Prefix { get; set; }
     public string? Suffix { get; set; }
@@ -12,6 +13,13 @@ public class CaffoaConfig
     public bool? ParsePathParameters { get; set; }
     public bool? ParseQueryParameters { get; set; }
     public bool? GenericAdditionalProperties { get; set; }
+
+    public string GenericAdditionalPropertiesType
+    {
+        get => _genericAdditionalPropertiesType ?? "JObject";
+        set => _genericAdditionalPropertiesType = value;
+    }
+
     public List<string>? Imports { get; set; }
     public List<RequestBodyTypeConfig>? RequestBodyType { get; set; }
     public FilterConfig? DurableClient { get; set; }
@@ -32,9 +40,10 @@ public class CaffoaConfig
             ParsePathParameters = ParsePathParameters ?? general.ParsePathParameters,
             ParseQueryParameters = ParseQueryParameters ?? general.ParseQueryParameters,
             GenericAdditionalProperties = GenericAdditionalProperties ?? general.GenericAdditionalProperties,
+            GenericAdditionalPropertiesType = GenericAdditionalPropertiesType ?? general.GenericAdditionalPropertiesType,
             DurableClient = DurableClient ?? general.DurableClient,
             SplitByTag = SplitByTag ?? general.SplitByTag,
-            WithCancellation = WithCancellation ?? general.WithCancellation,
+            WithCancellation = WithCancellation ?? general.WithCancellation
         };
     }
 }

@@ -1,9 +1,8 @@
 # caffoa changelog
 
 ### 1.3.0
-* new option: `genericAdditionalProperties` will create a dictionary for properties if `additionalProperties`is set to true or omitted.
+* new option: `genericAdditionalProperties` will create a dictionary for properties if `additionalProperties`is set to true or omitted. By default, JToken will be used, but you can use your own tyoe (e.g. `object`) by specifiying `genericAdditionalPropertiesType`
 * new option: `withCancellation` will add a cancellation token to the method interfaces that indices if the request has been cancelled.
-
 
 ### 1.2.1
 * added CLI builds for net6 and net5 for systems that can have net6/net5 without dotnetcore3.1 runtimes
