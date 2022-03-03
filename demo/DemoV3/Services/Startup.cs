@@ -12,9 +12,9 @@ namespace DemoV3.Services
     {
         public override void Configure(IFunctionsHostBuilder builder)
         {
-            builder.Services.AddSingleton<ICaffoaFactory<IDemoV3MaintainanceService>, MaintainanceService>();
-            builder.Services.AddSingleton<ICaffoaFactory<IDemoV3UserService>, DemoV3UserService>();
-            builder.Services.AddScoped<ICaffoaResultHandler, ResultHandler>();
+            builder.Services.AddCaffoaFactory<IDemoV3MaintainanceService, MaintainanceService>()
+                .AddCaffoaFactory<IDemoV3UserService, DemoV3UserService>()
+                .AddCaffoaResultHandler<ResultHandler>();
         }
     }
 }

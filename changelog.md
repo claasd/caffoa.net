@@ -2,6 +2,7 @@
 
 ### 1.4.0
 * new option `functionNamePrefix` that adds a prefix to all function names (Not interfaces). Useful if you have multiple APIs in one function that have identical operation IDs
+* possibility to add Caffoa Handlers through `services.AddCaffoaFactory<interface, implementantion>` and other `AddCaffoa*` extensions.
 
 ### 1.3.0
 * new option: `genericAdditionalProperties` will create a dictionary for properties if `additionalProperties`is set to true or omitted. By default, JToken will be used, but you can use your own tyoe (e.g. `object`) by specifiying `genericAdditionalPropertiesType`
