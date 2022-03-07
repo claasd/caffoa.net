@@ -12,14 +12,11 @@ using Newtonsoft.Json.Linq;
 namespace DemoV3.Services
 {
     
-    public class DemoV3UserService : IDemoV3UserService, ICaffoaFactory<IDemoV3UserService>
+    public class DemoV3UserService : IDemoV3UserService
     {
         private readonly UserRepository<UserWithId> _users = new UserRepository<UserWithId>();
         private readonly UserRepository<GuestUser> _guests = new UserRepository<GuestUser>();
-        public IDemoV3UserService Instance(HttpRequest request)
-        {
-            return this;
-        }
+        
 
         public async Task<IEnumerable<AnyCompleteUser>> UsersGetAsync(int offset = 0, int limit = 1000)
         {
@@ -117,6 +114,12 @@ namespace DemoV3.Services
         public async Task<UserWithId> UserGetAsync(string userId)
         {
             return await _users.GetById(userId);
+        }
+
+        public async ValueTask DisposeAsync()
+        {
+            await Task.Yield();
+            GC.SuppressFinalize(this);
         }
     }
 }

@@ -15,7 +15,7 @@ namespace DemoV3
     /// <summary>
     /// Interface for services to be implemented to serve the Function implementation
     /// </summary>
-    public interface IDemoV3MaintainanceService
+    public interface IDemoV3MaintainanceService : IAsyncDisposable
     {
         /// <summary>
         /// start a long running function via durable functions

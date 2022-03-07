@@ -43,7 +43,8 @@ namespace DemoV3
             HttpRequest request, string id, [DurableClient] IDurableOrchestrationClient durableClient)
         {
             try {
-                var result = await _factory.Instance(request).LongRunningFunctionAsync(durableClient, _converter.ParseGuid(id, nameof(id)));
+                await using var instance = _factory.Instance(request);
+                var result = await instance.LongRunningFunctionAsync(durableClient, _converter.ParseGuid(id, "id"));
                 return _resultHandler.Json(result, 202);
             } catch(CaffoaClientError err) {
                 return err.Result;

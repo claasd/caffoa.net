@@ -34,6 +34,7 @@ services:
   - apiPath: tests\openapi.yml
     config:
 #      functionNamePrefix: Func
+      disposable: true
       imports: 
         - DemoV3.Model.Base
       durableClient:

@@ -43,13 +43,14 @@ namespace DemoV3
             HttpRequest request)
         {
             try {
-                int offset = 0;
+                int offsetValue = 0;
                 if(request.Query.TryGetValue("offset", out var offsetQueryValue))
-                    offset = _converter.Parse<int>(offsetQueryValue, nameof(offset));
-                int limit = 1000;
+                    offsetValue = _converter.Parse<int>(offsetQueryValue, "offset");
+                int limitValue = 1000;
                 if(request.Query.TryGetValue("limit", out var limitQueryValue))
-                    limit = _converter.Parse<int>(limitQueryValue, nameof(limit));
-                var result = await _factory.Instance(request).UsersGetAsync(offset, limit);
+                    limitValue = _converter.Parse<int>(limitQueryValue, "limit");
+                await using var instance = _factory.Instance(request);
+                var result = await instance.UsersGetAsync(offsetValue, limitValue);
                 return _resultHandler.Json(result, 200);
             } catch(CaffoaClientError err) {
                 return err.Result;
@@ -68,12 +69,13 @@ namespace DemoV3
             HttpRequest request)
         {
             try {
+                await using var instance = _factory.Instance(request);
                 var jObject = await _jsonParser.Parse<JObject>(request.Body);
                 var discriminator = jObject["type"]?.ToString();
                 var task = discriminator switch
                 {
-                    "simple" => _factory.Instance(request).UserPostAsync(_jsonParser.ToObject<User>(jObject)),
-                    "guest" => _factory.Instance(request).UserPostAsync(_jsonParser.ToObject<GuestUser>(jObject)),
+                    "simple" => instance.UserPostAsync(_jsonParser.ToObject<User>(jObject)),
+                    "guest" => instance.UserPostAsync(_jsonParser.ToObject<GuestUser>(jObject)),
                     _ => throw _errorHandler.WrongContent("type", discriminator, new [] { "simple", "guest" })
                 };
                 var result = await task;
@@ -95,12 +97,13 @@ namespace DemoV3
             HttpRequest request, string userId)
         {
             try {
+                await using var instance = _factory.Instance(request);
                 var jObject = await _jsonParser.Parse<JObject>(request.Body);
                 var discriminator = jObject["type"]?.ToString();
                 var task = discriminator switch
                 {
-                    "simple" => _factory.Instance(request).UserPutAsync(userId, _jsonParser.ToObject<User>(jObject)),
-                    "guest" => _factory.Instance(request).UserPutAsync(userId, _jsonParser.ToObject<GuestUser>(jObject)),
+                    "simple" => instance.UserPutAsync(userId, _jsonParser.ToObject<User>(jObject)),
+                    "guest" => instance.UserPutAsync(userId, _jsonParser.ToObject<GuestUser>(jObject)),
                     _ => throw _errorHandler.WrongContent("type", discriminator, new [] { "simple", "guest" })
                 };
                 var (result, code) = await task;
@@ -122,7 +125,8 @@ namespace DemoV3
             HttpRequest request, string userId)
         {
             try {
-                var result = await _factory.Instance(request).UserPatchAsync(userId, await _jsonParser.Parse<JObject>(request.Body));
+                await using var instance = _factory.Instance(request);
+                var result = await instance.UserPatchAsync(userId, await _jsonParser.Parse<JObject>(request.Body));
                 return _resultHandler.Json(result, 200);
             } catch(CaffoaClientError err) {
                 return err.Result;
@@ -141,7 +145,8 @@ namespace DemoV3
             HttpRequest request, string userId)
         {
             try {
-                var result = await _factory.Instance(request).UserGetAsync(userId);
+                await using var instance = _factory.Instance(request);
+                var result = await instance.UserGetAsync(userId);
                 return _resultHandler.Json(result, 200);
             } catch(CaffoaClientError err) {
                 return err.Result;
@@ -160,7 +165,8 @@ namespace DemoV3
             HttpRequest request, string date)
         {
             try {
-                var result = await _factory.Instance(request).UsersGetByBirthdateAsync(_converter.ParseDateOnly(date, nameof(date)));
+                await using var instance = _factory.Instance(request);
+                var result = await instance.UsersGetByBirthdateAsync(_converter.ParseDateOnly(date, "date"));
                 return _resultHandler.Json(result, 200);
             } catch(CaffoaClientError err) {
                 return err.Result;
@@ -179,20 +185,21 @@ namespace DemoV3
             HttpRequest request)
         {
             try {
-                DateOnly before;
+                DateOnly beforeValue;
                 if(request.Query.TryGetValue("before", out var beforeQueryValue))
-                    before = _converter.ParseDateOnly(beforeQueryValue, nameof(before));
+                    beforeValue = _converter.ParseDateOnly(beforeQueryValue, "before");
                 else
                     throw _errorHandler.RequiredQueryParameterMissing("before");
-                DateOnly after;
+                DateOnly afterValue;
                 if(request.Query.TryGetValue("after", out var afterQueryValue))
-                    after = _converter.ParseDateOnly(afterQueryValue, nameof(after));
+                    afterValue = _converter.ParseDateOnly(afterQueryValue, "after");
                 else
                     throw _errorHandler.RequiredQueryParameterMissing("after");
-                int? maxResults = null;
+                int? maxResultsValue = null;
                 if(request.Query.TryGetValue("maxResults", out var maxResultsQueryValue))
-                    maxResults = _converter.Parse<int>(maxResultsQueryValue, nameof(maxResults));
-                var result = await _factory.Instance(request).UsersSearchByDateAsync(before, after, maxResults);
+                    maxResultsValue = _converter.Parse<int>(maxResultsQueryValue, "maxResults");
+                await using var instance = _factory.Instance(request);
+                var result = await instance.UsersSearchByDateAsync(beforeValue, afterValue, maxResultsValue);
                 return _resultHandler.Json(result, 200);
             } catch(CaffoaClientError err) {
                 return err.Result;

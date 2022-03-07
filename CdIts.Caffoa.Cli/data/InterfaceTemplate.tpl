@@ -12,7 +12,7 @@ namespace {NAMESPACE}
     /// <summary>
     /// Interface for services to be implemented to serve the Function implementation
     /// </summary>
-    public interface {CLASSNAME}
+    public interface {CLASSNAME}{PARENTS}
     {{
 {METHODS}
     }}

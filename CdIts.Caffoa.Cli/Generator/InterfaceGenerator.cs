@@ -50,6 +50,7 @@ public class InterfaceGenerator
         var format = new Dictionary<string, object>();
         format["NAMESPACE"] = _functionConfig.InterfaceNamespace;
         format["CLASSNAME"] = name;
+        format["PARENTS"] = _config.Disposable is true ? " : IAsyncDisposable" : "";
         format["IMPORTS"] = string.Join("", imports.Distinct().Select(i => $"using {i};\n"));
         format["METHODS"] = GenerateInterfaceMethods(endpoints);
         var formatted = file.FormatDict(format);

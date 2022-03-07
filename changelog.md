@@ -1,4 +1,6 @@
 # caffoa changelog
+### 1.5.0
+* possibility to have IAsyncDisposable instances
 
 ### 1.4.0
 * new option `functionNamePrefix` that adds a prefix to all function names (Not interfaces). Useful if you have multiple APIs in one function that have identical operation IDs
