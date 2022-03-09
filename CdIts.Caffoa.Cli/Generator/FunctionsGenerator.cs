@@ -123,6 +123,9 @@ public class FunctionsGenerator
         parameters["OPERATION"] = endpoint.Operation;
         parameters["PATH"] = _config.RoutePrefix + endpoint.Route;
         parameters["RESULT"] = result;
+        parameters["INSTANTIATION"] = _config.Disposable is true
+            ? "await using var instance = _factory.Instance(request);"
+            : "var instance = _factory.Instance(request);";
         parameters["QUERY_VARIABLES"] = GenerateQueryVariables(endpoint);
         parameters["CALL"] = call;
         parameters["PARAM_NAMES"] = string.Join("", pathParams);
@@ -140,7 +143,7 @@ public class FunctionsGenerator
         {
             var sb = new StringBuilder();
             var typeName = parameter.GetTypeName(_config);
-            sb.Append($"{typeName} {parameter.Name}");
+            sb.Append($"{typeName} {parameter.Name}Value");
             if (parameter.DefaultValue != null)
                 sb.Append($" = {parameter.DefaultValue}");
             else if (!parameter.Required)
@@ -148,7 +151,7 @@ public class FunctionsGenerator
             sb.Append(";\n                ");
             sb.Append($"if(request.Query.TryGetValue(\"{parameter.Name}\", out var {parameter.Name}QueryValue))");
             sb.Append("\n                    ");
-            sb.Append($"{parameter.Name} = ");
+            sb.Append($"{parameter.Name}Value = ");
             sb.Append(FormatConversion(parameter.GetTypeName(_config).Trim('?'), $"{parameter.Name}QueryValue",
                 parameter.Name));
             sb.Append(";\n                ");
@@ -169,7 +172,7 @@ public class FunctionsGenerator
     {
         var callParams = string.Join(", ", parameters);
         var awaitStr = addAwait ? "await " : "";
-        return $"{variable}{awaitStr}_factory.Instance(request).{endpoint.Name}Async({callParams})";
+        return $"{variable}{awaitStr}instance.{endpoint.Name}Async({callParams})";
     }
 
     private string FormatSelectionCall(EndPointModel endpoint, string variable)
@@ -185,7 +188,7 @@ public class FunctionsGenerator
             caseParams.Add($"_jsonParser.ToObject<{type}>(jObject)");
             if (_config.ParseQueryParameters is true)
             {
-                caseParams.AddRange(endpoint.QueryParameters().Select(p => p.Name));
+                caseParams.AddRange(endpoint.QueryParameters().Select(p => $"{p.Name}Value"));
             }
 
             if (_config.WithCancellation is true)
@@ -213,7 +216,7 @@ public class FunctionsGenerator
             callParams.Add($"request.Body");
         if (_config.ParseQueryParameters is true)
         {
-            callParams.AddRange(endpoint.QueryParameters().Select(p => p.Name));
+            callParams.AddRange(endpoint.QueryParameters().Select(p => $"{p.Name}Value"));
         }
 
         if (_config.WithCancellation is true)
@@ -242,14 +245,14 @@ public class FunctionsGenerator
         if (typeName == "string")
             return $"{variableName}";
         if (typeName == "DateOnly" && _config.UseDateOnly is true)
-            return $"_converter.ParseDateOnly({variableName}, nameof({objectName}))";
+            return $"_converter.ParseDateOnly({variableName}, \"{objectName}\")";
         if (typeName == "DateOnly")
-            return $"_converter.ParseDate({variableName}, nameof({objectName}))";
+            return $"_converter.ParseDate({variableName}, \"{objectName}\")";
         if (typeName == "DateTime")
-            return $"_converter.ParseDateTime({variableName}, nameof({objectName}))";
+            return $"_converter.ParseDateTime({variableName}, \"{objectName}\")";
         if (typeName == "Guid")
-            return $"_converter.ParseGuid({variableName}, nameof({objectName}))";
-        return $"_converter.Parse<{typeName}>({variableName}, nameof({objectName}))";
+            return $"_converter.ParseGuid({variableName}, \"{objectName}\")";
+        return $"_converter.Parse<{typeName}>({variableName}, \"{objectName}\")";
     }
 
 

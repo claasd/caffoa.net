@@ -140,6 +140,7 @@ config:
   genericAdditionalProperties: false # if set to true, a dictionary for additional properties will be generated if additionalProperties is set to true or not set at all (true is default)
   genericAdditionalPropertiesType: JObject # defaults to JObject, but a different type can be used for the additionalProperties dictionary
   withCancellation: false # if set to true, caffoa will add a CancellationToken to all interface methods. It will be triggered when the HTTP Request gets aborted (for example by the client).
+  disposable: false # if set to true, Interfaces will derive from IAsyncDisposable, and functions will use `await using var instance = _factory.Instance(..);`
   imports: # a list of imports that will be added to most generated classes
     - MySpecialNamespace
   requestBodyType: # you can override the request body type for specific operations or methods
@@ -170,6 +171,7 @@ services:
       genericAdditionalProperties: # overrides the config element from the global config
       genericAdditionalPropertiesType: # overrides the config element from the global config
       withCancellation: # overrides the config element from the global config
+      disposable: # overrides the config element from the global config
       imports: # overrides the config element from the global config
       requestBodyType: # overrides the config element from the global config
       durableClient: # overrides the config element from the global config

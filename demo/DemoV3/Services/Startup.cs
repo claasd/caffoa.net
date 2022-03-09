@@ -12,8 +12,8 @@ namespace DemoV3.Services
     {
         public override void Configure(IFunctionsHostBuilder builder)
         {
-            builder.Services.AddCaffoaFactory<IDemoV3MaintainanceService, MaintainanceService>()
-                .AddCaffoaFactory<IDemoV3UserService, DemoV3UserService>()
+            builder.Services.AddCaffoaFactory<IDemoV3MaintainanceService, MaintainanceServiceFactory>()
+                .AddCaffoaFactory<IDemoV3UserService, UserServiceFactory>()
                 .AddCaffoaResultHandler<ResultHandler>();
         }
     }

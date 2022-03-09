@@ -15,7 +15,7 @@ namespace DemoV3
     /// <summary>
     /// Interface for services to be implemented to serve the Function implementation
     /// </summary>
-    public interface IDemoV3UserService
+    public interface IDemoV3UserService : IAsyncDisposable
     {
         /// <summary>
         /// get information about the users

@@ -24,6 +24,7 @@ public class CaffoaConfig
     public List<RequestBodyTypeConfig>? RequestBodyType { get; set; }
     public FilterConfig? DurableClient { get; set; }
     public string? FunctionNamePrefix { get; set; }
+    public bool? Disposable { get; set; }
 
     public CaffoaGlobalConfig MergedWith(CaffoaGlobalConfig general)
     {
@@ -45,7 +46,8 @@ public class CaffoaConfig
             DurableClient = DurableClient ?? general.DurableClient,
             SplitByTag = SplitByTag ?? general.SplitByTag,
             WithCancellation = WithCancellation ?? general.WithCancellation,
-            FunctionNamePrefix = FunctionNamePrefix ?? general.FunctionNamePrefix
+            FunctionNamePrefix = FunctionNamePrefix ?? general.FunctionNamePrefix,
+            Disposable = Disposable ?? general.Disposable
         };
     }
 }

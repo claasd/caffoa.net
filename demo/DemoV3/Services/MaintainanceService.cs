@@ -7,7 +7,7 @@ using Microsoft.Azure.WebJobs.Extensions.DurableTask;
 
 namespace DemoV3.Services;
 
-public class MaintainanceService : IDemoV3MaintainanceService, ICaffoaFactory<IDemoV3MaintainanceService>
+public class MaintainanceService : IDemoV3MaintainanceService
 {
     public async Task<LongRunningfunctionStatus> LongRunningFunctionAsync(IDurableOrchestrationClient orchestrationClient, Guid id)
     {
@@ -18,5 +18,11 @@ public class MaintainanceService : IDemoV3MaintainanceService, ICaffoaFactory<ID
     public IDemoV3MaintainanceService Instance(HttpRequest request)
     {
         return this;
+    }
+
+    public ValueTask DisposeAsync()
+    {
+        GC.SuppressFinalize(this);
+        return ValueTask.CompletedTask;
     }
 }
