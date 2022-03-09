@@ -15,12 +15,12 @@ namespace DemoV3.Model {
             item.Message = other.Message;
         }
 
-        [Obsolete("Use MergedWith<T> from CdIts.Caffoa.Extensions instead")]
+        [Obsolete("Use MergedWith<T> from Caffoa.Extensions instead")]
         public static void MergeWithError(this Error item, Error other, JsonMergeSettings mergeSettings = null) {
             item.MergeWithError(JObject.FromObject(other), mergeSettings);
         }
 
-        [Obsolete("Use MergedWith<T> from CdIts.Caffoa.Extensions instead")]
+        [Obsolete("Use MergedWith<T> from Caffoa.Extensions instead")]
         public static void MergeWithError(this Error item, JToken other, JsonMergeSettings mergeSettings = null) {
             mergeSettings ??= new JsonMergeSettings()
             {
@@ -45,12 +45,12 @@ namespace DemoV3.Model {
             item.AgeGroup = other.AgeGroup;
         }
 
-        [Obsolete("Use MergedWith<T> from CdIts.Caffoa.Extensions instead")]
+        [Obsolete("Use MergedWith<T> from Caffoa.Extensions instead")]
         public static void MergeWithUser(this User item, User other, JsonMergeSettings mergeSettings = null) {
             item.MergeWithUser(JObject.FromObject(other), mergeSettings);
         }
 
-        [Obsolete("Use MergedWith<T> from CdIts.Caffoa.Extensions instead")]
+        [Obsolete("Use MergedWith<T> from Caffoa.Extensions instead")]
         public static void MergeWithUser(this User item, JToken other, JsonMergeSettings mergeSettings = null) {
             mergeSettings ??= new JsonMergeSettings()
             {
@@ -70,12 +70,12 @@ namespace DemoV3.Model {
             item.Type = other.Type;
         }
 
-        [Obsolete("Use MergedWith<T> from CdIts.Caffoa.Extensions instead")]
+        [Obsolete("Use MergedWith<T> from Caffoa.Extensions instead")]
         public static void MergeWithGuestUser(this GuestUser item, GuestUser other, JsonMergeSettings mergeSettings = null) {
             item.MergeWithGuestUser(JObject.FromObject(other), mergeSettings);
         }
 
-        [Obsolete("Use MergedWith<T> from CdIts.Caffoa.Extensions instead")]
+        [Obsolete("Use MergedWith<T> from Caffoa.Extensions instead")]
         public static void MergeWithGuestUser(this GuestUser item, JToken other, JsonMergeSettings mergeSettings = null) {
             mergeSettings ??= new JsonMergeSettings()
             {
@@ -96,12 +96,12 @@ namespace DemoV3.Model {
             item.RegistrationDate = other.RegistrationDate;
         }
 
-        [Obsolete("Use MergedWith<T> from CdIts.Caffoa.Extensions instead")]
+        [Obsolete("Use MergedWith<T> from Caffoa.Extensions instead")]
         public static void MergeWithUserWithId(this UserWithId item, UserWithId other, JsonMergeSettings mergeSettings = null) {
             item.MergeWithUserWithId(JObject.FromObject(other), mergeSettings);
         }
 
-        [Obsolete("Use MergedWith<T> from CdIts.Caffoa.Extensions instead")]
+        [Obsolete("Use MergedWith<T> from Caffoa.Extensions instead")]
         public static void MergeWithUserWithId(this UserWithId item, JToken other, JsonMergeSettings mergeSettings = null) {
             mergeSettings ??= new JsonMergeSettings()
             {
@@ -121,12 +121,12 @@ namespace DemoV3.Model {
             item.Taxes = other.Taxes;
         }
 
-        [Obsolete("Use MergedWith<T> from CdIts.Caffoa.Extensions instead")]
+        [Obsolete("Use MergedWith<T> from Caffoa.Extensions instead")]
         public static void MergeWithPricing(this Pricing item, Pricing other, JsonMergeSettings mergeSettings = null) {
             item.MergeWithPricing(JObject.FromObject(other), mergeSettings);
         }
 
-        [Obsolete("Use MergedWith<T> from CdIts.Caffoa.Extensions instead")]
+        [Obsolete("Use MergedWith<T> from Caffoa.Extensions instead")]
         public static void MergeWithPricing(this Pricing item, JToken other, JsonMergeSettings mergeSettings = null) {
             mergeSettings ??= new JsonMergeSettings()
             {
@@ -146,12 +146,12 @@ namespace DemoV3.Model {
             item.Result = other.Result?.ToAnyUser();
         }
 
-        [Obsolete("Use MergedWith<T> from CdIts.Caffoa.Extensions instead")]
+        [Obsolete("Use MergedWith<T> from Caffoa.Extensions instead")]
         public static void MergeWithLongRunningfunctionStatus(this LongRunningfunctionStatus item, LongRunningfunctionStatus other, JsonMergeSettings mergeSettings = null) {
             item.MergeWithLongRunningfunctionStatus(JObject.FromObject(other), mergeSettings);
         }
 
-        [Obsolete("Use MergedWith<T> from CdIts.Caffoa.Extensions instead")]
+        [Obsolete("Use MergedWith<T> from Caffoa.Extensions instead")]
         public static void MergeWithLongRunningfunctionStatus(this LongRunningfunctionStatus item, JToken other, JsonMergeSettings mergeSettings = null) {
             mergeSettings ??= new JsonMergeSettings()
             {

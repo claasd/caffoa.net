@@ -14,12 +14,12 @@ namespace DemoV3.Model.Base {
             item.Desc = other.Desc;
         }
 
-        [Obsolete("Use MergedWith<T> from CdIts.Caffoa.Extensions instead")]
+        [Obsolete("Use MergedWith<T> from Caffoa.Extensions instead")]
         public static void MergeWithFlags(this Flags item, Flags other, JsonMergeSettings mergeSettings = null) {
             item.MergeWithFlags(JObject.FromObject(other), mergeSettings);
         }
 
-        [Obsolete("Use MergedWith<T> from CdIts.Caffoa.Extensions instead")]
+        [Obsolete("Use MergedWith<T> from Caffoa.Extensions instead")]
         public static void MergeWithFlags(this Flags item, JToken other, JsonMergeSettings mergeSettings = null) {
             mergeSettings ??= new JsonMergeSettings()
             {
@@ -44,12 +44,12 @@ namespace DemoV3.Model.Base {
             item.AdditionalProperties = other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null;
         }
 
-        [Obsolete("Use MergedWith<T> from CdIts.Caffoa.Extensions instead")]
+        [Obsolete("Use MergedWith<T> from Caffoa.Extensions instead")]
         public static void MergeWithAddress(this Address item, Address other, JsonMergeSettings mergeSettings = null) {
             item.MergeWithAddress(JObject.FromObject(other), mergeSettings);
         }
 
-        [Obsolete("Use MergedWith<T> from CdIts.Caffoa.Extensions instead")]
+        [Obsolete("Use MergedWith<T> from Caffoa.Extensions instead")]
         public static void MergeWithAddress(this Address item, JToken other, JsonMergeSettings mergeSettings = null) {
             mergeSettings ??= new JsonMergeSettings()
             {

@@ -10,9 +10,9 @@ namespace CdIts.Caffoa.Cli.Generator;
 public class ModelGenerator
 {
     private readonly ServiceConfig _service;
-    private readonly CaffoaConfig _config;
+    private readonly CaffoaGlobalConfig _config;
 
-    public ModelGenerator(ServiceConfig service, CaffoaConfig mergedConfig)
+    public ModelGenerator(ServiceConfig service, CaffoaGlobalConfig mergedConfig)
     {
         _service = service;
         _config = mergedConfig;
@@ -182,6 +182,7 @@ public class ModelGenerator
 
     private string FormatEnumProperty(PropertyData property, Dictionary<string, object> format)
     {
+
         var file = Templates.GetTemplate("ModelEnumPropertyTemplate.tpl");
         format["NO_CHECK_MSG"] = _config.CheckEnums!.Value
             ? ""
@@ -193,7 +194,9 @@ public class ModelGenerator
     
     private void WriteEnumClass(PropertyData property, string className)
     {
-        var file = Templates.GetTemplate("ModelEnumPropertyClassTemplate.tpl");
+        var file = _config.RemoveDeprecated 
+            ? Templates.GetTemplate("ModelEnumPropertyClassTemplate.tpl")
+            : Templates.GetTemplate("ModelEnumPropertyClassTemplate.deprecated.tpl");
         var enums = new Dictionary<string, string>();
         var obsoleteEnums = new Dictionary<string, string>();
         var propName = property.Name.ToObjectName();
