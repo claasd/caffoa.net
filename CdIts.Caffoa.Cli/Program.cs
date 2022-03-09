@@ -37,7 +37,9 @@ try
         {
             var localConfig = service.Config?.MergedWith(settings.Config) ?? settings.Config;
             var parser = new ServiceParser(service, localConfig);
-
+            if(localConfig.GenerateResolvedApiFile is true)
+                parser.WriteGeneratedApiFile();
+                
             if (service.Model != null)
             {
                 var generator = new ModelGenerator(service, localConfig);

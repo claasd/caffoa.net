@@ -25,6 +25,7 @@ public class CaffoaConfig
     public FilterConfig? DurableClient { get; set; }
     public string? FunctionNamePrefix { get; set; }
     public bool? Disposable { get; set; }
+    public bool? GenerateResolvedApiFile { get; set; }
 
     public CaffoaGlobalConfig MergedWith(CaffoaGlobalConfig general)
     {
@@ -47,7 +48,8 @@ public class CaffoaConfig
             SplitByTag = SplitByTag ?? general.SplitByTag,
             WithCancellation = WithCancellation ?? general.WithCancellation,
             FunctionNamePrefix = FunctionNamePrefix ?? general.FunctionNamePrefix,
-            Disposable = Disposable ?? general.Disposable
+            Disposable = Disposable ?? general.Disposable,
+            GenerateResolvedApiFile = GenerateResolvedApiFile ?? general.GenerateResolvedApiFile
         };
     }
 }

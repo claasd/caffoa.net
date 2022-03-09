@@ -1,8 +1,11 @@
 using CdIts.Caffoa.Cli.Config;
 using CdIts.Caffoa.Cli.Errors;
 using CdIts.Caffoa.Cli.Model;
+using Microsoft.OpenApi;
+using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers;
+using Microsoft.OpenApi.Writers;
 
 namespace CdIts.Caffoa.Cli.Parser;
 
@@ -24,6 +27,16 @@ public class ServiceParser
         {
             throw new CaffoaValidationError($"Error parsing {service.ApiPath}", diagnostic);
         }
+    }
+
+    public void WriteGeneratedApiFile()
+    {
+        var path = Path.ChangeExtension(_service.ApiPath, "generated.yml");
+        using var fileStream = File.OpenWrite(path);
+        _document.Serialize(fileStream, OpenApiSpecVersion.OpenApi3_0, OpenApiFormat.Yaml, new OpenApiWriterSettings()
+        {
+            ReferenceInline = ReferenceInlineSetting.InlineLocalReferences
+        });
     }
 
     public List<SchemaItem> GenerateModel()
