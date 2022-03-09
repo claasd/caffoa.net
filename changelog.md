@@ -1,6 +1,12 @@
 # caffoa changelog
 ### 1.5.0
 * possibility to have IAsyncDisposable instances
+* cleanup of model generation. 
+  * The UpdateWith<Name> elements have been moved to extensions. a file called `Extensions.generated.cs` will be created for each namepsace containing these etension methods. If oyu do not need or want them, set `extensions` in your config to false. Future versions of caffoa will have false as default.
+  * Copy constructors and Base class constructors have been added
+  * To<Name> now uses the copy constructors.
+  * The `MergeWith<Name>` methods have been moved to extensions and have been deprecated. A new nuget package called CdIts.Caffoa.Extensions contains new generic `MergedWith<T>` methods.
+* Enum values have been moved to own classes for better code completion and cleaner model classes. The code for checking still remains in the model class for now. The old static names have been deprecated.
 
 ### 1.4.0
 * new option `functionNamePrefix` that adds a prefix to all function names (Not interfaces). Useful if you have multiple APIs in one function that have identical operation IDs

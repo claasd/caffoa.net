@@ -758,6 +758,7 @@ paths:
         in: query
         schema:
           type: integer
+          nullable: true
   '/startLongRunningFunction/{id}':
     post:
       tags:
@@ -819,6 +820,30 @@ paths:
                             nullable: true
                       - required:
                           - type
+                          - email
+                        type: object
+                        properties:
+                          email:
+                            type: string
+                            format: email
+                          type:
+                            enum:
+                              - guest
+                            type: string
+                            default: guest
+                    discriminator:
+                      propertyName: type
+                      mapping:
+                        simple: '#/components/schemas/user'
+                        guest: '#/components/schemas/guestUser'
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+components: { }pe
                           - email
                         type: object
                         properties:

@@ -18,7 +18,7 @@ public class ModelGenerator
         _config = mergedConfig;
     }
 
-    public void WriteModel(List<SchemaItem> objects)
+    public IEnumerable<string>? WriteModel(List<SchemaItem> objects)
     {
         Directory.CreateDirectory(_service.Model!.TargetFolder);
         var interfaces = objects.Where(o => o.Interface != null).ToList();
@@ -27,7 +27,9 @@ public class ModelGenerator
         enumClasses.ForEach(WriteEnumClasses);
         interfaces.ForEach(WriteModelInterface);
         classes.ForEach(c => WriteModelClass(c, interfaces));
-        
+        if (_config.Extensions is false) 
+            return null;
+        return classes.Select(CreateModelExtensions);
     }
 
     private void WriteModelInterface(SchemaItem item)
@@ -56,28 +58,70 @@ public class ModelGenerator
         parameters["PARENTS"] = formatter.Parents(interfaces);
         parameters["INTERFACE_METHODS"] = formatter.InterfaceMethods(interfaces);
         parameters["RAWNAME"] = item.Name;
-        parameters["UPDATEPROPS"] = FormatPropertyUpdates(item);
+        parameters["CONSTRUCTORS"] = CreateConstructors(item);
         parameters["PROPERTIES"] = FormatProperties(item);
         parameters["ADDITIONAL_PROPS"] = formatter.GenericAdditionalProperties();
         parameters["DESCRIPTION"] = formatter.Description;
         var formatted = file.FormatDict(parameters);
         File.WriteAllText(Path.Combine(_service.Model.TargetFolder, fileName), formatted.ToSystemNewLine());
     }
+    
+    private string CreateModelExtensions(SchemaItem item)
+    {
+        var file = Templates.GetTemplate("ModelExtensionContentTemplate.tpl");
+        var formatter = new SchemaItemFormatter(item, _config);
+        var parameters = new Dictionary<string, object>();
+        parameters["NAME"] = item.ClassName;
+        parameters["UPDATEPROPS"] = FormatExternalPropertiesUpdate(item);
+        var formatted = file.FormatDict(parameters);
+        return formatted.ToSystemNewLine();
+    }
 
-    private string FormatPropertyUpdates(SchemaItem schemaItem)
+    private string CreateConstructors(SchemaItem item)
+    {
+        var props = FormatPropertyUpdates(item);
+        var builder = new StringBuilder();
+        builder.Append($"public {item.ClassName}({item.ClassName} other)");
+        if (item.Parent != null)
+            builder.Append($" : base(other)");
+        builder.Append(" {\n            ");
+        builder.Append(props);
+        builder.Append("\n        }");
+        if (item.Parent != null)
+        {
+            builder.Append($"\n        public {item.ClassName}({item.Parent} other) : base(other) {{}}");
+        }
+            
+        return builder.ToString();
+    }
+
+    private string FormatExternalPropertiesUpdate(SchemaItem schemaItem)
     {
         var updateCommands = new List<string>();
         if (schemaItem.Parent != null)
         {
-            updateCommands.Add($"UpdateWith{schemaItem.Parent}(other);");
+            updateCommands.Add($"item.UpdateWith{schemaItem.Parent}(other);");
         }
+        updateCommands.AddRange(FormatPropertyUpdates(schemaItem, "item."));
+        return string.Join("\n            ", updateCommands);
+    }
+    
+    private string FormatPropertyUpdates(SchemaItem schemaItem)
+    {
+        
+        return string.Join("\n            ", FormatPropertyUpdates(schemaItem, ""));
+    }
 
+    private List<string> FormatPropertyUpdates(SchemaItem schemaItem, string prefix)
+    {
+        var updateCommands = new List<string>();
         if (schemaItem.Properties is null)
             throw new CaffoaParserError($"No properties defined for object {schemaItem.Name}");
         foreach (var property in schemaItem.Properties!)
         {
             var name = property.Name.ToObjectName();
             var sb = new StringBuilder();
+            sb.Append(prefix);
             sb.Append($"{name} = other.{name}");
             if (property.IsArray)
                 sb.Append(".ToList()");
@@ -94,8 +138,8 @@ public class ModelGenerator
 
         if (schemaItem.AdditionalPropertiesAllowed && _config.GenericAdditionalProperties is true)
             updateCommands.Add(
-                $"AdditionalProperties = other.AdditionalProperties != null ? new Dictionary<string, {_config.GenericAdditionalPropertiesType}>(other.AdditionalProperties) : null;");
-        return string.Join("\n            ", updateCommands);
+                $"{prefix}AdditionalProperties = other.AdditionalProperties != null ? new Dictionary<string, {_config.GenericAdditionalPropertiesType}>(other.AdditionalProperties) : null;");
+        return updateCommands;
     }
 
     private string FormatProperties(SchemaItem item)

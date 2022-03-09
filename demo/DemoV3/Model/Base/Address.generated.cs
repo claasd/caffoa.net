@@ -29,48 +29,18 @@ namespace DemoV3.Model.Base {
         public virtual Dictionary<string, Flags> Flags { get; set; } = new Dictionary<string, Flags>();
 
         [JsonExtensionData]
-        public Dictionary<string, JObject> AdditionalProperties;
+        public Dictionary<string, object> AdditionalProperties;
 
-        public Address ToAddress() {
-            var item = new Address();
-            item.UpdateWithAddress(this);
-            return item;
-        }
-
-        /// <summary>
-        /// Replaces all fields with the data of the passed object
-        /// </summary>
-        public void UpdateWithAddress(Address other) {
+        public Address(){}
+        public Address(Address other) {
             Street = other.Street;
             StreetExtra = other.StreetExtra;
             PostalCode = other.PostalCode;
             City = other.City;
             Country = other.Country;
             Flags = other.Flags;
-            AdditionalProperties = other.AdditionalProperties != null ? new Dictionary<string, JObject>(other.AdditionalProperties) : null;
+            AdditionalProperties = other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null;
         }
-
-        /// <summary>
-        /// Merges all fields of Address that are present in the passed object with the current object.
-        /// If merge settings are not omitted, Arrays will be replaced and null value will replace existing values
-        /// </summary>
-        public void MergeWithAddress(Address other, JsonMergeSettings mergeSettings = null) {
-            MergeWithAddress(JObject.FromObject(other), mergeSettings);
-        }
-
-        /// <summary>
-        /// Merges all fields of Address that are present in the passed JToken with the current object.
-        /// If merge settings are not omitted, Arrays will be replaced and null value will replace existing values
-        /// </summary>
-        public void MergeWithAddress(JToken other, JsonMergeSettings mergeSettings = null) {
-            mergeSettings ??= new JsonMergeSettings()
-            {
-                MergeArrayHandling = MergeArrayHandling.Replace,
-                MergeNullValueHandling = MergeNullValueHandling.Merge
-            };
-            var sourceObject = JObject.FromObject(this);
-            sourceObject.Merge(other, mergeSettings);
-            UpdateWithAddress(sourceObject.ToObject<Address>());
-        }
+        public Address ToAddress() => new Address(this);
     }
 }

@@ -22,46 +22,46 @@ try
         .Build();
     using var reader = File.OpenText(configPath);
     var settings = deserializer.Deserialize<CaffoaSettings>(reader);
-    if (settings.Config.ClearGeneratedFiles)
-    {
-        var files = Directory.GetFiles(".", "*.generated.cs", SearchOption.AllDirectories);
-        foreach (var file in files)
-        {
-            File.Delete(file);
-        }
-    }
 
+    var builders = new List<ApiBuilder>(); 
     foreach (var service in settings.Services)
     {
         try
         {
             var localConfig = service.Config?.MergedWith(settings.Config) ?? settings.Config;
-            var parser = new ServiceParser(service, localConfig);
-            if(localConfig.GenerateResolvedApiFile is true)
-                parser.WriteGeneratedApiFile();
-                
-            if (service.Model != null)
-            {
-                var generator = new ModelGenerator(service, localConfig);
-                var objects = parser.GenerateModel();
-                generator.WriteModel(objects);
-            }
-
-            if (service.Function != null)
-            {
-                var endpoints = parser.GenerateEndpoints();
-                var interfaceGenerator =
-                    new InterfaceGenerator(service.Function, localConfig, service.Model?.Namespace);
-                interfaceGenerator.GenerateInterface(endpoints);
-                var functionsGenerator =
-                    new FunctionsGenerator(service.Function, localConfig, service.Model?.Namespace);
-                functionsGenerator.GenerateFunctions(endpoints);
-            }
+            var builder = new ApiBuilder(service, localConfig);
+            builder.Parse();
+            builders.Add(builder);
         }
         catch (ConfigurationMissingError e)
         {
             throw new ConfigurationMissingError(e.Message + $" for '{service.ApiPath}'");
         }
+        if (settings.Config.ClearGeneratedFiles)
+        {
+            var files = Directory.GetFiles(".", "*.generated.cs", SearchOption.AllDirectories);
+            foreach (var file in files)
+            {
+                File.Delete(file);
+            }
+        }
+
+        var extensionGenerators = new List<ExtensionGenerator>();
+        foreach (var builder in builders)
+        {
+            builder.Generate();
+            if (builder.ExtensionData != null && builder.ExtensionData.Any())
+            {
+                var generator = extensionGenerators.FirstOrDefault(g=>g.Folder == builder.ExtensionFolder && g.Namespace == builder.ExtensionNamespace);
+                if (generator is null)
+                {
+                    generator = new ExtensionGenerator(builder.ExtensionFolder, builder.ExtensionNamespace);
+                    extensionGenerators.Add(generator);
+                }
+                generator.Add(builder.ExtensionData, builder.ExtensionImports);
+            }
+        }
+        extensionGenerators.ForEach(g=>g.Create());
     }
 }
 catch (YamlException e)

@@ -73,7 +73,7 @@ public class SchemaItemFormatter
     {
         var implementations = interfaces
             .Where(i => i.Interface != null && i.Interface.Children.Contains(_item.ClassName))
-            .Select(i => $"\n        public virtual {i.ClassName} To{i.ClassName}() => To{this._item.ClassName}();\n");
+            .Select(i => $"        public virtual {i.ClassName} To{i.ClassName}() => To{this._item.ClassName}();\n");
         return string.Join("", implementations);
     }
 

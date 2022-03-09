@@ -2,10 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Caffoa;
+using Caffoa.Extensions;
 using DemoV3.Errors;
 using DemoV3.Model;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Azure.WebJobs.Extensions.DurableTask;
 using Newtonsoft.Json.Linq;
 
@@ -106,7 +105,8 @@ namespace DemoV3.Services
         public async Task<UserWithId> UserPatchAsync(string userId, JObject payload)
         {
             var user = await _users.GetById(userId);
-            user.MergeWithUser(payload);
+            var updated = user.MergedWith<User>(payload);
+            user.UpdateWithUser(updated);
             await _users.Edit(user.Id, user);
             return user;
         }

@@ -26,6 +26,7 @@ public class CaffoaConfig
     public string? FunctionNamePrefix { get; set; }
     public bool? Disposable { get; set; }
     public bool? GenerateResolvedApiFile { get; set; }
+    public bool? Extensions { get; set; }
 
     public CaffoaGlobalConfig MergedWith(CaffoaGlobalConfig general)
     {
@@ -43,13 +44,14 @@ public class CaffoaConfig
             ParsePathParameters = ParsePathParameters ?? general.ParsePathParameters,
             ParseQueryParameters = ParseQueryParameters ?? general.ParseQueryParameters,
             GenericAdditionalProperties = GenericAdditionalProperties ?? general.GenericAdditionalProperties,
-            GenericAdditionalPropertiesType = GenericAdditionalPropertiesType ?? general.GenericAdditionalPropertiesType,
+            GenericAdditionalPropertiesType = _genericAdditionalPropertiesType ?? general.GenericAdditionalPropertiesType,
             DurableClient = DurableClient ?? general.DurableClient,
             SplitByTag = SplitByTag ?? general.SplitByTag,
             WithCancellation = WithCancellation ?? general.WithCancellation,
             FunctionNamePrefix = FunctionNamePrefix ?? general.FunctionNamePrefix,
             Disposable = Disposable ?? general.Disposable,
-            GenerateResolvedApiFile = GenerateResolvedApiFile ?? general.GenerateResolvedApiFile
+            GenerateResolvedApiFile = GenerateResolvedApiFile ?? general.GenerateResolvedApiFile,
+            Extensions = Extensions ?? general.Extensions
         };
     }
 }

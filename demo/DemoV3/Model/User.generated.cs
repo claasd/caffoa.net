@@ -66,18 +66,8 @@ namespace DemoV3.Model {
             }
         }
 
-        public User ToUser() {
-            var item = new User();
-            item.UpdateWithUser(this);
-            return item;
-        }
-
-        public virtual AnyUser ToAnyUser() => ToUser();
-
-        /// <summary>
-        /// Replaces all fields with the data of the passed object
-        /// </summary>
-        public void UpdateWithUser(User other) {
+        public User(){}
+        public User(User other) {
             Name = other.Name;
             Address = other.Address?.ToAddress();
             Birthdate = other.Birthdate;
@@ -86,28 +76,7 @@ namespace DemoV3.Model {
             Type = other.Type;
             AgeGroup = other.AgeGroup;
         }
-
-        /// <summary>
-        /// Merges all fields of User that are present in the passed object with the current object.
-        /// If merge settings are not omitted, Arrays will be replaced and null value will replace existing values
-        /// </summary>
-        public void MergeWithUser(User other, JsonMergeSettings mergeSettings = null) {
-            MergeWithUser(JObject.FromObject(other), mergeSettings);
-        }
-
-        /// <summary>
-        /// Merges all fields of User that are present in the passed JToken with the current object.
-        /// If merge settings are not omitted, Arrays will be replaced and null value will replace existing values
-        /// </summary>
-        public void MergeWithUser(JToken other, JsonMergeSettings mergeSettings = null) {
-            mergeSettings ??= new JsonMergeSettings()
-            {
-                MergeArrayHandling = MergeArrayHandling.Replace,
-                MergeNullValueHandling = MergeNullValueHandling.Merge
-            };
-            var sourceObject = JObject.FromObject(this);
-            sourceObject.Merge(other, mergeSettings);
-            UpdateWithUser(sourceObject.ToObject<User>());
-        }
+        public User ToUser() => new User(this);
+        public virtual AnyUser ToAnyUser() => ToUser();
     }
 }

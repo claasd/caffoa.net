@@ -2,7 +2,6 @@ using Caffoa;
 using DemoV3.Handler;
 using DemoV3.Services;
 using Microsoft.Azure.Functions.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection;
 
 [assembly: FunctionsStartup(typeof(Startup))]
 

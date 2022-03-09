@@ -31,45 +31,13 @@ namespace DemoV3.Model {
             }
         }
 
-        public GuestUser ToGuestUser() {
-            var item = new GuestUser();
-            item.UpdateWithGuestUser(this);
-            return item;
-        }
-
-        public virtual AnyUser ToAnyUser() => ToGuestUser();
-
-        public virtual AnyCompleteUser ToAnyCompleteUser() => ToGuestUser();
-
-        /// <summary>
-        /// Replaces all fields with the data of the passed object
-        /// </summary>
-        public void UpdateWithGuestUser(GuestUser other) {
+        public GuestUser(){}
+        public GuestUser(GuestUser other) {
             Email = other.Email;
             Type = other.Type;
         }
-
-        /// <summary>
-        /// Merges all fields of GuestUser that are present in the passed object with the current object.
-        /// If merge settings are not omitted, Arrays will be replaced and null value will replace existing values
-        /// </summary>
-        public void MergeWithGuestUser(GuestUser other, JsonMergeSettings mergeSettings = null) {
-            MergeWithGuestUser(JObject.FromObject(other), mergeSettings);
-        }
-
-        /// <summary>
-        /// Merges all fields of GuestUser that are present in the passed JToken with the current object.
-        /// If merge settings are not omitted, Arrays will be replaced and null value will replace existing values
-        /// </summary>
-        public void MergeWithGuestUser(JToken other, JsonMergeSettings mergeSettings = null) {
-            mergeSettings ??= new JsonMergeSettings()
-            {
-                MergeArrayHandling = MergeArrayHandling.Replace,
-                MergeNullValueHandling = MergeNullValueHandling.Merge
-            };
-            var sourceObject = JObject.FromObject(this);
-            sourceObject.Merge(other, mergeSettings);
-            UpdateWithGuestUser(sourceObject.ToObject<GuestUser>());
-        }
+        public GuestUser ToGuestUser() => new GuestUser(this);
+        public virtual AnyUser ToAnyUser() => ToGuestUser();
+        public virtual AnyCompleteUser ToAnyCompleteUser() => ToGuestUser();
     }
 }
