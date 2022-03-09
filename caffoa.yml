@@ -8,6 +8,7 @@ config:
   parseQueryParameters: true # if set to true, caffoa will parse required and optional parameters that are defined for query
   genericAdditionalProperties: false # if set to true, a dictionary for additional properties will be generated
   genericAdditionalPropertiesType: object
+  removeDeprecated: true
   requestBodyType: # overwrite the JSON type that is passed to the method for some operations
     - type: JObject
       import: Newtonsoft.Json.Linq

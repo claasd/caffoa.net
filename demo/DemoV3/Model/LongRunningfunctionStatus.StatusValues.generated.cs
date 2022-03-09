@@ -12,15 +12,5 @@ namespace DemoV3.Model {
             /// immutable array containing all allowed values for "status"
             public static readonly ImmutableArray<string> AllowedValues = ImmutableArray.Create<string>(Running, Success, Failure);
         }
-        
-        [Obsolete("Will be removed in a future version of caffoa. Use LongRunningfunctionStatus.StatusValues.Running instead.")]
-        public const string StatusRunningValue = StatusValues.Running;
-        [Obsolete("Will be removed in a future version of caffoa. Use LongRunningfunctionStatus.StatusValues.Success instead.")]
-        public const string StatusSuccessValue = StatusValues.Success;
-        [Obsolete("Will be removed in a future version of caffoa. Use LongRunningfunctionStatus.StatusValues.Failure instead.")]
-        public const string StatusFailureValue = StatusValues.Failure;
-
-        [Obsolete("Will be removed in a future version of caffoa. Use LongRunningfunctionStatus.StatusValues.AllowedValues instead")]
-        public static ImmutableArray<string> AllowedValuesForStatus { get => StatusValues.AllowedValues; }
     }
 }

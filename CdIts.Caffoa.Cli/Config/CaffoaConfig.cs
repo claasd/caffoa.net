@@ -51,7 +51,8 @@ public class CaffoaConfig
             FunctionNamePrefix = FunctionNamePrefix ?? general.FunctionNamePrefix,
             Disposable = Disposable ?? general.Disposable,
             GenerateResolvedApiFile = GenerateResolvedApiFile ?? general.GenerateResolvedApiFile,
-            Extensions = Extensions ?? general.Extensions
+            Extensions = Extensions ?? general.Extensions,
+            RemoveDeprecated = general.RemoveDeprecated
         };
     }
 }
