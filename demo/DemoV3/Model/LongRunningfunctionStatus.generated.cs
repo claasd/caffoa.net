@@ -11,28 +11,16 @@ namespace DemoV3.Model {
     public partial class LongRunningfunctionStatus {
         public const string LongRunningfunctionStatusObjectName = "longRunningfunctionStatus";
 
-        // constant values for "status"
-        public const string StatusRunningValue = "running";
-        public const string StatusSuccessValue = "success";
-        public const string StatusFailureValue = "failure";
-
-        /// <summary>
-        /// immutable array containing all allowed values for "status"
-        /// </summary>
-        public static readonly ImmutableArray<string> AllowedValuesForStatus = ImmutableArray.Create<string>(StatusRunningValue, StatusSuccessValue, StatusFailureValue);
-
         [JsonIgnore]
         private string _status;
 
         [JsonProperty("status")]
         public virtual string Status {
-            get {
-                return _status;
-            }
+            get => _status;
             set {
-                if (!AllowedValuesForStatus.Contains(value))
+                if (!StatusValues.AllowedValues.Contains(value))
                 {
-                    var allowedValues = string.Join(", ", AllowedValuesForStatus.Select(v => v.ToString()));
+                    var allowedValues = string.Join(", ", StatusValues.AllowedValues.Select(v => v.ToString()));
                     throw new ArgumentOutOfRangeException("status",
                         $"{value} is not allowed. Allowed values: [{allowedValues}]");
                 }

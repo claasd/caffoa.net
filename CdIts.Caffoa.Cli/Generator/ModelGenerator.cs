@@ -23,8 +23,11 @@ public class ModelGenerator
         Directory.CreateDirectory(_service.Model!.TargetFolder);
         var interfaces = objects.Where(o => o.Interface != null).ToList();
         var classes = objects.Where(o => o.Interface == null).ToList();
+        var enumClasses = objects.Where(o => o.Properties != null && o.Properties.Any(p=>p.Enums.Any())).ToList();
+        enumClasses.ForEach(WriteEnumClasses);
         interfaces.ForEach(WriteModelInterface);
         classes.ForEach(c => WriteModelClass(c, interfaces));
+        
     }
 
     private void WriteModelInterface(SchemaItem item)
@@ -124,11 +127,31 @@ public class ModelGenerator
 
         return string.Join("\n\n", properties);
     }
+    
+    private void WriteEnumClasses(SchemaItem item)
+    {
+        foreach (var property in item.Properties!.Where(p=>p.Enums.Any()))
+        {
+            WriteEnumClass(property, item.ClassName);
+        }
+    }
 
     private string FormatEnumProperty(PropertyData property, Dictionary<string, object> format)
     {
         var file = Templates.GetTemplate("ModelEnumPropertyTemplate.tpl");
+        format["NO_CHECK_MSG"] = _config.CheckEnums!.Value
+            ? ""
+            : "// set checkEnums=true in config file to have a value check here //\n                ";
+        format["NO_CHECK"] = _config.CheckEnums!.Value ? "" : "// ";
+        format["NULL_HANDLING"] = property.Nullable ? "v == null ? \"null\" : " : "";
+        return file.FormatDict(format);
+    }
+    
+    private void WriteEnumClass(PropertyData property, string className)
+    {
+        var file = Templates.GetTemplate("ModelEnumPropertyClassTemplate.tpl");
         var enums = new Dictionary<string, string>();
+        var obsoleteEnums = new Dictionary<string, string>();
         var propName = property.Name.ToObjectName();
         foreach (var value in property.Enums)
         {
@@ -136,23 +159,35 @@ public class ModelGenerator
                 continue;
             var cleaned = value.Replace("\"", "").FirstCharUpper();
             cleaned = Regex.Replace(cleaned, @"[^A-Za-z0-9]+", "_");
-            var name = $"{propName}{cleaned}Value";
-            enums[name] = value;
+            var obsoleteName = $"{propName}{cleaned}Value";
+            if(char.IsDigit(cleaned[0]))
+                cleaned = $"_{cleaned}";
+            enums[cleaned] = value;
+            obsoleteEnums[obsoleteName] = $"{propName}Values.{cleaned}";
         }
 
         var type = property.TypeName.Trim('?');
         var enumDefs = enums.Select(item => $"public const {type} {item.Key} = {item.Value};");
+        var obsoleteEnumDefs = obsoleteEnums.Select(item => $"[Obsolete(\"Will be removed in a future version of caffoa. Use {className}.{item.Value} instead.\")]\n        public const {type} {item.Key} = {item.Value};");
         var allowedNames = new List<string>(enums.Keys);
         if (property.Nullable)
             allowedNames.Add("null");
-        format["ENUMS"] = string.Join("\n        ", enumDefs);
-        format["ENUM_LIST_NAME"] = $"AllowedValuesFor{propName}";
-        format["ENUM_NAMES"] = string.Join(", ", allowedNames);
-        format["NO_CHECK_MSG"] = _config.CheckEnums!.Value
-            ? ""
-            : "// set checkEnums=true in config file to have a value check here //\n                ";
-        format["NO_CHECK"] = _config.CheckEnums!.Value ? "" : "// ";
-        format["NULL_HANDLING"] = property.Nullable ? "v == null ? \"null\" : " : "";
-        return file.FormatDict(format);
+        var formatter = new PropertyFormatter(property, false);
+        var format = new Dictionary<string, object>
+        {
+            ["NAMESPACE"] = _service.Model!.Namespace,
+            ["CLASS"] = className,
+            ["OBSOLETE_LIST_NAME"] = $"AllowedValuesFor{propName}",
+            ["OBSOLETE_ENUMS"] = string.Join("\n        ", obsoleteEnumDefs),
+            ["NAMEUPPER"] = propName,
+            ["NAMELOWER"] = property.Name,
+            ["TYPE"] = formatter.Type(),
+            ["ENUMS"] = string.Join("\n            ", enumDefs),
+            ["ENUM_NAMES"] = string.Join(", ", allowedNames)
+        };
+        string fileName = $"{className}.{propName}Values.generated.cs";
+        var formatted = file.FormatDict(format);
+        File.WriteAllText(Path.Combine(_service.Model!.TargetFolder, fileName), formatted.ToSystemNewLine());
+        
     }
 }

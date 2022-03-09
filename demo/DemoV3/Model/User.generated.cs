@@ -32,26 +32,16 @@ namespace DemoV3.Model {
         [JsonProperty("descriptions")]
         public virtual Dictionary<string, string> Descriptions { get; set; } = new Dictionary<string, string>();
 
-        // constant values for "type"
-        public const string TypeSimpleValue = "simple";
-
-        /// <summary>
-        /// immutable array containing all allowed values for "type"
-        /// </summary>
-        public static readonly ImmutableArray<string> AllowedValuesForType = ImmutableArray.Create<string>(TypeSimpleValue);
-
         [JsonIgnore]
         private string _type = "simple";
 
         [JsonProperty("type", Required = Required.Always)]
         public virtual string Type {
-            get {
-                return _type;
-            }
+            get => _type;
             set {
-                if (!AllowedValuesForType.Contains(value))
+                if (!TypeValues.AllowedValues.Contains(value))
                 {
-                    var allowedValues = string.Join(", ", AllowedValuesForType.Select(v => v.ToString()));
+                    var allowedValues = string.Join(", ", TypeValues.AllowedValues.Select(v => v.ToString()));
                     throw new ArgumentOutOfRangeException("type",
                         $"{value} is not allowed. Allowed values: [{allowedValues}]");
                 }
@@ -59,29 +49,16 @@ namespace DemoV3.Model {
             }
         }
 
-        // constant values for "ageGroup"
-        public const int AgeGroup18Value = 18;
-        public const int AgeGroup40Value = 40;
-        public const int AgeGroup70Value = 70;
-        public const int AgeGroup120Value = 120;
-
-        /// <summary>
-        /// immutable array containing all allowed values for "ageGroup"
-        /// </summary>
-        public static readonly ImmutableArray<int?> AllowedValuesForAgeGroup = ImmutableArray.Create<int?>(AgeGroup18Value, AgeGroup40Value, AgeGroup70Value, AgeGroup120Value, null);
-
         [JsonIgnore]
         private int? _ageGroup = 40;
 
         [JsonProperty("ageGroup")]
         public virtual int? AgeGroup {
-            get {
-                return _ageGroup;
-            }
+            get => _ageGroup;
             set {
-                if (!AllowedValuesForAgeGroup.Contains(value))
+                if (!AgeGroupValues.AllowedValues.Contains(value))
                 {
-                    var allowedValues = string.Join(", ", AllowedValuesForAgeGroup.Select(v => v == null ? "null" : v.ToString()));
+                    var allowedValues = string.Join(", ", AgeGroupValues.AllowedValues.Select(v => v == null ? "null" : v.ToString()));
                     throw new ArgumentOutOfRangeException("ageGroup",
                         $"{value} is not allowed. Allowed values: [{allowedValues}]");
                 }

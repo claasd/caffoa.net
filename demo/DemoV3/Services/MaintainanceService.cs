@@ -12,7 +12,7 @@ public class MaintainanceService : IDemoV3MaintainanceService
     public async Task<LongRunningfunctionStatus> LongRunningFunctionAsync(IDurableOrchestrationClient orchestrationClient, Guid id)
     {
         await Task.Yield();
-        return new LongRunningfunctionStatus() { Status = LongRunningfunctionStatus.StatusRunningValue };
+        return new LongRunningfunctionStatus() { Status = LongRunningfunctionStatus.StatusValues.Running };
     }
 
     public IDemoV3MaintainanceService Instance(HttpRequest request)

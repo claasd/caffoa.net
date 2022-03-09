@@ -14,26 +14,16 @@ namespace DemoV3.Model {
         [JsonProperty("email", Required = Required.Always)]
         public virtual string Email { get; set; }
 
-        // constant values for "type"
-        public const string TypeGuestValue = "guest";
-
-        /// <summary>
-        /// immutable array containing all allowed values for "type"
-        /// </summary>
-        public static readonly ImmutableArray<string> AllowedValuesForType = ImmutableArray.Create<string>(TypeGuestValue);
-
         [JsonIgnore]
         private string _type = "guest";
 
         [JsonProperty("type", Required = Required.Always)]
         public virtual string Type {
-            get {
-                return _type;
-            }
+            get => _type;
             set {
-                if (!AllowedValuesForType.Contains(value))
+                if (!TypeValues.AllowedValues.Contains(value))
                 {
-                    var allowedValues = string.Join(", ", AllowedValuesForType.Select(v => v.ToString()));
+                    var allowedValues = string.Join(", ", TypeValues.AllowedValues.Select(v => v.ToString()));
                     throw new ArgumentOutOfRangeException("type",
                         $"{value} is not allowed. Allowed values: [{allowedValues}]");
                 }
