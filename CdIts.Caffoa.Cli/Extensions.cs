@@ -66,6 +66,7 @@ public static class Extensions
             "string" when format == "uuid" => $"Guid{suffix}",
             "string" when format is "date-time" => $"DateTime{suffix}",
             "string" when format is "date" => $"DateOnly{suffix}",
+            "string" when format is "time" => $"TimeOnly{suffix}",
             "integer" when format == "int64" => $"long{suffix}",
             "integer" when format == "uint64" => $"ulong{suffix}",
             "integer" when format == "uint32" => $"uint{suffix}",

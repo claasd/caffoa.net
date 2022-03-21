@@ -67,6 +67,10 @@ paths:
                               type: integer
                               default: 40
                               nullable: true
+                            preferredContactTime:
+                              type: string
+                              format: time
+                              default: '12:00'
                         - type: object
                           properties:
                             id:
@@ -154,6 +158,10 @@ paths:
                       type: integer
                       default: 40
                       nullable: true
+                    preferredContactTime:
+                      type: string
+                      format: time
+                      default: '12:00'
                 - required:
                     - type
                     - email
@@ -217,6 +225,10 @@ paths:
                             type: integer
                             default: 40
                             nullable: true
+                          preferredContactTime:
+                            type: string
+                            format: time
+                            default: '12:00'
                       - type: object
                         properties:
                           id:
@@ -291,6 +303,10 @@ paths:
                       type: integer
                       default: 40
                       nullable: true
+                    preferredContactTime:
+                      type: string
+                      format: time
+                      default: '12:00'
                 - required:
                     - type
                     - email
@@ -354,6 +370,10 @@ paths:
                             type: integer
                             default: 40
                             nullable: true
+                          preferredContactTime:
+                            type: string
+                            format: time
+                            default: '12:00'
                       - type: object
                         properties:
                           id:
@@ -423,6 +443,10 @@ paths:
                             type: integer
                             default: 40
                             nullable: true
+                          preferredContactTime:
+                            type: string
+                            format: time
+                            default: '12:00'
                       - type: object
                         properties:
                           id:
@@ -493,6 +517,10 @@ paths:
                   type: integer
                   default: 40
                   nullable: true
+                preferredContactTime:
+                  type: string
+                  format: time
+                  default: '12:00'
       responses:
         '200':
           description: User was updated
@@ -535,6 +563,10 @@ paths:
                         type: integer
                         default: 40
                         nullable: true
+                      preferredContactTime:
+                        type: string
+                        format: time
+                        default: '12:00'
                   - type: object
                     properties:
                       id:
@@ -589,6 +621,10 @@ paths:
                         type: integer
                         default: 40
                         nullable: true
+                      preferredContactTime:
+                        type: string
+                        format: time
+                        default: '12:00'
                   - type: object
                     properties:
                       id:
@@ -652,6 +688,10 @@ paths:
                       type: integer
                       default: 40
                       nullable: true
+                    preferredContactTime:
+                      type: string
+                      format: time
+                      default: '12:00'
         '400':
           description: Error
           content:
@@ -724,6 +764,10 @@ paths:
                       type: integer
                       default: 40
                       nullable: true
+                    preferredContactTime:
+                      type: string
+                      format: time
+                      default: '12:00'
         '400':
           description: Error
           content:
@@ -818,32 +862,12 @@ paths:
                             type: integer
                             default: 40
                             nullable: true
+                          preferredContactTime:
+                            type: string
+                            format: time
+                            default: '12:00'
                       - required:
                           - type
-                          - email
-                        type: object
-                        properties:
-                          email:
-                            type: string
-                            format: email
-                          type:
-                            enum:
-                              - guest
-                            type: string
-                            default: guest
-                    discriminator:
-                      propertyName: type
-                      mapping:
-                        simple: '#/components/schemas/user'
-                        guest: '#/components/schemas/guestUser'
-    parameters:
-      - name: id
-        in: path
-        required: true
-        schema:
-          type: string
-          format: uuid
-components: { }pe
                           - email
                         type: object
                         properties:

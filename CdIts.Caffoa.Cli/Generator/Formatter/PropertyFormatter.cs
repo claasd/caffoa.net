@@ -33,7 +33,9 @@ public class PropertyFormatter
 
     public string Type()
     {
-        var name = _net60 ? _property.TypeName : _property.TypeName.Replace("DateOnly", "DateTime");
+        var name = _net60
+            ? _property.TypeName
+            : _property.TypeName.Replace("DateOnly", "DateTime").Replace("TimeOnly", "TimeSpan");
         if (_property.IsArray)
             return $"ICollection<{name}>";
         if (_property.IsMap)
@@ -44,25 +46,48 @@ public class PropertyFormatter
 
     public string Default(bool addSemicolonEnEmpty)
     {
-        var name = _net60 ? _property.TypeName : _property.TypeName.Replace("DateOnly", "DateTime");
+        var name = _net60
+            ? _property.TypeName
+            : _property.TypeName.Replace("DateOnly", "DateTime").Replace("TimeOnly", "TimeSpan");
         if (_property.IsArray)
             return $" = new List<{name}>();";
         if (_property.IsMap)
             return $" = new Dictionary<string, {name}>();";
         if (_property.Default != null)
+        {
+            if (name == "DateOnly")
+                return $" = DateTime.Parse({_property.Default});";
+            if (name == "TimeOnly")
+                return $" = TimeOnly.Parse({_property.Default});";
+            if (name == "DateTime")
+                return $" = DateTime.Parse({_property.Default});";
+            if (name == "TimeSpan")
+                return $" = TimeSpan.Parse({_property.Default});";
             return $" = {_property.Default};";
+        }
+
         if (!_property.Nullable && _property.IsOtherSchema)
             return $" = new {name}();";
+
 
         return addSemicolonEnEmpty ? ";" : "";
     }
 
     public string JsonTags()
     {
-        if (!_property.TypeName.StartsWith("DateOnly"))
-            return "";
-        if (_net60)
-            return "[JsonConverter(typeof(CaffoaDateOnlyConverter))]\n        ";
-        return "[JsonConverter(typeof(CaffoaDateConverter))]\n        ";
+        if (_property.TypeName.StartsWith("DateOnly"))
+        {
+            if (_net60)
+                return "[JsonConverter(typeof(CaffoaDateOnlyConverter))]\n        ";
+            return "[JsonConverter(typeof(CaffoaDateConverter))]\n        ";
+        }
+        if (_property.TypeName.StartsWith("TimeOnly"))
+        {
+            if (_net60)
+                return "[JsonConverter(typeof(CaffoaTimeOnlyConverter))]\n        ";
+            return "[JsonConverter(typeof(CaffoaTimeSpanConverter))]\n        ";
+        }
+
+        return "";
     }
 }

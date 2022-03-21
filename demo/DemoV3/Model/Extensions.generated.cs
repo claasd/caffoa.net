@@ -26,6 +26,7 @@ namespace DemoV3.Model {
             item.Descriptions = other.Descriptions;
             item.Type = other.Type;
             item.AgeGroup = other.AgeGroup;
+            item.PreferredContactTime = other.PreferredContactTime;
         }
 
         /// <summary>

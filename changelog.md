@@ -1,4 +1,8 @@
 # caffoa changelog
+
+### 1.6.0
+* added time parser for `type: string format: time` that uses DateTimeOnly or Timespan to represent times in the format HH:mm:ss. Parser also accepts h:m.
+
 ### 1.5.0
 * possibility to have IAsyncDisposable instances
 * cleanup of model generation. 

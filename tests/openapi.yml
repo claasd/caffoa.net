@@ -50,6 +50,10 @@ components:
           enum: [ 18,40,70,120 ]
           nullable: true
           default: 40
+        preferredContactTime:
+          type: string
+          format: time
+          default: "12:00"
 
       required:
         - type

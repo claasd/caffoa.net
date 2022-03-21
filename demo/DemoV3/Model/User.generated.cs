@@ -66,6 +66,10 @@ namespace DemoV3.Model {
             }
         }
 
+        [JsonConverter(typeof(CaffoaTimeOnlyConverter))]
+        [JsonProperty("preferredContactTime")]
+        public virtual TimeOnly PreferredContactTime { get; set; } = TimeOnly.Parse("12:00");
+
         public User(){}
         public User(User other) {
             Name = other.Name;
@@ -75,6 +79,7 @@ namespace DemoV3.Model {
             Descriptions = other.Descriptions;
             Type = other.Type;
             AgeGroup = other.AgeGroup;
+            PreferredContactTime = other.PreferredContactTime;
         }
         public User ToUser() => new User(this);
         public virtual AnyUser ToAnyUser() => ToUser();

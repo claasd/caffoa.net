@@ -248,6 +248,10 @@ public class FunctionsGenerator
             return $"_converter.ParseDateOnly({variableName}, \"{objectName}\")";
         if (typeName == "DateOnly")
             return $"_converter.ParseDate({variableName}, \"{objectName}\")";
+        if (typeName == "TimeOnly" && _config.UseDateOnly is true)
+            return $"_converter.ParseTimeOnly({variableName}, \"{objectName}\")";
+        if (typeName == "TimeOnly")
+            return $"_converter.ParseTimeSpan({variableName}, \"{objectName}\")";
         if (typeName == "DateTime")
             return $"_converter.ParseDateTime({variableName}, \"{objectName}\")";
         if (typeName == "Guid")

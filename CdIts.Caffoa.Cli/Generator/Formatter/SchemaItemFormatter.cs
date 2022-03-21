@@ -58,10 +58,10 @@ public class SchemaItemFormatter
             imports.Add("System.Linq");
         }
 
-        var hasDates = _item.Properties?.FirstOrDefault(p => p.TypeName.StartsWith("DateOnly")) != null;
-        if (hasDates)
+        var hasDates = _item.Properties?.Any(p => p.TypeName.StartsWith("DateOnly")) ?? false;
+        var hasTimes = _item.Properties?.Any(p => p.TypeName.StartsWith("TimeOny")) ?? false;
+        if (hasDates || hasTimes)
             imports.Add("Caffoa.JsonConverter");
-
         if (modelImports != null)
             imports.AddRange(modelImports);
         if (configImports != null)

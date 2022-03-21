@@ -33,6 +33,23 @@ public class CaffoaConverterTests
     }
     
     [Test]
+    public void TestConvertTimeOnly()
+    {
+        var input = "7:3";
+        var date = _converter.ParseTimeOnly(input, "name");
+        date.ToString("HH:mm:ss").Should().Be("07:03:00");
+    }
+    
+    [Test]
+    public void TestConvertTimeSpan()
+    {
+        var input = "7:3";
+        var date = _converter.ParseTimeSpan(input, "name");
+        date.ToString().Should().Be("07:03:00");
+    }
+    
+    
+    [Test]
     public void TestConvertDateTime()
     {
         var input = "2022-02-12T12:30:11";

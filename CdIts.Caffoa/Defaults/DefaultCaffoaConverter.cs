@@ -25,6 +25,16 @@ public class DefaultCaffoaConverter : ICaffoaConverter
             throw _errorHandler.ParameterConvertError(parameterName, "date", e);
         }
     }
+
+    public TimeSpan ParseTimeSpan(string parameter, string parameterName)
+    {
+        if (TimeSpan.TryParseExact(parameter, @"hh\:mm\:ss", CultureInfo.InvariantCulture, out var result))
+            return result;
+        if (TimeSpan.TryParseExact(parameter, @"h\:m", CultureInfo.InvariantCulture, out result))
+            return result;
+        throw _errorHandler.ParameterConvertError(parameterName, "time", new ArgumentException("Could not parse time. Expected format HH:mm:ss or H:m"));    
+    }
+    
 #if NET6_0    
     public DateOnly ParseDateOnly(string parameter, string parameterName)
     {
@@ -35,6 +45,18 @@ public class DefaultCaffoaConverter : ICaffoaConverter
         catch (Exception e)
         {
             throw _errorHandler.ParameterConvertError(parameterName, "date", e);
+        }
+    }
+
+    public TimeOnly ParseTimeOnly(string parameter, string parameterName)
+    {
+        try
+        {
+            return TimeOnly.Parse(parameter, CultureInfo.InvariantCulture);
+        }
+        catch (Exception e)
+        {
+            throw _errorHandler.ParameterConvertError(parameterName, "time", e);
         }
     }
 #endif
