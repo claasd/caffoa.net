@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Caffoa.Extensions;
@@ -23,6 +24,11 @@ namespace DemoV3.Services
             result.AddRange(await _users.List());
             result.AddRange(await _guests.List());
             return result.Skip(offset).Take(limit);
+        }
+
+        public Task UploadImageAsync(string userId, Stream stream)
+        {
+            return Task.CompletedTask;
         }
 
         public async Task<IEnumerable<User>> UsersGetByBirthdateAsync(DateOnly date)

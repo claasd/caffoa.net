@@ -159,6 +159,26 @@ namespace DemoV3
         /// <summary>
         /// auto-generated function invocation.
         ///</summary>
+        [FunctionName("UploadImageAsync")]
+        public async Task<IActionResult> UploadImageAsync(
+            [HttpTrigger(AuthorizationLevel.Function, "post", Route = "api/users/{userId}/uploadImage")]
+            HttpRequest request, string userId)
+        {
+            try {
+                await using var instance = _factory.Instance(request);
+                await instance.UploadImageAsync(userId, request.Body);
+                return _resultHandler.StatusCode(201);
+            } catch(CaffoaClientError err) {
+                return err.Result;
+            } catch (Exception e) {
+                if(_errorHandler.TryHandleFunctionException(e, out var errorHandlerResult, request, "UploadImage", "api/users/{userId}/uploadImage", "post", ("userId", userId)))
+                    return errorHandlerResult;
+                throw;
+            }
+        }
+        /// <summary>
+        /// auto-generated function invocation.
+        ///</summary>
         [FunctionName("UsersGetByBirthdateAsync")]
         public async Task<IActionResult> UsersGetByBirthdateAsync(
             [HttpTrigger(AuthorizationLevel.Function, "get", Route = "api/users/born-before/{date}")]

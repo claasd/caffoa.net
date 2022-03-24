@@ -90,7 +90,11 @@ public class PathParser
             throw new CaffoaParserError("Multiple possible bodies");
         var (type, content) = body.Content.First();
         if (type.ToLower() != "application/json")
-            throw new CaffoaParserError($"type {type}. Only application/json is currently supported for");
+        {
+            Console.Error.WriteLine($"type {type}. Only application/json is currently supported for content, found {type.ToLower()}. Stream is used for body");
+            return new NullBodyModel();
+        }
+
         if (content.Schema is null)
             return new NullBodyModel();
         if (content.Schema.OneOf.Count > 0)

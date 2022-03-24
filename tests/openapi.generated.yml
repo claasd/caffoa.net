@@ -639,6 +639,32 @@ paths:
         required: true
         schema:
           type: string
+  '/users/{userId}/uploadImage':
+    post:
+      tags:
+        - user
+      operationId: upload-image
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                image:
+                  type: string
+                  format: binary
+      responses:
+        '201':
+          description: Image was created
+    parameters:
+      - name: userId
+        in: path
+        description: the user id.
+        required: true
+        schema:
+          type: string
   '/users/born-before/{date}':
     get:
       tags:

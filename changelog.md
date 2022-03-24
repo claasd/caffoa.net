@@ -2,7 +2,7 @@
 
 ### 1.6.0
 * added time parser for `type: string format: time` that uses DateTimeOnly or Timespan to represent times in the format HH:mm:ss. Parser also accepts h:m.
-
+* do not fail on body different from application/json. Instead, warn an generate endpoint with Stream
 ### 1.5.0
 * possibility to have IAsyncDisposable instances
 * cleanup of model generation. 

@@ -63,6 +63,11 @@ namespace DemoV3
         Task<UserWithId> UserGetAsync(string userId);
 
         /// <summary>
+        /// 201 -> Image was created
+        /// </summary>
+        Task UploadImageAsync(string userId, Stream stream);
+
+        /// <summary>
         /// get
         /// 200 -> return user object
         /// 400 -> Error

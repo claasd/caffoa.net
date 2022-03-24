@@ -270,6 +270,34 @@ paths:
               schema:
                 $ref: "#/components/schemas/userWithId"
 
+  "/users/{userId}/uploadImage":
+    parameters:
+    - name: userId
+      in: path
+      required: true
+      description: the user id.
+      schema:
+        type: string
+    post:
+      tags:
+        - user
+      operationId: upload-image
+      requestBody: 
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                image:
+                  type: string
+                  format: binary
+      responses: 
+        201:
+          description: Image was created
+                
+
   "/users/born-before/{date}":
     parameters:
       - name: date
