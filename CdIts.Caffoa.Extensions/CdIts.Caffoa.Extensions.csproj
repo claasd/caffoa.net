@@ -22,7 +22,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\CdIts.Caffoa.Abstractions\CdIts.Caffoa.csproj" />
+      <ProjectReference Include="..\CdIts.Caffoa.Abstractions\CdIts.Caffoa.Abstractions.csproj" />
     </ItemGroup>
 
 </Project>
