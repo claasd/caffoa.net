@@ -15,6 +15,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\CdIts.Caffoa.Extensions\CdIts.Caffoa.Extensions.csproj" />
       <ProjectReference Include="..\CdIts.Caffoa\CdIts.Caffoa.csproj" />
     </ItemGroup>
 
