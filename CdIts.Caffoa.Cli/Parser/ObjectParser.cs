@@ -1,5 +1,7 @@
 using CdIts.Caffoa.Cli.Errors;
 using CdIts.Caffoa.Cli.Model;
+using Microsoft.OpenApi.Any;
+using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 
 namespace CdIts.Caffoa.Cli.Parser;
@@ -40,6 +42,24 @@ public class ObjectParser
     private PropertyData ParseProperty(string name, OpenApiSchema schema, bool required)
     {
         var property = new PropertyData(name, required);
+        property.Deprecated = schema.Deprecated;
+        try
+        {
+            property.CustomAttributes = ParseCustomAttributes(schema.Extensions);
+        }
+        catch (CaffoaParserError e)
+        {
+            Console.Error.WriteLine($"Could not parse custom attributes of {name}: {e.Message}");
+        }
+        
+        if (schema.Extensions.TryGetValue("x-caffoa-converter", out var converter))
+        {
+            if (converter is OpenApiString converterStr)
+                property.Converter = converterStr.Value;
+            else
+                Console.Error.WriteLine($"Could not parse custom converter of {name}: value is not a string");
+        }
+
         if (schema.Reference != null &&
             _knownTypes.TryGetValue(_classNameFunc(schema.Reference.Name()), out var knownSchema))
         {
@@ -89,6 +109,20 @@ public class ObjectParser
         }
 
         return property;
+    }
+
+    private List<string> ParseCustomAttributes(IDictionary<string, IOpenApiExtension> extensions)
+    {
+        if (!extensions.TryGetValue("x-caffoa-attributes", out var annotations))
+            return new List<string>();
+        var annotationsArray = annotations as OpenApiArray;
+        if (annotationsArray is null)
+            throw new CaffoaParserError("Not an array");
+        return annotationsArray.Select(item =>
+        {
+            var strItem = item as OpenApiString ?? throw new CaffoaParserError("one item is not a string");
+            return strItem.Value;
+        }).ToList();
     }
 
     private InterfaceModel ExtractInterface(IList<OpenApiSchema> schemaOneOf, OpenApiDiscriminator openApiDiscriminator)

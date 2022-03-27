@@ -34,6 +34,7 @@ components:
           type: string
           format: date
           nullable: true
+          deprecated: true
         emails:
           type: array
           items:
@@ -50,10 +51,13 @@ components:
           enum: [ 18,40,70,120 ]
           nullable: true
           default: 40
+          x-caffoa-attributes:
+            - Obsolete("do not use this")
         preferredContactTime:
           type: string
           format: time
           default: "12:00"
+          x-caffoa-converter: CustomTimeConverter
 
       required:
         - type

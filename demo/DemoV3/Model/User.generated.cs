@@ -22,6 +22,7 @@ namespace DemoV3.Model {
         [JsonProperty("address")]
         public virtual Address Address { get; set; }
 
+        [Obsolete]
         [JsonConverter(typeof(CaffoaDateOnlyConverter))]
         [JsonProperty("birthdate")]
         public virtual DateOnly? Birthdate { get; set; }
@@ -52,6 +53,7 @@ namespace DemoV3.Model {
         [JsonIgnore]
         private int? _ageGroup = 40;
 
+        [Obsolete("do not use this")]
         [JsonProperty("ageGroup")]
         public virtual int? AgeGroup {
             get => _ageGroup;
@@ -66,7 +68,7 @@ namespace DemoV3.Model {
             }
         }
 
-        [JsonConverter(typeof(CaffoaTimeOnlyConverter))]
+        [JsonConverter(typeof(CustomTimeConverter))]
         [JsonProperty("preferredContactTime")]
         public virtual TimeOnly PreferredContactTime { get; set; } = TimeOnly.Parse("12:00");
 
