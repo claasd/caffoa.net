@@ -236,5 +236,27 @@ namespace MyNamespace {
 }
 ```
 
+# custom converters and annotations
+the openapi doc allows for annotations. caffoa uses these annotations for custom attributes on properties and for custom json converters.
+
+## custom converters
+To use your own converter for a type, add `x-caffoa-converter: MyCustomConverter` to your openapi doc.
+
+## Attributes
+Sometimes, it is desirable to add custum attributes, for example if you want to use the generated classes for SQL.
+You can use the annotation `x-caffoa-custom-attributes` and specify a list of attributes.
+Example: 
+```yaml
+user:
+  type: object
+  properties:
+    id:
+      type: string
+      x-caffoa-attributes:
+        - PrimaryKey
+```
+this will add the annotation `[PrimaryKey]` the the `id` property.
+
+
 # Changelog
 The changelog is [here](changelog.md)

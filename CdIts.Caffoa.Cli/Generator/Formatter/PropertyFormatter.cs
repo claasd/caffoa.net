@@ -75,19 +75,26 @@ public class PropertyFormatter
 
     public string JsonTags()
     {
-        if (_property.TypeName.StartsWith("DateOnly"))
+        var tags = _property.CustomAttributes.Select(a => $"[{a}]\n        ").ToList();
+        if (_property.Deprecated)
+            tags.Add("[Obsolete]\n        ");
+        if(!string.IsNullOrEmpty(_property.Converter))
+            tags.Add($"[JsonConverter(typeof({_property.Converter}))]\n        ");
+        else if (_property.TypeName.StartsWith("DateOnly"))
         {
             if (_net60)
-                return "[JsonConverter(typeof(CaffoaDateOnlyConverter))]\n        ";
-            return "[JsonConverter(typeof(CaffoaDateConverter))]\n        ";
+                tags.Add("[JsonConverter(typeof(CaffoaDateOnlyConverter))]\n        ");
+            else
+                tags.Add("[JsonConverter(typeof(CaffoaDateConverter))]\n        ");
         }
-        if (_property.TypeName.StartsWith("TimeOnly"))
+        else if (_property.TypeName.StartsWith("TimeOnly"))
         {
             if (_net60)
-                return "[JsonConverter(typeof(CaffoaTimeOnlyConverter))]\n        ";
-            return "[JsonConverter(typeof(CaffoaTimeSpanConverter))]\n        ";
+                tags.Add("[JsonConverter(typeof(CaffoaTimeOnlyConverter))]\n        ");
+            else
+                tags.Add("[JsonConverter(typeof(CaffoaTimeSpanConverter))]\n        ");
         }
 
-        return "";
+        return string.Join("", tags);
     }
 }

@@ -45,6 +45,7 @@ paths:
                               type: string
                               format: date
                               nullable: true
+                              deprecated: true
                             emails:
                               type: array
                               items:
@@ -67,10 +68,13 @@ paths:
                               type: integer
                               default: 40
                               nullable: true
+                              x-caffoa-attributes:
+                                - Obsolete("do not use this")
                             preferredContactTime:
                               type: string
                               format: time
                               default: '12:00'
+                              x-caffoa-converter: CustomTimeConverter
                         - type: object
                           properties:
                             id:
@@ -136,6 +140,7 @@ paths:
                       type: string
                       format: date
                       nullable: true
+                      deprecated: true
                     emails:
                       type: array
                       items:
@@ -158,10 +163,13 @@ paths:
                       type: integer
                       default: 40
                       nullable: true
+                      x-caffoa-attributes:
+                        - Obsolete("do not use this")
                     preferredContactTime:
                       type: string
                       format: time
                       default: '12:00'
+                      x-caffoa-converter: CustomTimeConverter
                 - required:
                     - type
                     - email
@@ -203,6 +211,7 @@ paths:
                             type: string
                             format: date
                             nullable: true
+                            deprecated: true
                           emails:
                             type: array
                             items:
@@ -225,10 +234,13 @@ paths:
                             type: integer
                             default: 40
                             nullable: true
+                            x-caffoa-attributes:
+                              - Obsolete("do not use this")
                           preferredContactTime:
                             type: string
                             format: time
                             default: '12:00'
+                            x-caffoa-converter: CustomTimeConverter
                       - type: object
                         properties:
                           id:
@@ -281,6 +293,7 @@ paths:
                       type: string
                       format: date
                       nullable: true
+                      deprecated: true
                     emails:
                       type: array
                       items:
@@ -303,10 +316,13 @@ paths:
                       type: integer
                       default: 40
                       nullable: true
+                      x-caffoa-attributes:
+                        - Obsolete("do not use this")
                     preferredContactTime:
                       type: string
                       format: time
                       default: '12:00'
+                      x-caffoa-converter: CustomTimeConverter
                 - required:
                     - type
                     - email
@@ -348,6 +364,7 @@ paths:
                             type: string
                             format: date
                             nullable: true
+                            deprecated: true
                           emails:
                             type: array
                             items:
@@ -370,10 +387,13 @@ paths:
                             type: integer
                             default: 40
                             nullable: true
+                            x-caffoa-attributes:
+                              - Obsolete("do not use this")
                           preferredContactTime:
                             type: string
                             format: time
                             default: '12:00'
+                            x-caffoa-converter: CustomTimeConverter
                       - type: object
                         properties:
                           id:
@@ -421,6 +441,7 @@ paths:
                             type: string
                             format: date
                             nullable: true
+                            deprecated: true
                           emails:
                             type: array
                             items:
@@ -443,10 +464,13 @@ paths:
                             type: integer
                             default: 40
                             nullable: true
+                            x-caffoa-attributes:
+                              - Obsolete("do not use this")
                           preferredContactTime:
                             type: string
                             format: time
                             default: '12:00'
+                            x-caffoa-converter: CustomTimeConverter
                       - type: object
                         properties:
                           id:
@@ -495,6 +519,7 @@ paths:
                   type: string
                   format: date
                   nullable: true
+                  deprecated: true
                 emails:
                   type: array
                   items:
@@ -517,10 +542,13 @@ paths:
                   type: integer
                   default: 40
                   nullable: true
+                  x-caffoa-attributes:
+                    - Obsolete("do not use this")
                 preferredContactTime:
                   type: string
                   format: time
                   default: '12:00'
+                  x-caffoa-converter: CustomTimeConverter
       responses:
         '200':
           description: User was updated
@@ -541,6 +569,7 @@ paths:
                         type: string
                         format: date
                         nullable: true
+                        deprecated: true
                       emails:
                         type: array
                         items:
@@ -563,10 +592,13 @@ paths:
                         type: integer
                         default: 40
                         nullable: true
+                        x-caffoa-attributes:
+                          - Obsolete("do not use this")
                       preferredContactTime:
                         type: string
                         format: time
                         default: '12:00'
+                        x-caffoa-converter: CustomTimeConverter
                   - type: object
                     properties:
                       id:
@@ -599,6 +631,7 @@ paths:
                         type: string
                         format: date
                         nullable: true
+                        deprecated: true
                       emails:
                         type: array
                         items:
@@ -621,10 +654,13 @@ paths:
                         type: integer
                         default: 40
                         nullable: true
+                        x-caffoa-attributes:
+                          - Obsolete("do not use this")
                       preferredContactTime:
                         type: string
                         format: time
                         default: '12:00'
+                        x-caffoa-converter: CustomTimeConverter
                   - type: object
                     properties:
                       id:
@@ -692,6 +728,7 @@ paths:
                       type: string
                       format: date
                       nullable: true
+                      deprecated: true
                     emails:
                       type: array
                       items:
@@ -714,10 +751,13 @@ paths:
                       type: integer
                       default: 40
                       nullable: true
+                      x-caffoa-attributes:
+                        - Obsolete("do not use this")
                     preferredContactTime:
                       type: string
                       format: time
                       default: '12:00'
+                      x-caffoa-converter: CustomTimeConverter
         '400':
           description: Error
           content:
@@ -768,6 +808,7 @@ paths:
                       type: string
                       format: date
                       nullable: true
+                      deprecated: true
                     emails:
                       type: array
                       items:
@@ -790,10 +831,13 @@ paths:
                       type: integer
                       default: 40
                       nullable: true
+                      x-caffoa-attributes:
+                        - Obsolete("do not use this")
                     preferredContactTime:
                       type: string
                       format: time
                       default: '12:00'
+                      x-caffoa-converter: CustomTimeConverter
         '400':
           description: Error
           content:
@@ -866,6 +910,7 @@ paths:
                             type: string
                             format: date
                             nullable: true
+                            deprecated: true
                           emails:
                             type: array
                             items:
@@ -888,10 +933,13 @@ paths:
                             type: integer
                             default: 40
                             nullable: true
+                            x-caffoa-attributes:
+                              - Obsolete("do not use this")
                           preferredContactTime:
                             type: string
                             format: time
                             default: '12:00'
+                            x-caffoa-converter: CustomTimeConverter
                       - required:
                           - type
                           - email
@@ -917,4 +965,4 @@ paths:
         schema:
           type: string
           format: uuid
-components: { }
+components: { }ponents: { }

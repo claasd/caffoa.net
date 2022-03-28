@@ -19,4 +19,7 @@ public class PropertyData
     public string? Default { get; set; }
     public bool IsOtherSchema { get; set; }
     public List<string?> Enums { get; set; } = new();
+    public List<string> CustomAttributes { get; set; } = new();
+    public bool Deprecated { get; set; }
+    public string Converter { get; set; }
 }
