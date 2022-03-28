@@ -6,37 +6,43 @@ using Microsoft.OpenApi.Models;
 
 namespace CdIts.Caffoa.Cli.Parser;
 
-public class ObjectParser
+public abstract class ObjectParser
 {
-    private readonly Func<string, string> _classNameFunc;
-    private readonly SchemaItem _item;
+    protected readonly Func<string, string> ClassNameFunc;
+    protected readonly SchemaItem Item;
     private readonly IDictionary<string, OpenApiSchema> _knownTypes;
 
     public ObjectParser(SchemaItem item, IDictionary<string, OpenApiSchema> knownTypes,
         Func<string, string> classNameGenerator)
     {
-        _item = item;
+        Item = item;
         _knownTypes = knownTypes;
-        _classNameFunc = classNameGenerator;
+        ClassNameFunc = classNameGenerator;
     }
-
 
     public SchemaItem Parse(OpenApiSchema schema)
     {
-        if (schema.AllOf.Count > 0)
-            (schema, _item.Parent) = UpdateSchemaForAllOff(schema.AllOf);
-        if (schema.OneOf.Count > 0)
-            _item.Interface = ExtractInterface(schema.OneOf, schema.Discriminator);
-
-        else if (schema.Properties.Count > 0)
+        try
         {
-            _item.Properties = schema.Properties
-                .Select(item => ParseProperty(item.Key, item.Value, schema.Required.Contains(item.Key))).ToList();
-            _item.AdditionalPropertiesAllowed = schema.AdditionalPropertiesAllowed;
-        }
+            if (schema.AllOf.Count > 0)
+                schema = UpdateSchemaForAllOff(schema);
+            if (schema.OneOf.Count > 0)
+                Item.Interface = ExtractInterface(schema.OneOf, schema.Discriminator);
 
-        _item.Description = schema.Description;
-        return _item;
+            else if (schema.Properties.Count > 0)
+            {
+                Item.Properties = schema.Properties
+                    .Select(item => ParseProperty(item.Key, item.Value, schema.Required.Contains(item.Key))).ToList();
+                Item.AdditionalPropertiesAllowed = schema.AdditionalPropertiesAllowed;
+            }
+
+            Item.Description = schema.Description;
+            return Item;
+        }
+        catch (CaffoaParserError e)
+        {
+            throw new CaffoaParserError($"Error during parsing of object {Item.Name}: {e.Message}", e);
+        }
     }
 
     private PropertyData ParseProperty(string name, OpenApiSchema schema, bool required)
@@ -61,7 +67,7 @@ public class ObjectParser
         }
 
         if (schema.Reference != null &&
-            _knownTypes.TryGetValue(_classNameFunc(schema.Reference.Name()), out var knownSchema))
+            _knownTypes.TryGetValue(ClassNameFunc(schema.Reference.Name()), out var knownSchema))
         {
             schema = knownSchema;
             schema.Reference = null;
@@ -71,14 +77,14 @@ public class ObjectParser
         property.Nullable = schema.Nullable;
         if (schema.Reference != null)
         {
-            property.TypeName = _classNameFunc(schema.Reference.Name());
+            property.TypeName = ClassNameFunc(schema.Reference.Name());
             property.Nullable = !required;
             property.IsOtherSchema = true;
         }
         else if (schema.IsArray())
         {
             property.IsArray = true;
-            property.TypeName = schema.GetArrayType(_classNameFunc);
+            property.TypeName = schema.GetArrayType(ClassNameFunc);
         }
         else if (schema.AdditionalProperties != null)
         {
@@ -87,7 +93,7 @@ public class ObjectParser
                     "object with properties and additional properties are currently not supported.");
             if (schema.AdditionalProperties.Reference != null)
             {
-                property.TypeName = _classNameFunc(schema.AdditionalProperties.Reference.Name());
+                property.TypeName = ClassNameFunc(schema.AdditionalProperties.Reference.Name());
             }
             else
             {
@@ -137,36 +143,11 @@ public class ObjectParser
         {
             if (schema.Reference is null)
                 throw new CaffoaParserError("did not find $ref as child of oneOf");
-            model.Children.Add(_classNameFunc(schema.Reference.Name()));
+            model.Children.Add(ClassNameFunc(schema.Reference.Name()));
         }
 
         return model;
     }
 
-    private (OpenApiSchema, string?) UpdateSchemaForAllOff(IList<OpenApiSchema> schemas)
-    {
-        string? parent = null;
-        OpenApiSchema? newSchema = null;
-        foreach (var schema in schemas)
-        {
-            if (schema.Reference != null)
-            {
-                if (parent != null)
-                    throw new CaffoaParserError(
-                        "allOf is implemented as inheritance; cannot have to children with $ref");
-                parent = _classNameFunc(schema.Reference.Name());
-            }
-            else
-            {
-                if (newSchema != null)
-                    throw new CaffoaParserError(
-                        "allOf is implemented as inheritance; cannot have to children of allOf with direct implementation");
-                newSchema = schema;
-            }
-        }
-
-        if (newSchema is null)
-            throw new CaffoaParserError("Cannot create class without content, no child of allOf is type object");
-        return (newSchema, parent);
-    }
+    protected abstract OpenApiSchema UpdateSchemaForAllOff(OpenApiSchema schema);
 }

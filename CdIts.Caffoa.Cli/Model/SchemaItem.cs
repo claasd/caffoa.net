@@ -15,4 +15,5 @@ public class SchemaItem
     public string? Parent { get; set; }
     public string? Description { get; set; }
     public bool AdditionalPropertiesAllowed { get; set; }
+    public List<string> SubItems { get; set; } = new();
 }

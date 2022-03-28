@@ -4,7 +4,6 @@ using CdIts.Caffoa.Cli;
 using CdIts.Caffoa.Cli.Config;
 using CdIts.Caffoa.Cli.Errors;
 using CdIts.Caffoa.Cli.Generator;
-using CdIts.Caffoa.Cli.Parser;
 using CommandLine;
 using YamlDotNet.Core;
 using YamlDotNet.Serialization;

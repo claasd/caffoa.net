@@ -141,6 +141,7 @@ config:
   genericAdditionalPropertiesType: JObject # defaults to JObject, but a different type can be used for the additionalProperties dictionary
   withCancellation: false # if set to true, caffoa will add a CancellationToken to all interface methods. It will be triggered when the HTTP Request gets aborted (for example by the client).
   disposable: false # if set to true, Interfaces will derive from IAsyncDisposable, and functions will use `await using var instance = _factory.Instance(..);`
+  useInheritance: false # default is true for caffoa 1.x. When set to false, instead of inheritance, allOf will create a standalone object with converterst to objects that are referenced by allOf. False will be the default in caffoa 2.x
   imports: # a list of imports that will be added to most generated classes
     - MySpecialNamespace
   requestBodyType: # you can override the request body type for specific operations or methods
@@ -172,6 +173,7 @@ services:
       genericAdditionalPropertiesType: # overrides the config element from the global config
       withCancellation: # overrides the config element from the global config
       disposable: # overrides the config element from the global config
+      useInheritance: # overrides the config element from the global config
       imports: # overrides the config element from the global config
       requestBodyType: # overrides the config element from the global config
       durableClient: # overrides the config element from the global config
@@ -244,7 +246,7 @@ To use your own converter for a type, add `x-caffoa-converter: MyCustomConverter
 
 ## Attributes
 Sometimes, it is desirable to add custum attributes, for example if you want to use the generated classes for SQL.
-You can use the annotation `x-caffoa-custom-attributes` and specify a list of attributes.
+You can use the annotation `x-caffoa-attributes` and specify a list of attributes.
 Example: 
 ```yaml
 user:

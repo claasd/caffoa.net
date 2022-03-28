@@ -21,5 +21,5 @@ public class PropertyData
     public List<string?> Enums { get; set; } = new();
     public List<string> CustomAttributes { get; set; } = new();
     public bool Deprecated { get; set; }
-    public string Converter { get; set; }
+    public string? Converter { get; set; }
 }

@@ -34,7 +34,7 @@ namespace DemoV3.Services
         public async Task<IEnumerable<User>> UsersGetByBirthdateAsync(DateOnly date)
         {
             var users = await _users.List();
-            return users.Where(u => u.Birthdate >= date);
+            return users.Where(u => u.Birthdate >= date).Select(u=>u.ToUser());
         }
 
         public async Task<IEnumerable<User>> UsersSearchByDateAsync(DateOnly before, DateOnly after, int? maxResults = null)
@@ -43,7 +43,7 @@ namespace DemoV3.Services
             var results = users.Where(u => u.Birthdate < before && u.Birthdate > after);
             if (maxResults is > 0)
                 results = results.Take(maxResults.Value);
-            return results;
+            return results.Select(u=>u.ToUser());
         }
 
         public Task LongRunningFunctionAsync(IDurableOrchestrationClient orchestrationClient)
@@ -68,7 +68,7 @@ namespace DemoV3.Services
             try
             {
                 var user = await _users.GetById(userId);
-                user.UpdateWithUser(payload);
+                user = user.MergedWith(payload);
                 await _users.Edit(user.Id, user);
                 return (user, 200);
             }
@@ -79,7 +79,7 @@ namespace DemoV3.Services
                     Id = userId,
                     RegistrationDate = DateTime.Now
                 };
-                newUser.UpdateWithUser(payload);
+                newUser.MergedWith(payload);
                 await _users.Add(newUser.Id, newUser);
                 return (newUser, 201);
             }
@@ -111,8 +111,7 @@ namespace DemoV3.Services
         public async Task<UserWithId> UserPatchAsync(string userId, JObject payload)
         {
             var user = await _users.GetById(userId);
-            var updated = user.MergedWith<User>(payload);
-            user.UpdateWithUser(updated);
+            user = user.MergedWith<User, UserWithId>(payload);
             await _users.Edit(user.Id, user);
             return user;
         }

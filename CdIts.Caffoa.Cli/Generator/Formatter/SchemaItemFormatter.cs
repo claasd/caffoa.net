@@ -32,9 +32,7 @@ public class SchemaItemFormatter
         var parents = new List<string>();
         if (_item.Parent != null)
             parents.Add(_item.Parent);
-        var interfaces = allObjects.Where(o => o.Interface != null && o.Interface.Children.Contains(_item.ClassName))
-            .Select(o => o.ClassName);
-        parents.AddRange(interfaces);
+        parents.AddRange(MatchingInterfaces(allObjects));
         if (parents.Count > 0)
             return " : " + string.Join(", ", parents);
         return "";
@@ -69,18 +67,33 @@ public class SchemaItemFormatter
         return imports.Count > 0 ? string.Join("", imports.Distinct().Select(i => $"using {i};\n")) : "";
     }
 
+    public List<string> MatchingInterfaces(List<SchemaItem> schemas)
+    {
+        return schemas.Where(schema => schema.Interface != null && schema.Interface.Children.Any(
+            interfaceChild => interfaceChild == _item.ClassName ||
+                              _item.SubItems.Any(subItem => subItem == interfaceChild)
+        )).Select(item => item.ClassName).ToList();
+    }
+
     public string InterfaceMethods(List<SchemaItem> interfaces)
     {
-        var implementations = interfaces
-            .Where(i => i.Interface != null && i.Interface.Children.Contains(_item.ClassName))
-            .Select(i => $"        public virtual {i.ClassName} To{i.ClassName}() => To{this._item.ClassName}();\n");
+        var implementations = MatchingInterfaces(interfaces)
+            .Select(i => $"        public virtual {i} To{i}() => To{_item.ClassName}();\n");
+        return string.Join("", implementations);
+    }
+    
+    public string SubItemMethods()
+    {
+        var implementations = _item.SubItems
+            .Select(i => $"        public virtual {i} To{i}() => new {i}(this);\n");
         return string.Join("", implementations);
     }
 
     public string GenericAdditionalProperties()
     {
         if (_item.AdditionalPropertiesAllowed && _config.GenericAdditionalProperties is true)
-            return $"\n        [JsonExtensionData]\n        public Dictionary<string, {_config.GenericAdditionalPropertiesType}> AdditionalProperties;\n";
+            return
+                $"\n        [JsonExtensionData]\n        public Dictionary<string, {_config.GenericAdditionalPropertiesType}> AdditionalProperties;\n";
         return "";
     }
 }
