@@ -6,6 +6,8 @@
 * allow for custom converters, using `x-caffoa-converter` annotation in openapi
 * allow for custom attributes, using `x-caffoa-attributes` annotation in openapi
 * deprecated properties will have an `[Obsolete]` attributes
+* new config option `useInheritance: false`. This will create a different kind of object for `allOf`. Instead of inheritance, allOf will create a standalone object. constructors will be generated to initialize referenced objects, as well as To<ReferencedObject> methods.
+This also now allows for using multiple references in `allOf` and gets rid of complicated inheritance chains.
 
 ### 1.5.0
 * possibility to have IAsyncDisposable instances

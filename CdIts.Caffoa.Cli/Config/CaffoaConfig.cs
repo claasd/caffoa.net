@@ -27,6 +27,7 @@ public class CaffoaConfig
     public bool? Disposable { get; set; }
     public bool? GenerateResolvedApiFile { get; set; }
     public bool? Extensions { get; set; }
+    public bool? UseInheritance { get; set; }
 
     public CaffoaGlobalConfig MergedWith(CaffoaGlobalConfig general)
     {
@@ -52,7 +53,8 @@ public class CaffoaConfig
             Disposable = Disposable ?? general.Disposable,
             GenerateResolvedApiFile = GenerateResolvedApiFile ?? general.GenerateResolvedApiFile,
             Extensions = Extensions ?? general.Extensions,
-            RemoveDeprecated = general.RemoveDeprecated
+            RemoveDeprecated = general.RemoveDeprecated,
+            UseInheritance = UseInheritance ?? general.UseInheritance
         };
     }
 }

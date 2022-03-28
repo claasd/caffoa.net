@@ -83,7 +83,9 @@ public class ServiceParser
                 continue;
             if (_knownTypes.ContainsKey(className))
                 continue;
-            var parser = new ObjectParser(new SchemaItem(name, className), _knownTypes, ClassName);
+            ObjectParser parser = _config.UseInheritance is true
+                ? new ObjectInheritanceParser(new SchemaItem(name, className), _knownTypes, ClassName)
+                : new ObjectStandaloneParser(new SchemaItem(name, className), _knownTypes, ClassName);
             objects.Add(parser.Parse(apiSchema));
             Duplicates.Add(className);
         }

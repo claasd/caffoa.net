@@ -23,13 +23,13 @@ public class ModelGenerator
         Directory.CreateDirectory(_service.Model!.TargetFolder);
         var interfaces = objects.Where(o => o.Interface != null).ToList();
         var classes = objects.Where(o => o.Interface == null).ToList();
-        var enumClasses = objects.Where(o => o.Properties != null && o.Properties.Any(p=>p.Enums.Any())).ToList();
+        var enumClasses = objects.Where(o => o.Properties != null && o.Properties.Any(p => p.Enums.Any())).ToList();
         enumClasses.ForEach(WriteEnumClasses);
         interfaces.ForEach(WriteModelInterface);
-        classes.ForEach(c => WriteModelClass(c, interfaces));
-        if (_config.Extensions is false) 
+        classes.ForEach(c => WriteModelClass(c, interfaces, classes));
+        if (_config.Extensions is false)
             return null;
-        return classes.Select(CreateModelExtensions);
+        return classes.Select(c => CreateModelExtensions(c, classes)).Where(d => !string.IsNullOrEmpty(d));
     }
 
     private void WriteModelInterface(SchemaItem item)
@@ -46,7 +46,7 @@ public class ModelGenerator
         File.WriteAllText(Path.Combine(_service.Model.TargetFolder, fileName), formatted.ToSystemNewLine());
     }
 
-    private void WriteModelClass(SchemaItem item, List<SchemaItem> interfaces)
+    private void WriteModelClass(SchemaItem item, List<SchemaItem> interfaces, List<SchemaItem> otherClasses)
     {
         var file = Templates.GetTemplate("ModelTemplate.tpl");
         var formatter = new SchemaItemFormatter(item, _config);
@@ -56,34 +56,51 @@ public class ModelGenerator
         parameters["IMPORTS"] = formatter.Imports(_service.Model.Imports, _config.Imports);
         parameters["NAME"] = item.ClassName;
         parameters["PARENTS"] = formatter.Parents(interfaces);
-        parameters["INTERFACE_METHODS"] = formatter.InterfaceMethods(interfaces);
+        parameters["INTERFACE_METHODS"] = formatter.InterfaceMethods(interfaces) + formatter.SubItemMethods();
         parameters["RAWNAME"] = item.Name;
-        parameters["CONSTRUCTORS"] = CreateConstructors(item);
+        parameters["CONSTRUCTORS"] = CreateConstructors(item, otherClasses);
         parameters["PROPERTIES"] = FormatProperties(item);
         parameters["ADDITIONAL_PROPS"] = formatter.GenericAdditionalProperties();
         parameters["DESCRIPTION"] = formatter.Description;
         var formatted = file.FormatDict(parameters);
         File.WriteAllText(Path.Combine(_service.Model.TargetFolder, fileName), formatted.ToSystemNewLine());
     }
-    
-    private string CreateModelExtensions(SchemaItem item)
+
+    private string CreateModelExtensions(SchemaItem item, List<SchemaItem> otherSchemas)
     {
-        var file = _config.RemoveDeprecated ? 
-            Templates.GetTemplate("ModelExtensionContentTemplate.tpl")
-            : Templates.GetTemplate("ModelExtensionContentTemplate.deprecated.tpl");
-        var formatter = new SchemaItemFormatter(item, _config);
+        var data = new List<string>();
+        data.Add(CreateModelExtension(item, item));
+        if (_config.UseInheritance is false)
+        {
+            foreach (var subItem in item.SubItems)
+            {
+                var otherItem = otherSchemas.First(i => i.ClassName == subItem);
+                data.Add(CreateModelExtension(item, otherItem));
+            }
+        }
+
+        return string.Join("\n\n", data);
+    }
+
+    private string CreateModelExtension(SchemaItem item, SchemaItem otherItem)
+    {
+        string file;
+        file = Templates.GetTemplate(_config.RemoveDeprecated
+            ? "ModelExtensionContentTemplate.tpl"
+            : "ModelExtensionContentTemplate.deprecated.tpl");
         var parameters = new Dictionary<string, object>();
         parameters["NAME"] = item.ClassName;
-        parameters["UPDATEPROPS"] = FormatExternalPropertiesUpdate(item);
+        parameters["OTHER"] = otherItem.ClassName;
+        parameters["UPDATEPROPS"] = FormatExternalPropertiesUpdate(otherItem);
         var formatted = file.FormatDict(parameters);
         return formatted.ToSystemNewLine();
     }
 
-    private string CreateConstructors(SchemaItem item)
+    private string CreateConstructors(SchemaItem item, List<SchemaItem> otherClasses)
     {
-        var props = FormatPropertyUpdates(item);
         var builder = new StringBuilder();
         builder.Append($"public {item.ClassName}({item.ClassName} other)");
+        var props = FormatPropertyUpdates(item);
         if (item.Parent != null)
             builder.Append($" : base(other)");
         builder.Append(" {\n            ");
@@ -93,7 +110,22 @@ public class ModelGenerator
         {
             builder.Append($"\n        public {item.ClassName}({item.Parent} other) : base(other) {{}}");
         }
-            
+
+        foreach (var subItem in item.SubItems)
+        {
+            var otherItem = otherClasses.First(c => c.ClassName == subItem);
+            builder.Append($"\n        public {item.ClassName}({subItem} other){{\n            ");
+            builder.Append(FormatPropertyUpdates(otherItem));
+            builder.Append("\n        }");
+        }
+
+        foreach (var inheritingItem in otherClasses.Where(o => o.SubItems.Contains(item.ClassName)))
+        {
+            builder.Append($"\n        public {item.ClassName}({inheritingItem.ClassName} other){{\n            ");
+            builder.Append(props);
+            builder.Append("\n        }");
+        }
+
         return builder.ToString();
     }
 
@@ -104,13 +136,13 @@ public class ModelGenerator
         {
             updateCommands.Add($"item.UpdateWith{schemaItem.Parent}(other);");
         }
+
         updateCommands.AddRange(FormatPropertyUpdates(schemaItem, "item."));
         return string.Join("\n            ", updateCommands);
     }
-    
+
     private string FormatPropertyUpdates(SchemaItem schemaItem)
     {
-        
         return string.Join("\n            ", FormatPropertyUpdates(schemaItem, ""));
     }
 
@@ -173,10 +205,10 @@ public class ModelGenerator
 
         return string.Join("\n\n", properties);
     }
-    
+
     private void WriteEnumClasses(SchemaItem item)
     {
-        foreach (var property in item.Properties!.Where(p=>p.Enums.Any()))
+        foreach (var property in item.Properties!.Where(p => p.Enums.Any()))
         {
             WriteEnumClass(property, item.ClassName);
         }
@@ -184,7 +216,6 @@ public class ModelGenerator
 
     private string FormatEnumProperty(PropertyData property, Dictionary<string, object> format)
     {
-
         var file = Templates.GetTemplate("ModelEnumPropertyTemplate.tpl");
         format["NO_CHECK_MSG"] = _config.CheckEnums!.Value
             ? ""
@@ -193,10 +224,10 @@ public class ModelGenerator
         format["NULL_HANDLING"] = property.Nullable ? "v == null ? \"null\" : " : "";
         return file.FormatDict(format);
     }
-    
+
     private void WriteEnumClass(PropertyData property, string className)
     {
-        var file = _config.RemoveDeprecated 
+        var file = _config.RemoveDeprecated
             ? Templates.GetTemplate("ModelEnumPropertyClassTemplate.tpl")
             : Templates.GetTemplate("ModelEnumPropertyClassTemplate.deprecated.tpl");
         var enums = new Dictionary<string, string>();
@@ -209,7 +240,7 @@ public class ModelGenerator
             var cleaned = value.Replace("\"", "").FirstCharUpper();
             cleaned = Regex.Replace(cleaned, @"[^A-Za-z0-9]+", "_");
             var obsoleteName = $"{propName}{cleaned}Value";
-            if(char.IsDigit(cleaned[0]))
+            if (char.IsDigit(cleaned[0]))
                 cleaned = $"_{cleaned}";
             enums[cleaned] = value;
             obsoleteEnums[obsoleteName] = $"{propName}Values.{cleaned}";
@@ -217,7 +248,8 @@ public class ModelGenerator
 
         var type = property.TypeName.Trim('?');
         var enumDefs = enums.Select(item => $"public const {type} {item.Key} = {item.Value};");
-        var obsoleteEnumDefs = obsoleteEnums.Select(item => $"[Obsolete(\"Will be removed in a future version of caffoa. Use {className}.{item.Value} instead.\")]\n        public const {type} {item.Key} = {item.Value};");
+        var obsoleteEnumDefs = obsoleteEnums.Select(item =>
+            $"[Obsolete(\"Will be removed in a future version of caffoa. Use {className}.{item.Value} instead.\")]\n        public const {type} {item.Key} = {item.Value};");
         var allowedNames = new List<string>(enums.Keys);
         if (property.Nullable)
             allowedNames.Add("null");
@@ -237,6 +269,5 @@ public class ModelGenerator
         string fileName = $"{className}.{propName}Values.generated.cs";
         var formatted = file.FormatDict(format);
         File.WriteAllText(Path.Combine(_service.Model!.TargetFolder, fileName), formatted.ToSystemNewLine());
-        
     }
 }
