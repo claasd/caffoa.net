@@ -74,8 +74,13 @@ public class ModelGenerator
         {
             foreach (var subItem in item.SubItems)
             {
-                var otherItem = otherSchemas.First(i => i.ClassName == subItem);
-                data.Add(CreateModelExtension(item, otherItem));
+                var otherItem = otherSchemas.FirstOrDefault(i => i.ClassName == subItem);
+                if(otherItem != null)
+                    data.Add(CreateModelExtension(item, otherItem));
+                else
+                {
+                    Console.Error.WriteLine($"Warning: Could not generate update extension for {item.ClassName} with parameter {subItem}");
+                }
             }
         }
 
@@ -113,10 +118,17 @@ public class ModelGenerator
 
         foreach (var subItem in item.SubItems)
         {
-            var otherItem = otherClasses.First(c => c.ClassName == subItem);
-            builder.Append($"\n        public {item.ClassName}({subItem} other){{\n            ");
-            builder.Append(FormatPropertyUpdates(otherItem));
-            builder.Append("\n        }");
+            var otherItem = otherClasses.FirstOrDefault(c => c.ClassName == subItem);
+            if (otherItem != null)
+            {
+                builder.Append($"\n        public {item.ClassName}({subItem} other){{\n            ");
+                builder.Append(FormatPropertyUpdates(otherItem));
+                builder.Append("\n        }");
+            }
+            else
+            {
+                Console.Error.WriteLine($"WARNING: Cloud not create contructor for class {item.ClassName} with parameter {subItem}");
+            }
         }
 
         foreach (var inheritingItem in otherClasses.Where(o => o.SubItems.Contains(item.ClassName)))

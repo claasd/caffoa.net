@@ -10,7 +10,7 @@ public static class Merging
     {
         serializer ??= JsonSerializer.CreateDefault();
         return Merged<T>(
-            errorHandler != null ? errorHandler.ToJObject(other, serializer) : JObject.FromObject(other, serializer),
+            errorHandler != null ? errorHandler.ToJObject(item, serializer) : JObject.FromObject(item, serializer),
             other, mergeSettings, serializer, errorHandler);
     }
 
