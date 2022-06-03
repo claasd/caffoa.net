@@ -3,9 +3,11 @@
 ### 1.6.0
 * added time parser for `type: string format: time` that uses DateTimeOnly or Timespan to represent times in the format HH:mm:ss. Parser also accepts h:m.
 * do not fail on body different from application/json. Instead, warn an generate endpoint with Stream
+* results with different types than `application/json` will now be generated, raising a warning and generate the function with IActionResult as return value.
 * allow for custom converters, using `x-caffoa-converter` annotation in openapi
 * allow for custom attributes, using `x-caffoa-attributes` annotation in openapi
 * deprecated properties will have an `[Obsolete]` attributes
+* Updated underlying OpenApi library
 * new config option `useInheritance: false`. This will create a different kind of object for `allOf`. Instead of inheritance, allOf will create a standalone object. constructors will be generated to initialize referenced objects, as well as To<ReferencedObject> methods.
 This also now allows for using multiple references in `allOf` and gets rid of complicated inheritance chains.
 
