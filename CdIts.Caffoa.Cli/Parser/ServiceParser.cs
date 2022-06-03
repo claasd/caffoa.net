@@ -5,7 +5,9 @@ using Microsoft.OpenApi;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers;
+using Microsoft.OpenApi.Services;
 using Microsoft.OpenApi.Writers;
+using YamlDotNet.Core.Tokens;
 
 namespace CdIts.Caffoa.Cli.Parser;
 
@@ -13,29 +15,39 @@ public class ServiceParser
 {
     private readonly ServiceConfig _service;
     private readonly CaffoaGlobalConfig _config;
-    private OpenApiDocument _document;
+    private readonly OpenApiDocument _document;
     private readonly Dictionary<string, OpenApiSchema> _knownTypes = new();
-    public static List<string> Duplicates = new();
+    private static readonly List<string> Duplicates = new();
+    public OpenApiDocument Document => _document;
+    public string ApiName => Path.GetFileName(_service.ApiPath);
 
     public ServiceParser(ServiceConfig service, CaffoaGlobalConfig config)
     {
         _service = service;
         _config = config;
         using var fileStream = File.OpenRead(_service.ApiPath);
-        _document = new OpenApiStreamReader().Read(fileStream, out var diagnostic);
+        var reader = new OpenApiStreamReader();
+        _document = reader.Read(fileStream, out var diagnostic);
         if (diagnostic.Errors.Count > 0)
         {
             throw new CaffoaValidationError($"Error parsing {service.ApiPath}", diagnostic);
         }
     }
 
-    public void WriteGeneratedApiFile()
+    public void WriteGeneratedApiFile(Dictionary<string, OpenApiDocument> allDocuments)
     {
         var path = Path.ChangeExtension(_service.ApiPath, "generated.yml");
         using var fileStream = File.OpenWrite(path);
+        var workspace = new OpenApiWorkspace();
+        foreach (var (name, doc) in allDocuments)
+        {
+            workspace.AddDocument(name, doc);
+        }
+        workspace.AddDocument("root", _document);
         _document.Serialize(fileStream, OpenApiSpecVersion.OpenApi3_0, OpenApiFormat.Yaml, new OpenApiWriterSettings()
         {
-            ReferenceInline = ReferenceInlineSetting.InlineLocalReferences
+            InlineExternalReferences = true,
+            InlineLocalReferences = true
         });
     }
 

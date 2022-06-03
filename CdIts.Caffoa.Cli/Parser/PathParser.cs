@@ -78,7 +78,7 @@ public class PathParser
         catch (CaffoaParserError e)
         {
             throw new CaffoaParserError(
-                $"Error during parsing of operation {operationItem.OperationId} ({operation} {path}): {e.Message}");
+                $"Error during parsing of operation {operationItem.OperationId} ({operation} {path}): {e.Message}", e);
         }
 
         return result;
@@ -136,12 +136,21 @@ public class PathParser
     {
         var response = new ResponseModel(code);
         if (responseItem.Content.Count > 1)
-            throw new CaffoaParserError("Multiple possible responses");
+        {
+            Console.Error.WriteLine($"WARNING: Multiple possible responses. Only a single application/json response is currently supported for objects.");
+            response.Unknown = true;
+            return response;
+        }
         if (responseItem.Content.Count == 0)
             return response;
         var (type, content) = responseItem.Content.First();
         if (type.ToLower() != "application/json")
-            throw new CaffoaParserError($"type {type}. Only application/json is currently supported for");
+        {
+            Console.Error.WriteLine($"WARNING: found content type {type}. Only application/json is currently supported for objects.");
+            response.Unknown = true;
+            return response;
+        }
+
         var schema = content?.Schema;
         if (schema is null)
         {

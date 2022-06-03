@@ -5,6 +5,7 @@ using CdIts.Caffoa.Cli.Config;
 using CdIts.Caffoa.Cli.Errors;
 using CdIts.Caffoa.Cli.Generator;
 using CommandLine;
+using Microsoft.OpenApi.Models;
 using YamlDotNet.Core;
 using YamlDotNet.Serialization;
 using YamlDotNet.Serialization.NamingConventions;
@@ -22,7 +23,7 @@ try
     using var reader = File.OpenText(configPath);
     var settings = deserializer.Deserialize<CaffoaSettings>(reader);
 
-    var builders = new List<ApiBuilder>(); 
+    var builders = new List<ApiBuilder>();
     foreach (var service in settings.Services)
     {
         try
@@ -36,32 +37,40 @@ try
         {
             throw new ConfigurationMissingError(e.Message + $" for '{service.ApiPath}'");
         }
-        if (settings.Config.ClearGeneratedFiles)
-        {
-            var files = Directory.GetFiles(".", "*.generated.cs", SearchOption.AllDirectories);
-            foreach (var file in files)
-            {
-                File.Delete(file);
-            }
-        }
-
-        var extensionGenerators = new List<ExtensionGenerator>();
-        foreach (var builder in builders)
-        {
-            builder.Generate();
-            if (builder.ExtensionData != null && builder.ExtensionData.Any())
-            {
-                var generator = extensionGenerators.FirstOrDefault(g=>g.Folder == builder.ExtensionFolder && g.Namespace == builder.ExtensionNamespace);
-                if (generator is null)
-                {
-                    generator = new ExtensionGenerator(builder.ExtensionFolder, builder.ExtensionNamespace);
-                    extensionGenerators.Add(generator);
-                }
-                generator.Add(builder.ExtensionData, builder.ExtensionImports);
-            }
-        }
-        extensionGenerators.ForEach(g=>g.Create());
     }
+
+    if (settings.Config.ClearGeneratedFiles)
+    {
+        var files = Directory.GetFiles(".", "*.generated.cs", SearchOption.AllDirectories);
+        foreach (var file in files)
+        {
+            File.Delete(file);
+        }
+    }
+
+    var extensionGenerators = new List<ExtensionGenerator>();
+    var parsedDocuments = new Dictionary<string, OpenApiDocument>();
+    foreach (var builder in builders)
+    {
+        parsedDocuments[builder.ApiName] = builder.Document;
+    }
+    foreach (var builder in builders)
+    {
+        builder.Generate(parsedDocuments);
+        if (builder.ExtensionData != null && builder.ExtensionData.Any())
+        {
+            var generator = extensionGenerators.FirstOrDefault(g =>
+                g.Folder == builder.ExtensionFolder && g.Namespace == builder.ExtensionNamespace);
+            if (generator is null)
+            {
+                generator = new ExtensionGenerator(builder.ExtensionFolder, builder.ExtensionNamespace);
+                extensionGenerators.Add(generator);
+            }
+
+            generator.Add(builder.ExtensionData, builder.ExtensionImports);
+        }
+    }
+    extensionGenerators.ForEach(g => g.Create());
 }
 catch (YamlException e)
 {

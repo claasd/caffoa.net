@@ -2,6 +2,7 @@ using CdIts.Caffoa.Cli.Config;
 using CdIts.Caffoa.Cli.Generator;
 using CdIts.Caffoa.Cli.Model;
 using CdIts.Caffoa.Cli.Parser;
+using Microsoft.OpenApi.Models;
 
 namespace CdIts.Caffoa.Cli;
 
@@ -30,6 +31,10 @@ public class ApiBuilder
         }
     }
 
+    public string ApiName => _parser.ApiName;
+    public OpenApiDocument Document => _parser.Document;
+    
+
     public ApiBuilder(ServiceConfig service, CaffoaGlobalConfig config)
     {
         _service = service;
@@ -45,7 +50,7 @@ public class ApiBuilder
             _endpoints = _parser.GenerateEndpoints();
     }
 
-    public void Generate()
+    public void Generate(Dictionary<string, OpenApiDocument> allDocuments)
     {
         if (_service.Model != null && _model != null)
         {
@@ -64,6 +69,6 @@ public class ApiBuilder
         }
 
         if (_config.GenerateResolvedApiFile is true)
-            _parser.WriteGeneratedApiFile();
+            _parser.WriteGeneratedApiFile(allDocuments);
     }
 }
