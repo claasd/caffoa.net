@@ -23,9 +23,9 @@ namespace DemoV3.Model {
         public virtual Address Address { get; set; }
 
         [Obsolete]
-        [JsonConverter(typeof(CaffoaDateOnlyConverter))]
+        [JsonConverter(typeof(CaffoaDateConverter))]
         [JsonProperty("birthdate")]
-        public virtual DateOnly? Birthdate { get; set; }
+        public virtual DateTime? Birthdate { get; set; }
 
         [JsonProperty("emails")]
         public virtual ICollection<string> Emails { get; set; } = new List<string>();
@@ -40,13 +40,32 @@ namespace DemoV3.Model {
         public virtual string Type {
             get => _type;
             set {
-                if (!TypeValues.AllowedValues.Contains(value))
+                var _value = TypeValues.AllowedValues.FirstOrDefault(v=>String.Compare(v, value, StringComparison.OrdinalIgnoreCase) == 0, value);
+                if (!TypeValues.AllowedValues.Contains(_value))
                 {
                     var allowedValues = string.Join(", ", TypeValues.AllowedValues.Select(v => v.ToString()));
                     throw new ArgumentOutOfRangeException("type",
                         $"{value} is not allowed. Allowed values: [{allowedValues}]");
                 }
-                _type = value;
+                _type = _value;
+            }
+        }
+
+        [JsonIgnore]
+        private string _role = "reader";
+
+        [JsonProperty("role")]
+        public virtual string Role {
+            get => _role;
+            set {
+                var _value = RoleValues.AllowedValues.FirstOrDefault(v=>String.Compare(v, value, StringComparison.OrdinalIgnoreCase) == 0, value);
+                if (!RoleValues.AllowedValues.Contains(_value))
+                {
+                    var allowedValues = string.Join(", ", RoleValues.AllowedValues.Select(v => v.ToString()));
+                    throw new ArgumentOutOfRangeException("role",
+                        $"{value} is not allowed. Allowed values: [{allowedValues}]");
+                }
+                _role = _value;
             }
         }
 
@@ -58,19 +77,20 @@ namespace DemoV3.Model {
         public virtual int? AgeGroup {
             get => _ageGroup;
             set {
-                if (!AgeGroupValues.AllowedValues.Contains(value))
+                var _value = value;
+                if (!AgeGroupValues.AllowedValues.Contains(_value))
                 {
                     var allowedValues = string.Join(", ", AgeGroupValues.AllowedValues.Select(v => v == null ? "null" : v.ToString()));
                     throw new ArgumentOutOfRangeException("ageGroup",
                         $"{value} is not allowed. Allowed values: [{allowedValues}]");
                 }
-                _ageGroup = value;
+                _ageGroup = _value;
             }
         }
 
         [JsonConverter(typeof(CustomTimeConverter))]
         [JsonProperty("preferredContactTime")]
-        public virtual TimeOnly PreferredContactTime { get; set; } = TimeOnly.Parse("12:00");
+        public virtual TimeSpan PreferredContactTime { get; set; } = TimeSpan.Parse("12:00");
 
         public User(){}
         public User(User other) {
@@ -80,6 +100,7 @@ namespace DemoV3.Model {
             Emails = other.Emails.ToList();
             Descriptions = other.Descriptions;
             Type = other.Type;
+            Role = other.Role;
             AgeGroup = other.AgeGroup;
             PreferredContactTime = other.PreferredContactTime;
         }

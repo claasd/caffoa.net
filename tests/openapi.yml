@@ -46,6 +46,10 @@ components:
           type: string
           enum: [ simple ]
           default: simple
+        role:
+          type: string
+          enum: [ admin, reader, contributor ]
+          default: reader
         ageGroup:
           type: integer
           enum: [ 18,40,70,120 ]

@@ -14,15 +14,15 @@ namespace DemoV3.Services
     
     public class DemoV3UserService : IDemoV3UserService
     {
-        private readonly UserRepository<UserWithId> _users = new UserRepository<UserWithId>();
-        private readonly UserRepository<GuestUser> _guests = new UserRepository<GuestUser>();
+        private static readonly UserRepository<UserWithId> Users = new UserRepository<UserWithId>();
+        private static readonly UserRepository<GuestUser> Guests = new UserRepository<GuestUser>();
         
 
         public async Task<IEnumerable<AnyCompleteUser>> UsersGetAsync(int offset = 0, int limit = 1000)
         {
             var result = new List<AnyCompleteUser>();
-            result.AddRange(await _users.List());
-            result.AddRange(await _guests.List());
+            result.AddRange(await Users.List());
+            result.AddRange(await Guests.List());
             return result.Skip(offset).Take(limit);
         }
 
@@ -31,15 +31,15 @@ namespace DemoV3.Services
             return Task.CompletedTask;
         }
 
-        public async Task<IEnumerable<User>> UsersGetByBirthdateAsync(DateOnly date)
+        public async Task<IEnumerable<User>> UsersGetByBirthdateAsync(DateTime date)
         {
-            var users = await _users.List();
+            var users = await Users.List();
             return users.Where(u => u.Birthdate >= date).Select(u=>u.ToUser());
         }
 
-        public async Task<IEnumerable<User>> UsersSearchByDateAsync(DateOnly before, DateOnly after, int? maxResults = null)
+        public async Task<IEnumerable<User>> UsersSearchByDateAsync(DateTime before, DateTime after, int? maxResults = null)
         {
-            var users = await _users.List();
+            var users = await Users.List();
             var results = users.Where(u => u.Birthdate < before && u.Birthdate > after);
             if (maxResults is > 0)
                 results = results.Take(maxResults.Value);
@@ -67,9 +67,9 @@ namespace DemoV3.Services
         {
             try
             {
-                var user = await _users.GetById(userId);
+                var user = await Users.GetById(userId);
                 user = user.MergedWith(payload);
-                await _users.Edit(user.Id, user);
+                await Users.Edit(user.Id, user);
                 return (user, 200);
             }
             catch (UserNotFoundClientError)
@@ -77,10 +77,11 @@ namespace DemoV3.Services
                 var newUser = new UserWithId()
                 {
                     Id = userId,
-                    RegistrationDate = DateTime.Now
+                    RegistrationDate = DateTime.Now,
+                    Name=""
                 };
-                newUser.MergedWith(payload);
-                await _users.Add(newUser.Id, newUser);
+                newUser = newUser.MergedWith(payload);
+                await Users.Add(newUser.Id, newUser);
                 return (newUser, 201);
             }
         }
@@ -93,13 +94,13 @@ namespace DemoV3.Services
             }
             try
             {
-                await _guests.GetById(userId);
-                await _guests.Edit(payload.Email, payload);
+                await Guests.GetById(userId);
+                await Guests.Edit(payload.Email, payload);
                 return (payload, 200);
             }
             catch (UserNotFoundClientError)
             {
-                await _guests.Add(payload.Email, payload);
+                await Guests.Add(payload.Email, payload);
                 return (payload, 201);
             }
 
@@ -110,15 +111,15 @@ namespace DemoV3.Services
 
         public async Task<UserWithId> UserPatchAsync(string userId, JObject payload)
         {
-            var user = await _users.GetById(userId);
+            var user = await Users.GetById(userId);
             user = user.MergedWith<User, UserWithId>(payload);
-            await _users.Edit(user.Id, user);
+            await Users.Edit(user.Id, user);
             return user;
         }
 
         public async Task<UserWithId> UserGetAsync(string userId)
         {
-            return await _users.GetById(userId);
+            return await Users.GetById(userId);
         }
 
         public async ValueTask DisposeAsync()

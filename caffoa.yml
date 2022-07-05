@@ -2,7 +2,8 @@ config:
   clearGeneratedFiles: true
   duplicates: once # once, overwrite (default)
   routePrefix: api/
-  useDateOnly: true
+  useDateOnly: false
+  acceptCaseInvariantEnums: true
 #  useInheritance: false
   splitByTag: true # if set to true, multiple function files and interfaces will be generated, based on the first tag of each path item
   parsePathParameters: true # if set to true, the parameter parsing is not left to Functions, but is done by caffoa, opening up the possibility to give back better error messages
@@ -18,7 +19,7 @@ config:
           - user-patch
         methods:
           - patch
-  
+#  acceptCaseInvariantEnums: true
 services:
   - apiPath: tests\base.openapi.yml
     config:

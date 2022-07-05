@@ -21,13 +21,14 @@ namespace DemoV3.Model {
         public virtual string Type {
             get => _type;
             set {
-                if (!TypeValues.AllowedValues.Contains(value))
+                var _value = TypeValues.AllowedValues.FirstOrDefault(v=>String.Compare(v, value, StringComparison.OrdinalIgnoreCase) == 0, value);
+                if (!TypeValues.AllowedValues.Contains(_value))
                 {
                     var allowedValues = string.Join(", ", TypeValues.AllowedValues.Select(v => v.ToString()));
                     throw new ArgumentOutOfRangeException("type",
                         $"{value} is not allowed. Allowed values: [{allowedValues}]");
                 }
-                _type = value;
+                _type = _value;
             }
         }
 

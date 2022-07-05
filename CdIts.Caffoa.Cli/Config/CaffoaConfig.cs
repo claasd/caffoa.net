@@ -4,6 +4,7 @@ public class CaffoaConfig
 {
     private string? _genericAdditionalPropertiesType;
     public bool? CheckEnums { get; set; }
+    public bool? AcceptCaseInvariantEnums { get; set; }
     public string? Prefix { get; set; }
     public string? Suffix { get; set; }
     public string? RoutePrefix { get; set; }
@@ -54,7 +55,8 @@ public class CaffoaConfig
             GenerateResolvedApiFile = GenerateResolvedApiFile ?? general.GenerateResolvedApiFile,
             Extensions = Extensions ?? general.Extensions,
             RemoveDeprecated = general.RemoveDeprecated,
-            UseInheritance = UseInheritance ?? general.UseInheritance
+            UseInheritance = UseInheritance ?? general.UseInheritance,
+            AcceptCaseInvariantEnums = AcceptCaseInvariantEnums ?? general.AcceptCaseInvariantEnums
         };
     }
 }

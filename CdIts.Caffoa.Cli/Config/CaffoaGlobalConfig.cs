@@ -9,6 +9,7 @@ public class CaffoaGlobalConfig : CaffoaConfig
     public CaffoaGlobalConfig()
     {
         CheckEnums = true;
+        AcceptCaseInvariantEnums = false;
         UseDateOnly = false;
         Imports = new List<string>();
         UseInheritance = true; 

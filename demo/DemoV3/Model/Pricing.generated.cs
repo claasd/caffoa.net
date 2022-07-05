@@ -19,13 +19,14 @@ namespace DemoV3.Model {
         public virtual double? Price {
             get => _price;
             set {
-                if (!PriceValues.AllowedValues.Contains(value))
+                var _value = value;
+                if (!PriceValues.AllowedValues.Contains(_value))
                 {
                     var allowedValues = string.Join(", ", PriceValues.AllowedValues.Select(v => v == null ? "null" : v.ToString()));
                     throw new ArgumentOutOfRangeException("price",
                         $"{value} is not allowed. Allowed values: [{allowedValues}]");
                 }
-                _price = value;
+                _price = _value;
             }
         }
 

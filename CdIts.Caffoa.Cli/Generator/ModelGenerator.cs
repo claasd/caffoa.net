@@ -4,6 +4,7 @@ using CdIts.Caffoa.Cli.Config;
 using CdIts.Caffoa.Cli.Errors;
 using CdIts.Caffoa.Cli.Generator.Formatter;
 using CdIts.Caffoa.Cli.Model;
+using YamlDotNet.Core.Tokens;
 
 namespace CdIts.Caffoa.Cli.Generator;
 
@@ -75,11 +76,12 @@ public class ModelGenerator
             foreach (var subItem in item.SubItems)
             {
                 var otherItem = otherSchemas.FirstOrDefault(i => i.ClassName == subItem);
-                if(otherItem != null)
+                if (otherItem != null)
                     data.Add(CreateModelExtension(item, otherItem));
                 else
                 {
-                    Console.Error.WriteLine($"Warning: Could not generate update extension for {item.ClassName} with parameter {subItem}");
+                    Console.Error.WriteLine(
+                        $"Warning: Could not generate update extension for {item.ClassName} with parameter {subItem}");
                 }
             }
         }
@@ -127,7 +129,8 @@ public class ModelGenerator
             }
             else
             {
-                Console.Error.WriteLine($"WARNING: Cloud not create contructor for class {item.ClassName} with parameter {subItem}");
+                Console.Error.WriteLine(
+                    $"WARNING: Cloud not create contructor for class {item.ClassName} with parameter {subItem}");
             }
         }
 
@@ -229,7 +232,12 @@ public class ModelGenerator
     private string FormatEnumProperty(PropertyData property, Dictionary<string, object> format)
     {
         var file = Templates.GetTemplate("ModelEnumPropertyTemplate.tpl");
-        format["NO_CHECK_MSG"] = _config.CheckEnums!.Value
+        if (_config.AcceptCaseInvariantEnums is true && property.TypeName == "string")
+            format["TRANSFORM"] =
+                $"{property.Name.ToObjectName()}Values.AllowedValues.FirstOrDefault(v=>String.Compare(v, value, StringComparison.OrdinalIgnoreCase) == 0, value)";
+        else
+            format["TRANSFORM"] = "value";
+        format["NO_CHECK_MSG"] = _config.CheckEnums is true
             ? ""
             : "// set checkEnums=true in config file to have a value check here //\n                ";
         format["NO_CHECK"] = _config.CheckEnums!.Value ? "" : "// ";

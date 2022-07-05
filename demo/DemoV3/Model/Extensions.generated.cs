@@ -25,6 +25,7 @@ namespace DemoV3.Model {
             item.Emails = other.Emails.ToList();
             item.Descriptions = other.Descriptions;
             item.Type = other.Type;
+            item.Role = other.Role;
             item.AgeGroup = other.AgeGroup;
             item.PreferredContactTime = other.PreferredContactTime;
         }
