@@ -3,7 +3,7 @@
         ///</summary>
         [FunctionName("{PREFIX}{NAME}Async")]
         public async Task<IActionResult> {NAME}Async(
-            [HttpTrigger(AuthorizationLevel.Function, "{OPERATION}", Route = "{PATH}")]
+            [HttpTrigger(AuthorizationLevel.{AUTHORIZATION_LEVEL}, "{OPERATION}", Route = "{PATH}")]
             HttpRequest request{PARAM_NAMES})
         {{
             try {{

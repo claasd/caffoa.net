@@ -19,6 +19,7 @@ config:
           - user-patch
         methods:
           - patch
+  authorizationLevel: function # function | user | anonymous | system | admin
 #  acceptCaseInvariantEnums: true
 services:
   - apiPath: tests\base.openapi.yml

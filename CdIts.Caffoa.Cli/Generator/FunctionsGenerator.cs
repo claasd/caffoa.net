@@ -119,6 +119,7 @@ public class FunctionsGenerator
             pathParams.Add(", [DurableClient] IDurableOrchestrationClient durableClient");
 
         parameters["NAME"] = endpoint.Name;
+        parameters["AUTHORIZATION_LEVEL"] = _config.AuthorizationLevel!.FirstCharUpper();
         parameters["PREFIX"] = _config.FunctionNamePrefix ?? "";
         parameters["OPERATION"] = endpoint.Operation;
         parameters["PATH"] = _config.RoutePrefix + endpoint.Route;

@@ -127,6 +127,7 @@ The file will contain a partial class, with all properties of the schema. You ca
 There are multiple optional configuration options that you can use:
 ```yaml
 config:
+  authorizationLevel: function # function | user | anonymous | system | admin
   clearGeneratedFiles: true # default is false, removes all files below the working directory, that end in .generated.cs
   duplicates: override # "once" or "override". once will not generate the same class name twice, even if it occurs in different API Specs.
   prefix: "Pre" # A prefix that is added to all model classes

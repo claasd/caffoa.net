@@ -12,6 +12,7 @@ public class CaffoaGlobalConfig : CaffoaConfig
         AcceptCaseInvariantEnums = false;
         UseDateOnly = false;
         Imports = new List<string>();
-        UseInheritance = true; 
+        UseInheritance = true;
+        AuthorizationLevel = "function";
     }
 }
