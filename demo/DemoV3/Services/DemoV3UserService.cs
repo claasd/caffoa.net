@@ -9,6 +9,8 @@ using DemoV3.Model;
 using Microsoft.Azure.WebJobs.Extensions.DurableTask;
 using Newtonsoft.Json.Linq;
 
+#pragma warning disable CS0612
+
 namespace DemoV3.Services
 {
     
@@ -44,11 +46,6 @@ namespace DemoV3.Services
             if (maxResults is > 0)
                 results = results.Take(maxResults.Value);
             return results.Select(u=>u.ToUser());
-        }
-
-        public Task LongRunningFunctionAsync(IDurableOrchestrationClient orchestrationClient)
-        {
-            return Task.CompletedTask;
         }
 
         public async Task<AnyCompleteUser> UserPostAsync(User payload)

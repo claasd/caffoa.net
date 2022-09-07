@@ -57,7 +57,7 @@ try
     foreach (var builder in builders)
     {
         builder.Generate(parsedDocuments);
-        if (builder.ExtensionData != null && builder.ExtensionData.Any())
+        if (builder.ExtensionData.Any())
         {
             var generator = extensionGenerators.FirstOrDefault(g =>
                 g.Folder == builder.ExtensionFolder && g.Namespace == builder.ExtensionNamespace);
@@ -86,7 +86,7 @@ catch (ConfigurationMissingException e)
 catch (CaffoaValidationException e)
 {
     Console.Error.WriteLine(e.Message);
-    foreach (var error in e.Diagnostic.Errors)
+    foreach (var error in e.Diagnostic?.Errors ?? new List<OpenApiError>())
     {
         Console.Error.WriteLine(error.ToString());
     }

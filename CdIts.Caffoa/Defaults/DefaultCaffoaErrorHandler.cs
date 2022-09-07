@@ -69,7 +69,7 @@ public class DefaultCaffoaErrorHandler : ICaffoaErrorHandler
             debugInformation["p_" + name] = value.ToString();
         }
         debugInformation["Payload"] = GetPayloadForExceptionLogging(request);
-        _logger.LogCritical(JsonConvert.SerializeObject(debugInformation));
+        _logger.LogCritical("{DebugInfo}", JsonConvert.SerializeObject(debugInformation));
         result = null;
         return false;
     }

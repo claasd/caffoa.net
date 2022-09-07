@@ -116,7 +116,7 @@ public abstract class ObjectParser
         return null;
     }
 
-    private List<string> ParseCustomAttributes(IDictionary<string, IOpenApiExtension> extensions, string name)
+    private static List<string> ParseCustomAttributes(IDictionary<string, IOpenApiExtension> extensions, string name)
     {
         try
         {

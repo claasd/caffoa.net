@@ -99,9 +99,7 @@ public class FunctionsGenerator
         if (endpoint.HasRequestBody && endpoint.RequestBodyType is SelectionBodyModel)
             call = FormatSelectionCall(endpoint, variable);
         else
-        {
             call = FormatCall(endpoint, variable, ParseParameters(endpoint), true);
-        }
 
         List<string> pathParams;
         var filteredParams = endpoint.Parameters.Where(p => !p.IsQueryParameter);
@@ -169,7 +167,7 @@ public class FunctionsGenerator
         return string.Join("", parameters);
     }
 
-    private string FormatCall(EndPointModel endpoint, string variable, IEnumerable<string> parameters, bool addAwait)
+    private static string FormatCall(EndPointModel endpoint, string variable, IEnumerable<string> parameters, bool addAwait)
     {
         var callParams = string.Join(", ", parameters);
         var awaitStr = addAwait ? "await " : "";
@@ -261,7 +259,7 @@ public class FunctionsGenerator
     }
 
 
-    private (string, string) GenerateResult(EndPointModel endpoint)
+    private static (string, string) GenerateResult(EndPointModel endpoint)
     {
         var codes = new List<int>();
         string? typeName = null;

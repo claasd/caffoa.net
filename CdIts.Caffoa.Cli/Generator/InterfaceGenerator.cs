@@ -113,7 +113,7 @@ public class InterfaceGenerator
         return builder.Build();
     }
 
-    private string GetResponseType(EndPointModel endpoint)
+    private static string GetResponseType(EndPointModel endpoint)
     {
         var codes = new List<int>();
         string? typeName = null;

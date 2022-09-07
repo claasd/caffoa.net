@@ -6,7 +6,7 @@ namespace CdIts.Caffoa.Cli.Errors;
 [Serializable]
 public class CaffoaValidationException : Exception
 {
-    public OpenApiDiagnostic Diagnostic { get; }
+    public OpenApiDiagnostic? Diagnostic { get; }
 
     public CaffoaValidationException(string message, OpenApiDiagnostic diagnostic) : base(message)
     {

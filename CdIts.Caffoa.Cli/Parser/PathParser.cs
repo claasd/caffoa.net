@@ -159,7 +159,7 @@ public class PathParser
         return response;
     }
 
-    public List<ParameterObject> ParseParameter(IList<OpenApiParameter> parameters)
+    public static List<ParameterObject> ParseParameter(IList<OpenApiParameter> parameters)
     {
         return parameters.Where(p => p.In is ParameterLocation.Path or ParameterLocation.Query)
             .Select(p =>
