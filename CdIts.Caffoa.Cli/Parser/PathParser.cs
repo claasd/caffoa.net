@@ -32,7 +32,7 @@ public class PathParser
         List<ParameterObject> baseParams)
     {
         if (operationItem.OperationId is null)
-            throw new CaffoaParserError($"Operation ID must be set on '{operation} {path}'");
+            throw new CaffoaParserException($"Operation ID must be set on '{operation} {path}'");
         var name = operationItem.OperationId.ToObjectName();
         var tags = operationItem.Tags.Select(t => t.Name);
         var tag = tags.FirstOrDefault() ?? "default";
@@ -41,30 +41,26 @@ public class PathParser
         {
             result.Parameters.AddRange(baseParams);
             result.Parameters.AddRange(ParseParameter(operationItem.Parameters));
-            if (operationItem.Description != null)
-                result.DocumentationLines = operationItem.Description.Split("\n").ToList();
+            result.DocumentationLines = operationItem.Description?.Split("\n").ToList() ?? new List<string>();
             if (operationItem.RequestBody != null)
             {
                 result.HasRequestBody = true;
                 result.RequestBodyType = ParseRequestBody(operationItem.RequestBody);
                 if (_config.RequestBodyType != null)
                 {
-                    foreach (var requestConfig in _config.RequestBodyType)
-                    {
-                        if (requestConfig.Filter.Contains(operation, operationItem))
-                        {
-                            result.RequestBodyType = new SimpleBodyModel(requestConfig.Type);
-                            if (requestConfig.Import != null)
-                                result.Imports.Add(requestConfig.Import);
-                        }
+                    var typeOverride = _config.RequestBodyType.FirstOrDefault(requestConfig =>
+                        requestConfig.Filter.Contains(operation, operationItem));
+                    if(typeOverride != null) {
+                        result.RequestBodyType = new SimpleBodyModel(typeOverride.Type);
+                        if (typeOverride.Import != null)
+                            result.Imports.Add(typeOverride.Import);
                     }
                 }
             }
-
             foreach (var (response, responseItem) in operationItem.Responses)
             {
                 if (responseItem is null)
-                    throw new CaffoaParserError(
+                    throw new CaffoaParserException(
                         $"Missing Response configuration for Response '{response}' (maybe a wrong reference?)");
                 result.DocumentationLines.Add($"{response} -> {responseItem.Description}");
                 result.Responses.Add(ParseResponse(response, responseItem));
@@ -75,9 +71,9 @@ public class PathParser
                 result.DurableClient = true;
             }
         }
-        catch (CaffoaParserError e)
+        catch (CaffoaParserException e)
         {
-            throw new CaffoaParserError(
+            throw new CaffoaParserException(
                 $"Error during parsing of operation {operationItem.OperationId} ({operation} {path}): {e.Message}", e);
         }
 
@@ -87,7 +83,7 @@ public class PathParser
     private IBodyModel ParseRequestBody(OpenApiRequestBody body)
     {
         if (body.Content.Count > 1)
-            throw new CaffoaParserError("Multiple possible bodies");
+            throw new CaffoaParserException("Multiple possible bodies");
         var (type, content) = body.Content.First();
         if (type.ToLower() != "application/json")
         {
@@ -101,16 +97,17 @@ public class PathParser
         {
             var discriminator = content.Schema.Discriminator;
             if (discriminator is null)
-                throw new CaffoaParserError("Need discriminator in oneOf");
+                throw new CaffoaParserException("Need discriminator in oneOf");
             var mapping = discriminator.Mapping.ToDictionary(i => i.Value, i => i.Key);
             var result = new SelectionBodyModel(discriminator.PropertyName);
-            foreach (var subSchema in content.Schema.OneOf)
+            if(content.Schema.OneOf.Any(s=>s.Reference is null))
+                throw new CaffoaParserException("Cannot have oneOf without ref types");
+            
+            foreach (var reference in content.Schema.OneOf.Select(s=>s.Reference))
             {
-                if (subSchema.Reference == null)
-                    throw new CaffoaParserError("Cannot have oneOf without ref types");
-                if (!mapping.TryGetValue(subSchema.Reference.ReferenceV3, out var mapName))
-                    mapName = subSchema.Reference.Name();
-                var typeName = _classNameFunc(subSchema.Reference.Name());
+                if (!mapping.TryGetValue(reference.ReferenceV3, out var mapName))
+                    mapName = reference.Name();
+                var typeName = _classNameFunc(reference.Name());
                 result.Mapping[mapName] = typeName;
             }
 
@@ -128,7 +125,7 @@ public class PathParser
             return _classNameFunc(schema.Reference.Name());
         if (schema.IsPrimitiveType())
             return schema.TypeName();
-        throw new CaffoaParserError("complex type. Only array, ref or basic types are supported.");
+        throw new CaffoaParserException("complex type. Only array, ref or basic types are supported.");
     }
 
 

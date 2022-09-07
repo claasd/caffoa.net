@@ -33,9 +33,9 @@ try
             builder.Parse();
             builders.Add(builder);
         }
-        catch (ConfigurationMissingError e)
+        catch (ConfigurationMissingException e)
         {
-            throw new ConfigurationMissingError(e.Message + $" for '{service.ApiPath}'");
+            throw new ConfigurationMissingException(e.Message + $" for '{service.ApiPath}'");
         }
     }
 
@@ -78,12 +78,12 @@ catch (YamlException e)
     Console.Error.WriteLine($"Error in your configuration file (Line: {e.Start.Line}): {msg}");
     return 1;
 }
-catch (ConfigurationMissingError e)
+catch (ConfigurationMissingException e)
 {
     Console.Error.WriteLine($"Error in your configuration file: " + e.Message);
     return 1;
 }
-catch (CaffoaValidationError e)
+catch (CaffoaValidationException e)
 {
     Console.Error.WriteLine(e.Message);
     foreach (var error in e.Diagnostic.Errors)

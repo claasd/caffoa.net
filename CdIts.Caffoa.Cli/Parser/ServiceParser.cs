@@ -30,7 +30,7 @@ public class ServiceParser
         _document = reader.Read(fileStream, out var diagnostic);
         if (diagnostic.Errors.Count > 0)
         {
-            throw new CaffoaValidationError($"Error parsing {service.ApiPath}", diagnostic);
+            throw new CaffoaValidationException($"Error parsing {service.ApiPath}", diagnostic);
         }
     }
 

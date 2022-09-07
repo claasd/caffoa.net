@@ -6,7 +6,7 @@ namespace Caffoa;
 /// Factory to create an implementation of a function interface.
 /// </summary>
 /// <typeparam name="T">The interface that was created by caffoa</typeparam>
-public interface ICaffoaFactory<T>
+public interface ICaffoaFactory<out T>
 {
     /// <summary>
     /// Must return a valid instance of T.

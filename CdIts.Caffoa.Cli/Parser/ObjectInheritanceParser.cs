@@ -10,30 +10,30 @@ public class ObjectInheritanceParser : ObjectParser
     {
     }
 
-    protected override OpenApiSchema UpdateSchemaForAllOff(OpenApiSchema originalSchema)
+    protected override OpenApiSchema UpdateSchemaForAllOff(OpenApiSchema schema)
     {
         string? parent = null;
         OpenApiSchema? newSchema = null;
-        foreach (var schema in originalSchema.AllOf)
+        foreach (var localSchema in schema.AllOf)
         {
-            if (schema.Reference != null)
+            if (localSchema.Reference != null)
             {
                 if (parent != null)
-                    throw new CaffoaParserError(
+                    throw new CaffoaParserException(
                         "allOf is implemented as inheritance; cannot have two children with $ref");
-                parent = ClassNameFunc(schema.Reference.Name());
+                parent = ClassNameFunc(localSchema.Reference.Name());
             }
             else
             {
                 if (newSchema != null)
-                    throw new CaffoaParserError(
+                    throw new CaffoaParserException(
                         "allOf is implemented as inheritance; cannot have to children of allOf with direct implementation");
-                newSchema = schema;
+                newSchema = localSchema;
             }
         }
 
         if (newSchema is null)
-            throw new CaffoaParserError("allOf is implemented as inheritance; Cannot create class without content, no child of allOf is type object");
+            throw new CaffoaParserException("allOf is implemented as inheritance; Cannot create class without content, no child of allOf is type object");
         Item.Parent = parent;
         return newSchema;
     }

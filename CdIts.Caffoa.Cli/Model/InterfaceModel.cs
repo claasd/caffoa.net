@@ -2,6 +2,6 @@ namespace CdIts.Caffoa.Cli.Model;
 
 public class InterfaceModel
 {
-    public string? Discriminator;
-    public List<string> Children = new();
+    public string? Discriminator { get; set; }
+    public List<string> Children { get; } = new();
 }

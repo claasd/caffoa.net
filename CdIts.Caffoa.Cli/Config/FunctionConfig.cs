@@ -14,20 +14,20 @@ public class FunctionConfig
 
     public string Name
     {
-        get => _name ?? throw new ConfigurationMissingError("Missing 'name' of configuration 'function'");
+        get => _name ?? throw new ConfigurationMissingException("Missing 'name' of configuration 'function'");
         set => _name = value;
     }
 
     public string Namespace
     {
-        get => _ns ?? throw new ConfigurationMissingError("Missing 'namespace' of configuration 'function'");
+        get => _ns ?? throw new ConfigurationMissingException("Missing 'namespace' of configuration 'function'");
         set => _ns = value;
     }
 
     public string TargetFolder
     {
         get => _targetFolder ??
-               throw new ConfigurationMissingError("Missing 'targetFolder' of configuration 'function'");
+               throw new ConfigurationMissingException("Missing 'targetFolder' of configuration 'function'");
         set => _targetFolder = value;
     }
 

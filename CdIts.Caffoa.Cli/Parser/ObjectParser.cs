@@ -12,7 +12,7 @@ public abstract class ObjectParser
     protected readonly SchemaItem Item;
     private readonly IDictionary<string, OpenApiSchema> _knownTypes;
 
-    public ObjectParser(SchemaItem item, IDictionary<string, OpenApiSchema> knownTypes,
+    protected ObjectParser(SchemaItem item, IDictionary<string, OpenApiSchema> knownTypes,
         Func<string, string> classNameGenerator)
     {
         Item = item;
@@ -39,9 +39,9 @@ public abstract class ObjectParser
             Item.Description = schema.Description;
             return Item;
         }
-        catch (CaffoaParserError e)
+        catch (CaffoaParserException e)
         {
-            throw new CaffoaParserError($"Error during parsing of object {Item.Name}: {e.Message}", e);
+            throw new CaffoaParserException($"Error during parsing of object {Item.Name}: {e.Message}", e);
         }
     }
 
@@ -49,22 +49,9 @@ public abstract class ObjectParser
     {
         var property = new PropertyData(name, required);
         property.Deprecated = schema.Deprecated;
-        try
-        {
-            property.CustomAttributes = ParseCustomAttributes(schema.Extensions);
-        }
-        catch (CaffoaParserError e)
-        {
-            Console.Error.WriteLine($"Could not parse custom attributes of {name}: {e.Message}");
-        }
-        
-        if (schema.Extensions.TryGetValue("x-caffoa-converter", out var converter))
-        {
-            if (converter is OpenApiString converterStr)
-                property.Converter = converterStr.Value;
-            else
-                Console.Error.WriteLine($"Could not parse custom converter of {name}: value is not a string");
-        }
+        property.CustomAttributes = ParseCustomAttributes(schema.Extensions, name);
+        property.Converter = ParseCustomConverter(schema.Extensions, name);
+
 
         if (schema.Reference != null &&
             _knownTypes.TryGetValue(ClassNameFunc(schema.Reference.Name()), out var knownSchema))
@@ -89,7 +76,7 @@ public abstract class ObjectParser
         else if (schema.AdditionalProperties != null)
         {
             if (schema.Properties.Count > 0)
-                throw new CaffoaParserError(
+                throw new CaffoaParserException(
                     "object with properties and additional properties are currently not supported.");
             if (schema.AdditionalProperties.Reference != null)
             {
@@ -104,7 +91,7 @@ public abstract class ObjectParser
         }
         else if (schema.Properties == null)
         {
-            throw new CaffoaParserError(
+            throw new CaffoaParserException(
                 "object without any properties are currently not supported.");
         }
         else
@@ -117,34 +104,52 @@ public abstract class ObjectParser
         return property;
     }
 
-    private List<string> ParseCustomAttributes(IDictionary<string, IOpenApiExtension> extensions)
+    private static string? ParseCustomConverter(IDictionary<string, IOpenApiExtension> schemaExtensions, string name)
     {
-        if (!extensions.TryGetValue("x-caffoa-attributes", out var annotations))
-            return new List<string>();
-        var annotationsArray = annotations as OpenApiArray;
-        if (annotationsArray is null)
-            throw new CaffoaParserError("Not an array");
-        return annotationsArray.Select(item =>
+        if (schemaExtensions.TryGetValue("x-caffoa-converter", out var converter))
         {
-            var strItem = item as OpenApiString ?? throw new CaffoaParserError("one item is not a string");
-            return strItem.Value;
-        }).ToList();
+            if (converter is OpenApiString converterStr)
+                return converterStr.Value;
+            Console.Error.WriteLine($"Could not parse custom converter of {name}: value is not a string");
+        }
+
+        return null;
+    }
+
+    private List<string> ParseCustomAttributes(IDictionary<string, IOpenApiExtension> extensions, string name)
+    {
+        try
+        {
+            if (!extensions.TryGetValue("x-caffoa-attributes", out var annotations))
+                return new List<string>();
+            var annotationsArray = annotations as OpenApiArray;
+            if (annotationsArray is null)
+                throw new CaffoaParserException("Not an array");
+            return annotationsArray.Select(item =>
+            {
+                var strItem = item as OpenApiString ?? throw new CaffoaParserException("one item is not a string");
+                return strItem.Value;
+            }).ToList();
+        }
+        catch (CaffoaParserException e)
+        {
+            Console.Error.WriteLine($"Could not parse custom attributes of {name}: {e.Message}");
+            return new List<string>();
+        }
     }
 
     private InterfaceModel ExtractInterface(IList<OpenApiSchema> schemaOneOf, OpenApiDiscriminator openApiDiscriminator)
     {
         if (openApiDiscriminator.PropertyName is null)
-            throw new CaffoaParserError("cannot create oneOf interface without discriminator property");
+            throw new CaffoaParserException("cannot create oneOf interface without discriminator property");
         var model = new InterfaceModel
         {
             Discriminator = openApiDiscriminator.PropertyName
         };
-        foreach (var schema in schemaOneOf)
-        {
-            if (schema.Reference is null)
-                throw new CaffoaParserError("did not find $ref as child of oneOf");
-            model.Children.Add(ClassNameFunc(schema.Reference.Name()));
-        }
+        model.Children.AddRange(schemaOneOf.Select(schema =>
+            schema.Reference is null
+                ? throw new CaffoaParserException("did not find $ref as child of oneOf")
+                : ClassNameFunc(schema.Reference.Name())));
 
         return model;
     }

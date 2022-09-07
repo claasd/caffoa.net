@@ -19,7 +19,7 @@ public class ModelGenerator
         _config = mergedConfig;
     }
 
-    public IEnumerable<string>? WriteModel(List<SchemaItem> objects)
+    public IEnumerable<string> WriteModel(List<SchemaItem> objects)
     {
         Directory.CreateDirectory(_service.Model!.TargetFolder);
         var interfaces = objects.Where(o => o.Interface != null).ToList();
@@ -29,7 +29,7 @@ public class ModelGenerator
         interfaces.ForEach(WriteModelInterface);
         classes.ForEach(c => WriteModelClass(c, interfaces, classes));
         if (_config.Extensions is false)
-            return null;
+            return Array.Empty<string>();
         return classes.Select(c => CreateModelExtensions(c, classes)).Where(d => !string.IsNullOrEmpty(d));
     }
 
@@ -165,7 +165,7 @@ public class ModelGenerator
     {
         var updateCommands = new List<string>();
         if (schemaItem.Properties is null)
-            throw new CaffoaParserError($"No properties defined for object {schemaItem.Name}");
+            throw new CaffoaParserException($"No properties defined for object {schemaItem.Name}");
         foreach (var property in schemaItem.Properties!)
         {
             var name = property.Name.ToObjectName();

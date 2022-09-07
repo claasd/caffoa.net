@@ -1,6 +1,9 @@
 # caffoa changelog
 
 ### 1.8.0
+* Refactoring, removed code smells
+
+### 1.8.0
 * Allow to set the function authorization level
 
 ### 1.7.0

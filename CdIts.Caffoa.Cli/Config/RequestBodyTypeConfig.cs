@@ -8,7 +8,7 @@ public class RequestBodyTypeConfig
 
     public string Type
     {
-        get => _type ?? throw new ConfigurationMissingError("'type' is required when specifying 'requestBodyType'");
+        get => _type ?? throw new ConfigurationMissingException("'type' is required when specifying 'requestBodyType'");
         set => _type = value;
     }
 

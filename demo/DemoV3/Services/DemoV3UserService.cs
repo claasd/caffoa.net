@@ -72,7 +72,7 @@ namespace DemoV3.Services
                 await Users.Edit(user.Id, user);
                 return (user, 200);
             }
-            catch (UserNotFoundClientError)
+            catch (UserNotFoundClientException)
             {
                 var newUser = new UserWithId()
                 {
@@ -90,7 +90,7 @@ namespace DemoV3.Services
         {
             if (payload.Email != userId)
             {
-                throw new GuestUserNotValidClientError();
+                throw new GuestUserNotValidClientException();
             }
             try
             {
@@ -98,7 +98,7 @@ namespace DemoV3.Services
                 await Guests.Edit(payload.Email, payload);
                 return (payload, 200);
             }
-            catch (UserNotFoundClientError)
+            catch (UserNotFoundClientException)
             {
                 await Guests.Add(payload.Email, payload);
                 return (payload, 201);

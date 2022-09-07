@@ -9,13 +9,13 @@ public class ModelConfig
 
     public string Namespace
     {
-        get => _ns ?? throw new ConfigurationMissingError("Missing 'namespace' of configuration 'model'");
+        get => _ns ?? throw new ConfigurationMissingException("Missing 'namespace' of configuration 'model'");
         set => _ns = value;
     }
 
     public string TargetFolder
     {
-        get => _targetFolder ?? throw new ConfigurationMissingError("Missing 'targetFolder' of configuration 'model'");
+        get => _targetFolder ?? throw new ConfigurationMissingException("Missing 'targetFolder' of configuration 'model'");
         set => _targetFolder = value;
     }
 

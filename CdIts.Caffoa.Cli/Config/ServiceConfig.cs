@@ -8,11 +8,11 @@ public class ServiceConfig
 
     public string ApiPath
     {
-        get => _apiPath ?? throw new ConfigurationMissingError("'apiPath' is required for 'services'");
+        get => _apiPath ?? throw new ConfigurationMissingException("'apiPath' is required for 'services'");
         set => _apiPath = value;
     }
 
     public CaffoaConfig? Config { get; set; }
-    public FunctionConfig? Function;
-    public ModelConfig? Model;
+    public FunctionConfig? Function { get; set; }
+    public ModelConfig? Model { get; set; }
 }

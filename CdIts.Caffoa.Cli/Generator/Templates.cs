@@ -4,7 +4,7 @@ using System.Text;
 
 namespace CdIts.Caffoa.Cli.Generator;
 
-public class Templates
+public static class Templates
 {
     public static string GetTemplate(string name)
     {

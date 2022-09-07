@@ -21,7 +21,7 @@ namespace DemoV3.Services
             await Task.Yield();
             if (_fakeRepo.TryGetValue(id, out var entity))
                 return entity;
-            throw new UserNotFoundClientError();
+            throw new UserNotFoundClientException();
         }
 
         public async Task Add(string id, T entity)
@@ -40,7 +40,7 @@ namespace DemoV3.Services
         {
             await Task.Yield();
             if (!_fakeRepo.TryGetValue(id, out _))
-                throw new UserNotFoundClientError();
+                throw new UserNotFoundClientException();
 
             _fakeRepo[id] = entity;
         }

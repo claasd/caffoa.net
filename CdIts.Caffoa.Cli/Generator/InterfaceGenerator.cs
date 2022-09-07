@@ -80,68 +80,37 @@ public class InterfaceGenerator
 
     private List<string> GetParams(EndPointModel endpoint)
     {
-        var parameter = endpoint.Parameters.Where(p => !p.IsQueryParameter).Select(p =>
-        {
-            var typeName = p.GetTypeName(_config);
-            return $"{typeName} {p.Name}";
-        }).ToList();
-
+        var builder = ParameterBuilder.Instance(_config.UseDateOnly is true && _config.ParsePathParameters is true)
+            .AddPathParameters(endpoint.Parameters);
         if (endpoint.DurableClient)
-            parameter.Insert(0, "IDurableOrchestrationClient orchestrationClient");
-
-        var queryParameters = new List<string>();
+            builder.AddDurableClient();
         if (_config.ParseQueryParameters is true)
-        {
-            queryParameters.AddRange(endpoint.QueryParameters().Select(p =>
-            {
-                var typeName = p.GetTypeName(_config);
-                var result = $"{typeName} {p.Name}";
-                if (p.DefaultValue != null)
-                    result += $" = {p.DefaultValue}";
-                else if (!p.Required)
-                    result += $" = null";
-                return result;
-            }));
-        }
-
+            builder.AddQueryParameters(endpoint.QueryParameters());
+        if (_config.WithCancellation is true)
+            builder.AddCancellationToken();
         if (endpoint.HasRequestBody)
         {
-            if (endpoint.RequestBodyType is SelectionBodyModel selection)
+            switch (endpoint.RequestBodyType)
             {
-                var methods = new List<string>();
-                foreach (var value in selection.Mapping.Values)
+                case SelectionBodyModel selection:
                 {
-                    var localParameter = new List<string>(parameter);
-                    localParameter.Add($"{value} payload");
-                    localParameter.AddRange(queryParameters);
-                    if (_config.WithCancellation is true)
+                    foreach (var value in selection.Mapping.Values)
                     {
-                        localParameter.Add("CancellationToken cancellationToken = default");
+                        builder.AddBody($"{value} payload");
                     }
 
-                    methods.Add(string.Join(", ", localParameter));
+                    break;
                 }
-
-                return methods;
-            }
-
-            if (endpoint.RequestBodyType is SimpleBodyModel simple)
-            {
-                parameter.Add($"{simple.TypeName} payload");
-            }
-            else
-            {
-                parameter.Add("Stream stream");
+                case SimpleBodyModel simple:
+                    builder.AddBody($"{simple.TypeName} payload");
+                    break;
+                default:
+                    builder.AddBody("Stream stream");
+                    break;
             }
         }
 
-        parameter.AddRange(queryParameters);
-        if (_config.WithCancellation is true)
-        {
-            parameter.Add("CancellationToken cancellationToken = default");
-        }
-
-        return new List<string>() {string.Join(", ", parameter)};
+        return builder.Build();
     }
 
     private string GetResponseType(EndPointModel endpoint)
@@ -155,7 +124,8 @@ public class InterfaceGenerator
             codes.Add(response.Code);
             if (typeName != null && typeName != response.TypeName)
             {
-                // TODO: log warning "Returning different objects is not supported"
+                Console.Error.WriteLine(
+                    $"Returning different objects is not supported, defaulting to IActionResult for {endpoint.Name}/{endpoint.Operation}");
                 return "<IActionResult>";
             }
 

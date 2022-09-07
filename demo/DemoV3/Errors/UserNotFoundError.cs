@@ -1,17 +1,24 @@
+using System;
+using System.Runtime.Serialization;
 using Demov3.Errors;
 using DemoV3.Model;
 
 namespace DemoV3.Errors
 {
-    public class UserNotFoundClientError : ClientError
+    [Serializable]
+    public class UserNotFoundClientException : ClientException
     {
-        public UserNotFoundClientError()
+        public UserNotFoundClientException()
         {
             Element = new Error()
             {
                 Status = "UserNotFound",
                 Message = "The specified user was not found"
             };
+        }
+
+        protected UserNotFoundClientException(SerializationInfo info, StreamingContext context) : base(info, context)
+        {
         }
     }
 }

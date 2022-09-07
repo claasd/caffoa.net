@@ -13,7 +13,7 @@ public class ApiBuilder
     private List<SchemaItem>? _model;
     private List<EndPointModel>? _endpoints;
     private readonly ServiceParser _parser;
-    public IEnumerable<string>? ExtensionData { get; private set; }
+    public IEnumerable<string> ExtensionData { get; private set; } = Array.Empty<string>();
     public string ExtensionNamespace => _service.Model!.Namespace;
     public string ExtensionFolder => _service.Model!.TargetFolder;
 
