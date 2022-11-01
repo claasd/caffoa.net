@@ -84,14 +84,9 @@ try
     }
 
     var extensionGenerators = new List<ExtensionGenerator>();
-    var parsedDocuments = new Dictionary<string, OpenApiDocument>();
     foreach (var builder in builders)
     {
-        parsedDocuments[builder.ApiName] = builder.Document;
-    }
-    foreach (var builder in builders)
-    {
-        builder.Generate(parsedDocuments);
+        builder.Generate(builders.ToDictionary(b=>b.ApiName, b=>b.Document));
         if (builder.ExtensionData.Any())
         {
             var generator = extensionGenerators.FirstOrDefault(g =>

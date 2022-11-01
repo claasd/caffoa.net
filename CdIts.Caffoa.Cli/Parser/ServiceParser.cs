@@ -20,7 +20,7 @@ public class ServiceParser
     private readonly Dictionary<string, OpenApiSchema> _knownTypes = new();
     private static readonly List<string> Duplicates = new();
     public OpenApiDocument Document => _document;
-    public string ApiName => Path.GetFileName(_service.ApiPath);
+    public string ApiName { get; }
 
     public ServiceParser(ServiceConfig service, CaffoaGlobalConfig config)
     {
@@ -30,9 +30,15 @@ public class ServiceParser
         try
         {
             if (_service.ApiPath.StartsWith("http"))
+            {
                 input = new WebClient().OpenRead(_service.ApiPath);
+                ApiName = _service.ApiPath;
+            }
             else
+            {
                 input = File.OpenRead(_service.ApiPath);
+                ApiName = Path.GetFileName(_service.ApiPath);
+            }
 
 
             var reader = new OpenApiStreamReader();
@@ -58,7 +64,6 @@ public class ServiceParser
         {
             workspace.AddDocument(name, doc);
         }
-
         workspace.AddDocument("root", _document);
         _document.Serialize(fileStream, OpenApiSpecVersion.OpenApi3_0, OpenApiFormat.Yaml, new OpenApiWriterSettings()
         {
@@ -88,7 +93,6 @@ public class ServiceParser
         {
             endpoints.AddRange(parser.Parse(path, pathItem));
         }
-
         return endpoints;
     }
 
