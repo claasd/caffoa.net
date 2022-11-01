@@ -1,7 +1,6 @@
-﻿using CdIts.Caffoa.Cli.Config;
-using CdIts.Caffoa.Cli.Model;
+﻿using CdIts.Caffoa.Cli.Model;
 
-namespace CdIts.Caffoa.Cli.Generator.Formatter;
+namespace CdIts.Caffoa.Cli.Generator;
 
 public class ParameterBuilder
 {

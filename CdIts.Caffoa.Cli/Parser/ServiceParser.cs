@@ -7,7 +7,6 @@ using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers;
 using Microsoft.OpenApi.Services;
 using Microsoft.OpenApi.Writers;
-using YamlDotNet.Core.Tokens;
 
 namespace CdIts.Caffoa.Cli.Parser;
 
@@ -19,18 +18,38 @@ public class ServiceParser
     private readonly Dictionary<string, OpenApiSchema> _knownTypes = new();
     private static readonly List<string> Duplicates = new();
     public OpenApiDocument Document => _document;
-    public string ApiName => Path.GetFileName(_service.ApiPath);
+    public string ApiName { get; }
 
     public ServiceParser(ServiceConfig service, CaffoaGlobalConfig config)
     {
         _service = service;
         _config = config;
-        using var fileStream = File.OpenRead(_service.ApiPath);
-        var reader = new OpenApiStreamReader();
-        _document = reader.Read(fileStream, out var diagnostic);
-        if (diagnostic.Errors.Count > 0)
+        Stream? input = null;
+        try
         {
-            throw new CaffoaValidationException($"Error parsing {service.ApiPath}", diagnostic);
+            if (_service.ApiPath.StartsWith("http"))
+            {
+                input = new HttpClient().GetStreamAsync(_service.ApiPath).Result;
+                ApiName = _service.ApiPath;
+            }
+            else
+            {
+                input = File.OpenRead(_service.ApiPath);
+                ApiName = Path.GetFileName(_service.ApiPath);
+            }
+
+
+            var reader = new OpenApiStreamReader();
+            _document = reader.Read(input, out var diagnostic);
+
+            if (diagnostic.Errors.Count > 0)
+            {
+                throw new CaffoaValidationException($"Error parsing {service.ApiPath}", diagnostic);
+            }
+        }
+        finally
+        {
+            input?.Close();
         }
     }
 
@@ -54,11 +73,13 @@ public class ServiceParser
     public List<SchemaItem> GenerateModel()
     {
         var schemas = _document.Components.Schemas;
-        if (_service.Model!.Includes.Count > 0)
+        ParseSimpleTypes(schemas);
+        if (_service.Model!.Includes != null && _service.Model.Includes.Any())
             schemas = schemas.Where(p => _service.Model.Includes.Contains(p.Key))
                 .ToDictionary(p => p.Key, p => p.Value);
-        schemas = schemas.Where(p => !_service.Model.Excludes.Contains(p.Key)).ToDictionary(p => p.Key, p => p.Value);
-        ParseSimpleTypes(schemas);
+        if (_service.Model.Excludes != null)
+            schemas = schemas.Where(p => !_service.Model.Excludes.Contains(p.Key))
+                .ToDictionary(p => p.Key, p => p.Value);
         return ParseObjects(schemas);
     }
 
@@ -70,7 +91,6 @@ public class ServiceParser
         {
             endpoints.AddRange(parser.Parse(path, pathItem));
         }
-
         return endpoints;
     }
 

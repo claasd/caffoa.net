@@ -4,7 +4,6 @@ using CdIts.Caffoa.Cli.Config;
 using CdIts.Caffoa.Cli.Errors;
 using CdIts.Caffoa.Cli.Generator.Formatter;
 using CdIts.Caffoa.Cli.Model;
-using YamlDotNet.Core.Tokens;
 
 namespace CdIts.Caffoa.Cli.Generator;
 
@@ -163,27 +162,12 @@ public class ModelGenerator
 
     private List<string> FormatPropertyUpdates(SchemaItem schemaItem, string prefix)
     {
-        var updateCommands = new List<string>();
         if (schemaItem.Properties is null)
-            throw new CaffoaParserException($"No properties defined for object {schemaItem.Name}");
-        foreach (var property in schemaItem.Properties!)
         {
-            var name = property.Name.ToObjectName();
-            var sb = new StringBuilder();
-            sb.Append(prefix);
-            sb.Append($"{name} = other.{name}");
-            if (property.IsArray)
-                sb.Append(".ToList()");
-            if (property.IsOtherSchema)
-            {
-                if (property.Nullable)
-                    sb.Append('?');
-                sb.Append($".To{property.TypeName.ToObjectName()}()");
-            }
-
-            sb.Append(';');
-            updateCommands.Add(sb.ToString());
+            throw new CaffoaParserException($"No properties defined for object {schemaItem.Name}");
         }
+
+        var updateCommands = schemaItem.Properties!.Select(property => FormatPropertyUpdate(property, prefix)).ToList();
 
         if (schemaItem.AdditionalPropertiesAllowed && _config.GenericAdditionalProperties is true)
             updateCommands.Add(
@@ -191,10 +175,44 @@ public class ModelGenerator
         return updateCommands;
     }
 
+    private static string FormatPropertyUpdate(PropertyData property, string prefix)
+    {
+        var name = property.Name.ToObjectName();
+        var sb = new StringBuilder();
+        sb.Append(prefix);
+        sb.Append($"{name} = other.{name}");
+
+        if (property.IsOtherSchema)
+        {
+            if (property.Nullable)
+                sb.Append('?');
+            sb.Append($".To{property.TypeName.ToObjectName()}()");
+        }
+
+        if (property.IsArray)
+        {
+            if (property.InnerTypeIsOtherSchema)
+                sb.Append($".Select(value=>value.To{property.TypeName.ToObjectName()}())");
+            sb.Append(".ToList()");
+        }
+        else if (property.IsMap)
+        {
+            sb.Append(".ToDictionary(entry => entry.Key, entry => entry.Value");
+            if (property.InnerTypeIsOtherSchema)
+                sb.Append($".To{property.TypeName.ToObjectName()}()");
+            sb.Append(')');
+        }
+
+        sb.Append(';');
+        return sb.ToString();
+    }
+
     private string FormatProperties(SchemaItem item)
     {
         var properties = new List<string>();
-        foreach (var property in item.Properties!)
+        if (item.Properties is null)
+            return "";
+        foreach (var property in item.Properties)
         {
             var formatter = new PropertyFormatter(property, _config.UseDateOnly ?? false);
             var format = new Dictionary<string, object>();

@@ -4,13 +4,9 @@ namespace CdIts.Caffoa.Cli.Config;
 
 public class FunctionConfig
 {
-    private string? _interfaceName;
-    private string? _functionsName;
     private string? _name;
     private string? _ns;
     private string? _targetFolder;
-    private string? _interfaceNamespace;
-    private string? _interfaceTargetFolder;
 
     public string Name
     {
@@ -31,33 +27,16 @@ public class FunctionConfig
         set => _targetFolder = value;
     }
 
-    public string FunctionsName
-    {
-        get => _functionsName ?? $"{Name}Functions";
-        set => _functionsName = value;
-    }
+    public string? FunctionsName { get; set; }
+    public string? InterfaceName { get; set; }
 
-    public string InterfaceName
-    {
-        get => _interfaceName ?? $"I{Name}Service";
-        set => _interfaceName = value;
-    }
+    public string? InterfaceNamespace { get; set; }
 
-    public string InterfaceNamespace
-    {
-        get => _interfaceNamespace ?? Namespace;
-        set => _interfaceNamespace = value;
-    }
-
-    public string InterfaceTargetFolder
-    {
-        get => _interfaceTargetFolder ?? TargetFolder;
-        set => _interfaceTargetFolder = value;
-    }
+    public string? InterfaceTargetFolder { get; set; }
 
     public string GetInterfaceName(string prefix)
     {
-        var name = _interfaceName;
+        var name = InterfaceName;
         if (name == null)
             name = $"I{Name}{prefix}Service";
         else if (name.Contains("{Tag}"))
@@ -69,7 +48,7 @@ public class FunctionConfig
 
     public string GetFunctionName(string prefix)
     {
-        var name = _functionsName;
+        var name = FunctionsName;
         if (name == null)
             name = $"{Name}{prefix}Functions";
         else if (name.Contains("{Tag}"))

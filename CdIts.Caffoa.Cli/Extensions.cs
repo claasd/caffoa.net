@@ -1,7 +1,6 @@
 using System.Globalization;
 using System.Text;
 using System.Text.RegularExpressions;
-using CdIts.Caffoa.Cli.Errors;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 
@@ -52,8 +51,8 @@ public static class Extensions
             return classNameFunc(item.Reference.Name());
         if (item.IsPrimitiveType())
             return item.TypeName();
-        throw new CaffoaParserException(
-            $"Cannot parse array trees: the array item should be declared in own schema directly under 'components'");
+        var innerName = item.GetArrayType(classNameFunc);
+        return $"List<{innerName}>";
     }
 
     public static string TypeName(this OpenApiSchema schema)

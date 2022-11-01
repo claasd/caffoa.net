@@ -22,4 +22,5 @@ public class PropertyData
     public List<string> CustomAttributes { get; set; } = new();
     public bool Deprecated { get; set; }
     public string? Converter { get; set; }
+    public bool InnerTypeIsOtherSchema { get; set; }
 }

@@ -1,7 +1,12 @@
 # caffoa changelog
 
-### 1.8.0
+### 1.9.0
 * Refactoring, removed code smells
+* added `--initwithfile` and `--initprojectname` to command line, to create a new caffoa.yml based on an openapi file
+* it is now possible to load openapi definitions from urls
+* nested arrays are now possible
+* when cloning an object, dictionaries are now cloned as well.
+* when cloning models, models in lists are now cloned as well instead of shallow copied
 
 ### 1.8.0
 * Allow to set the function authorization level

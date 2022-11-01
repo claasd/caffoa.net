@@ -12,11 +12,13 @@ paths:
       parameters:
         - name: offset
           in: query
+          style: form
           schema:
             type: integer
             default: 0
         - name: limit
           in: query
+          style: form
           schema:
             type: integer
             default: 1000
@@ -979,6 +981,7 @@ paths:
         in: path
         description: the user id.
         required: true
+        style: simple
         schema:
           type: string
   '/users/{userId}/uploadImage':
@@ -1005,6 +1008,7 @@ paths:
         in: path
         description: the user id.
         required: true
+        style: simple
         schema:
           type: string
   '/users/born-before/{date}':
@@ -1118,6 +1122,7 @@ paths:
       - name: date
         in: path
         required: true
+        style: simple
         schema:
           type: string
           format: date
@@ -1232,18 +1237,21 @@ paths:
       - name: before
         in: query
         required: true
+        style: form
         schema:
           type: string
           format: date
       - name: after
         in: query
         required: true
+        style: form
         schema:
           type: string
           format: date
           default: '1950-01-01T00:00:00.0000000'
       - name: maxResults
         in: query
+        style: form
         schema:
           type: integer
           nullable: true
@@ -1370,6 +1378,7 @@ paths:
       - name: id
         in: path
         required: true
+        style: simple
         schema:
           type: string
           format: uuid

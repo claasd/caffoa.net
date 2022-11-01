@@ -36,7 +36,7 @@ namespace DemoV3.Model {
         public Pricing(){}
         public Pricing(Pricing other) {
             Price = other.Price;
-            Taxes = other.Taxes;
+            Taxes = other.Taxes.ToDictionary(entry => entry.Key, entry => entry.Value);
         }
         public Pricing ToPricing() => new Pricing(this);
     }

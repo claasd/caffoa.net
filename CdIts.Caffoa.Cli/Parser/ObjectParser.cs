@@ -47,11 +47,13 @@ public abstract class ObjectParser
 
     private PropertyData ParseProperty(string name, OpenApiSchema schema, bool required)
     {
+        if (schema.AnyOf.Any())
+            throw new CaffoaParserException("anyOf is not supported on object properties");
         var property = new PropertyData(name, required);
         property.Deprecated = schema.Deprecated;
         property.CustomAttributes = ParseCustomAttributes(schema.Extensions, name);
         property.Converter = ParseCustomConverter(schema.Extensions, name);
-
+    
 
         if (schema.Reference != null &&
             _knownTypes.TryGetValue(ClassNameFunc(schema.Reference.Name()), out var knownSchema))
@@ -72,6 +74,7 @@ public abstract class ObjectParser
         {
             property.IsArray = true;
             property.TypeName = schema.GetArrayType(ClassNameFunc);
+            property.InnerTypeIsOtherSchema = schema.Items.Reference != null;
         }
         else if (schema.AdditionalProperties != null)
         {
@@ -81,10 +84,12 @@ public abstract class ObjectParser
             if (schema.AdditionalProperties.Reference != null)
             {
                 property.TypeName = ClassNameFunc(schema.AdditionalProperties.Reference.Name());
+                property.InnerTypeIsOtherSchema = true;
             }
             else
             {
                 property.TypeName = schema.AdditionalProperties.TypeName();
+                property.InnerTypeIsOtherSchema = false;
             }
 
             property.IsMap = true;
