@@ -52,6 +52,8 @@ public static class Extensions
             return classNameFunc(item.Reference.Name());
         if (item.IsPrimitiveType())
             return item.TypeName();
+        var innerName = item.GetArrayType(classNameFunc);
+        return $"List<{innerName}>";
         throw new CaffoaParserException(
             $"Cannot parse array trees: the array item should be declared in own schema directly under 'components'");
     }

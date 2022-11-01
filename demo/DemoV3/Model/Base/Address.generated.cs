@@ -38,7 +38,7 @@ namespace DemoV3.Model.Base {
             PostalCode = other.PostalCode;
             City = other.City;
             Country = other.Country;
-            Flags = other.Flags;
+            Flags = other.Flags.ToDictionary(entry => entry.Key, entry => entry.Value.ToFlags());
             AdditionalProperties = other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null;
         }
         public Address ToAddress() => new Address(this);

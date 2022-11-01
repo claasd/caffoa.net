@@ -19,7 +19,7 @@ public class ModelConfig
         set => _targetFolder = value;
     }
 
-    public List<string> Excludes { get; set; } = new();
-    public List<string> Includes { get; set; } = new();
-    public List<string> Imports { get; set; } = new();
+    public List<string>? Excludes { get; set; }
+    public List<string>? Includes { get; set; }
+    public List<string>? Imports { get; set; }
 }

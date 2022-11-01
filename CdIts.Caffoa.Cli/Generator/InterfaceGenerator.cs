@@ -43,12 +43,12 @@ public class InterfaceGenerator
             imports.AddRange(_config.Imports);
         if (_modelNamespace != null)
             imports.Add(_modelNamespace);
-        var targetFolder = _functionConfig.InterfaceTargetFolder;
+        var targetFolder = _functionConfig.InterfaceTargetFolder ?? _functionConfig.TargetFolder;
         var name = _functionConfig.GetInterfaceName(namePrefix);
         Directory.CreateDirectory(targetFolder);
         var file = Templates.GetTemplate("InterfaceTemplate.tpl");
         var format = new Dictionary<string, object>();
-        format["NAMESPACE"] = _functionConfig.InterfaceNamespace;
+        format["NAMESPACE"] = _functionConfig.InterfaceNamespace ?? _functionConfig.Namespace;
         format["CLASSNAME"] = name;
         format["PARENTS"] = _config.Disposable is true ? " : IAsyncDisposable" : "";
         format["IMPORTS"] = string.Join("", imports.Distinct().Select(i => $"using {i};\n"));

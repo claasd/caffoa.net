@@ -1,3 +1,4 @@
+using System.Net;
 using CdIts.Caffoa.Cli.Config;
 using CdIts.Caffoa.Cli.Errors;
 using CdIts.Caffoa.Cli.Model;
@@ -25,12 +26,26 @@ public class ServiceParser
     {
         _service = service;
         _config = config;
-        using var fileStream = File.OpenRead(_service.ApiPath);
-        var reader = new OpenApiStreamReader();
-        _document = reader.Read(fileStream, out var diagnostic);
-        if (diagnostic.Errors.Count > 0)
+        Stream? input = null;
+        try
         {
-            throw new CaffoaValidationException($"Error parsing {service.ApiPath}", diagnostic);
+            if (_service.ApiPath.StartsWith("http"))
+                input = new WebClient().OpenRead(_service.ApiPath);
+            else
+                input = File.OpenRead(_service.ApiPath);
+
+
+            var reader = new OpenApiStreamReader();
+            _document = reader.Read(input, out var diagnostic);
+
+            if (diagnostic.Errors.Count > 0)
+            {
+                throw new CaffoaValidationException($"Error parsing {service.ApiPath}", diagnostic);
+            }
+        }
+        finally
+        {
+            input?.Close();
         }
     }
 
@@ -43,6 +58,7 @@ public class ServiceParser
         {
             workspace.AddDocument(name, doc);
         }
+
         workspace.AddDocument("root", _document);
         _document.Serialize(fileStream, OpenApiSpecVersion.OpenApi3_0, OpenApiFormat.Yaml, new OpenApiWriterSettings()
         {
@@ -54,11 +70,13 @@ public class ServiceParser
     public List<SchemaItem> GenerateModel()
     {
         var schemas = _document.Components.Schemas;
-        if (_service.Model!.Includes.Count > 0)
+        ParseSimpleTypes(schemas);
+        if (_service.Model!.Includes != null && _service.Model.Includes.Any())
             schemas = schemas.Where(p => _service.Model.Includes.Contains(p.Key))
                 .ToDictionary(p => p.Key, p => p.Value);
-        schemas = schemas.Where(p => !_service.Model.Excludes.Contains(p.Key)).ToDictionary(p => p.Key, p => p.Value);
-        ParseSimpleTypes(schemas);
+        if (_service.Model.Excludes != null)
+            schemas = schemas.Where(p => !_service.Model.Excludes.Contains(p.Key))
+                .ToDictionary(p => p.Key, p => p.Value);
         return ParseObjects(schemas);
     }
 

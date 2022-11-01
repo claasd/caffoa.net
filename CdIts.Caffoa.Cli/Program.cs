@@ -11,16 +11,51 @@ using YamlDotNet.Serialization;
 using YamlDotNet.Serialization.NamingConventions;
 using Parser = CommandLine.Parser;
 
-var configPath = "";
-
+CommandLineOptions options = new CommandLineOptions(); 
 Parser.Default.ParseArguments<CommandLineOptions>(args)
-    .WithParsed(o => { configPath = o.ConfigPath; });
+    .WithParsed(o => options = o);
 try
 {
+    if (options.InitWithFile != null)
+    {
+        var serializer = new SerializerBuilder().WithNamingConvention(CamelCaseNamingConvention.Instance).ConfigureDefaultValuesHandling(DefaultValuesHandling.OmitDefaults).Build();
+        var defaultConfig = new CaffoaSettings()
+        {
+            Config = new CaffoaGlobalConfig(false)
+            {
+                Disposable = true,
+                RemoveDeprecated = true,
+                WithCancellation = true,
+                ClearGeneratedFiles = true,
+                ParsePathParameters = true,
+                ParseQueryParameters = true,
+                SplitByTag = true,
+                AcceptCaseInvariantEnums = true
+            }
+        };
+        defaultConfig.Services.Add(new ServiceConfig()
+        {
+            ApiPath = options.InitWithFile,
+            Function = new FunctionConfig()
+            {
+                Name = options.InitProjectName,
+                Namespace = options.InitProjectName,
+                TargetFolder = options.InitProjectName
+            },
+            Model = new ModelConfig()
+            {
+            Namespace = options.InitProjectName + ".Model",
+            TargetFolder = options.InitProjectName + "/Model"
+        }
+        });
+        using var stream = new StreamWriter(options.ConfigPath);
+        serializer.Serialize(stream, defaultConfig);
+        return 0;
+    }
     var deserializer = new DeserializerBuilder()
         .WithNamingConvention(CamelCaseNamingConvention.Instance)
         .Build();
-    using var reader = File.OpenText(configPath);
+    using var reader = File.OpenText(options.ConfigPath);
     var settings = deserializer.Deserialize<CaffoaSettings>(reader);
 
     var builders = new List<ApiBuilder>();

@@ -40,7 +40,7 @@ public class FunctionsGenerator
         if (endpoints.FirstOrDefault(e => e.DurableClient) != null)
             imports.Add("Microsoft.Azure.WebJobs.Extensions.DurableTask");
         endpoints.ForEach(e => imports.AddRange(e.Imports));
-        if (_functionConfig.InterfaceNamespace != _functionConfig.Namespace)
+        if (_functionConfig.InterfaceNamespace != null)
             imports.Add(_functionConfig.InterfaceNamespace);
         if (_config.Imports != null)
             imports.AddRange(_config.Imports);

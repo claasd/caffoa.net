@@ -165,21 +165,38 @@ public class ModelGenerator
     {
         var updateCommands = new List<string>();
         if (schemaItem.Properties is null)
+        {
             throw new CaffoaParserException($"No properties defined for object {schemaItem.Name}");
+        }
+
         foreach (var property in schemaItem.Properties!)
         {
             var name = property.Name.ToObjectName();
             var sb = new StringBuilder();
             sb.Append(prefix);
             sb.Append($"{name} = other.{name}");
-            if (property.IsArray)
-                sb.Append(".ToList()");
+            
             if (property.IsOtherSchema)
             {
                 if (property.Nullable)
                     sb.Append('?');
                 sb.Append($".To{property.TypeName.ToObjectName()}()");
             }
+
+            if (property.IsArray)
+            {
+                if (property.InnerTypeIsOtherSchema)
+                    sb.Append($".Select(value=>value.To{property.TypeName.ToObjectName()}())");
+                sb.Append(".ToList()");
+            }
+            else if(property.IsMap)
+            {
+                sb.Append(".ToDictionary(entry => entry.Key, entry => entry.Value");
+                if (property.InnerTypeIsOtherSchema)
+                    sb.Append($".To{property.TypeName.ToObjectName()}()");
+                sb.Append(")");
+            }
+            
 
             sb.Append(';');
             updateCommands.Add(sb.ToString());
@@ -194,7 +211,9 @@ public class ModelGenerator
     private string FormatProperties(SchemaItem item)
     {
         var properties = new List<string>();
-        foreach (var property in item.Properties!)
+        if (item.Properties is null)
+            return "";
+        foreach (var property in item.Properties)
         {
             var formatter = new PropertyFormatter(property, _config.UseDateOnly ?? false);
             var format = new Dictionary<string, object>();

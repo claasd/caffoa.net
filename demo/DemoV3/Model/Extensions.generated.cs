@@ -23,7 +23,7 @@ namespace DemoV3.Model {
             item.Address = other.Address?.ToAddress();
             item.Birthdate = other.Birthdate;
             item.Emails = other.Emails.ToList();
-            item.Descriptions = other.Descriptions;
+            item.Descriptions = other.Descriptions.ToDictionary(entry => entry.Key, entry => entry.Value);
             item.Type = other.Type;
             item.Role = other.Role;
             item.AgeGroup = other.AgeGroup;
@@ -52,7 +52,7 @@ namespace DemoV3.Model {
         /// </summary>
         public static void UpdateWithPricing(this Pricing item, Pricing other) {
             item.Price = other.Price;
-            item.Taxes = other.Taxes;
+            item.Taxes = other.Taxes.ToDictionary(entry => entry.Key, entry => entry.Value);
         }
 
         /// <summary>

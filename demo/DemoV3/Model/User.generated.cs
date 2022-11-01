@@ -98,7 +98,7 @@ namespace DemoV3.Model {
             Address = other.Address?.ToAddress();
             Birthdate = other.Birthdate;
             Emails = other.Emails.ToList();
-            Descriptions = other.Descriptions;
+            Descriptions = other.Descriptions.ToDictionary(entry => entry.Key, entry => entry.Value);
             Type = other.Type;
             Role = other.Role;
             AgeGroup = other.AgeGroup;
