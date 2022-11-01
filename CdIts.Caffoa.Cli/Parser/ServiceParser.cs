@@ -1,4 +1,3 @@
-using System.Net;
 using CdIts.Caffoa.Cli.Config;
 using CdIts.Caffoa.Cli.Errors;
 using CdIts.Caffoa.Cli.Model;
@@ -8,7 +7,6 @@ using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers;
 using Microsoft.OpenApi.Services;
 using Microsoft.OpenApi.Writers;
-using YamlDotNet.Core.Tokens;
 
 namespace CdIts.Caffoa.Cli.Parser;
 
@@ -31,7 +29,7 @@ public class ServiceParser
         {
             if (_service.ApiPath.StartsWith("http"))
             {
-                input = new WebClient().OpenRead(_service.ApiPath);
+                input = new HttpClient().GetStreamAsync(_service.ApiPath).Result;
                 ApiName = _service.ApiPath;
             }
             else

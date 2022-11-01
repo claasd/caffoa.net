@@ -4,7 +4,6 @@ using CdIts.Caffoa.Cli.Config;
 using CdIts.Caffoa.Cli.Errors;
 using CdIts.Caffoa.Cli.Generator.Formatter;
 using CdIts.Caffoa.Cli.Model;
-using YamlDotNet.Core.Tokens;
 
 namespace CdIts.Caffoa.Cli.Generator;
 

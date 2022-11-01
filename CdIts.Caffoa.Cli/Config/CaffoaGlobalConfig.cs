@@ -1,11 +1,9 @@
-using System.Runtime.CompilerServices;
-
 namespace CdIts.Caffoa.Cli.Config;
 
 public class CaffoaGlobalConfig : CaffoaConfig
 {
     public bool ClearGeneratedFiles { get; set; }
-    public string Duplicates { get; set; }
+    public string? Duplicates { get; set; }
     public bool RemoveDeprecated { get; set; }
 
     public CaffoaGlobalConfig() : this(true)
