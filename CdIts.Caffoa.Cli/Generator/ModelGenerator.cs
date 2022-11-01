@@ -160,46 +160,45 @@ public class ModelGenerator
         return string.Join("\n            ", FormatPropertyUpdates(schemaItem, ""));
     }
 
+    private string FormatPropertyUpdate(PropertyData property, string prefix)
+    {
+        var name = property.Name.ToObjectName();
+        var sb = new StringBuilder();
+        sb.Append(prefix);
+        sb.Append($"{name} = other.{name}");
+            
+        if (property.IsOtherSchema)
+        {
+            if (property.Nullable)
+                sb.Append('?');
+            sb.Append($".To{property.TypeName.ToObjectName()}()");
+        }
+
+        if (property.IsArray)
+        {
+            if (property.InnerTypeIsOtherSchema)
+                sb.Append($".Select(value=>value.To{property.TypeName.ToObjectName()}())");
+            sb.Append(".ToList()");
+        }
+        else if(property.IsMap)
+        {
+            sb.Append(".ToDictionary(entry => entry.Key, entry => entry.Value");
+            if (property.InnerTypeIsOtherSchema)
+                sb.Append($".To{property.TypeName.ToObjectName()}()");
+            sb.Append(')');
+        }
+        sb.Append(';');
+        return sb.ToString();
+    }
+    
     private List<string> FormatPropertyUpdates(SchemaItem schemaItem, string prefix)
     {
-        var updateCommands = new List<string>();
         if (schemaItem.Properties is null)
         {
             throw new CaffoaParserException($"No properties defined for object {schemaItem.Name}");
         }
 
-        foreach (var property in schemaItem.Properties!)
-        {
-            var name = property.Name.ToObjectName();
-            var sb = new StringBuilder();
-            sb.Append(prefix);
-            sb.Append($"{name} = other.{name}");
-            
-            if (property.IsOtherSchema)
-            {
-                if (property.Nullable)
-                    sb.Append('?');
-                sb.Append($".To{property.TypeName.ToObjectName()}()");
-            }
-
-            if (property.IsArray)
-            {
-                if (property.InnerTypeIsOtherSchema)
-                    sb.Append($".Select(value=>value.To{property.TypeName.ToObjectName()}())");
-                sb.Append(".ToList()");
-            }
-            else if(property.IsMap)
-            {
-                sb.Append(".ToDictionary(entry => entry.Key, entry => entry.Value");
-                if (property.InnerTypeIsOtherSchema)
-                    sb.Append($".To{property.TypeName.ToObjectName()}()");
-                sb.Append(")");
-            }
-            
-
-            sb.Append(';');
-            updateCommands.Add(sb.ToString());
-        }
+        var updateCommands = schemaItem.Properties!.Select(property => FormatPropertyUpdate(property, prefix)).ToList();
 
         if (schemaItem.AdditionalPropertiesAllowed && _config.GenericAdditionalProperties is true)
             updateCommands.Add(
