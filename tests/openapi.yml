@@ -210,7 +210,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/anyCompleteUser"
+                type: array
+                items:
+                  $ref: "#/components/schemas/anyCompleteUser"
   "/users/{userId}":
     parameters:
       - name: userId

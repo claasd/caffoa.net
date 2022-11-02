@@ -96,10 +96,11 @@ public class FunctionsGenerator
         var parameters = new Dictionary<string, object>();
         var (result, variable) = GenerateResult(endpoint);
         string call;
+        var noAwait = _config.AsyncArrays is true && endpoint.HasArrayResult();
         if (endpoint.HasRequestBody && endpoint.RequestBodyType is SelectionBodyModel)
-            call = FormatSelectionCall(endpoint, variable);
+            call = FormatSelectionCall(endpoint, variable, !noAwait);
         else
-            call = FormatCall(endpoint, variable, ParseParameters(endpoint), true);
+            call = FormatCall(endpoint, variable, ParseParameters(endpoint), !noAwait);
 
         List<string> pathParams;
         var filteredParams = endpoint.Parameters.Where(p => !p.IsQueryParameter);
@@ -174,7 +175,7 @@ public class FunctionsGenerator
         return $"{variable}{awaitStr}instance.{endpoint.Name}Async({callParams})";
     }
 
-    private string FormatSelectionCall(EndPointModel endpoint, string variable)
+    private string FormatSelectionCall(EndPointModel endpoint, string variable, bool useAwait)
     {
         var model = endpoint.RequestBodyType as SelectionBodyModel;
         var file = Templates.GetTemplate("FunctionsSwitchMethod.tpl");
@@ -194,12 +195,13 @@ public class FunctionsGenerator
             {
                 caseParams.Add("request.HttpContext.RequestAborted");
             }
-
+            
             var call = FormatCall(endpoint, "", caseParams, false);
             cases.Add($"\"{key}\" => {call}");
         }
 
-        parameter["VALUE"] = variable;
+        parameter["VARNAME"] = useAwait ? "var task = " : variable;
+        parameter["AWAIT"] = useAwait ?  $";\n                {variable}await task" : "";
         parameter["DISC"] = model.Disriminator;
         parameter["CASES_ALLOWED_VALUES"] = string.Join(", ", model.Mapping.Keys.Select(k => $"\"{k}\""));
         parameter["CASES"] = string.Join("\n                    ", cases.Select(c => $"{c},"));

@@ -1,3 +1,4 @@
+using System.Collections;
 using CdIts.Caffoa.Cli.Config;
 using CdIts.Caffoa.Cli.Generator.Formatter;
 using CdIts.Caffoa.Cli.Model;
@@ -113,7 +114,7 @@ public class InterfaceGenerator
         return builder.Build();
     }
 
-    private static string GetResponseType(EndPointModel endpoint)
+    private string GetResponseType(EndPointModel endpoint)
     {
         var codes = new List<int>();
         string? typeName = null;
@@ -126,20 +127,30 @@ public class InterfaceGenerator
             {
                 Console.Error.WriteLine(
                     $"Returning different objects is not supported, defaulting to IActionResult for {endpoint.Name}/{endpoint.Operation}");
-                return "<IActionResult>";
+                return "Task<IActionResult>";
             }
 
             typeName = response.TypeName;
             if (response.Unknown)
                 typeName = "IActionResult";
         }
+        return FormatResponse(codes, typeName);
+    }
 
+    private string FormatResponse(ICollection codes, string? typeName)
+    {
         if (codes.Count == 0)
-            return "<IActionResult>";
+            return "Task<IActionResult>";
+        if (codes.Count == 1 && typeName is null)
+            return "Task";
+        if (codes.Count == 1 && _config.AsyncArrays is true && typeName!.StartsWith("IEnumerable<"))
+            return $"IAsyncEnumerable{typeName[11..]}";
         if (codes.Count == 1)
-            return typeName == null ? "" : $"<{typeName}>";
+            return $"Task<{typeName}>";
         if (typeName is null)
-            return "<int>";
-        return $"<({typeName}, int)>";
+            return "Task<int>";
+        if (_config.AsyncArrays is true && typeName!.StartsWith("IEnumerable<"))
+            return $"(IAsyncEnumerable{typeName[11..]}, int)";
+        return $"Task<({typeName}, int)>";
     }
 }

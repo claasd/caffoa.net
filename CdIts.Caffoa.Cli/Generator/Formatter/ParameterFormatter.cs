@@ -11,4 +11,9 @@ public static class ParameterFormatter
         orderedParams.AddRange(queryParameter.Where(e => e.DefaultValue != null || !e.Required));
         return orderedParams;
     }
+
+    public static bool HasArrayResult(this EndPointModel endpoint)
+    {
+        return endpoint.Responses.Any(r => r.TypeName != null && r.TypeName.StartsWith("IEnumerable<"));
+    }
 }

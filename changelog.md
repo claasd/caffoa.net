@@ -7,6 +7,7 @@
 * nested arrays are now possible
 * when cloning an object, dictionaries are now cloned as well.
 * when cloning models, models in lists are now cloned as well instead of shallow copied
+* prototype for IAsyncEnumerable for return of lists
 
 ### 1.8.0
 * Allow to set the function authorization level

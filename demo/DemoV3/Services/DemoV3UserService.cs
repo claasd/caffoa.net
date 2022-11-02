@@ -48,16 +48,16 @@ namespace DemoV3.Services
             return results.Select(u=>u.ToUser());
         }
 
-        public async Task<AnyCompleteUser> UserPostAsync(User payload)
+        public async Task<IEnumerable<AnyCompleteUser>> UserPostAsync(User payload)
         {
             var (user, _) = await UserPutAsync(Guid.NewGuid().ToString(), payload);
-            return user;
+            return new [] {user};
         }
 
-        public async Task<AnyCompleteUser> UserPostAsync(GuestUser payload)
+        public async Task<IEnumerable<AnyCompleteUser>> UserPostAsync(GuestUser payload)
         {
             var (user,_) = await UserPutAsync(payload.Email, payload);
-            return user;
+            return new [] {user};
         }
 
         public async Task<(AnyCompleteUser, int)> UserPutAsync(string userId, User payload)

@@ -264,112 +264,114 @@ paths:
           content:
             application/json:
               schema:
-                required:
-                  - type
-                oneOf:
-                  - allOf:
-                      - required:
-                          - type
-                          - name
-                        type: object
-                        properties:
-                          name:
-                            type: string
-                            description: A fancy string with description
-                          address:
-                            required:
-                              - street
-                              - postalCode
-                              - city
-                              - country
-                            type: object
-                            properties:
-                              street:
-                                type: string
-                              street.extra:
-                                type: string
-                                nullable: true
-                              postalCode:
-                                type: string
-                              city:
-                                type: string
-                              country:
-                                type: string
-                              flags:
-                                additionalProperties:
-                                  type: object
-                                  properties:
-                                    id:
-                                      type: string
-                                    desc:
-                                      type: string
-                                  additionalProperties: false
-                          birthdate:
-                            type: string
-                            format: date
-                            nullable: true
-                            deprecated: true
-                          emails:
-                            type: array
-                            items:
-                              type: string
-                          descriptions:
-                            additionalProperties:
+                type: array
+                items:
+                  required:
+                    - type
+                  oneOf:
+                    - allOf:
+                        - required:
+                            - type
+                            - name
+                          type: object
+                          properties:
+                            name:
                               type: string
                               description: A fancy string with description
-                          type:
-                            enum:
-                              - simple
-                            type: string
-                            default: simple
-                          role:
-                            enum:
-                              - admin
-                              - reader
-                              - contributor
-                            type: string
-                            default: reader
-                          ageGroup:
-                            enum:
-                              - 18
-                              - 40
-                              - 70
-                              - 120
-                            type: integer
-                            default: 40
-                            nullable: true
-                            x-caffoa-attributes:
-                              - Obsolete("do not use this")
-                          preferredContactTime:
-                            type: string
-                            format: time
-                            default: '12:00'
-                            x-caffoa-converter: CustomTimeConverter
-                      - type: object
-                        properties:
-                          id:
-                            type: string
-                          registrationDate:
-                            type: string
-                            format: date-time
-                  - required:
-                      - type
-                      - email
-                    type: object
-                    properties:
-                      email:
-                        type: string
-                        format: email
-                      type:
-                        enum:
-                          - guest
-                        type: string
-                        default: guest
-                discriminator:
-                  propertyName: type
-                  mapping:
-                    simple: '#/components/schemas/userWithId'
-                    guest: '#/components/schemas/guestUser'
+                            address:
+                              required:
+                                - street
+                                - postalCode
+                                - city
+                                - country
+                              type: object
+                              properties:
+                                street:
+                                  type: string
+                                street.extra:
+                                  type: string
+                                  nullable: true
+                                postalCode:
+                                  type: string
+                                city:
+                                  type: string
+                                country:
+                                  type: string
+                                flags:
+                                  additionalProperties:
+                                    type: object
+                                    properties:
+                                      id:
+                                        type: string
+                                      desc:
+                                        type: string
+                                    additionalProperties: false
+                            birthdate:
+                              type: string
+                              format: date
+                              nullable: true
+                              deprecated: true
+                            emails:
+                              type: array
+                              items:
+                                type: string
+                            descriptions:
+                              additionalProperties:
+                                type: string
+                                description: A fancy string with description
+                            type:
+                              enum:
+                                - simple
+                              type: string
+                              default: simple
+                            role:
+                              enum:
+                                - admin
+                                - reader
+                                - contributor
+                              type: string
+                              default: reader
+                            ageGroup:
+                              enum:
+                                - 18
+                                - 40
+                                - 70
+                                - 120
+                              type: integer
+                              default: 40
+                              nullable: true
+                              x-caffoa-attributes:
+                                - Obsolete("do not use this")
+                            preferredContactTime:
+                              type: string
+                              format: time
+                              default: '12:00'
+                              x-caffoa-converter: CustomTimeConverter
+                        - type: object
+                          properties:
+                            id:
+                              type: string
+                            registrationDate:
+                              type: string
+                              format: date-time
+                    - required:
+                        - type
+                        - email
+                      type: object
+                      properties:
+                        email:
+                          type: string
+                          format: email
+                        type:
+                          enum:
+                            - guest
+                          type: string
+                          default: guest
+                  discriminator:
+                    propertyName: type
+                    mapping:
+                      simple: '#/components/schemas/userWithId'
+                      guest: '#/components/schemas/guestUser'
   '/users/{userId}':
     put:
       tags:

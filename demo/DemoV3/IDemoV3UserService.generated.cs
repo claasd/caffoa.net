@@ -28,13 +28,13 @@ namespace DemoV3
         /// create or update a user without return test
         /// 201 -> User was created
         /// </summary>
-        Task<AnyCompleteUser> UserPostAsync(User payload);
+        Task<IEnumerable<AnyCompleteUser>> UserPostAsync(User payload);
 
         /// <summary>
         /// create or update a user without return test
         /// 201 -> User was created
         /// </summary>
-        Task<AnyCompleteUser> UserPostAsync(GuestUser payload);
+        Task<IEnumerable<AnyCompleteUser>> UserPostAsync(GuestUser payload);
 
         /// <summary>
         /// create or update a user
