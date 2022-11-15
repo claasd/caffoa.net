@@ -81,5 +81,15 @@ namespace DemoV3
         /// </summary>
         Task<IEnumerable<User>> UsersSearchByDateAsync(DateTime before, DateTime after, int? maxResults = null);
 
+        /// <summary>
+        /// 200 -> list of elements that have the requested tag
+        /// </summary>
+        Task<TagInfos> GetTagsAsync();
+
+        /// <summary>
+        /// 200 -> tags for the user
+        /// </summary>
+        Task<IEnumerable<KeyValuePair<string, IEnumerable<Guid>>>> GetUserTagsAsync();
+
     }
 }

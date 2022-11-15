@@ -73,7 +73,7 @@ public abstract class ObjectParser
         else if (schema.IsArray())
         {
             property.IsArray = true;
-            property.TypeName = schema.GetArrayType(ClassNameFunc);
+            property.TypeName = schema.GetArrayType(ClassNameFunc, _knownTypes);
             property.InnerTypeIsOtherSchema = schema.Items.Reference != null;
         }
         else if (schema.AdditionalProperties != null)
@@ -85,6 +85,12 @@ public abstract class ObjectParser
             {
                 property.TypeName = ClassNameFunc(schema.AdditionalProperties.Reference.Name());
                 property.InnerTypeIsOtherSchema = true;
+            }
+            else if (schema.AdditionalProperties.IsArray())
+            {
+                var arrayType = schema.AdditionalProperties.GetArrayType(ClassNameFunc, _knownTypes);
+                property.TypeName = $"List<{arrayType}>";
+                property.InnerTypeIsOtherSchema = false;
             }
             else
             {

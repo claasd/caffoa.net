@@ -229,5 +229,45 @@ namespace DemoV3
                 throw;
             }
         }
+        /// <summary>
+        /// auto-generated function invocation.
+        ///</summary>
+        [FunctionName("GetTagsAsync")]
+        public async Task<IActionResult> GetTagsAsync(
+            [HttpTrigger(AuthorizationLevel.Function, "get", Route = "api/tags")]
+            HttpRequest request)
+        {
+            try {
+                await using var instance = _factory.Instance(request);
+                var result = await instance.GetTagsAsync();
+                return _resultHandler.Json(result, 200);
+            } catch(CaffoaClientError err) {
+                return err.Result;
+            } catch (Exception e) {
+                if(_errorHandler.TryHandleFunctionException(e, out var errorHandlerResult, request, "GetTags", "api/tags", "get"))
+                    return errorHandlerResult;
+                throw;
+            }
+        }
+        /// <summary>
+        /// auto-generated function invocation.
+        ///</summary>
+        [FunctionName("GetUserTagsAsync")]
+        public async Task<IActionResult> GetUserTagsAsync(
+            [HttpTrigger(AuthorizationLevel.Function, "get", Route = "api/tags/users")]
+            HttpRequest request)
+        {
+            try {
+                await using var instance = _factory.Instance(request);
+                var result = await instance.GetUserTagsAsync();
+                return _resultHandler.Json(result, 200);
+            } catch(CaffoaClientError err) {
+                return err.Result;
+            } catch (Exception e) {
+                if(_errorHandler.TryHandleFunctionException(e, out var errorHandlerResult, request, "GetUserTags", "api/tags/users", "get"))
+                    return errorHandlerResult;
+                throw;
+            }
+        }
     }
 }

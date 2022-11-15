@@ -1384,4 +1384,56 @@ paths:
         schema:
           type: string
           format: uuid
+  /tags:
+    get:
+      tags:
+        - user
+      operationId: get-tags
+      responses:
+        '200':
+          description: list of elements that have the requested tag
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  user:
+                    type: object
+                    additionalProperties:
+                      type: array
+                      items:
+                        type: string
+                        description: a tag id
+                        format: uuid
+                example:
+                  user:
+                    <userId_1>:
+                      - <tagId_1>
+                      - <tagId_2>
+                    <userId_2>:
+                      - <tagId_2>
+                      - <tagId_3>
+  /tags/users:
+    get:
+      tags:
+        - user
+      operationId: get-user-tags
+      responses:
+        '200':
+          description: tags for the user
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties:
+                  type: array
+                  items:
+                    type: string
+                    description: a tag id
+                    format: uuid
+components: { }                      - <tagId_1>
+                      - <tagId_2>
+                    <userId_2>:
+                      - <tagId_2>
+                      - <tagId_3>
 components: { }

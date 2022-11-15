@@ -13,12 +13,12 @@ using Newtonsoft.Json.Linq;
 
 namespace DemoV3.Services
 {
-    
     public class DemoV3UserService : IDemoV3UserService
     {
         private static readonly UserRepository<UserWithId> Users = new UserRepository<UserWithId>();
         private static readonly UserRepository<GuestUser> Guests = new UserRepository<GuestUser>();
-        
+        private static readonly Dictionary<string, List<Guid>> Tags = new();
+
 
         public async Task<IEnumerable<AnyCompleteUser>> UsersGetAsync(int offset = 0, int limit = 1000)
         {
@@ -36,28 +36,44 @@ namespace DemoV3.Services
         public async Task<IEnumerable<User>> UsersGetByBirthdateAsync(DateTime date)
         {
             var users = await Users.List();
-            return users.Where(u => u.Birthdate >= date).Select(u=>u.ToUser());
+            return users.Where(u => u.Birthdate >= date).Select(u => u.ToUser());
         }
 
-        public async Task<IEnumerable<User>> UsersSearchByDateAsync(DateTime before, DateTime after, int? maxResults = null)
+        public async Task<IEnumerable<User>> UsersSearchByDateAsync(DateTime before, DateTime after,
+            int? maxResults = null)
         {
             var users = await Users.List();
             var results = users.Where(u => u.Birthdate < before && u.Birthdate > after);
             if (maxResults is > 0)
                 results = results.Take(maxResults.Value);
-            return results.Select(u=>u.ToUser());
+            return results.Select(u => u.ToUser());
+        }
+
+        public async Task<TagInfos> GetTagsAsync()
+        {
+            await Task.Yield();
+            return new TagInfos()
+            {
+                User = Tags
+            };
+        }
+
+        public async Task<IEnumerable<KeyValuePair<string, IEnumerable<Guid>>>> GetUserTagsAsync()
+        {
+            await Task.Yield();
+            return Tags.ToDictionary(i => i.Key, i => i.Value.Select(v => v));
         }
 
         public async Task<IEnumerable<AnyCompleteUser>> UserPostAsync(User payload)
         {
             var (user, _) = await UserPutAsync(Guid.NewGuid().ToString(), payload);
-            return new [] {user};
+            return new[] { user };
         }
 
         public async Task<IEnumerable<AnyCompleteUser>> UserPostAsync(GuestUser payload)
         {
-            var (user,_) = await UserPutAsync(payload.Email, payload);
-            return new [] {user};
+            var (user, _) = await UserPutAsync(payload.Email, payload);
+            return new[] { user };
         }
 
         public async Task<(AnyCompleteUser, int)> UserPutAsync(string userId, User payload)
@@ -75,7 +91,7 @@ namespace DemoV3.Services
                 {
                     Id = userId,
                     RegistrationDate = DateTime.Now,
-                    Name=""
+                    Name = ""
                 };
                 newUser = newUser.MergedWith(payload);
                 await Users.Add(newUser.Id, newUser);
@@ -89,6 +105,7 @@ namespace DemoV3.Services
             {
                 throw new GuestUserNotValidClientException();
             }
+
             try
             {
                 await Guests.GetById(userId);
@@ -100,10 +117,6 @@ namespace DemoV3.Services
                 await Guests.Add(payload.Email, payload);
                 return (payload, 201);
             }
-
-            
-            
-            
         }
 
         public async Task<UserWithId> UserPatchAsync(string userId, JObject payload)
