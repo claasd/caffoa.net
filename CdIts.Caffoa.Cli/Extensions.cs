@@ -44,14 +44,21 @@ public static class Extensions
         return schema.Type is "array";
     }
 
-    public static string GetArrayType(this OpenApiSchema schema, Func<string, string> classNameFunc)
+    public static string GetArrayType(this OpenApiSchema schema, Func<string, string> classNameFunc,
+        IDictionary<string, OpenApiSchema> knownPrimitiveTypes)
     {
         var item = schema.Items;
+        if (item.Reference != null &&
+            knownPrimitiveTypes.TryGetValue(classNameFunc(item.Reference.Name()), out var primitiveSchema))
+        {
+            item = primitiveSchema;
+            item.Reference = null;
+        }
         if (item.Reference != null)
             return classNameFunc(item.Reference.Name());
         if (item.IsPrimitiveType())
             return item.TypeName();
-        var innerName = item.GetArrayType(classNameFunc);
+        var innerName = item.GetArrayType(classNameFunc, knownPrimitiveTypes);
         return $"List<{innerName}>";
     }
 

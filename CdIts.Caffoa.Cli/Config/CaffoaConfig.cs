@@ -29,8 +29,8 @@ public class CaffoaConfig
     public bool? GenerateResolvedApiFile { get; set; }
     public bool? Extensions { get; set; }
     public bool? UseInheritance { get; set; }
-    
     public string? AuthorizationLevel { get; set; }
+    public bool? AsyncArrays { get; set; }
 
     public CaffoaGlobalConfig MergedWith(CaffoaGlobalConfig general)
     {
@@ -59,7 +59,8 @@ public class CaffoaConfig
             RemoveDeprecated = general.RemoveDeprecated,
             UseInheritance = UseInheritance ?? general.UseInheritance,
             AcceptCaseInvariantEnums = AcceptCaseInvariantEnums ?? general.AcceptCaseInvariantEnums,
-            AuthorizationLevel = AuthorizationLevel ?? general.AuthorizationLevel
+            AuthorizationLevel = AuthorizationLevel ?? general.AuthorizationLevel,
+            AsyncArrays = AsyncArrays ?? general.AsyncArrays
         };
     }
 }

@@ -28,13 +28,13 @@ namespace DemoV3
         /// create or update a user without return test
         /// 201 -> User was created
         /// </summary>
-        Task<AnyCompleteUser> UserPostAsync(User payload);
+        Task<IEnumerable<AnyCompleteUser>> UserPostAsync(User payload);
 
         /// <summary>
         /// create or update a user without return test
         /// 201 -> User was created
         /// </summary>
-        Task<AnyCompleteUser> UserPostAsync(GuestUser payload);
+        Task<IEnumerable<AnyCompleteUser>> UserPostAsync(GuestUser payload);
 
         /// <summary>
         /// create or update a user
@@ -80,6 +80,16 @@ namespace DemoV3
         /// 400 -> Error
         /// </summary>
         Task<IEnumerable<User>> UsersSearchByDateAsync(DateTime before, DateTime after, int? maxResults = null);
+
+        /// <summary>
+        /// 200 -> list of elements that have the requested tag
+        /// </summary>
+        Task<TagInfos> GetTagsAsync();
+
+        /// <summary>
+        /// 200 -> tags for the user
+        /// </summary>
+        Task<IEnumerable<KeyValuePair<string, IEnumerable<Guid>>>> GetUserTagsAsync();
 
     }
 }

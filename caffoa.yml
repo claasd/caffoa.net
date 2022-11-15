@@ -11,6 +11,7 @@ config:
   genericAdditionalProperties: false # if set to true, a dictionary for additional properties will be generated
   genericAdditionalPropertiesType: object
   removeDeprecated: true
+  asyncArrays: false
   requestBodyType: # overwrite the JSON type that is passed to the method for some operations
     - type: JObject
       import: Newtonsoft.Json.Linq

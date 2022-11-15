@@ -62,5 +62,12 @@ namespace DemoV3.Model {
             item.Status = other.Status;
             item.Result = other.Result?.ToAnyUser();
         }
+
+        /// <summary>
+        /// Replaces all fields with the data of the passed object
+        /// </summary>
+        public static void UpdateWithTagInfos(this TagInfos item, TagInfos other) {
+            item.User = other.User.ToDictionary(entry => entry.Key, entry => entry.Value);
+        }
     }
 }

@@ -9,11 +9,14 @@ public class PathParser
 {
     private readonly CaffoaConfig _config;
     private readonly Func<string, string> _classNameFunc;
+    private readonly Dictionary<string, OpenApiSchema> _knownTypes;
 
-    public PathParser(CaffoaConfig config, Func<string, string> classNameFunc)
+    public PathParser(CaffoaConfig config, Func<string, string> classNameFunc,
+        Dictionary<string, OpenApiSchema> knownTypes)
     {
         _config = config;
         _classNameFunc = classNameFunc;
+        _knownTypes = knownTypes;
     }
 
     public List<EndPointModel> Parse(string path, OpenApiPathItem item)
@@ -50,13 +53,15 @@ public class PathParser
                 {
                     var typeOverride = _config.RequestBodyType.FirstOrDefault(requestConfig =>
                         requestConfig.Filter.Contains(operation, operationItem));
-                    if(typeOverride != null) {
+                    if (typeOverride != null)
+                    {
                         result.RequestBodyType = new SimpleBodyModel(typeOverride.Type);
                         if (typeOverride.Import != null)
                             result.Imports.Add(typeOverride.Import);
                     }
                 }
             }
+
             foreach (var (response, responseItem) in operationItem.Responses)
             {
                 if (responseItem is null)
@@ -87,7 +92,8 @@ public class PathParser
         var (type, content) = body.Content.First();
         if (type.ToLower() != "application/json")
         {
-            Console.Error.WriteLine($"type {type}. Only application/json is currently supported for content, found {type.ToLower()}. Stream is used for body");
+            Console.Error.WriteLine(
+                $"type {type}. Only application/json is currently supported for content, found {type.ToLower()}. Stream is used for body");
             return new NullBodyModel();
         }
 
@@ -100,10 +106,10 @@ public class PathParser
                 throw new CaffoaParserException("Need discriminator in oneOf");
             var mapping = discriminator.Mapping.ToDictionary(i => i.Value, i => i.Key);
             var result = new SelectionBodyModel(discriminator.PropertyName);
-            if(content.Schema.OneOf.Any(s=>s.Reference is null))
+            if (content.Schema.OneOf.Any(s => s.Reference is null))
                 throw new CaffoaParserException("Cannot have oneOf without ref types");
-            
-            foreach (var reference in content.Schema.OneOf.Select(s=>s.Reference))
+
+            foreach (var reference in content.Schema.OneOf.Select(s => s.Reference))
             {
                 if (!mapping.TryGetValue(reference.ReferenceV3, out var mapName))
                     mapName = reference.Name();
@@ -120,11 +126,17 @@ public class PathParser
     private string ParseType(OpenApiSchema schema)
     {
         if (schema.IsArray())
-            return $"IEnumerable<{schema.GetArrayType(_classNameFunc)}>";
+            return $"IEnumerable<{schema.GetArrayType(_classNameFunc, _knownTypes)}>";
         if (schema.Reference != null)
             return _classNameFunc(schema.Reference.Name());
         if (schema.IsPrimitiveType())
             return schema.TypeName();
+        if (schema.AdditionalProperties != null && !schema.Properties.Any())
+        {
+            var innerType = ParseType(schema.AdditionalProperties);
+            return $"IEnumerable<KeyValuePair<string, {innerType}>>";
+        }
+
         throw new CaffoaParserException("complex type. Only array, ref or basic types are supported.");
     }
 
@@ -134,16 +146,19 @@ public class PathParser
         var response = new ResponseModel(code);
         if (responseItem.Content.Count > 1)
         {
-            Console.Error.WriteLine($"WARNING: Multiple possible responses. Only a single application/json response is currently supported for objects.");
+            Console.Error.WriteLine(
+                $"WARNING: Multiple possible responses. Only a single application/json response is currently supported for objects.");
             response.Unknown = true;
             return response;
         }
+
         if (responseItem.Content.Count == 0)
             return response;
         var (type, content) = responseItem.Content.First();
         if (type.ToLower() != "application/json")
         {
-            Console.Error.WriteLine($"WARNING: found content type {type}. Only application/json is currently supported for objects.");
+            Console.Error.WriteLine(
+                $"WARNING: found content type {type}. Only application/json is currently supported for objects.");
             response.Unknown = true;
             return response;
         }

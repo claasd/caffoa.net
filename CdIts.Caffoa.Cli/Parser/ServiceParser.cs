@@ -86,7 +86,7 @@ public class ServiceParser
     public List<EndPointModel> GenerateEndpoints()
     {
         var endpoints = new List<EndPointModel>();
-        var parser = new PathParser(_config, ClassName);
+        var parser = new PathParser(_config, ClassName, _knownTypes);
         foreach (var (path, pathItem) in _document.Paths)
         {
             endpoints.AddRange(parser.Parse(path, pathItem));

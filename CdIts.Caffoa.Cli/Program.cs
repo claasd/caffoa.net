@@ -86,7 +86,7 @@ try
     var extensionGenerators = new List<ExtensionGenerator>();
     foreach (var builder in builders)
     {
-        builder.Generate(builders.ToDictionary(b=>b.ApiName, b=>b.Document));
+        builder.Generate(builders.GroupBy(b=>b.ApiName,b=>b.Document).ToDictionary(g=>g.Key, g=>g.First()));
         if (builder.ExtensionData.Any())
         {
             var generator = extensionGenerators.FirstOrDefault(g =>
