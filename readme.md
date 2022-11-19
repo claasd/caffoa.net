@@ -23,6 +23,18 @@ You will need to install the following nuget packages:
 
 As code generation needs a lot of configuration, all configuration is done using a config file in yaml format.
 
+first, install the tool using dotnet:
+```bash
+dotnet new tool-manifest
+dotnet tool install cdits.caffoa.cli
+```
+
+instead of installing it locally, you can install it in the global tool repo:
+
+```bash
+dotnet tool install cdits.caffoa.cli --global
+```
+
 The minimal config file is as follows (usually called `caffoa.yml`):
 ```yaml
 services:
@@ -35,19 +47,16 @@ services:
       namespace: MyNamespace.Model
       targetFolder: ./output/Model
 ```
-You can add multiple services. Also, you can omit either `model` or `function` if you do not need one of them.
-Then, install and call the tool: 
 
+You can generate a config file with sensitive config settings using the following command:
 ```bash
-dotnet new tool-manifest
-dotnet tool install cdits.caffoa.cli
-dotnet caffoa
+dotnet caffoa --initwithfile my-openapi.yml --initprojectname MyFunction
 ```
 
-instead of installing it locally, you can install it in the global tool repo:
+You can add multiple services. Also, you can omit either `model` or `function` if you do not need one of them.
+Then, create the c# files: 
 
 ```bash
-dotnet tool install cdits.caffoa.cli --global
 dotnet caffoa
 ```
 
@@ -55,8 +64,6 @@ If oyu have a different yml file, or have it in a different directory, you can p
 ```bash
 dotnet caffoa --configfile /path/to/caffoa.yml
 ```
-
-
 
 ## Created Azure Function template:
 
@@ -127,12 +134,14 @@ The file will contain a partial class, with all properties of the schema. You ca
 There are multiple optional configuration options that you can use:
 ```yaml
 config:
-  authorizationLevel: function # function | user | anonymous | system | admin
+  authorizationLevel: function # function | anonymous | system | admin
   clearGeneratedFiles: true # default is false, removes all files below the working directory, that end in .generated.cs
   duplicates: override # "once" or "override". once will not generate the same class name twice, even if it occurs in different API Specs.
   prefix: "Pre" # A prefix that is added to all model classes
   suffix: "Suf" # A suffix that is added to all model classes
-  checkEnums: true # set to false to disalbe the generated checks for enums in models
+  enumsAsStaticValues: false # defaults to true for backward compatibility in caffoa 1.x
+  checkEnums: true # set to false to disable the generated checks for enums in models. Only applies if enumsAsStaticValues is true
+  acceptCaseInvariantEnums: true # if set to true, string enums checks will be case invariant. Only applies if enumsAsStaticValues is true, otherwise checks will be case invariant as fallback automatically
   routePrefix: "api/" # a route prefix that is added to all routes in function
   useDateOnly: false # you can set this to true if you use net6.0 and want date types to be de-serialized as DateOnly instead of DateTime.
   splitByTag: false # if set to true, multiple function files and interfaces will be generated, based on the first tag of each path item
@@ -142,7 +151,7 @@ config:
   genericAdditionalPropertiesType: JObject # defaults to JObject, but a different type can be used for the additionalProperties dictionary
   withCancellation: false # if set to true, caffoa will add a CancellationToken to all interface methods. It will be triggered when the HTTP Request gets aborted (for example by the client).
   disposable: false # if set to true, Interfaces will derive from IAsyncDisposable, and functions will use `await using var instance = _factory.Instance(..);`
-  useInheritance: false # default is true for caffoa 1.x. When set to false, instead of inheritance, allOf will create a standalone object with converterst to objects that are referenced by allOf. False will be the default in caffoa 2.x
+  useInheritance: false # default is true for caffoa 1.x. When set to false, instead of inheritance, allOf will create a standalone object with converters to objects that are referenced by allOf. False will be the default in caffoa 2.x
   imports: # a list of imports that will be added to most generated classes
     - MySpecialNamespace
   requestBodyType: # you can override the request body type for specific operations or methods
@@ -154,31 +163,20 @@ config:
         - user-patch
       methods: # a optional list of specific methods that should use this type. All operations that use this method will use the specified type
         - patch
+      prefix: patch # operations where the operation id starts with this prefix. default ist null
   durableClient: # inject "[DurableClient] IDurableOrchestrationClient durableClient" into functions 
     all: true # optional, uses this type for all functions
     operations: # a optional list of specific operations that should get a durableClient
       - long-running-function
+    prefix: import # add a durable client to all methods where the operation id starts with this prefix defult ist null
   functionNamePrefix: Pre_ # adds a prefix to all function names (Not interfaces). Useful if you have multiple APIs in one function that have identical operation IDs
+  removeDeprecated: false # if set to true, no backward compatibility code will be generated
+  extensions: true # default is true, set to false to not generate extension methods for models
+  asyncArrays: true # default is false. if set to true, functions that return arrays will use IAsyncEnumerable instead if Task<IEnumerable>
 services:
   - apiPath: userservice.openapi.yml
     config:
-      prefix:  # overrides the config element from the global config
-      suffix:  # overrides the config element from the global config
-      checkEnums: # overrides the config element from the global config
-      routePrefix: # overrides the config element from the global config
-      useDateOnly: # overrides the config element from the global config
-      splitByTag: # overrides the config element from the global config
-      parsePathParameters: # overrides the config element from the global config
-      parseQueryParameters: # overrides the config element from the global config
-      genericAdditionalProperties: # overrides the config element from the global config
-      genericAdditionalPropertiesType: # overrides the config element from the global config
-      withCancellation: # overrides the config element from the global config
-      disposable: # overrides the config element from the global config
-      useInheritance: # overrides the config element from the global config
-      imports: # overrides the config element from the global config
-      requestBodyType: # overrides the config element from the global config
-      durableClient: # overrides the config element from the global config
-      functionNamePrefix: # overrides the config element from the global config
+      - anyValueFromGlobalConfig: value # overwrite global config for this API
     function:
       name: MyClassName
       namespace: MyNamespace
@@ -207,7 +205,7 @@ Caffoa parses the return and requestBody specifications, and handles the object 
 * Responses that have well-defined schemas will be serialized to Json responses
 * The interface will not have IActionResult returns, but need to return the actual object for the method
 * The interface will have the actual type that was passed along in the body as parameter
-* Errors (400-499) will be implemented as Exceptions, that you can throw in your implementation.
+* Errors (400-499) will be implemented as Exceptions, that you can throw in your implementation by subclassing CaffoaClientError.
 * If you have different return codes for one object (e.g. 200 or 201 for a put request), the return of the interface will be (YourObject, int).
 
 Caffoa takes over a lot of boilerplate code for you. Furthermore, it forces you to not cut corners, as you cannot return a different object than the specification calls for.
@@ -215,7 +213,7 @@ Caffoa takes over a lot of boilerplate code for you. Furthermore, it forces you 
 # Dependency Injection
 
 For simple straightforward use, you only need to pass your factory as Dependency Injection. You can, however, change the behavior of parsing, serialisation and error handling through DI.
-The constructor of the generated function class takes three optional interfaces, that you can overwrite. 
+The constructor of the generated function class takes three optional interfaces, that you can implement or inherit from the default implementation. 
 Simply create an implementation of either [one of the the interfaces](https://github.com/claasd/caffoa.net/tree/main/CdIts.Caffoa.Abstractions), or inherit one of the [default implementations](https://github.com/claasd/caffoa.net/tree/main/CdIts.Caffoa/Defaults) if you only need to change a small portion.
 * `ICaffoaErrorHandler` / `CaffoaDefaultErrorHandler`: handles errors that may occur during parsing. Default implementation returns BadRequest with a human readable error string
 * `ICaffoaJsonParser` / `DefaultCaffoaJsonParser`: Parses incoming JSON objects to model objects.
@@ -246,7 +244,7 @@ the openapi doc allows for annotations. caffoa uses these annotations for custom
 To use your own converter for a type, add `x-caffoa-converter: MyCustomConverter` to your openapi doc.
 
 ## Attributes
-Sometimes, it is desirable to add custum attributes, for example if you want to use the generated classes for SQL.
+Sometimes, it is desirable to add custom attributes, for example if you want to use the generated classes for SQL.
 You can use the annotation `x-caffoa-attributes` and specify a list of attributes.
 Example: 
 ```yaml

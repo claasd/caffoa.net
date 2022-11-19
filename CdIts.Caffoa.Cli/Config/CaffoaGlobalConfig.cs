@@ -21,6 +21,7 @@ public class CaffoaGlobalConfig : CaffoaConfig
             UseInheritance = true;
             AuthorizationLevel = "function";
             Duplicates = "overwrite";
+            EnumsAsStaticValues = true;
         }
     }
 }

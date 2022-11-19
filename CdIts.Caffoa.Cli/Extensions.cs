@@ -1,6 +1,7 @@
 using System.Globalization;
 using System.Text;
 using System.Text.RegularExpressions;
+using CdIts.Caffoa.Cli.Model;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 
@@ -134,5 +135,14 @@ public static class Extensions
     public static string Name(this OpenApiReference reference)
     {
         return reference.Id.Split("/").Last();
+    }
+
+    public static bool CanBeEnum(this PropertyData property)
+    {
+        return property.Enums.Count > 0 && !property.TypeName.StartsWith("double") && !property.TypeName.StartsWith("float");
+    }
+    public static bool CanBeStringEnum(this PropertyData property)
+    {
+        return property.Enums.Count > 0;
     }
 }

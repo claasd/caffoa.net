@@ -1,14 +1,14 @@
-using System.Collections.Immutable;
-using System;
+using System.Runtime.Serialization;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+using Caffoa.JsonConverter;
 
 namespace {NAMESPACE} {{
     public partial class {CLASS} {{
-        public static class {NAMEUPPER}Values {{
-            // constant values for "{NAMELOWER}"
+        // enum values for "{NAMELOWER}"
+        [JsonConverter(typeof({JSONPROPERTY}))]
+        public enum {ENUMNAME}{ENUMBASE} {{
             {ENUMS}
-    
-            /// immutable array containing all allowed values for "{NAMELOWER}"
-            public static readonly ImmutableArray<{TYPE}> AllowedValues = ImmutableArray.Create<{TYPE}>({ENUM_NAMES});
         }}
     }}
 }}

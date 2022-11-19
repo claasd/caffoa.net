@@ -2,7 +2,6 @@ namespace CdIts.Caffoa.Cli.Config;
 
 public class CaffoaConfig
 {
-    private string? _genericAdditionalPropertiesType;
     public bool? CheckEnums { get; set; }
     public bool? AcceptCaseInvariantEnums { get; set; }
     public string? Prefix { get; set; }
@@ -15,11 +14,8 @@ public class CaffoaConfig
     public bool? ParseQueryParameters { get; set; }
     public bool? GenericAdditionalProperties { get; set; }
 
-    public string GenericAdditionalPropertiesType
-    {
-        get => _genericAdditionalPropertiesType ?? "JObject";
-        set => _genericAdditionalPropertiesType = value;
-    }
+    public string? GenericAdditionalPropertiesType { get; set; }
+    public string GetGenericAdditionalPropertiesType() => GenericAdditionalPropertiesType ?? "JObject";
 
     public List<string>? Imports { get; set; }
     public List<RequestBodyTypeConfig>? RequestBodyType { get; set; }
@@ -31,6 +27,7 @@ public class CaffoaConfig
     public bool? UseInheritance { get; set; }
     public string? AuthorizationLevel { get; set; }
     public bool? AsyncArrays { get; set; }
+    public bool? EnumsAsStaticValues { get; set; }
 
     public CaffoaGlobalConfig MergedWith(CaffoaGlobalConfig general)
     {
@@ -48,7 +45,7 @@ public class CaffoaConfig
             ParsePathParameters = ParsePathParameters ?? general.ParsePathParameters,
             ParseQueryParameters = ParseQueryParameters ?? general.ParseQueryParameters,
             GenericAdditionalProperties = GenericAdditionalProperties ?? general.GenericAdditionalProperties,
-            GenericAdditionalPropertiesType = _genericAdditionalPropertiesType ?? general.GenericAdditionalPropertiesType,
+            GenericAdditionalPropertiesType = GenericAdditionalPropertiesType ?? general.GenericAdditionalPropertiesType,
             DurableClient = DurableClient ?? general.DurableClient,
             SplitByTag = SplitByTag ?? general.SplitByTag,
             WithCancellation = WithCancellation ?? general.WithCancellation,
@@ -60,7 +57,8 @@ public class CaffoaConfig
             UseInheritance = UseInheritance ?? general.UseInheritance,
             AcceptCaseInvariantEnums = AcceptCaseInvariantEnums ?? general.AcceptCaseInvariantEnums,
             AuthorizationLevel = AuthorizationLevel ?? general.AuthorizationLevel,
-            AsyncArrays = AsyncArrays ?? general.AsyncArrays
+            AsyncArrays = AsyncArrays ?? general.AsyncArrays,
+            EnumsAsStaticValues = EnumsAsStaticValues ?? general.EnumsAsStaticValues
         };
     }
 }
