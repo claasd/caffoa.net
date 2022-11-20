@@ -14,23 +14,8 @@ namespace DemoV3.Model {
         [JsonProperty("email", Required = Required.Always)]
         public virtual string Email { get; set; }
 
-        [JsonIgnore]
-        private string _type = "guest";
-
         [JsonProperty("type", Required = Required.Always)]
-        public virtual string Type {
-            get => _type;
-            set {
-                var _value = TypeValues.AllowedValues.FirstOrDefault(v=>String.Compare(v, value, StringComparison.OrdinalIgnoreCase) == 0, value);
-                if (!TypeValues.AllowedValues.Contains(_value))
-                {
-                    var allowedValues = string.Join(", ", TypeValues.AllowedValues.Select(v => v.ToString()));
-                    throw new ArgumentOutOfRangeException("type",
-                        $"{value} is not allowed. Allowed values: [{allowedValues}]");
-                }
-                _type = _value;
-            }
-        }
+        public virtual TypeValue Type { get; set; } = TypeValue.Guest;
 
         public GuestUser(){}
         public GuestUser(GuestUser other) {
@@ -40,5 +25,6 @@ namespace DemoV3.Model {
         public GuestUser ToGuestUser() => new GuestUser(this);
         public virtual AnyUser ToAnyUser() => ToGuestUser();
         public virtual AnyCompleteUser ToAnyCompleteUser() => ToGuestUser();
+        public virtual string TypeDiscriminator => Type.ToString();
     }
 }

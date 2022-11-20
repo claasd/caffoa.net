@@ -74,12 +74,21 @@ public class SchemaItemFormatter
                               _item.SubItems.Any(subItem => subItem == interfaceChild)
         )).Select(item => item.ClassName).ToList();
     }
+    public List<string> MatchingDiscriminators(List<SchemaItem> schemas)
+    {
+        return schemas.Where(schema => schema.Interface?.Discriminator != null && schema.Interface.Children.Any(
+            interfaceChild => interfaceChild == _item.ClassName ||
+                              _item.SubItems.Any(subItem => subItem == interfaceChild)
+        )).Select(item => item.Interface!.Discriminator!.ToObjectName()).Distinct().ToList();
+    }
 
     public string InterfaceMethods(List<SchemaItem> interfaces)
     {
         var implementations = MatchingInterfaces(interfaces)
             .Select(i => $"        public virtual {i} To{i}() => To{_item.ClassName}();\n");
-        return string.Join("", implementations);
+        var discriminators = MatchingDiscriminators(interfaces)
+            .Select(d=>$"        public virtual string {d}Discriminator => {d}.ToString();\n");
+        return string.Join("", implementations.Concat(discriminators));
     }
     
     public string SubItemMethods()
@@ -93,7 +102,7 @@ public class SchemaItemFormatter
     {
         if (_item.AdditionalPropertiesAllowed && _config.GenericAdditionalProperties is true)
             return
-                $"\n        [JsonExtensionData]\n        public Dictionary<string, {_config.GenericAdditionalPropertiesType}> AdditionalProperties;\n";
+                $"\n        [JsonExtensionData]\n        public Dictionary<string, {_config.GetGenericAdditionalPropertiesType()}> AdditionalProperties;\n";
         return "";
     }
 }

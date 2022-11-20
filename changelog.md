@@ -7,8 +7,10 @@
 * nested arrays are now possible
 * when cloning an object, dictionaries are now cloned as well.
 * when cloning models, models in lists are now cloned as well instead of shallow copied
-* prototype for IAsyncEnumerable for return of lists
+* prototype for IAsyncEnumerable for return of lists via `asyncArrays: true`
 * correctly parse additional properties if additional properties is array, overwritten primitive type of combination of both
+* Allow to use C# enums for string and integers, using `enumsAsStaticValues: false`
+* prefix filter for durableClient and requestBodyType operation selection
 
 ### 1.8.0
 * Allow to set the function authorization level

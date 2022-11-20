@@ -1,3 +1,4 @@
+using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using CdIts.Caffoa.Cli.Config;
@@ -171,7 +172,7 @@ public class ModelGenerator
 
         if (schemaItem.AdditionalPropertiesAllowed && _config.GenericAdditionalProperties is true)
             updateCommands.Add(
-                $"{prefix}AdditionalProperties = other.AdditionalProperties != null ? new Dictionary<string, {_config.GenericAdditionalPropertiesType}>(other.AdditionalProperties) : null;");
+                $"{prefix}AdditionalProperties = other.AdditionalProperties != null ? new Dictionary<string, {_config.GetGenericAdditionalPropertiesType()}>(other.AdditionalProperties) : null;");
         return updateCommands;
     }
 
@@ -222,11 +223,17 @@ public class ModelGenerator
             format["TYPE"] = formatter.Type();
             format["NAMEUPPER"] = property.Name.ToObjectName();
             format["NAMELOWER"] = property.Name;
-            if (property.Enums.Count > 0)
+            if (_config.EnumsAsStaticValues is false && property.CanBeEnum())
             {
-                format["DEFAULT"] = formatter.Default(true);
                 properties.Add(FormatEnumProperty(property, format));
             }
+
+            else if (property.CanBeStringEnum())
+            {
+                format["DEFAULT"] = formatter.Default(true);
+                properties.Add(FormatEnumStringProperty(property, format));
+            }
+
             else
             {
                 format["DEFAULT"] = formatter.Default(false);
@@ -243,11 +250,14 @@ public class ModelGenerator
     {
         foreach (var property in item.Properties!.Where(p => p.Enums.Any()))
         {
-            WriteEnumClass(property, item.ClassName);
+            if (_config.EnumsAsStaticValues is false && property.CanBeEnum())
+                WriteEnumClass(property, item.ClassName);
+            else
+                WriteEnumAsStringClass(property, item.ClassName);
         }
     }
 
-    private string FormatEnumProperty(PropertyData property, Dictionary<string, object> format)
+    private string FormatEnumStringProperty(PropertyData property, Dictionary<string, object> format)
     {
         var file = Templates.GetTemplate("ModelEnumPropertyTemplate.tpl");
         if (_config.AcceptCaseInvariantEnums is true && property.TypeName == "string")
@@ -262,11 +272,34 @@ public class ModelGenerator
         format["NULL_HANDLING"] = property.Nullable ? "v == null ? \"null\" : " : "";
         return file.FormatDict(format);
     }
+    
+    private static string FormatEnumProperty(PropertyData property, Dictionary<string, object> format)
+    {
+        var file = Templates.GetTemplate("ModelPropertyTemplate.tpl");
+        var enumType = property.Name.ToObjectName() +"Value";
+        var typeName = enumType;
+        if (property.Nullable)
+            typeName += "?";
+        format["TYPE"] = typeName;
+        var defaultValue = "";
+        if (property.Default != null)
+            defaultValue = $" = {enumType}.{EnumNameForValue(property.Default)};";
+        format["DEFAULT"] = defaultValue;
+        return file.FormatDict(format);
+    }
 
-    private void WriteEnumClass(PropertyData property, string className)
+    private static string EnumNameForValue(string value)
+    {
+        var cleaned = value.Replace("\"", "").FirstCharUpper();
+        cleaned = Regex.Replace(cleaned, @"[^A-Za-z0-9]+", "_");
+        if (char.IsDigit(cleaned[0]))
+            cleaned = $"_{cleaned}";
+        return cleaned;
+    }
+    private void WriteEnumAsStringClass(PropertyData property, string className)
     {
         var file = _config.RemoveDeprecated
-            ? Templates.GetTemplate("ModelEnumPropertyClassTemplate.tpl")
+            ? Templates.GetTemplate("ModelEnumPropertyClassTemplate.string.tpl")
             : Templates.GetTemplate("ModelEnumPropertyClassTemplate.deprecated.tpl");
         var enums = new Dictionary<string, string>();
         var obsoleteEnums = new Dictionary<string, string>();
@@ -275,17 +308,17 @@ public class ModelGenerator
         {
             if (value == null)
                 continue;
-            var cleaned = value.Replace("\"", "").FirstCharUpper();
-            cleaned = Regex.Replace(cleaned, @"[^A-Za-z0-9]+", "_");
-            var obsoleteName = $"{propName}{cleaned}Value";
-            if (char.IsDigit(cleaned[0]))
-                cleaned = $"_{cleaned}";
+            var cleaned = EnumNameForValue(value);
             enums[cleaned] = value;
+            var cleanName = value.Replace("\"", "").FirstCharUpper();
+            cleanName = Regex.Replace(cleanName, @"[^A-Za-z0-9]+", "_");
+            var obsoleteName = $"{propName}{cleanName}Value";
             obsoleteEnums[obsoleteName] = $"{propName}Values.{cleaned}";
         }
 
         var type = property.TypeName.Trim('?');
         var enumDefs = enums.Select(item => $"public const {type} {item.Key} = {item.Value};");
+
         var obsoleteEnumDefs = obsoleteEnums.Select(item =>
             $"[Obsolete(\"Will be removed in a future version of caffoa. Use {className}.{item.Value} instead.\")]\n        public const {type} {item.Key} = {item.Value};");
         var allowedNames = new List<string>(enums.Keys);
@@ -305,6 +338,52 @@ public class ModelGenerator
             ["ENUM_NAMES"] = string.Join(", ", allowedNames)
         };
         string fileName = $"{className}.{propName}Values.generated.cs";
+        var formatted = file.FormatDict(format);
+        File.WriteAllText(Path.Combine(_service.Model!.TargetFolder, fileName), formatted.ToSystemNewLine());
+    }
+
+    private void WriteEnumClass(PropertyData property, string className)
+    {
+        var file = Templates.GetTemplate("ModelEnumPropertyClassTemplate.tpl");
+        var enums = new Dictionary<string, string>();
+        var propName = property.Name.ToObjectName() + "Value";
+        foreach (var value in property.Enums)
+        {
+            if (value == null)
+                continue;
+            var cleaned = EnumNameForValue(value);
+            enums[cleaned] = value;
+        }
+
+        var type = property.TypeName.Trim('?');
+        IEnumerable<string> enumDefs;
+        string enumbase = "";
+        string jsonproperty = "";
+        if (type == "string")
+        {
+            jsonproperty = "StringEnumConverter";
+            enumDefs = enums.Select(item => $"[EnumMember(Value = {item.Value})] {item.Key}");
+        }
+        else
+        {
+            enumbase = $" : {type}";
+            jsonproperty = $"CaffoaNumericEnumConverter<{propName}>";
+            enumDefs = enums.Select(item => $"{item.Key} = {item.Value}");
+        }
+
+        var formatter = new PropertyFormatter(property, false);
+        var format = new Dictionary<string, object>
+        {
+            ["NAMESPACE"] = _service.Model!.Namespace,
+            ["CLASS"] = className,
+            ["ENUMNAME"] = propName,
+            ["NAMELOWER"] = property.Name,
+            ["TYPE"] = formatter.Type(),
+            ["ENUMS"] = string.Join(",\n            ", enumDefs),
+            ["ENUMBASE"] = enumbase,
+            ["JSONPROPERTY"] = jsonproperty
+        };
+        string fileName = $"{className}.{propName}.generated.cs";
         var formatted = file.FormatDict(format);
         File.WriteAllText(Path.Combine(_service.Model!.TargetFolder, fileName), formatted.ToSystemNewLine());
     }

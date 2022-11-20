@@ -23,5 +23,6 @@ namespace DemoV3.Model {
         public UserWithId(User other) : base(other) {}
         public UserWithId ToUserWithId() => new UserWithId(this);
         public virtual AnyCompleteUser ToAnyCompleteUser() => ToUserWithId();
+        public virtual string TypeDiscriminator => Type.ToString();
     }
 }

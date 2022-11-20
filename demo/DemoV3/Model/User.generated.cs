@@ -33,60 +33,15 @@ namespace DemoV3.Model {
         [JsonProperty("descriptions")]
         public virtual Dictionary<string, string> Descriptions { get; set; } = new Dictionary<string, string>();
 
-        [JsonIgnore]
-        private string _type = "simple";
-
         [JsonProperty("type", Required = Required.Always)]
-        public virtual string Type {
-            get => _type;
-            set {
-                var _value = TypeValues.AllowedValues.FirstOrDefault(v=>String.Compare(v, value, StringComparison.OrdinalIgnoreCase) == 0, value);
-                if (!TypeValues.AllowedValues.Contains(_value))
-                {
-                    var allowedValues = string.Join(", ", TypeValues.AllowedValues.Select(v => v.ToString()));
-                    throw new ArgumentOutOfRangeException("type",
-                        $"{value} is not allowed. Allowed values: [{allowedValues}]");
-                }
-                _type = _value;
-            }
-        }
-
-        [JsonIgnore]
-        private string _role = "reader";
+        public virtual TypeValue Type { get; set; } = TypeValue.Simple;
 
         [JsonProperty("role")]
-        public virtual string Role {
-            get => _role;
-            set {
-                var _value = RoleValues.AllowedValues.FirstOrDefault(v=>String.Compare(v, value, StringComparison.OrdinalIgnoreCase) == 0, value);
-                if (!RoleValues.AllowedValues.Contains(_value))
-                {
-                    var allowedValues = string.Join(", ", RoleValues.AllowedValues.Select(v => v.ToString()));
-                    throw new ArgumentOutOfRangeException("role",
-                        $"{value} is not allowed. Allowed values: [{allowedValues}]");
-                }
-                _role = _value;
-            }
-        }
-
-        [JsonIgnore]
-        private int? _ageGroup = 40;
+        public virtual RoleValue Role { get; set; } = RoleValue.Reader;
 
         [Obsolete("do not use this")]
         [JsonProperty("ageGroup")]
-        public virtual int? AgeGroup {
-            get => _ageGroup;
-            set {
-                var _value = value;
-                if (!AgeGroupValues.AllowedValues.Contains(_value))
-                {
-                    var allowedValues = string.Join(", ", AgeGroupValues.AllowedValues.Select(v => v == null ? "null" : v.ToString()));
-                    throw new ArgumentOutOfRangeException("ageGroup",
-                        $"{value} is not allowed. Allowed values: [{allowedValues}]");
-                }
-                _ageGroup = _value;
-            }
-        }
+        public virtual AgeGroupValue? AgeGroup { get; set; } = AgeGroupValue._40;
 
         [JsonConverter(typeof(CustomTimeConverter))]
         [JsonProperty("preferredContactTime")]
@@ -106,5 +61,6 @@ namespace DemoV3.Model {
         }
         public User ToUser() => new User(this);
         public virtual AnyUser ToAnyUser() => ToUser();
+        public virtual string TypeDiscriminator => Type.ToString();
     }
 }
