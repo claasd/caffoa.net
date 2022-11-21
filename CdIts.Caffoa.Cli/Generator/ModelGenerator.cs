@@ -98,7 +98,7 @@ public class ModelGenerator
         var parameters = new Dictionary<string, object>();
         parameters["NAME"] = item.ClassName;
         parameters["OTHER"] = otherItem.ClassName;
-        parameters["UPDATEPROPS"] = FormatExternalPropertiesUpdate(otherItem);
+        parameters["UPDATEPROPS"] = FormatExternalPropertiesUpdate(otherItem, item.ClassName);
         var formatted = file.FormatDict(parameters);
         return formatted.ToSystemNewLine();
     }
@@ -144,7 +144,7 @@ public class ModelGenerator
         return builder.ToString();
     }
 
-    private string FormatExternalPropertiesUpdate(SchemaItem schemaItem)
+    private string FormatExternalPropertiesUpdate(SchemaItem schemaItem, string targetClassName)
     {
         var updateCommands = new List<string>();
         if (schemaItem.Parent != null)
@@ -152,23 +152,23 @@ public class ModelGenerator
             updateCommands.Add($"item.UpdateWith{schemaItem.Parent}(other);");
         }
 
-        updateCommands.AddRange(FormatPropertyUpdates(schemaItem, "item."));
+        updateCommands.AddRange(FormatPropertyUpdates(schemaItem, "item.", targetClassName));
         return string.Join("\n            ", updateCommands);
     }
 
     private string FormatPropertyUpdates(SchemaItem schemaItem)
     {
-        return string.Join("\n            ", FormatPropertyUpdates(schemaItem, ""));
+        return string.Join("\n            ", FormatPropertyUpdates(schemaItem, "", ""));
     }
 
-    private List<string> FormatPropertyUpdates(SchemaItem schemaItem, string prefix)
+    private List<string> FormatPropertyUpdates(SchemaItem schemaItem, string prefix, string targetClassName)
     {
         if (schemaItem.Properties is null)
         {
             throw new CaffoaParserException($"No properties defined for object {schemaItem.Name}");
         }
 
-        var updateCommands = schemaItem.Properties!.Select(property => FormatPropertyUpdate(property, prefix)).ToList();
+        var updateCommands = schemaItem.Properties!.Select(property => FormatPropertyUpdate(property, prefix, targetClassName)).ToList();
 
         if (schemaItem.AdditionalPropertiesAllowed && _config.GenericAdditionalProperties is true)
             updateCommands.Add(
@@ -176,12 +176,17 @@ public class ModelGenerator
         return updateCommands;
     }
 
-    private static string FormatPropertyUpdate(PropertyData property, string prefix)
+    private static string FormatPropertyUpdate(PropertyData property, string prefix, string targetClassName)
     {
         var name = property.Name.ToObjectName();
         var sb = new StringBuilder();
         sb.Append(prefix);
-        sb.Append($"{name} = other.{name}");
+        if (!string.IsNullOrEmpty(targetClassName))
+            targetClassName += ".";
+        if(property.CanBeEnum())
+            sb.Append($"{name} = ({targetClassName}{name}Value)other.{name}");
+        else
+            sb.Append($"{name} = other.{name}");
 
         if (property.IsOtherSchema)
         {

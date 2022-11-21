@@ -54,9 +54,9 @@ namespace DemoV3.Model {
             Birthdate = other.Birthdate;
             Emails = other.Emails.ToList();
             Descriptions = other.Descriptions.ToDictionary(entry => entry.Key, entry => entry.Value);
-            Type = other.Type;
-            Role = other.Role;
-            AgeGroup = other.AgeGroup;
+            Type = (TypeValue)other.Type;
+            Role = (RoleValue)other.Role;
+            AgeGroup = (AgeGroupValue)other.AgeGroup;
             PreferredContactTime = other.PreferredContactTime;
         }
         public User ToUser() => new User(this);

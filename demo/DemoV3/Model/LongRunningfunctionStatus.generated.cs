@@ -19,7 +19,7 @@ namespace DemoV3.Model {
 
         public LongRunningfunctionStatus(){}
         public LongRunningfunctionStatus(LongRunningfunctionStatus other) {
-            Status = other.Status;
+            Status = (StatusValue)other.Status;
             Result = other.Result?.ToAnyUser();
         }
         public LongRunningfunctionStatus ToLongRunningfunctionStatus() => new LongRunningfunctionStatus(this);

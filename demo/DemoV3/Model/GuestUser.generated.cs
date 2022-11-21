@@ -20,7 +20,7 @@ namespace DemoV3.Model {
         public GuestUser(){}
         public GuestUser(GuestUser other) {
             Email = other.Email;
-            Type = other.Type;
+            Type = (TypeValue)other.Type;
         }
         public GuestUser ToGuestUser() => new GuestUser(this);
         public virtual AnyUser ToAnyUser() => ToGuestUser();
