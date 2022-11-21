@@ -183,7 +183,9 @@ public class ModelGenerator
         sb.Append(prefix);
         if (!string.IsNullOrEmpty(targetClassName))
             targetClassName += ".";
-        if(property.CanBeEnum())
+        if(property.CanBeEnum() && property.Nullable)
+            sb.Append($"{name} = other.{name} is null ? null : ({targetClassName}{name}Value)other.{name}");
+        else if(property.CanBeEnum())
             sb.Append($"{name} = ({targetClassName}{name}Value)other.{name}");
         else
             sb.Append($"{name} = other.{name}");
