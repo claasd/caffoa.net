@@ -24,9 +24,9 @@ namespace DemoV3.Model {
             item.Birthdate = other.Birthdate;
             item.Emails = other.Emails.ToList();
             item.Descriptions = other.Descriptions.ToDictionary(entry => entry.Key, entry => entry.Value);
-            item.Type = other.Type;
-            item.Role = other.Role;
-            item.AgeGroup = other.AgeGroup;
+            item.Type = (User.TypeValue)other.Type;
+            item.Role = (User.RoleValue)other.Role;
+            item.AgeGroup = (User.AgeGroupValue)other.AgeGroup;
             item.PreferredContactTime = other.PreferredContactTime;
         }
 
@@ -35,7 +35,7 @@ namespace DemoV3.Model {
         /// </summary>
         public static void UpdateWithGuestUser(this GuestUser item, GuestUser other) {
             item.Email = other.Email;
-            item.Type = other.Type;
+            item.Type = (GuestUser.TypeValue)other.Type;
         }
 
         /// <summary>
@@ -59,7 +59,7 @@ namespace DemoV3.Model {
         /// Replaces all fields with the data of the passed object
         /// </summary>
         public static void UpdateWithLongRunningfunctionStatus(this LongRunningfunctionStatus item, LongRunningfunctionStatus other) {
-            item.Status = other.Status;
+            item.Status = (LongRunningfunctionStatus.StatusValue)other.Status;
             item.Result = other.Result?.ToAnyUser();
         }
 
