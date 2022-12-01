@@ -81,13 +81,12 @@ public class InterfaceGenerator
 
     private List<string> GetParams(EndPointModel endpoint)
     {
-        var builder = ParameterBuilder.Instance(_config.UseDateOnly is true && _config.ParsePathParameters is true)
+        var builder = ParameterBuilder.Instance()
             .AddPathParameters(endpoint.Parameters);
         if (endpoint.DurableClient)
             builder.AddDurableClient();
-        if (_config.ParseQueryParameters is true)
-            builder.AddQueryParameters(endpoint.QueryParameters());
-        if (_config.WithCancellation is true)
+        builder.AddQueryParameters(endpoint.QueryParameters());
+        if (!_config.WithCancellation is false)
             builder.AddCancellationToken();
         if (endpoint.HasRequestBody)
         {

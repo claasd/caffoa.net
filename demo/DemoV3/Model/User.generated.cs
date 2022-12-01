@@ -23,9 +23,9 @@ namespace DemoV3.Model {
         public virtual Address Address { get; set; }
 
         [Obsolete]
-        [JsonConverter(typeof(CaffoaDateConverter))]
+        [JsonConverter(typeof(CaffoaDateOnlyConverter))]
         [JsonProperty("birthdate")]
-        public virtual DateTime? Birthdate { get; set; }
+        public virtual DateOnly? Birthdate { get; set; }
 
         [JsonProperty("emails")]
         public virtual ICollection<string> Emails { get; set; } = new List<string>();
@@ -43,9 +43,9 @@ namespace DemoV3.Model {
         [JsonProperty("ageGroup")]
         public virtual AgeGroupValue? AgeGroup { get; set; } = AgeGroupValue._40;
 
-        [JsonConverter(typeof(CustomTimeConverter))]
+        [JsonConverter(typeof(CaffoaTimeOnlyConverter))]
         [JsonProperty("preferredContactTime")]
-        public virtual TimeSpan PreferredContactTime { get; set; } = TimeSpan.Parse("12:00");
+        public virtual TimeOnly? PreferredContactTime { get; set; } = TimeOnly.Parse("12:00");
 
         public User(){}
         public User(User other) {
@@ -56,7 +56,18 @@ namespace DemoV3.Model {
             Descriptions = other.Descriptions.ToDictionary(entry => entry.Key, entry => entry.Value);
             Type = (TypeValue)other.Type;
             Role = (RoleValue)other.Role;
-            AgeGroup = (AgeGroupValue)other.AgeGroup;
+            AgeGroup = other.AgeGroup is null ? null : (AgeGroupValue)other.AgeGroup;
+            PreferredContactTime = other.PreferredContactTime;
+        }
+        public User(UserWithId other){
+            Name = other.Name;
+            Address = other.Address?.ToAddress();
+            Birthdate = other.Birthdate;
+            Emails = other.Emails.ToList();
+            Descriptions = other.Descriptions.ToDictionary(entry => entry.Key, entry => entry.Value);
+            Type = (TypeValue)other.Type;
+            Role = (RoleValue)other.Role;
+            AgeGroup = other.AgeGroup is null ? null : (AgeGroupValue)other.AgeGroup;
             PreferredContactTime = other.PreferredContactTime;
         }
         public User ToUser() => new User(this);

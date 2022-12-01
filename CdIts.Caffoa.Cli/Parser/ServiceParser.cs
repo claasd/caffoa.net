@@ -65,8 +65,8 @@ public class ServiceParser
         workspace.AddDocument("root", _document);
         _document.Serialize(fileStream, OpenApiSpecVersion.OpenApi3_0, OpenApiFormat.Yaml, new OpenApiWriterSettings()
         {
-            InlineExternalReferences = true,
-            InlineLocalReferences = true
+            InlineExternalReferences = false,
+            InlineLocalReferences = false
         });
     }
 

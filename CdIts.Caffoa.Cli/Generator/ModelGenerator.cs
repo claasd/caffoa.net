@@ -71,7 +71,7 @@ public class ModelGenerator
     {
         var data = new List<string>();
         data.Add(CreateModelExtension(item, item));
-        if (_config.UseInheritance is false)
+        if (_config.UseInheritance is true)
         {
             foreach (var subItem in item.SubItems)
             {
@@ -92,9 +92,7 @@ public class ModelGenerator
     private string CreateModelExtension(SchemaItem item, SchemaItem otherItem)
     {
         string file;
-        file = Templates.GetTemplate(_config.RemoveDeprecated
-            ? "ModelExtensionContentTemplate.tpl"
-            : "ModelExtensionContentTemplate.deprecated.tpl");
+        file = Templates.GetTemplate("ModelExtensionContentTemplate.tpl");
         var parameters = new Dictionary<string, object>();
         parameters["NAME"] = item.ClassName;
         parameters["OTHER"] = otherItem.ClassName;
@@ -222,7 +220,7 @@ public class ModelGenerator
             return "";
         foreach (var property in item.Properties)
         {
-            var formatter = new PropertyFormatter(property, _config.UseDateOnly ?? false);
+            var formatter = new PropertyFormatter(property);
             var format = new Dictionary<string, object>();
             format["DESCRIPTION"] = formatter.Description();
             format["JSON_EXTRA"] = formatter.JsonTags();
@@ -230,7 +228,7 @@ public class ModelGenerator
             format["TYPE"] = formatter.Type();
             format["NAMEUPPER"] = property.Name.ToObjectName();
             format["NAMELOWER"] = property.Name;
-            if (_config.EnumsAsStaticValues is false && property.CanBeEnum())
+            if (property.CanBeEnum())
             {
                 properties.Add(FormatEnumProperty(property, format));
             }
@@ -257,7 +255,7 @@ public class ModelGenerator
     {
         foreach (var property in item.Properties!.Where(p => p.Enums.Any()))
         {
-            if (_config.EnumsAsStaticValues is false && property.CanBeEnum())
+            if (property.CanBeEnum())
                 WriteEnumClass(property, item.ClassName);
             else
                 WriteEnumAsStringClass(property, item.ClassName);
@@ -267,15 +265,7 @@ public class ModelGenerator
     private string FormatEnumStringProperty(PropertyData property, Dictionary<string, object> format)
     {
         var file = Templates.GetTemplate("ModelEnumPropertyTemplate.tpl");
-        if (_config.AcceptCaseInvariantEnums is true && property.TypeName == "string")
-            format["TRANSFORM"] =
-                $"{property.Name.ToObjectName()}Values.AllowedValues.FirstOrDefault(v=>String.Compare(v, value, StringComparison.OrdinalIgnoreCase) == 0, value)";
-        else
-            format["TRANSFORM"] = "value";
-        format["NO_CHECK_MSG"] = _config.CheckEnums is true
-            ? ""
-            : "// set checkEnums=true in config file to have a value check here //\n                ";
-        format["NO_CHECK"] = _config.CheckEnums!.Value ? "" : "// ";
+        format["TRANSFORM"] = "value";
         format["NULL_HANDLING"] = property.Nullable ? "v == null ? \"null\" : " : "";
         return file.FormatDict(format);
     }
@@ -305,9 +295,7 @@ public class ModelGenerator
     }
     private void WriteEnumAsStringClass(PropertyData property, string className)
     {
-        var file = _config.RemoveDeprecated
-            ? Templates.GetTemplate("ModelEnumPropertyClassTemplate.string.tpl")
-            : Templates.GetTemplate("ModelEnumPropertyClassTemplate.deprecated.tpl");
+        var file = Templates.GetTemplate("ModelEnumPropertyClassTemplate.string.tpl");
         var enums = new Dictionary<string, string>();
         var obsoleteEnums = new Dictionary<string, string>();
         var propName = property.Name.ToObjectName();
@@ -331,7 +319,7 @@ public class ModelGenerator
         var allowedNames = new List<string>(enums.Keys);
         if (property.Nullable)
             allowedNames.Add("null");
-        var formatter = new PropertyFormatter(property, false);
+        var formatter = new PropertyFormatter(property);
         var format = new Dictionary<string, object>
         {
             ["NAMESPACE"] = _service.Model!.Namespace,
@@ -378,7 +366,7 @@ public class ModelGenerator
             enumDefs = enums.Select(item => $"{item.Key} = {item.Value}");
         }
 
-        var formatter = new PropertyFormatter(property, false);
+        var formatter = new PropertyFormatter(property);
         var format = new Dictionary<string, object>
         {
             ["NAMESPACE"] = _service.Model!.Namespace,

@@ -61,7 +61,7 @@ components:
           type: string
           format: time
           default: "12:00"
-          x-caffoa-converter: CustomTimeConverter
+          nullable: true
 
       required:
         - type

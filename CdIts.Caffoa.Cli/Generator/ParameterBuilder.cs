@@ -4,27 +4,25 @@ namespace CdIts.Caffoa.Cli.Generator;
 
 public class ParameterBuilder
 {
-    private readonly bool _useDateOnly;
     private readonly List<string> _parameters = new();
     private readonly List<string> _queryParameters = new();
     private readonly List<string> _bodies = new();
     private bool _withCancellation;
 
-    private ParameterBuilder(bool useDateOnly)
+    private ParameterBuilder()
     {
-        _useDateOnly = useDateOnly;
     }
 
-    public static ParameterBuilder Instance(bool useDateOnly)
+    public static ParameterBuilder Instance()
     {
-        return new ParameterBuilder(useDateOnly);
+        return new ParameterBuilder();
     }
 
     public ParameterBuilder AddPathParameters(IEnumerable<ParameterObject> parameters)
     {
         _parameters.AddRange(parameters.Where(p => !p.IsQueryParameter).Select(p =>
         {
-            var typeName = p.GetTypeName(_useDateOnly);
+            var typeName = p.TypeName;
             return $"{typeName} {p.Name}";
         }));
         return this;
@@ -40,7 +38,7 @@ public class ParameterBuilder
     {
         _queryParameters.AddRange(queryParameters.Select(p =>
         {
-            var typeName = p.GetTypeName(_useDateOnly);
+            var typeName = p.TypeName;
             var result = $"{typeName} {p.Name}";
             if (p.DefaultValue != null)
                 result += $" = {p.DefaultValue}";

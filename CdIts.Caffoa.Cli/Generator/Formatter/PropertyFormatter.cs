@@ -5,12 +5,10 @@ namespace CdIts.Caffoa.Cli.Generator.Formatter;
 public class PropertyFormatter
 {
     private readonly PropertyData _property;
-    private readonly bool _net60;
 
-    public PropertyFormatter(PropertyData property, bool net60)
+    public PropertyFormatter(PropertyData property)
     {
         _property = property;
-        _net60 = net60;
     }
 
     public string Description()
@@ -33,9 +31,7 @@ public class PropertyFormatter
 
     public string Type()
     {
-        var name = _net60
-            ? _property.TypeName
-            : _property.TypeName.Replace("DateOnly", "DateTime").Replace("TimeOnly", "TimeSpan");
+        var name = _property.TypeName;
         if (_property.IsArray)
             return $"ICollection<{name}>";
         if (_property.IsMap)
@@ -46,22 +42,20 @@ public class PropertyFormatter
 
     public string Default(bool addSemicolonEnEmpty)
     {
-        var name = _net60
-            ? _property.TypeName
-            : _property.TypeName.Replace("DateOnly", "DateTime").Replace("TimeOnly", "TimeSpan");
+        var name = _property.TypeName;
         if (_property.IsArray)
             return $" = new List<{name}>();";
         if (_property.IsMap)
             return $" = new Dictionary<string, {name}>();";
         if (_property.Default != null)
         {
-            if (name == "DateOnly")
+            if (name.StartsWith("DateOnly"))
                 return $" = DateTime.Parse({_property.Default});";
-            if (name == "TimeOnly")
+            if (name.StartsWith("TimeOnly"))
                 return $" = TimeOnly.Parse({_property.Default});";
-            if (name == "DateTime")
+            if (name.StartsWith("DateTime"))
                 return $" = DateTime.Parse({_property.Default});";
-            if (name == "TimeSpan")
+            if (name.StartsWith("TimeSpan"))
                 return $" = TimeSpan.Parse({_property.Default});";
             return $" = {_property.Default};";
         }
@@ -78,23 +72,12 @@ public class PropertyFormatter
         var tags = _property.CustomAttributes.Select(a => $"[{a}]\n        ").ToList();
         if (_property.Deprecated)
             tags.Add("[Obsolete]\n        ");
-        if(!string.IsNullOrEmpty(_property.Converter))
+        if (!string.IsNullOrEmpty(_property.Converter))
             tags.Add($"[JsonConverter(typeof({_property.Converter}))]\n        ");
         else if (_property.TypeName.StartsWith("DateOnly"))
-        {
-            if (_net60)
-                tags.Add("[JsonConverter(typeof(CaffoaDateOnlyConverter))]\n        ");
-            else
-                tags.Add("[JsonConverter(typeof(CaffoaDateConverter))]\n        ");
-        }
+            tags.Add("[JsonConverter(typeof(CaffoaDateOnlyConverter))]\n        ");
         else if (_property.TypeName.StartsWith("TimeOnly"))
-        {
-            if (_net60)
-                tags.Add("[JsonConverter(typeof(CaffoaTimeOnlyConverter))]\n        ");
-            else
-                tags.Add("[JsonConverter(typeof(CaffoaTimeSpanConverter))]\n        ");
-        }
-
+            tags.Add("[JsonConverter(typeof(CaffoaTimeOnlyConverter))]\n        ");
         return string.Join("", tags);
     }
 }

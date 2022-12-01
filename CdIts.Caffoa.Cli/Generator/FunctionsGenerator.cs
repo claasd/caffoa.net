@@ -48,16 +48,15 @@ public class FunctionsGenerator
             imports.Add(_modelNamespace);
         if (endpoints.FirstOrDefault(e => e.RequestBodyType is SelectionBodyModel) != null)
             imports.Add("Newtonsoft.Json.Linq");
-        var extraVars = new List<AdditionalInterfaceModel>();
-        if (_config.ParsePathParameters is true || _config.ParseQueryParameters is true)
+        var extraVars = new List<AdditionalInterfaceModel>
         {
-            extraVars.Add(new AdditionalInterfaceModel()
+            new()
             {
                 VariableName = "converter",
                 ParameterType = "ICaffoaConverter",
                 Initializer = "converter ?? new DefaultCaffoaConverter(_errorHandler)"
-            });
-        }
+            }
+        };
 
         var name = _functionConfig.GetFunctionName(namePrefix);
         Directory.CreateDirectory(_functionConfig.TargetFolder);
@@ -104,15 +103,7 @@ public class FunctionsGenerator
 
         List<string> pathParams;
         var filteredParams = endpoint.Parameters.Where(p => !p.IsQueryParameter);
-        if (_config.ParsePathParameters is true)
-            pathParams = filteredParams.Select(p => $", string {p.Name}").ToList();
-        else
-            pathParams = filteredParams.Select(p =>
-            {
-                var type = p
-                    .GetTypeName(_config); // Invalid cast from 'System.String' to 'System.DateOnly' by Azure functions
-                return $", {type} {p.Name}";
-            }).ToList();
+        pathParams = filteredParams.Select(p => $", string {p.Name}").ToList();
 
         if (endpoint.DurableClient)
             pathParams.Add(", [DurableClient] IDurableOrchestrationClient durableClient");
@@ -136,13 +127,11 @@ public class FunctionsGenerator
 
     private string GenerateQueryVariables(EndPointModel endpoint)
     {
-        if (_config.ParseQueryParameters is not true)
-            return "";
         var parameters = new List<string>();
         foreach (var parameter in endpoint.Parameters.Where(p => p.IsQueryParameter))
         {
             var sb = new StringBuilder();
-            var typeName = parameter.GetTypeName(_config);
+            var typeName = parameter.TypeName;
             sb.Append($"{typeName} {parameter.Name}Value");
             if (parameter.DefaultValue != null)
                 sb.Append($" = {parameter.DefaultValue}");
@@ -152,7 +141,7 @@ public class FunctionsGenerator
             sb.Append($"if(request.Query.TryGetValue(\"{parameter.Name}\", out var {parameter.Name}QueryValue))");
             sb.Append("\n                    ");
             sb.Append($"{parameter.Name}Value = ");
-            sb.Append(FormatConversion(parameter.GetTypeName(_config).Trim('?'), $"{parameter.Name}QueryValue",
+            sb.Append(FormatConversion(parameter.TypeName.Trim('?'), $"{parameter.Name}QueryValue",
                 parameter.Name));
             sb.Append(";\n                ");
             if (parameter.Required && parameter.DefaultValue is null)
@@ -168,7 +157,8 @@ public class FunctionsGenerator
         return string.Join("", parameters);
     }
 
-    private static string FormatCall(EndPointModel endpoint, string variable, IEnumerable<string> parameters, bool addAwait)
+    private static string FormatCall(EndPointModel endpoint, string variable, IEnumerable<string> parameters,
+        bool addAwait)
     {
         var callParams = string.Join(", ", parameters);
         var awaitStr = addAwait ? "await " : "";
@@ -184,24 +174,21 @@ public class FunctionsGenerator
         var callParams = BuildCallParameterList(endpoint);
         foreach (var (key, type) in model!.Mapping)
         {
-            var caseParams = new List<string>(callParams);
-            caseParams.Add($"_jsonParser.ToObject<{type}>(jObject)");
-            if (_config.ParseQueryParameters is true)
+            var caseParams = new List<string>(callParams)
             {
-                caseParams.AddRange(endpoint.QueryParameters().Select(p => $"{p.Name}Value"));
-            }
-
-            if (_config.WithCancellation is true)
-            {
+                $"_jsonParser.ToObject<{type}>(jObject)"
+            };
+            caseParams.AddRange(endpoint.QueryParameters().Select(p => $"{p.Name}Value"));
+            if (!_config.WithCancellation is false)
                 caseParams.Add("request.HttpContext.RequestAborted");
-            }
-            
+
+
             var call = FormatCall(endpoint, "", caseParams, false);
             cases.Add($"\"{key}\" => {call}");
         }
 
         parameter["VARNAME"] = useAwait ? "var task = " : variable;
-        parameter["AWAIT"] = useAwait ?  $";\n                {variable}await task" : "";
+        parameter["AWAIT"] = useAwait ? $";\n                {variable}await task" : "";
         parameter["DISC"] = model.Disriminator;
         parameter["CASES_ALLOWED_VALUES"] = string.Join(", ", model.Mapping.Keys.Select(k => $"\"{k}\""));
         parameter["CASES"] = string.Join("\n                    ", cases.Select(c => $"{c},"));
@@ -215,16 +202,9 @@ public class FunctionsGenerator
             callParams.Add($"await _jsonParser.Parse<{simple.TypeName}>(request.Body)");
         else if (endpoint.HasRequestBody)
             callParams.Add($"request.Body");
-        if (_config.ParseQueryParameters is true)
-        {
-            callParams.AddRange(endpoint.QueryParameters().Select(p => $"{p.Name}Value"));
-        }
-
-        if (_config.WithCancellation is true)
-        {
+        callParams.AddRange(endpoint.QueryParameters().Select(p => $"{p.Name}Value"));
+        if (!_config.WithCancellation is false)
             callParams.Add("request.HttpContext.RequestAborted");
-        }
-
         return callParams;
     }
 
@@ -232,10 +212,7 @@ public class FunctionsGenerator
     {
         var filtered = endpoint.Parameters.Where(p => !p.IsQueryParameter).ToList();
         List<string> result;
-        if (_config.ParsePathParameters is true)
-            result = filtered.Select(p => FormatConversion(p.GetTypeName(_config), p.Name, p.Name)).ToList();
-        else
-            result = filtered.Select(p => p.Name).ToList();
+        result = filtered.Select(p => FormatConversion(p.TypeName, p.Name, p.Name)).ToList();
         if (endpoint.DurableClient)
             result.Insert(0, "durableClient");
         return result;
@@ -245,14 +222,10 @@ public class FunctionsGenerator
     {
         if (typeName == "string")
             return $"{variableName}";
-        if (typeName == "DateOnly" && _config.UseDateOnly is true)
-            return $"_converter.ParseDateOnly({variableName}, \"{objectName}\")";
         if (typeName == "DateOnly")
-            return $"_converter.ParseDate({variableName}, \"{objectName}\")";
-        if (typeName == "TimeOnly" && _config.UseDateOnly is true)
-            return $"_converter.ParseTimeOnly({variableName}, \"{objectName}\")";
+            return $"_converter.ParseDateOnly({variableName}, \"{objectName}\")";
         if (typeName == "TimeOnly")
-            return $"_converter.ParseTimeSpan({variableName}, \"{objectName}\")";
+            return $"_converter.ParseTimeOnly({variableName}, \"{objectName}\")";
         if (typeName == "DateTime")
             return $"_converter.ParseDateTime({variableName}, \"{objectName}\")";
         if (typeName == "Guid")
