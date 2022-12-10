@@ -26,7 +26,7 @@ namespace DemoV3.Model {
             item.Descriptions = other.Descriptions.ToDictionary(entry => entry.Key, entry => entry.Value);
             item.Type = (User.TypeValue)other.Type;
             item.Role = (User.RoleValue)other.Role;
-            item.AgeGroup = (User.AgeGroupValue)other.AgeGroup;
+            item.AgeGroup = other.AgeGroup is null ? null : (User.AgeGroupValue)other.AgeGroup;
             item.PreferredContactTime = other.PreferredContactTime;
         }
 

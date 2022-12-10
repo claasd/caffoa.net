@@ -91,5 +91,15 @@ namespace DemoV3
         /// </summary>
         Task<IEnumerable<KeyValuePair<string, IEnumerable<Guid>>>> GetUserTagsAsync();
 
+        /// <summary>
+        /// 200 -> a list of neum
+        /// </summary>
+        Task<IEnumerable<MyEnumType>> ListEnumsAsync(MyEnumType? filter = null);
+
+        /// <summary>
+        /// 200 -> a list of neum
+        /// </summary>
+        Task<IEnumerable<MyEnumType>> ListEnums2Async(MyEnumType filter);
+
     }
 }

@@ -158,6 +158,7 @@ components:
         type: array
         items:
           $ref: "#/components/schemas/tagId"
+
     tagInfos:
       type: object
       properties:
@@ -171,6 +172,14 @@ components:
               "<userId_2>": [ "<tagId_2>", "<tagId_3>" ],
             },
           }
+    myEnumType:
+      type: string
+      enum:
+        - enum1
+        - enum2
+        - enum space
+        - enum-sepcial_CHARS
+          
   responses:
     error:
       description: Error
@@ -378,7 +387,6 @@ paths:
           type: integer
         required: false
         in: query
-    
     get:
       tags:
         - user
@@ -416,7 +424,7 @@ paths:
             'application/json':
               schema:
                 $ref: "#/components/schemas/longRunningfunctionStatus"
-      
+  
   /tags:
     get:
       tags:
@@ -429,6 +437,7 @@ paths:
             application/json:
               schema: 
                 $ref: "#/components/schemas/tagInfos"
+
   "/tags/users":
     get:
       tags:
@@ -442,3 +451,44 @@ paths:
               schema:
                 $ref: "#/components/schemas/tagInfo"
                   
+  /enums/list:
+    parameters: 
+      - name: filter
+        in: query
+        required: false
+        schema: 
+          $ref: "#/components/schemas/myEnumType"
+    get:
+      operationId: listEnums
+      tags:
+        - user
+      responses: 
+        200:
+          description: a list of neum
+          content: 
+            application/json:
+              schema: 
+                type: array
+                items: 
+                  $ref: "#/components/schema/myEnumType"
+                  
+  /enums/list/filter/{filter}:
+    parameters:
+      - name: filter
+        in: path
+        required: true
+        schema:
+          $ref: "#/components/schemas/myEnumType"
+    get:
+      operationId: listEnums2
+      tags:
+        - user
+      responses:
+        200:
+          description: a list of neum
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schema/myEnumType"

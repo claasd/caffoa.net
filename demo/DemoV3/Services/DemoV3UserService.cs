@@ -64,6 +64,16 @@ namespace DemoV3.Services
             return Tags.ToDictionary(i => i.Key, i => i.Value.Select(v => v));
         }
 
+        public Task<IEnumerable<MyEnumType>> ListEnumsAsync(MyEnumType? filter = null)
+        {
+            return Task.FromResult<IEnumerable<MyEnumType>>(new List<MyEnumType>() { MyEnumType.Enum1 });
+        }
+
+        public Task<IEnumerable<MyEnumType>> ListEnums2Async(MyEnumType filter)
+        {
+            return Task.FromResult<IEnumerable<MyEnumType>>(new List<MyEnumType>() { MyEnumType.Enum2 });
+        }
+
         public async Task<IEnumerable<AnyCompleteUser>> UserPostAsync(User payload)
         {
             var (user, _) = await UserPutAsync(Guid.NewGuid().ToString(), payload);

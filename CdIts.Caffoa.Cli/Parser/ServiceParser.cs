@@ -100,6 +100,8 @@ public class ServiceParser
         {
             if (!apiSchema.IsPrimitiveType() && !apiSchema.HasOnlyAdditionalProperties())
                 continue;
+            if(apiSchema.CanBeEnum())
+                continue;
             var className = ClassName(name);
             _knownTypes[className] = apiSchema;
         }

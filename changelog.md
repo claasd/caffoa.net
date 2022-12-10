@@ -1,4 +1,7 @@
 # caffoa changelog
+### 1.10.0
+* Allow enums in arrays, if the enum is declared as it's own schema elements
+* Allow enums in query and path parameters, if the enum is declared as it's own schema elements
 
 ### 1.9.0
 * Refactoring, removed code smells

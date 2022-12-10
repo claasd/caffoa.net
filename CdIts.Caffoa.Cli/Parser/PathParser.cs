@@ -174,18 +174,29 @@ public class PathParser
         return response;
     }
 
-    public static List<ParameterObject> ParseParameter(IList<OpenApiParameter> parameters)
+    public List<ParameterObject> ParseParameter(IList<OpenApiParameter> parameters)
     {
         return parameters.Where(p => p.In is ParameterLocation.Path or ParameterLocation.Query)
             .Select(p =>
             {
                 var defaultValue = p.Schema.DefaultAsString();
                 p.Schema.Nullable = !p.Required && defaultValue == null;
-                var result = new ParameterObject(p.Name, p.Schema.TypeName(), p.Description,
+                var type = p.Schema.TypeName();
+                var isEnum = false;
+                if (p.Schema.Reference != null && p.Schema.CanBeEnum())
+                {
+                    type = _classNameFunc(p.Schema.Reference.Name());
+                    if (p.Schema.Nullable)
+                        type += "?";
+                    isEnum = true;
+                }
+
+                var result = new ParameterObject(p.Name, type, p.Description,
                     p.In == ParameterLocation.Query)
                 {
                     DefaultValue = defaultValue,
-                    Required = p.Required
+                    Required = p.Required,
+                    IsEnum = isEnum
                 };
                 return result;
             })

@@ -153,7 +153,7 @@ public class FunctionsGenerator
             sb.Append("\n                    ");
             sb.Append($"{parameter.Name}Value = ");
             sb.Append(FormatConversion(parameter.GetTypeName(_config).Trim('?'), $"{parameter.Name}QueryValue",
-                parameter.Name));
+                parameter.Name, parameter.IsEnum));
             sb.Append(";\n                ");
             if (parameter.Required && parameter.DefaultValue is null)
             {
@@ -233,7 +233,7 @@ public class FunctionsGenerator
         var filtered = endpoint.Parameters.Where(p => !p.IsQueryParameter).ToList();
         List<string> result;
         if (_config.ParsePathParameters is true)
-            result = filtered.Select(p => FormatConversion(p.GetTypeName(_config), p.Name, p.Name)).ToList();
+            result = filtered.Select(p => FormatConversion(p.GetTypeName(_config), p.Name, p.Name, p.IsEnum)).ToList();
         else
             result = filtered.Select(p => p.Name).ToList();
         if (endpoint.DurableClient)
@@ -241,7 +241,7 @@ public class FunctionsGenerator
         return result;
     }
 
-    private string FormatConversion(string typeName, string variableName, string objectName)
+    private string FormatConversion(string typeName, string variableName, string objectName, bool isEnum)
     {
         if (typeName == "string")
             return $"{variableName}";
@@ -257,6 +257,8 @@ public class FunctionsGenerator
             return $"_converter.ParseDateTime({variableName}, \"{objectName}\")";
         if (typeName == "Guid")
             return $"_converter.ParseGuid({variableName}, \"{objectName}\")";
+        if (isEnum)
+            return $"_converter.ParseEnum<{typeName}>({variableName}, \"{objectName}\")";
         return $"_converter.Parse<{typeName}>({variableName}, \"{objectName}\")";
     }
 

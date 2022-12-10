@@ -1,4 +1,6 @@
 using System.Globalization;
+using System.Reflection;
+using System.Runtime.Serialization;
 
 namespace Caffoa.Defaults;
 
@@ -32,10 +34,11 @@ public class DefaultCaffoaConverter : ICaffoaConverter
             return result;
         if (TimeSpan.TryParseExact(parameter, @"h\:m", CultureInfo.InvariantCulture, out result))
             return result;
-        throw _errorHandler.ParameterConvertError(parameterName, "time", new ArgumentException("Could not parse time. Expected format HH:mm:ss or H:m"));    
+        throw _errorHandler.ParameterConvertError(parameterName, "time",
+            new ArgumentException("Could not parse time. Expected format HH:mm:ss or H:m"));
     }
-    
-#if NET6_0    
+
+#if NET6_0
     public DateOnly ParseDateOnly(string parameter, string parameterName)
     {
         try
@@ -60,7 +63,7 @@ public class DefaultCaffoaConverter : ICaffoaConverter
         }
     }
 #endif
-    
+
     public DateTime ParseDateTime(string parameter, string parameterName)
     {
         try
@@ -72,8 +75,8 @@ public class DefaultCaffoaConverter : ICaffoaConverter
             throw _errorHandler.ParameterConvertError(parameterName, "date-time", e);
         }
     }
-    
-    public Guid ParseGuid(string parameter, string parameterName) 
+
+    public Guid ParseGuid(string parameter, string parameterName)
     {
         try
         {
@@ -85,15 +88,39 @@ public class DefaultCaffoaConverter : ICaffoaConverter
         }
     }
 
-    public T Parse<T>(string parameter, string parameterName) 
+    public T ParseEnum<T>(string parameter, string parameterName, bool ignoreCase = true) where T : Enum
+    {
+        var type = typeof(T);
+        var names = Enum.GetNames(type);
+        for (var i = 0; i < names.Length; i++)
+        {
+            var name = names[i];
+            var f = type.GetField(name, BindingFlags.Public | BindingFlags.Static)!;
+            var value = (T)f.GetValue(null)!;
+            if (string.Compare(name, parameter,
+                    ignoreCase ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal) == 0)
+                return value;
+            var specifiedName = f.GetCustomAttributes(typeof(EnumMemberAttribute), true)
+                .Cast<EnumMemberAttribute>()
+                .Select(a => a.Value)
+                .SingleOrDefault();
+            if (specifiedName != null && string.Compare(specifiedName, parameter,
+                    ignoreCase ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal) == 0)
+                return value;
+        }
+        throw _errorHandler.ParameterConvertError(parameterName, type.Name, new ArgumentException($"Could not convert value '{parameter}'"));
+    }
+
+    public T Parse<T>(string parameter, string parameterName) => (T)Parse(parameter, typeof(T), parameterName);
+    public object Parse(string parameter, Type type, string parameterName)
     {
         try
         {
-            return (T)Convert.ChangeType(parameter, typeof(T), CultureInfo.InvariantCulture);
+            return Convert.ChangeType(parameter, type, CultureInfo.InvariantCulture);
         }
         catch (Exception e)
         {
-            throw _errorHandler.ParameterConvertError(parameterName, nameof(T), e);
+            throw _errorHandler.ParameterConvertError(parameterName, type.Name, e);
         }
     }
 }

@@ -35,6 +35,14 @@ public abstract class ObjectParser
                     .Select(item => ParseProperty(item.Key, item.Value, schema.Required.Contains(item.Key))).ToList();
                 Item.AdditionalPropertiesAllowed = schema.AdditionalPropertiesAllowed;
             }
+            else if(schema.IsPrimitiveType() && schema.CanBeEnum())
+            {
+                if (schema.Type.StartsWith("string"))
+                    Item.Type = SchemaItem.ObjectType.StringEnum;
+                if (schema.Type.StartsWith("int"))
+                    Item.Type = SchemaItem.ObjectType.IntEnum;
+                Item.Enums = schema.EnumsAsStrings();
+            }
 
             Item.Description = schema.Description;
             return Item;

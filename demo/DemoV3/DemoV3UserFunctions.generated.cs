@@ -269,5 +269,48 @@ namespace DemoV3
                 throw;
             }
         }
+        /// <summary>
+        /// auto-generated function invocation.
+        ///</summary>
+        [FunctionName("ListEnumsAsync")]
+        public async Task<IActionResult> ListEnumsAsync(
+            [HttpTrigger(AuthorizationLevel.Function, "get", Route = "api/enums/list")]
+            HttpRequest request)
+        {
+            try {
+                MyEnumType? filterValue = null;
+                if(request.Query.TryGetValue("filter", out var filterQueryValue))
+                    filterValue = _converter.ParseEnum<MyEnumType>(filterQueryValue, "filter");
+                await using var instance = _factory.Instance(request);
+                var result = await instance.ListEnumsAsync(filterValue);
+                return _resultHandler.Json(result, 200);
+            } catch(CaffoaClientError err) {
+                return err.Result;
+            } catch (Exception e) {
+                if(_errorHandler.TryHandleFunctionException(e, out var errorHandlerResult, request, "ListEnums", "api/enums/list", "get"))
+                    return errorHandlerResult;
+                throw;
+            }
+        }
+        /// <summary>
+        /// auto-generated function invocation.
+        ///</summary>
+        [FunctionName("ListEnums2Async")]
+        public async Task<IActionResult> ListEnums2Async(
+            [HttpTrigger(AuthorizationLevel.Function, "get", Route = "api/enums/list/filter/{filter}")]
+            HttpRequest request, string filter)
+        {
+            try {
+                await using var instance = _factory.Instance(request);
+                var result = await instance.ListEnums2Async(_converter.ParseEnum<MyEnumType>(filter, "filter"));
+                return _resultHandler.Json(result, 200);
+            } catch(CaffoaClientError err) {
+                return err.Result;
+            } catch (Exception e) {
+                if(_errorHandler.TryHandleFunctionException(e, out var errorHandlerResult, request, "ListEnums2", "api/enums/list/filter/{filter}", "get", ("filter", filter)))
+                    return errorHandlerResult;
+                throw;
+            }
+        }
     }
 }

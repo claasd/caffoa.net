@@ -23,9 +23,11 @@ public class ModelGenerator
     {
         Directory.CreateDirectory(_service.Model!.TargetFolder);
         var interfaces = objects.Where(o => o.Interface != null).ToList();
-        var classes = objects.Where(o => o.Interface == null).ToList();
-        var enumClasses = objects.Where(o => o.Properties != null && o.Properties.Any(p => p.Enums.Any())).ToList();
-        enumClasses.ForEach(WriteEnumClasses);
+        var classes = objects.Where(o => o.Interface == null && o.Type == SchemaItem.ObjectType.Regular).ToList();
+        var enumClasses = objects.Where(o => o.Type == SchemaItem.ObjectType.IntEnum || o.Type == SchemaItem.ObjectType.StringEnum).ToList();
+        var enumProperties = objects.Where(o => o.Properties != null && o.Properties.Any(p => p.Enums.Any())).ToList();
+        enumProperties.ForEach(WriteEnumClasses);
+        enumClasses.ForEach(WriteEnumClass);
         interfaces.ForEach(WriteModelInterface);
         classes.ForEach(c => WriteModelClass(c, interfaces, classes));
         if (_config.Extensions is false)
@@ -258,7 +260,7 @@ public class ModelGenerator
         foreach (var property in item.Properties!.Where(p => p.Enums.Any()))
         {
             if (_config.EnumsAsStaticValues is false && property.CanBeEnum())
-                WriteEnumClass(property, item.ClassName);
+                WriteEnumPropertyClass(property, item.ClassName);
             else
                 WriteEnumAsStringClass(property, item.ClassName);
         }
@@ -349,7 +351,7 @@ public class ModelGenerator
         File.WriteAllText(Path.Combine(_service.Model!.TargetFolder, fileName), formatted.ToSystemNewLine());
     }
 
-    private void WriteEnumClass(PropertyData property, string className)
+    private void WriteEnumPropertyClass(PropertyData property, string className)
     {
         var file = Templates.GetTemplate("ModelEnumPropertyClassTemplate.tpl");
         var enums = new Dictionary<string, string>();
@@ -391,6 +393,44 @@ public class ModelGenerator
             ["JSONPROPERTY"] = jsonproperty
         };
         string fileName = $"{className}.{propName}.generated.cs";
+        var formatted = file.FormatDict(format);
+        File.WriteAllText(Path.Combine(_service.Model!.TargetFolder, fileName), formatted.ToSystemNewLine());
+    }
+    private void WriteEnumClass(SchemaItem item)
+    {
+        var file = Templates.GetTemplate("ModelEnumClassTemplate.tpl");
+        var enums = new Dictionary<string, string>();
+        foreach (var value in item.Enums)
+        {
+            if (value == null)
+                continue;
+            var cleaned = EnumNameForValue(value);
+            enums[cleaned] = value;
+        }
+        IEnumerable<string> enumDefs;
+        string enumbase = "";
+        string jsonproperty = "";
+        if (item.Type == SchemaItem.ObjectType.StringEnum)
+        {
+            jsonproperty = "StringEnumConverter";
+            enumDefs = enums.Select(item => $"[EnumMember(Value = {item.Value})] {item.Key}");
+        }
+        else
+        {
+            enumbase = $" : {item.Type}";
+            jsonproperty = $"CaffoaNumericEnumConverter<{item.ClassName}>";
+            enumDefs = enums.Select(item => $"{item.Key} = {item.Value}");
+        }
+
+        var format = new Dictionary<string, object>
+        {
+            ["NAMESPACE"] = _service.Model!.Namespace,
+            ["ENUMNAME"] = item.ClassName,
+            ["ENUMS"] = string.Join(",\n        ", enumDefs),
+            ["ENUMBASE"] = enumbase,
+            ["JSONPROPERTY"] = jsonproperty
+        };
+        string fileName = $"{item.ClassName}.generated.cs";
         var formatted = file.FormatDict(format);
         File.WriteAllText(Path.Combine(_service.Model!.TargetFolder, fileName), formatted.ToSystemNewLine());
     }
