@@ -179,7 +179,15 @@ components:
         - enum2
         - enum space
         - enum-sepcial_CHARS
-          
+    enumObject:
+      type: object
+      properties: 
+        single: 
+          $ref: "#/components/schemas/myEnumType"
+        array:
+          type: array
+          items:
+            $ref: "#/components/schemas/myEnumType"
   responses:
     error:
       description: Error

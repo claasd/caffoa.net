@@ -24,6 +24,7 @@ config:
   authorizationLevel: function # function | user | anonymous | system | admin
 #  acceptCaseInvariantEnums: true
   enumsAsStaticValues: false
+  extensions: true
 services:
   - apiPath: tests\base.openapi.yml
     config:

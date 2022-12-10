@@ -76,13 +76,13 @@ public abstract class ObjectParser
         {
             property.TypeName = ClassNameFunc(schema.Reference.Name());
             property.Nullable = !required;
-            property.IsOtherSchema = true;
+            property.IsOtherSchema = !schema.IsPrimitiveType();
         }
         else if (schema.IsArray())
         {
             property.IsArray = true;
             property.TypeName = schema.GetArrayType(ClassNameFunc, _knownTypes);
-            property.InnerTypeIsOtherSchema = schema.Items.Reference != null;
+            property.InnerTypeIsOtherSchema = schema.Items.Reference != null && !schema.Items.IsPrimitiveType();
         }
         else if (schema.AdditionalProperties != null)
         {

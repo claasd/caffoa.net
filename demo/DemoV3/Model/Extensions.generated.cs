@@ -69,5 +69,13 @@ namespace DemoV3.Model {
         public static void UpdateWithTagInfos(this TagInfos item, TagInfos other) {
             item.User = other.User.ToDictionary(entry => entry.Key, entry => entry.Value);
         }
+
+        /// <summary>
+        /// Replaces all fields with the data of the passed object
+        /// </summary>
+        public static void UpdateWithEnumObject(this EnumObject item, EnumObject other) {
+            item.Single = other.Single;
+            item.Array = other.Array.ToList();
+        }
     }
 }
