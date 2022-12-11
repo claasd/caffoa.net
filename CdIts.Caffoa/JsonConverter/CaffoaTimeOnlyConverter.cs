@@ -6,16 +6,25 @@ namespace Caffoa.JsonConverter;
 
 public class CaffoaTimeOnlyConverter : JsonConverter<TimeOnly?>
 {
-    private const string TimeFormat = "HH:mm:ss";
+    public const string TimeFormat = "HH:mm:ss";
+    public const string ParseFormat = "H:m:s";
+    public const string FallbackParseFormat = "H:m";
 
     public override TimeOnly? ReadJson(JsonReader reader, Type objectType, TimeOnly? existingValue,
         bool hasExistingValue, JsonSerializer serializer)
     {
         try
         {
-            var value = reader.Value;
+            var value = reader.Value?.ToString();
             if (reader.TokenType is not JsonToken.Null && value is not null)
-                return TimeOnly.Parse(value.ToString() ?? "", CultureInfo.InvariantCulture);
+            {
+                if (TimeOnly.TryParseExact(value, ParseFormat, out var time))
+                    return time;
+                if (TimeOnly.TryParseExact(value, FallbackParseFormat, out time))
+                    return time;
+                throw new ArgumentException($"Cannot convert '{value}' value to TimeOnly.");
+            }
+
             if (Nullable.GetUnderlyingType(objectType) is not null) // this is a nullable type
                 return null;
             throw new ArgumentException("Cannot convert null value to TimeOnly.");

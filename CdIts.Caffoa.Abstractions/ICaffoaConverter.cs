@@ -12,7 +12,7 @@ public interface ICaffoaConverter
     /// </summary>
     /// <param name="parameter">the input string</param>
     /// <param name="parameterName">the name of the variable as defined in the openapi spec</param>
-    DateTime ParseDate(string parameter, string parameterName);
+    DateTimeOffset ParseDate(string parameter, string parameterName);
     
     /// <summary>
     /// Should parse openapi date format ("2022-01-01") into DateTime
@@ -29,7 +29,7 @@ public interface ICaffoaConverter
     /// </summary>
     /// <param name="parameter">the input string</param>
     /// <param name="parameterName">the name of the variable as defined in the openapi spec</param>
-    DateTime ParseDateTime(string parameter, string parameterName);
+    DateTimeOffset ParseDateTime(string parameter, string parameterName);
 
     /// <summary>
     /// Should parse openapi uuid format string into a Guid

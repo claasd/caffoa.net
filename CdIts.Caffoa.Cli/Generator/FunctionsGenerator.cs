@@ -253,7 +253,7 @@ public class FunctionsGenerator
             return $"_converter.ParseTimeOnly({variableName}, \"{objectName}\")";
         if (typeName == "TimeOnly")
             return $"_converter.ParseTimeSpan({variableName}, \"{objectName}\")";
-        if (typeName == "DateTime")
+        if (typeName == "DateTimeOffset")
             return $"_converter.ParseDateTime({variableName}, \"{objectName}\")";
         if (typeName == "Guid")
             return $"_converter.ParseGuid({variableName}, \"{objectName}\")";

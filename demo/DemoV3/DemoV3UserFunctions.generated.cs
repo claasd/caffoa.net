@@ -205,12 +205,12 @@ namespace DemoV3
             HttpRequest request)
         {
             try {
-                DateTime beforeValue;
+                DateTimeOffset beforeValue;
                 if(request.Query.TryGetValue("before", out var beforeQueryValue))
                     beforeValue = _converter.ParseDateTime(beforeQueryValue, "before");
                 else
                     throw _errorHandler.RequiredQueryParameterMissing("before");
-                DateTime afterValue;
+                DateTimeOffset afterValue;
                 if(request.Query.TryGetValue("after", out var afterQueryValue))
                     afterValue = _converter.ParseDateTime(afterQueryValue, "after");
                 else

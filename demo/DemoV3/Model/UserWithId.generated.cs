@@ -13,7 +13,7 @@ namespace DemoV3.Model {
         public virtual string Id { get; set; }
 
         [JsonProperty("registrationDate")]
-        public virtual DateTime RegistrationDate { get; set; }
+        public virtual DateTimeOffset RegistrationDate { get; set; }
 
         public UserWithId(){}
         public UserWithId(UserWithId other) : base(other) {

@@ -6,9 +6,9 @@
   *  `acceptCaseInvariantEnums`: This will now always treated as true, as Json.NET enums are treated as case-insensitive, and enums are the new default
   *  `removeDeprecated`: the deprecated values for static string for enums are removed
   *  `enumsAsStaticValues` and `checkEnums` was moved into `enumMode` with the possible values
-    * `Default` = uses c# enums, was `enumsAsStaticValues`: `false`, **is the new default for enums**
-    * `StaticValues` = uses static values, was `enumsAsStaticValues`: `true` and `checkEnums`: `true`
-    * `StaticValuesWithoutCheck` = uses static values bus does not check the input, was `enumsAsStaticValues`: `true` and `checkEnums`: `false`
+     * `Default` = uses c# enums, was `enumsAsStaticValues`: `false`, **is the new default for enums**
+     * `StaticValues` = uses static values, was `enumsAsStaticValues`: `true` and `checkEnums`: `true`
+     * `StaticValuesWithoutCheck` = uses static values bus does not check the input, was `enumsAsStaticValues`: `true` and `checkEnums`: `false`
 
 * Change of defaults for several configuration parameters. 
   *  `withCancelation`: `true`
@@ -16,14 +16,17 @@
   *  `parseQueryParameters`: `true`
   *  `genericAdditionalPropertiesType` : `JToken`
   *  `clearGeneratedFiles` : `true`
-  *  `enumMode`: `Default`, was `enumsAsStaticValues`: `false`
+  *  `enumMode`: `Default` (was `enumsAsStaticValues`: `false`)
 
-* static class EnumConverter to convert string to enums and get defined string values from enums
+* For `date-time` objects, the `DateTimeOffset` class is now used instead of `DateTime`.
+* new static class `EnumConverter` to convert string to enums and get defined string values from enums via `enumName.Value()`
 * New interface method in `ICaffoaConverter` to convert strings to enums.
+* `ParseDate` and `ParseDateTime` interface method in `ICaffoaConverter` now return `DateTimeOffset`
 * Dropped support for enums on number types (double/float)
 
 ### other changes
 * Allow enums in arrays, if the enum is declared as it's own schema elements
+* Support for nullable DateOnly and TimeOnly values
 
 ### 1.9.0
 * Refactoring, removed code smells

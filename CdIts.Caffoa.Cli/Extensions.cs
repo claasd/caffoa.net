@@ -71,7 +71,7 @@ public static class Extensions
         return type switch
         {
             "string" when format == "uuid" => $"Guid{suffix}",
-            "string" when format is "date-time" => $"DateTime{suffix}",
+            "string" when format is "date-time" => $"DateTimeOffset{suffix}",
             "string" when format is "date" => $"DateOnly{suffix}",
             "string" when format is "time" => $"TimeOnly{suffix}",
             "integer" when format == "int64" => $"long{suffix}",

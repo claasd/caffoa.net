@@ -25,7 +25,7 @@ namespace DemoV1a.Model {
         [Obsolete]
         [JsonConverter(typeof(CaffoaDateConverter))]
         [JsonProperty("birthdate")]
-        public virtual DateTime? Birthdate { get; set; }
+        public virtual DateTimeOffset? Birthdate { get; set; }
 
         [JsonProperty("emails")]
         public virtual ICollection<string> Emails { get; set; } = new List<string>();
@@ -96,7 +96,7 @@ namespace DemoV1a.Model {
         public virtual string Id { get; set; }
 
         [JsonProperty("registrationDate")]
-        public virtual DateTime RegistrationDate { get; set; }
+        public virtual DateTimeOffset RegistrationDate { get; set; }
 
         public L1UserWithId(){}
         public L1UserWithId(L1UserWithId other) {

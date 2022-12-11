@@ -35,7 +35,7 @@ public class PropertyFormatter
     {
         var name = _net60
             ? _property.TypeName
-            : _property.TypeName.Replace("DateOnly", "DateTime").Replace("TimeOnly", "TimeSpan");
+            : _property.TypeName.Replace("DateOnly", "DateTimeOffset").Replace("TimeOnly", "TimeSpan");
         if (_property.IsArray)
             return $"ICollection<{name}>";
         if (_property.IsMap)
@@ -48,7 +48,7 @@ public class PropertyFormatter
     {
         var name = _net60
             ? _property.TypeName
-            : _property.TypeName.Replace("DateOnly", "DateTime").Replace("TimeOnly", "TimeSpan");
+            : _property.TypeName.Replace("DateOnly", "DateTimeOffset").Replace("TimeOnly", "TimeSpan");
         if (_property.IsArray)
             return $" = new List<{name}>();";
         if (_property.IsMap)
@@ -56,11 +56,11 @@ public class PropertyFormatter
         if (_property.Default != null)
         {
             if (name == "DateOnly")
-                return $" = DateTime.Parse({_property.Default});";
+                return $" = DateOnly.Parse({_property.Default});";
             if (name == "TimeOnly")
                 return $" = TimeOnly.Parse({_property.Default});";
-            if (name == "DateTime")
-                return $" = DateTime.Parse({_property.Default});";
+            if (name == "DateTimeOffset")
+                return $" = DateTimeOffset.Parse({_property.Default});";
             if (name == "TimeSpan")
                 return $" = TimeSpan.Parse({_property.Default});";
             return $" = {_property.Default};";

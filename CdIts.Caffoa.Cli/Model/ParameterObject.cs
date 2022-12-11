@@ -29,6 +29,6 @@ public class ParameterObject
 
     public string GetTypeName(bool useDateOnly)
     {
-        return useDateOnly ? TypeName : TypeName.Replace("DateOnly", "DateTime");
+        return useDateOnly ? TypeName : TypeName.Replace("DateOnly", "DateTimeOffset");
     }
 }

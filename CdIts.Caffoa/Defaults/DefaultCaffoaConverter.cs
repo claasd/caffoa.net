@@ -16,11 +16,11 @@ public class DefaultCaffoaConverter : ICaffoaConverter
         _errorHandler = errorHandler;
     }
 
-    public DateTime ParseDate(string parameter, string parameterName)
+    public DateTimeOffset ParseDate(string parameter, string parameterName)
     {
         try
         {
-            return DateTime.ParseExact(parameter, "yyyy-MM-dd", CultureInfo.InvariantCulture);
+            return DateTimeOffset.ParseExact(parameter, "yyyy-MM-dd", CultureInfo.InvariantCulture);
         }
         catch (Exception e)
         {
@@ -64,11 +64,11 @@ public class DefaultCaffoaConverter : ICaffoaConverter
     }
 #endif
 
-    public DateTime ParseDateTime(string parameter, string parameterName)
+    public DateTimeOffset ParseDateTime(string parameter, string parameterName)
     {
         try
         {
-            return DateTime.Parse(parameter);
+            return DateTimeOffset.Parse(parameter);
         }
         catch (Exception e)
         {

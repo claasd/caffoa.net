@@ -72,14 +72,14 @@ namespace DemoV1a
         /// 200 -> return user object
         /// 400 -> Error
         /// </summary>
-        Task<IEnumerable<L1User>> UsersGetByBirthdateAsync(DateTime date, CancellationToken cancellationToken = default);
+        Task<IEnumerable<L1User>> UsersGetByBirthdateAsync(DateTimeOffset date, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// get
         /// 200 -> return user object
         /// 400 -> Error
         /// </summary>
-        Task<IEnumerable<L1User>> UsersSearchByDateAsync(DateTime before, DateTime after, int? maxResults = null, CancellationToken cancellationToken = default);
+        Task<IEnumerable<L1User>> UsersSearchByDateAsync(DateTimeOffset before, DateTimeOffset after, int? maxResults = null, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// 200 -> list of elements that have the requested tag
