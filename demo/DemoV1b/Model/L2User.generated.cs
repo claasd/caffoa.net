@@ -95,6 +95,9 @@ namespace DemoV1b.Model {
         [JsonProperty("preferredContactTime")]
         public virtual TimeSpan PreferredContactTime { get; set; } = TimeSpan.Parse("12:00");
 
+        [JsonProperty("lastSessionLength")]
+        public virtual TimeSpan LastSessionLength { get; set; }
+
         public L2User(){}
         public L2User(L2User other) {
             Name = other.Name;
@@ -106,6 +109,7 @@ namespace DemoV1b.Model {
             Role = other.Role;
             AgeGroup = other.AgeGroup;
             PreferredContactTime = other.PreferredContactTime;
+            LastSessionLength = other.LastSessionLength;
         }
         public L2User(L2UserWithId other){
             Name = other.Name;
@@ -117,6 +121,7 @@ namespace DemoV1b.Model {
             Role = other.Role;
             AgeGroup = other.AgeGroup;
             PreferredContactTime = other.PreferredContactTime;
+            LastSessionLength = other.LastSessionLength;
         }
         public L2User ToL2User() => new L2User(this);
         public virtual L2AnyUser ToL2AnyUser() => ToL2User();

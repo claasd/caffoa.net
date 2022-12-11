@@ -28,6 +28,7 @@ namespace DemoV3.Model {
             item.Role = (User.RoleValue)other.Role;
             item.AgeGroup = other.AgeGroup is null ? null : (User.AgeGroupValue)other.AgeGroup;
             item.PreferredContactTime = other.PreferredContactTime;
+            item.LastSessionLength = other.LastSessionLength;
         }
 
         /// <summary>

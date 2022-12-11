@@ -111,6 +111,9 @@ paths:
                               format: time
                               default: '12:00'
                               x-caffoa-converter: CustomTimeConverter
+                            lastSessionLength:
+                              type: string
+                              format: duration
                         - type: object
                           properties:
                             id:
@@ -240,6 +243,9 @@ paths:
                       format: time
                       default: '12:00'
                       x-caffoa-converter: CustomTimeConverter
+                    lastSessionLength:
+                      type: string
+                      format: duration
                 - required:
                     - type
                     - email
@@ -347,6 +353,9 @@ paths:
                               format: time
                               default: '12:00'
                               x-caffoa-converter: CustomTimeConverter
+                            lastSessionLength:
+                              type: string
+                              format: duration
                         - type: object
                           properties:
                             id:
@@ -463,6 +472,9 @@ paths:
                       format: time
                       default: '12:00'
                       x-caffoa-converter: CustomTimeConverter
+                    lastSessionLength:
+                      type: string
+                      format: duration
                 - required:
                     - type
                     - email
@@ -568,6 +580,9 @@ paths:
                             format: time
                             default: '12:00'
                             x-caffoa-converter: CustomTimeConverter
+                          lastSessionLength:
+                            type: string
+                            format: duration
                       - type: object
                         properties:
                           id:
@@ -679,6 +694,9 @@ paths:
                             format: time
                             default: '12:00'
                             x-caffoa-converter: CustomTimeConverter
+                          lastSessionLength:
+                            type: string
+                            format: duration
                       - type: object
                         properties:
                           id:
@@ -791,6 +809,9 @@ paths:
                   format: time
                   default: '12:00'
                   x-caffoa-converter: CustomTimeConverter
+                lastSessionLength:
+                  type: string
+                  format: duration
       responses:
         '200':
           description: User was updated
@@ -875,6 +896,9 @@ paths:
                         format: time
                         default: '12:00'
                         x-caffoa-converter: CustomTimeConverter
+                      lastSessionLength:
+                        type: string
+                        format: duration
                   - type: object
                     properties:
                       id:
@@ -971,6 +995,9 @@ paths:
                         format: time
                         default: '12:00'
                         x-caffoa-converter: CustomTimeConverter
+                      lastSessionLength:
+                        type: string
+                        format: duration
                   - type: object
                     properties:
                       id:
@@ -1104,6 +1131,9 @@ paths:
                       format: time
                       default: '12:00'
                       x-caffoa-converter: CustomTimeConverter
+                    lastSessionLength:
+                      type: string
+                      format: duration
         '400':
           description: Error
           content:
@@ -1219,6 +1249,9 @@ paths:
                       format: time
                       default: '12:00'
                       x-caffoa-converter: CustomTimeConverter
+                    lastSessionLength:
+                      type: string
+                      format: duration
         '400':
           description: Error
           content:
@@ -1358,6 +1391,9 @@ paths:
                             format: time
                             default: '12:00'
                             x-caffoa-converter: CustomTimeConverter
+                          lastSessionLength:
+                            type: string
+                            format: duration
                       - required:
                           - type
                           - email
@@ -1492,47 +1528,7 @@ paths:
             - enum space
             - enum-sepcial_CHARS
           type: string
-components: { }uid
-components: { }          properties:
-                      id:
-                        type: string
-                      registrationDate:
-                        type: string
-                        format: date-time
-                properties:
-                  name:
-                    type: string
-                    description: A fancy string with description
-                  address:
-                    required:
-                      - street
-                      - postalCode
-                      - city
-                      - country
-                    type: object
-                    properties:
-                      street:
-                        type: string
-                      street.extra:
-                        type: string
-                        nullable: true
-                      postalCode:
-                        type: string
-                      city:
-                        type: string
-                      country:
-                        type: string
-                      flags:
-                        additionalProperties:
-                          type: object
-                          properties:
-                            id:
-                              type: string
-                            desc:
-                              type: string
-                          additionalProperties: false
-                  birthdate:
-                    type: string
+components: { }string
                     format: date
                     nullable: true
                     deprecated: true

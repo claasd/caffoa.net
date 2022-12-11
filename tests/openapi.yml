@@ -62,7 +62,9 @@ components:
           format: time
           default: "12:00"
           x-caffoa-converter: CustomTimeConverter
-
+        lastSessionLength:
+          type: string
+          format: duration
       required:
         - type
         - name

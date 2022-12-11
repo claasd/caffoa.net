@@ -28,6 +28,7 @@ namespace DemoV1a.Model {
             item.Role = other.Role;
             item.AgeGroup = other.AgeGroup;
             item.PreferredContactTime = other.PreferredContactTime;
+            item.LastSessionLength = other.LastSessionLength;
         }
 
         /// <summary>
@@ -51,6 +52,7 @@ namespace DemoV1a.Model {
             item.Role = other.Role;
             item.AgeGroup = other.AgeGroup;
             item.PreferredContactTime = other.PreferredContactTime;
+            item.LastSessionLength = other.LastSessionLength;
             item.Id = other.Id;
             item.RegistrationDate = other.RegistrationDate;
         }
@@ -68,6 +70,7 @@ namespace DemoV1a.Model {
             item.Role = other.Role;
             item.AgeGroup = other.AgeGroup;
             item.PreferredContactTime = other.PreferredContactTime;
+            item.LastSessionLength = other.LastSessionLength;
         }
 
         /// <summary>

@@ -4,8 +4,10 @@ using System.Runtime.Serialization;
 using Caffoa;
 using Caffoa.Defaults;
 using Caffoa.Extensions;
+using CdIts.Caffoa.Tests.TestClasses;
 using FluentAssertions;
 using Microsoft.Extensions.Logging.Abstractions;
+using Newtonsoft.Json;
 using NUnit.Framework;
 using EnumConverter = Caffoa.EnumConverter;
 
@@ -156,5 +158,17 @@ public class CaffoaConverterTests
     {
         var act = ()=> EnumConverter.FromString<TestEnumType>(input);
         act.Should().Throw<InvalidEnumArgumentException>();
+    }
+
+    [Test]
+    public void TestDuration()
+    {
+        var duration = JsonConvert.SerializeObject(new DurationTestClass()
+        {
+            Duration = TimeSpan.FromMinutes(920)
+        });
+        Console.WriteLine(duration);
+        var obj2 = JsonConvert.DeserializeObject<DurationTestClass>(duration);
+        obj2.Duration.TotalMinutes.Should().Be(920);
     }
 }
