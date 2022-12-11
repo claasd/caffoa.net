@@ -128,33 +128,33 @@ The file will contain a partial class, with all properties of the schema. You ca
 * The schema must be defined in the components section.
 * Furthermore, schemas may not be nested without reference.
 (You can easily overcome this restriction by defining more schemas in the components section and have them reference each other.)
-* allOf is implemented as inheritance, and therefore can only handle allOf with one reference and one direct configuration
+* when using inheritanceMode, allOf is implemented as inheritance, and therefore can only handle allOf with one reference and one direct configuration. When using inheritanceMode=false, you can use multiple elements in allOf
 
 ## Advanced configuration options
-There are multiple optional configuration options that you can use:
+There are multiple optional configuration options that you can use (shown values represent the default):
+
+Parameters of the legacy 1.x interface can be found in the [old readme](https://github.com/claasd/caffoa.net/blob/v1.9.0/readme.md#advanced-configuration-options)
+
 ```yaml
 config:
-  authorizationLevel: function # function | anonymous | system | admin
-  clearGeneratedFiles: true # default is false, removes all files below the working directory, that end in .generated.cs
+  authorizationLevel: function #  function | anonymous | system | admin
+  clearGeneratedFiles: true # default is true, removes all files below the working directory, that end in .generated.cs
   duplicates: override # "once" or "override". once will not generate the same class name twice, even if it occurs in different API Specs.
-  prefix: "Pre" # A prefix that is added to all model classes
-  suffix: "Suf" # A suffix that is added to all model classes
-  enumsAsStaticValues: false # defaults to true for backward compatibility in caffoa 1.x
-  checkEnums: true # set to false to disable the generated checks for enums in models. Only applies if enumsAsStaticValues is true
-  acceptCaseInvariantEnums: true # if set to true, string enums checks will be case invariant. Only applies if enumsAsStaticValues is true, otherwise checks will be case invariant as fallback automatically
-  routePrefix: "api/" # a route prefix that is added to all routes in function
+  prefix: "" # A prefix that is added to all model classes
+  suffix: "" # A suffix that is added to all model classes
+  enumMode: Default # Default | StaticValues | StaticValuesWithoutCheck. Default creates C# enums, others modes create static values with or without check for allowed values
+  routePrefix: "" # a route prefix that is added to all routes in function, e.g. 'frontend/'
   useDateOnly: false # you can set this to true if you use net6.0 and want date types to be de-serialized as DateOnly instead of DateTime.
   splitByTag: false # if set to true, multiple function files and interfaces will be generated, based on the first tag of each path item
-  parsePathParameters: true # if set to true, the parameter parsing is not left to Functions, but is done by caffoa, opening up the possibility to give back better error messages
-  parseQueryParameters: true # if set to true, caffoa will parse required and optional parameters that are defined for query
+  parsePathParameters: true # if set to false, the parameter parsing is left to Functions runtime
+  parseQueryParameters: true # if set to false, query parameters will not be parsed, you have to do it yourself
   genericAdditionalProperties: false # if set to true, a dictionary for additional properties will be generated if additionalProperties is set to true or not set at all (true is default)
-  genericAdditionalPropertiesType: JObject # defaults to JObject, but a different type can be used for the additionalProperties dictionary
-  withCancellation: false # if set to true, caffoa will add a CancellationToken to all interface methods. It will be triggered when the HTTP Request gets aborted (for example by the client).
+  genericAdditionalPropertiesType: JToken  # different type can be used for the additionalProperties dictionary
+  withCancellation: true # if set to false, caffoa will not add a CancellationToken to all interface methods. It will be triggered when the HTTP Request gets aborted (for example by the client).
   disposable: false # if set to true, Interfaces will derive from IAsyncDisposable, and functions will use `await using var instance = _factory.Instance(..);`
-  useInheritance: false # default is true for caffoa 1.x. When set to false, instead of inheritance, allOf will create a standalone object with converters to objects that are referenced by allOf. False will be the default in caffoa 2.x
-  imports: # a list of imports that will be added to most generated classes
-    - MySpecialNamespace
-  requestBodyType: # you can override the request body type for specific operations or methods
+  useInheritance: false # When set to false, instead of inheritance, allOf will create a standalone object with converters to objects that are referenced by allOf.
+  imports: [] # a list of imports that will be added to most generated classes
+  requestBodyType:  # Default is NULL you can override the request body type for specific operations or methods
     type: JObject # the body type that JSON should be de-serialized to
     import: Newtonsoft.Json.Linq # optional import for the type
     filter: # filter for the operations/methods where this type should be used
@@ -163,39 +163,37 @@ config:
         - user-patch
       methods: # a optional list of specific methods that should use this type. All operations that use this method will use the specified type
         - patch
-      prefix: patch # operations where the operation id starts with this prefix. default ist null
-  durableClient: # inject "[DurableClient] IDurableOrchestrationClient durableClient" into functions 
+      prefix: patch # optinal operations where the operation id starts with this prefix. default ist null
+  durableClient: # default is null. inject "[DurableClient] IDurableOrchestrationClient durableClient" into functions 
     all: true # optional, uses this type for all functions
     operations: # a optional list of specific operations that should get a durableClient
       - long-running-function
     prefix: import # add a durable client to all methods where the operation id starts with this prefix defult ist null
-  functionNamePrefix: Pre_ # adds a prefix to all function names (Not interfaces). Useful if you have multiple APIs in one function that have identical operation IDs
-  removeDeprecated: false # if set to true, no backward compatibility code will be generated
-  extensions: true # default is true, set to false to not generate extension methods for models
-  asyncArrays: true # default is false. if set to true, functions that return arrays will use IAsyncEnumerable instead if Task<IEnumerable>
+  functionNamePrefix: "" # adds a prefix to all function names (Not interfaces). Useful if you have multiple APIs in one function that have identical operation IDs
+  extensions: true # set to false to not generate extension methods for models
+  asyncArrays: false # if set to true, functions that return arrays will use IAsyncEnumerable instead if Task<IEnumerable>
 services:
   - apiPath: userservice.openapi.yml
-    config:
-      - anyValueFromGlobalConfig: value # overwrite global config for this API
+    config: null # optional, can be an config option. That option is then overriden for this api only
     function:
       name: MyClassName
       namespace: MyNamespace
       targetFolder: ./output
-      functionsName: MyFunctions # name of the functions class. defaults to {name}Functions 
-      interfaceName: IMyInterface # name of the interface class. defaults to I{name}Service. 
-      interfaceNamespace: MyInterfaceNamespace # defaults to 'namespace'. If given, the interface uses this namespace
-      interfaceTargetFolder: ./output/shared # defaults to 'targetFolder'. If given, the interface is written to this folder
+      functionsName: null # name of the functions class. defaults to {name}Functions 
+      interfaceName: null # name of the interface class. defaults to I{name}Service. 
+      interfaceNamespace: null # defaults to 'namespace'. If given, the interface uses this namespace
+      interfaceTargetFolder: null # defaults to 'targetFolder'. If given, the interface is written to this folder
     model:
       namespace: MyNamespace.Model
       targetFolder: ./output/Model
       # you can exclude objects from generation:
-      excludes:
+      excludes: # default is an empty array
        - objectToExclude
       # you can also generate only some classes
-      include:
+      include: # default is an empty array. If includes are set, excludes are ignored
         - objectToInclude
         - otherObjectToInclude
-      imports: # imports that are added in addition to the config section
+      imports: # imports that are added in addition to the config section. Default is an empty array
         - someImport
 ```
 

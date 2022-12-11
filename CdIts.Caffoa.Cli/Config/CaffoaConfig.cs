@@ -2,8 +2,6 @@ namespace CdIts.Caffoa.Cli.Config;
 
 public class CaffoaConfig
 {
-    public bool? CheckEnums { get; set; }
-    public bool? AcceptCaseInvariantEnums { get; set; }
     public string? Prefix { get; set; }
     public string? Suffix { get; set; }
     public string? RoutePrefix { get; set; }
@@ -15,7 +13,7 @@ public class CaffoaConfig
     public bool? GenericAdditionalProperties { get; set; }
 
     public string? GenericAdditionalPropertiesType { get; set; }
-    public string GetGenericAdditionalPropertiesType() => GenericAdditionalPropertiesType ?? "JObject";
+    public string GetGenericAdditionalPropertiesType() => GenericAdditionalPropertiesType ?? "JToken";
 
     public List<string>? Imports { get; set; }
     public List<RequestBodyTypeConfig>? RequestBodyType { get; set; }
@@ -27,8 +25,15 @@ public class CaffoaConfig
     public bool? UseInheritance { get; set; }
     public string? AuthorizationLevel { get; set; }
     public bool? AsyncArrays { get; set; }
-    public bool? EnumsAsStaticValues { get; set; }
 
+    public enum EnumCreationMode
+    {
+        Default,
+        StaticValues,
+        StaticValuesWithoutCheck
+    }
+    public EnumCreationMode? EnumMode { get; set; }
+    public EnumCreationMode GetEnumCreationMode() => EnumMode ?? EnumCreationMode.Default;
     public CaffoaGlobalConfig MergedWith(CaffoaGlobalConfig general)
     {
         return new CaffoaGlobalConfig()
@@ -37,7 +42,6 @@ public class CaffoaConfig
             Prefix = Prefix ?? general.Prefix,
             Suffix = Suffix ?? general.Suffix,
             RequestBodyType = RequestBodyType ?? general.RequestBodyType,
-            CheckEnums = CheckEnums ?? general.CheckEnums,
             RoutePrefix = RoutePrefix ?? general.RoutePrefix,
             UseDateOnly = UseDateOnly ?? general.UseDateOnly,
             Duplicates = general.Duplicates,
@@ -53,12 +57,10 @@ public class CaffoaConfig
             Disposable = Disposable ?? general.Disposable,
             GenerateResolvedApiFile = GenerateResolvedApiFile ?? general.GenerateResolvedApiFile,
             Extensions = Extensions ?? general.Extensions,
-            RemoveDeprecated = general.RemoveDeprecated,
             UseInheritance = UseInheritance ?? general.UseInheritance,
-            AcceptCaseInvariantEnums = AcceptCaseInvariantEnums ?? general.AcceptCaseInvariantEnums,
             AuthorizationLevel = AuthorizationLevel ?? general.AuthorizationLevel,
             AsyncArrays = AsyncArrays ?? general.AsyncArrays,
-            EnumsAsStaticValues = EnumsAsStaticValues ?? general.EnumsAsStaticValues
+            EnumMode = EnumMode ?? general.EnumMode
         };
     }
 }

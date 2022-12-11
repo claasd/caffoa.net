@@ -23,14 +23,7 @@ try
         {
             Config = new CaffoaGlobalConfig(false)
             {
-                Disposable = null,
-                RemoveDeprecated = true,
-                WithCancellation = true,
-                ClearGeneratedFiles = true,
-                ParsePathParameters = true,
-                ParseQueryParameters = true,
                 SplitByTag = null,
-                EnumsAsStaticValues = false
             }
         };
         defaultConfig.Services.Add(new ServiceConfig()

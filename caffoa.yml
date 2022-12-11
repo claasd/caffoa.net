@@ -3,14 +3,9 @@ config:
   duplicates: once # once, overwrite (default)
   routePrefix: api/
   useDateOnly: false
-  acceptCaseInvariantEnums: true
-#  useInheritance: false
   splitByTag: true # if set to true, multiple function files and interfaces will be generated, based on the first tag of each path item
-  parsePathParameters: true # if set to true, the parameter parsing is not left to Functions, but is done by caffoa, opening up the possibility to give back better error messages
-  parseQueryParameters: true # if set to true, caffoa will parse required and optional parameters that are defined for query
   genericAdditionalProperties: false # if set to true, a dictionary for additional properties will be generated
   genericAdditionalPropertiesType: object
-  removeDeprecated: true
   asyncArrays: false
   useInheritance: true
   requestBodyType: # overwrite the JSON type that is passed to the method for some operations
@@ -22,9 +17,8 @@ config:
         methods:
           - patch
   authorizationLevel: function # function | user | anonymous | system | admin
-#  acceptCaseInvariantEnums: true
-  enumsAsStaticValues: false
   extensions: true
+  enumMode: Default
 services:
   - apiPath: tests\base.openapi.yml
     config:
@@ -37,11 +31,10 @@ services:
   - apiPath: tests\base.openapi.yml
     model:
       namespace: DemoV3.Model
-      targetFolder: ./demo/DemoV3/Model/XY
+      targetFolder: ./demo/DemoV3/Model
 
   - apiPath: tests\openapi.yml
     config:
-#      functionNamePrefix: Func
       generateResolvedApiFile: true
       disposable: true
       imports: 
@@ -56,4 +49,55 @@ services:
       targetFolder: demo/DemoV3
       namespace: DemoV3
       name: DemoV3
+
+  - apiPath: tests\base.openapi.yml
+    config:
+      prefix: L1
+    model:
+      namespace: DemoV1a.Model.Base
+      targetFolder: ./demo/DemoV1a/Model/Base
+      
+  - apiPath: tests\openapi.yml
+    config:
+      useInheritance: false
+      enumMode: StaticValues
+      imports:
+        - DemoV1a.Model.Base
+      durableClient:
+        operations:
+          - long-running-function
+      prefix: L1
+    model:
+      namespace: DemoV1a.Model
+      targetFolder: ./demo/DemoV1a/Model
+    function:
+      targetFolder: demo/DemoV1a
+      namespace: DemoV1a
+      name: DemoV1a
+
+  - apiPath: tests\base.openapi.yml
+    config:
+      prefix: L2
+    model:
+      namespace: DemoV1b.Model.Base
+      targetFolder: ./demo/DemoV1b/Model/Base
+
+  - apiPath: tests\openapi.yml
+    config:
+      useInheritance: false
+      enumMode: StaticValuesWithoutCheck
+      imports:
+        - DemoV1b.Model.Base
+      durableClient:
+        operations:
+          - long-running-function
+      prefix: L2
+    model:
+      namespace: DemoV1b.Model
+      targetFolder: ./demo/DemoV1b/Model
+    function:
+      targetFolder: demo/DemoV1b
+      namespace: DemoV1b
+      name: DemoV1b
+      
       

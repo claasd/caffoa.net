@@ -1,7 +1,29 @@
 # caffoa changelog
-### 1.10.0
+## 2.0.0
+### Breaking Changes:
+* use of c# enums for query and path parameters, if the enum is declared as it's own schema elements
+* Removed parameters:
+  *  `acceptCaseInvariantEnums`: This will now always treated as true, as Json.NET enums are treated as case-insensitive, and enums are the new default
+  *  `removeDeprecated`: the deprecated values for static string for enums are removed
+  *  `enumsAsStaticValues` and `checkEnums` was moved into `enumMode` with the possible values
+    * `Default` = uses c# enums, was `enumsAsStaticValues`: `false`, **is the new default for enums**
+    * `StaticValues` = uses static values, was `enumsAsStaticValues`: `true` and `checkEnums`: `true`
+    * `StaticValuesWithoutCheck` = uses static values bus does not check the input, was `enumsAsStaticValues`: `true` and `checkEnums`: `false`
+
+* Change of defaults for several configuration parameters. 
+  *  `withCancelation`: `true`
+  *  `parsePathParameters`: `true`
+  *  `parseQueryParameters`: `true`
+  *  `genericAdditionalPropertiesType` : `JToken`
+  *  `clearGeneratedFiles` : `true`
+  *  `enumMode`: `Default`, was `enumsAsStaticValues`: `false`
+
+* static class EnumConverter to convert string to enums and get defined string values from enums
+* New interface method in `ICaffoaConverter` to convert strings to enums.
+* Dropped support for enums on number types (double/float)
+
+### other changes
 * Allow enums in arrays, if the enum is declared as it's own schema elements
-* Allow enums in query and path parameters, if the enum is declared as it's own schema elements
 
 ### 1.9.0
 * Refactoring, removed code smells

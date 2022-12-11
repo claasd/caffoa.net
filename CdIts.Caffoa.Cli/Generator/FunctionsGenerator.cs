@@ -49,7 +49,7 @@ public class FunctionsGenerator
         if (endpoints.FirstOrDefault(e => e.RequestBodyType is SelectionBodyModel) != null)
             imports.Add("Newtonsoft.Json.Linq");
         var extraVars = new List<AdditionalInterfaceModel>();
-        if (_config.ParsePathParameters is true || _config.ParseQueryParameters is true)
+        if (_config.ParsePathParameters is not false || _config.ParseQueryParameters is not false)
         {
             extraVars.Add(new AdditionalInterfaceModel()
             {
@@ -104,7 +104,7 @@ public class FunctionsGenerator
 
         List<string> pathParams;
         var filteredParams = endpoint.Parameters.Where(p => !p.IsQueryParameter);
-        if (_config.ParsePathParameters is true)
+        if (_config.ParsePathParameters is not false)
             pathParams = filteredParams.Select(p => $", string {p.Name}").ToList();
         else
             pathParams = filteredParams.Select(p =>
@@ -136,7 +136,7 @@ public class FunctionsGenerator
 
     private string GenerateQueryVariables(EndPointModel endpoint)
     {
-        if (_config.ParseQueryParameters is not true)
+        if (_config.ParseQueryParameters is false)
             return "";
         var parameters = new List<string>();
         foreach (var parameter in endpoint.Parameters.Where(p => p.IsQueryParameter))
@@ -186,12 +186,12 @@ public class FunctionsGenerator
         {
             var caseParams = new List<string>(callParams);
             caseParams.Add($"_jsonParser.ToObject<{type}>(jObject)");
-            if (_config.ParseQueryParameters is true)
+            if (_config.ParseQueryParameters is not false)
             {
                 caseParams.AddRange(endpoint.QueryParameters().Select(p => $"{p.Name}Value"));
             }
 
-            if (_config.WithCancellation is true)
+            if (_config.WithCancellation is not false)
             {
                 caseParams.Add("request.HttpContext.RequestAborted");
             }
@@ -215,12 +215,12 @@ public class FunctionsGenerator
             callParams.Add($"await _jsonParser.Parse<{simple.TypeName}>(request.Body)");
         else if (endpoint.HasRequestBody)
             callParams.Add($"request.Body");
-        if (_config.ParseQueryParameters is true)
+        if (_config.ParseQueryParameters is not false)
         {
             callParams.AddRange(endpoint.QueryParameters().Select(p => $"{p.Name}Value"));
         }
 
-        if (_config.WithCancellation is true)
+        if (_config.WithCancellation is not false)
         {
             callParams.Add("request.HttpContext.RequestAborted");
         }
@@ -232,7 +232,7 @@ public class FunctionsGenerator
     {
         var filtered = endpoint.Parameters.Where(p => !p.IsQueryParameter).ToList();
         List<string> result;
-        if (_config.ParsePathParameters is true)
+        if (_config.ParsePathParameters is not false)
             result = filtered.Select(p => FormatConversion(p.GetTypeName(_config), p.Name, p.Name, p.IsEnum)).ToList();
         else
             result = filtered.Select(p => p.Name).ToList();

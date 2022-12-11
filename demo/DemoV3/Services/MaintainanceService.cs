@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using DemoV3.Model;
 using Microsoft.AspNetCore.Http;
@@ -8,7 +9,7 @@ namespace DemoV3.Services;
 
 public class MaintainanceService : IDemoV3MaintainanceService
 {
-    public async Task<LongRunningfunctionStatus> LongRunningFunctionAsync(IDurableOrchestrationClient orchestrationClient, Guid id)
+    public async Task<LongRunningfunctionStatus> LongRunningFunctionAsync(IDurableOrchestrationClient orchestrationClient, Guid id, CancellationToken cancellationToken = default)
     {
         await Task.Yield();
         return new LongRunningfunctionStatus() { Status = LongRunningfunctionStatus.StatusValue.Running };

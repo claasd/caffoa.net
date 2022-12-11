@@ -50,7 +50,7 @@ namespace DemoV3
                 if(request.Query.TryGetValue("limit", out var limitQueryValue))
                     limitValue = _converter.Parse<int>(limitQueryValue, "limit");
                 await using var instance = _factory.Instance(request);
-                var result = await instance.UsersGetAsync(offsetValue, limitValue);
+                var result = await instance.UsersGetAsync(offsetValue, limitValue, request.HttpContext.RequestAborted);
                 return _resultHandler.Json(result, 200);
             } catch(CaffoaClientError err) {
                 return err.Result;
@@ -74,8 +74,8 @@ namespace DemoV3
                 var discriminator = jObject["type"]?.ToString();
                 var task = discriminator switch
                 {
-                    "simple" => instance.UserPostAsync(_jsonParser.ToObject<User>(jObject)),
-                    "guest" => instance.UserPostAsync(_jsonParser.ToObject<GuestUser>(jObject)),
+                    "simple" => instance.UserPostAsync(_jsonParser.ToObject<User>(jObject), request.HttpContext.RequestAborted),
+                    "guest" => instance.UserPostAsync(_jsonParser.ToObject<GuestUser>(jObject), request.HttpContext.RequestAborted),
                     _ => throw _errorHandler.WrongContent("type", discriminator, new [] { "simple", "guest" })
                 };
                 var result = await task;
@@ -102,8 +102,8 @@ namespace DemoV3
                 var discriminator = jObject["type"]?.ToString();
                 var task = discriminator switch
                 {
-                    "simple" => instance.UserPutAsync(userId, _jsonParser.ToObject<User>(jObject)),
-                    "guest" => instance.UserPutAsync(userId, _jsonParser.ToObject<GuestUser>(jObject)),
+                    "simple" => instance.UserPutAsync(userId, _jsonParser.ToObject<User>(jObject), request.HttpContext.RequestAborted),
+                    "guest" => instance.UserPutAsync(userId, _jsonParser.ToObject<GuestUser>(jObject), request.HttpContext.RequestAborted),
                     _ => throw _errorHandler.WrongContent("type", discriminator, new [] { "simple", "guest" })
                 };
                 var (result, code) = await task;
@@ -126,7 +126,7 @@ namespace DemoV3
         {
             try {
                 await using var instance = _factory.Instance(request);
-                var result = await instance.UserPatchAsync(userId, await _jsonParser.Parse<JObject>(request.Body));
+                var result = await instance.UserPatchAsync(userId, await _jsonParser.Parse<JObject>(request.Body), request.HttpContext.RequestAborted);
                 return _resultHandler.Json(result, 200);
             } catch(CaffoaClientError err) {
                 return err.Result;
@@ -146,7 +146,7 @@ namespace DemoV3
         {
             try {
                 await using var instance = _factory.Instance(request);
-                var result = await instance.UserGetAsync(userId);
+                var result = await instance.UserGetAsync(userId, request.HttpContext.RequestAborted);
                 return _resultHandler.Json(result, 200);
             } catch(CaffoaClientError err) {
                 return err.Result;
@@ -166,7 +166,7 @@ namespace DemoV3
         {
             try {
                 await using var instance = _factory.Instance(request);
-                await instance.UploadImageAsync(userId, request.Body);
+                await instance.UploadImageAsync(userId, request.Body, request.HttpContext.RequestAborted);
                 return _resultHandler.StatusCode(201);
             } catch(CaffoaClientError err) {
                 return err.Result;
@@ -186,7 +186,7 @@ namespace DemoV3
         {
             try {
                 await using var instance = _factory.Instance(request);
-                var result = await instance.UsersGetByBirthdateAsync(_converter.ParseDateTime(date, "date"));
+                var result = await instance.UsersGetByBirthdateAsync(_converter.ParseDateTime(date, "date"), request.HttpContext.RequestAborted);
                 return _resultHandler.Json(result, 200);
             } catch(CaffoaClientError err) {
                 return err.Result;
@@ -219,7 +219,7 @@ namespace DemoV3
                 if(request.Query.TryGetValue("maxResults", out var maxResultsQueryValue))
                     maxResultsValue = _converter.Parse<int>(maxResultsQueryValue, "maxResults");
                 await using var instance = _factory.Instance(request);
-                var result = await instance.UsersSearchByDateAsync(beforeValue, afterValue, maxResultsValue);
+                var result = await instance.UsersSearchByDateAsync(beforeValue, afterValue, maxResultsValue, request.HttpContext.RequestAborted);
                 return _resultHandler.Json(result, 200);
             } catch(CaffoaClientError err) {
                 return err.Result;
@@ -239,7 +239,7 @@ namespace DemoV3
         {
             try {
                 await using var instance = _factory.Instance(request);
-                var result = await instance.GetTagsAsync();
+                var result = await instance.GetTagsAsync(request.HttpContext.RequestAborted);
                 return _resultHandler.Json(result, 200);
             } catch(CaffoaClientError err) {
                 return err.Result;
@@ -259,7 +259,7 @@ namespace DemoV3
         {
             try {
                 await using var instance = _factory.Instance(request);
-                var result = await instance.GetUserTagsAsync();
+                var result = await instance.GetUserTagsAsync(request.HttpContext.RequestAborted);
                 return _resultHandler.Json(result, 200);
             } catch(CaffoaClientError err) {
                 return err.Result;
@@ -282,7 +282,7 @@ namespace DemoV3
                 if(request.Query.TryGetValue("filter", out var filterQueryValue))
                     filterValue = _converter.ParseEnum<MyEnumType>(filterQueryValue, "filter");
                 await using var instance = _factory.Instance(request);
-                var result = await instance.ListEnumsAsync(filterValue);
+                var result = await instance.ListEnumsAsync(filterValue, request.HttpContext.RequestAborted);
                 return _resultHandler.Json(result, 200);
             } catch(CaffoaClientError err) {
                 return err.Result;
@@ -302,7 +302,7 @@ namespace DemoV3
         {
             try {
                 await using var instance = _factory.Instance(request);
-                var result = await instance.ListEnums2Async(_converter.ParseEnum<MyEnumType>(filter, "filter"));
+                var result = await instance.ListEnums2Async(_converter.ParseEnum<MyEnumType>(filter, "filter"), request.HttpContext.RequestAborted);
                 return _resultHandler.Json(result, 200);
             } catch(CaffoaClientError err) {
                 return err.Result;

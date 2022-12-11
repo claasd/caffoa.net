@@ -90,28 +90,18 @@ public class DefaultCaffoaConverter : ICaffoaConverter
 
     public T ParseEnum<T>(string parameter, string parameterName, bool ignoreCase = true) where T : Enum
     {
-        var type = typeof(T);
-        var names = Enum.GetNames(type);
-        for (var i = 0; i < names.Length; i++)
+        try
         {
-            var name = names[i];
-            var f = type.GetField(name, BindingFlags.Public | BindingFlags.Static)!;
-            var value = (T)f.GetValue(null)!;
-            if (string.Compare(name, parameter,
-                    ignoreCase ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal) == 0)
-                return value;
-            var specifiedName = f.GetCustomAttributes(typeof(EnumMemberAttribute), true)
-                .Cast<EnumMemberAttribute>()
-                .Select(a => a.Value)
-                .SingleOrDefault();
-            if (specifiedName != null && string.Compare(specifiedName, parameter,
-                    ignoreCase ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal) == 0)
-                return value;
+            return EnumConverter.FromString<T>(parameter);
         }
-        throw _errorHandler.ParameterConvertError(parameterName, type.Name, new ArgumentException($"Could not convert value '{parameter}'"));
+        catch (Exception e)
+        {
+            throw _errorHandler.ParameterConvertError(parameterName, typeof(T).Name, e);
+        }
     }
 
     public T Parse<T>(string parameter, string parameterName) => (T)Parse(parameter, typeof(T), parameterName);
+
     public object Parse(string parameter, Type type, string parameterName)
     {
         try

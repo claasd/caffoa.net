@@ -44,7 +44,7 @@ namespace DemoV3
         {
             try {
                 await using var instance = _factory.Instance(request);
-                var result = await instance.LongRunningFunctionAsync(durableClient, _converter.ParseGuid(id, "id"));
+                var result = await instance.LongRunningFunctionAsync(durableClient, _converter.ParseGuid(id, "id"), request.HttpContext.RequestAborted);
                 return _resultHandler.Json(result, 202);
             } catch(CaffoaClientError err) {
                 return err.Result;

@@ -1,10 +1,13 @@
 using System;
+using System.ComponentModel;
 using System.Runtime.Serialization;
 using Caffoa;
 using Caffoa.Defaults;
+using Caffoa.Extensions;
 using FluentAssertions;
 using Microsoft.Extensions.Logging.Abstractions;
 using NUnit.Framework;
+using EnumConverter = Caffoa.EnumConverter;
 
 namespace CdIts.Caffoa.Tests;
 
@@ -91,7 +94,7 @@ public class CaffoaConverterTests
     {
         [EnumMember(Value = "enum1")] Enum1,
         Enum2,
-        [EnumMember(Value = "enum space")] Enum_space,
+        [EnumMember(Value = "enum space")] EnumSpace,
 
         [EnumMember(Value = "enum-special_CHARS")]
         EnumSpecialChars
@@ -102,22 +105,56 @@ public class CaffoaConverterTests
     [TestCase("Enum1", TestEnumType.Enum1)]
     [TestCase("Enum2", TestEnumType.Enum2)]
     [TestCase("enum2", TestEnumType.Enum2)]
-    [TestCase("Enum_space", TestEnumType.Enum_space)]
-    [TestCase("enum space", TestEnumType.Enum_space)]
-    [TestCase("ENUM SPACE", TestEnumType.Enum_space)]
+    [TestCase("EnumSpace", TestEnumType.EnumSpace)]
+    [TestCase("enum space", TestEnumType.EnumSpace)]
+    [TestCase("ENUM SPACE", TestEnumType.EnumSpace)]
     [TestCase("EnumSpecialChars", TestEnumType.EnumSpecialChars)]
     [TestCase("enum-special_chars", TestEnumType.EnumSpecialChars)]
-    public void EnumTests(string input, TestEnumType result)
+    public void EnumConverterTests(string input, TestEnumType result)
     {
         _converter.ParseEnum<TestEnumType>(input, "name").Should().Be(result);
     }
-    
+
     [TestCase("enum12")]
     [TestCase("enum5")]
     [TestCase("enum-space")]
     public void EnumNegativeTests(string input)
     {
         _converter.Invoking(c => c.ParseEnum<TestEnumType>(input, "PARAM")).Should().Throw<DefaultCaffoaClientError>()
-            .WithMessage($"Error*PARAM*TestEnumType*Could*not*convert*{input}*");
+            .WithMessage($"Error*PARAM*TestEnumType*{input}*is*invalid*");
+    }
+
+    [TestCase(TestEnumType.Enum1, "enum1")]
+    [TestCase(TestEnumType.Enum2, "Enum2")]
+    [TestCase(TestEnumType.EnumSpace, "enum space")]
+    [TestCase(TestEnumType.EnumSpecialChars, "enum-special_CHARS")]
+    [TestCase((TestEnumType)99, "99")]
+    public void EnumToString(TestEnumType input, string result)
+    {
+        input.Value().Should().Be(result);
+    }
+
+    [TestCase("enum1", TestEnumType.Enum1)]
+    [TestCase("ENUM1", TestEnumType.Enum1)]
+    [TestCase("Enum1", TestEnumType.Enum1)]
+    [TestCase("Enum2", TestEnumType.Enum2)]
+    [TestCase("enum2", TestEnumType.Enum2)]
+    [TestCase("EnumSpace", TestEnumType.EnumSpace)]
+    [TestCase("enum space", TestEnumType.EnumSpace)]
+    [TestCase("ENUM SPACE", TestEnumType.EnumSpace)]
+    [TestCase("EnumSpecialChars", TestEnumType.EnumSpecialChars)]
+    [TestCase("enum-special_chars", TestEnumType.EnumSpecialChars)]
+    public void EnumFromStringTests(string input, TestEnumType result)
+    {
+        EnumConverter.FromString<TestEnumType>(input).Should().Be(result);
+    }
+    
+    [TestCase("enum12")]
+    [TestCase("enum5")]
+    [TestCase("enum-space")]
+    public void EnumFromStringErrorTests(string input)
+    {
+        var act = ()=> EnumConverter.FromString<TestEnumType>(input);
+        act.Should().Throw<InvalidEnumArgumentException>();
     }
 }

@@ -1,0 +1,28 @@
+using System;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using System.Collections.Generic;
+using System.Linq;
+using System.Collections.Immutable;
+using DemoV1b.Model.Base;
+
+namespace DemoV1b.Model {
+    /// AUTOGENERED BY caffoa ///
+    [JsonObject(MemberSerialization.OptIn)]
+    public partial class L2Pricing {
+        public const string L2PricingObjectName = "pricing";
+
+        [JsonProperty("price")]
+        public virtual double? Price { get; set; }
+
+        [JsonProperty("taxes")]
+        public virtual Dictionary<string, double> Taxes { get; set; } = new Dictionary<string, double>();
+
+        public L2Pricing(){}
+        public L2Pricing(L2Pricing other) {
+            Price = other.Price;
+            Taxes = other.Taxes.ToDictionary(entry => entry.Key, entry => entry.Value);
+        }
+        public L2Pricing ToL2Pricing() => new L2Pricing(this);
+    }
+}

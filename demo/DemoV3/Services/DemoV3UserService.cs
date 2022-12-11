@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Caffoa.Extensions;
 using DemoV3.Errors;
@@ -20,7 +21,7 @@ namespace DemoV3.Services
         private static readonly Dictionary<string, List<Guid>> Tags = new();
 
 
-        public async Task<IEnumerable<AnyCompleteUser>> UsersGetAsync(int offset = 0, int limit = 1000)
+        public async Task<IEnumerable<AnyCompleteUser>> UsersGetAsync(int offset = 0, int limit = 1000, CancellationToken cancellationToken = default)
         {
             var result = new List<AnyCompleteUser>();
             result.AddRange(await Users.List());
@@ -28,19 +29,19 @@ namespace DemoV3.Services
             return result.Skip(offset).Take(limit);
         }
 
-        public Task UploadImageAsync(string userId, Stream stream)
+        public Task UploadImageAsync(string userId, Stream stream, CancellationToken cancellationToken = default)
         {
             return Task.CompletedTask;
         }
 
-        public async Task<IEnumerable<User>> UsersGetByBirthdateAsync(DateTime date)
+        public async Task<IEnumerable<User>> UsersGetByBirthdateAsync(DateTime date, CancellationToken cancellationToken = default)
         {
             var users = await Users.List();
             return users.Where(u => u.Birthdate >= date).Select(u => u.ToUser());
         }
 
         public async Task<IEnumerable<User>> UsersSearchByDateAsync(DateTime before, DateTime after,
-            int? maxResults = null)
+            int? maxResults = null, CancellationToken cancellationToken = default)
         {
             var users = await Users.List();
             var results = users.Where(u => u.Birthdate < before && u.Birthdate > after);
@@ -49,7 +50,7 @@ namespace DemoV3.Services
             return results.Select(u => u.ToUser());
         }
 
-        public async Task<TagInfos> GetTagsAsync()
+        public async Task<TagInfos> GetTagsAsync(CancellationToken cancellationToken = default)
         {
             await Task.Yield();
             return new TagInfos()
@@ -58,35 +59,35 @@ namespace DemoV3.Services
             };
         }
 
-        public async Task<IEnumerable<KeyValuePair<string, IEnumerable<Guid>>>> GetUserTagsAsync()
+        public async Task<IEnumerable<KeyValuePair<string, IEnumerable<Guid>>>> GetUserTagsAsync(CancellationToken cancellationToken = default)
         {
             await Task.Yield();
             return Tags.ToDictionary(i => i.Key, i => i.Value.Select(v => v));
         }
 
-        public Task<IEnumerable<MyEnumType>> ListEnumsAsync(MyEnumType? filter = null)
+        public Task<IEnumerable<MyEnumType>> ListEnumsAsync(MyEnumType? filter = null, CancellationToken cancellationToken = default)
         {
             return Task.FromResult<IEnumerable<MyEnumType>>(new List<MyEnumType>() { MyEnumType.Enum1 });
         }
 
-        public Task<IEnumerable<MyEnumType>> ListEnums2Async(MyEnumType filter)
+        public Task<IEnumerable<MyEnumType>> ListEnums2Async(MyEnumType filter, CancellationToken cancellationToken = default)
         {
             return Task.FromResult<IEnumerable<MyEnumType>>(new List<MyEnumType>() { MyEnumType.Enum2 });
         }
 
-        public async Task<IEnumerable<AnyCompleteUser>> UserPostAsync(User payload)
+        public async Task<IEnumerable<AnyCompleteUser>> UserPostAsync(User payload, CancellationToken cancellationToken = default)
         {
             var (user, _) = await UserPutAsync(Guid.NewGuid().ToString(), payload);
             return new[] { user };
         }
 
-        public async Task<IEnumerable<AnyCompleteUser>> UserPostAsync(GuestUser payload)
+        public async Task<IEnumerable<AnyCompleteUser>> UserPostAsync(GuestUser payload, CancellationToken cancellationToken = default)
         {
             var (user, _) = await UserPutAsync(payload.Email, payload);
             return new[] { user };
         }
 
-        public async Task<(AnyCompleteUser, int)> UserPutAsync(string userId, User payload)
+        public async Task<(AnyCompleteUser, int)> UserPutAsync(string userId, User payload, CancellationToken cancellationToken = default)
         {
             try
             {
@@ -109,7 +110,7 @@ namespace DemoV3.Services
             }
         }
 
-        public async Task<(AnyCompleteUser, int)> UserPutAsync(string userId, GuestUser payload)
+        public async Task<(AnyCompleteUser, int)> UserPutAsync(string userId, GuestUser payload, CancellationToken cancellationToken = default)
         {
             if (payload.Email != userId)
             {
@@ -129,7 +130,7 @@ namespace DemoV3.Services
             }
         }
 
-        public async Task<UserWithId> UserPatchAsync(string userId, JObject payload)
+        public async Task<UserWithId> UserPatchAsync(string userId, JObject payload, CancellationToken cancellationToken = default)
         {
             var user = await Users.GetById(userId);
             user = user.MergedWith<User, UserWithId>(payload);
@@ -137,7 +138,7 @@ namespace DemoV3.Services
             return user;
         }
 
-        public async Task<UserWithId> UserGetAsync(string userId)
+        public async Task<UserWithId> UserGetAsync(string userId, CancellationToken cancellationToken = default)
         {
             return await Users.GetById(userId);
         }
