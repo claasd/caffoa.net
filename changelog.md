@@ -27,6 +27,8 @@
 ### other changes
 * Allow enums in arrays, if the enum is declared as it's own schema elements
 * Support for nullable DateOnly and TimeOnly values
+* Support for "Any" properties `propName: {}`. Will be added as JToken.
+* Support for duration formats (TimeSpan)
 
 ### 1.9.0
 * Refactoring, removed code smells
