@@ -180,46 +180,15 @@ public class ModelGenerator
 
     private string FormatPropertyUpdate(PropertyData property, string prefix, string targetClassName)
     {
-        var name = property.Name.ToObjectName();
-        var sb = new StringBuilder();
-        sb.Append(prefix);
         if (!string.IsNullOrEmpty(targetClassName))
             targetClassName += ".";
-        if (_config.GetEnumCreationMode() == CaffoaConfig.EnumCreationMode.Default && property.CanBeEnum() &&
-            property.Nullable)
-            sb.Append($"{name} = other.{name} is null ? null : ({targetClassName}{name}Value)other.{name}");
-        else if (_config.GetEnumCreationMode() == CaffoaConfig.EnumCreationMode.Default && property.CanBeEnum())
-            sb.Append($"{name} = ({targetClassName}{name}Value)other.{name}");
-        else
-            sb.Append($"{name} = other.{name}");
-
-        if (property.IsOtherSchema)
-        {
-            if (property.Nullable)
-                sb.Append('?');
-            sb.Append($".To{property.TypeName.ToObjectName()}()");
-        }
-        else if (property.TypeName.Trim('?') == "JToken")
-        {
-            sb.Append($"?.DeepClone()");
-        }
-
-        if (property.IsArray)
-        {
-            if (property.InnerTypeIsOtherSchema)
-                sb.Append($".Select(value=>value.To{property.TypeName.ToObjectName()}())");
-            sb.Append(".ToList()");
-        }
-        else if (property.IsMap)
-        {
-            sb.Append(".ToDictionary(entry => entry.Key, entry => entry.Value");
-            if (property.InnerTypeIsOtherSchema)
-                sb.Append($".To{property.TypeName.ToObjectName()}()");
-            sb.Append(')');
-        }
-
-        sb.Append(';');
-        return sb.ToString();
+        return new PropertyUpdateBuilder(prefix, targetClassName, property,
+                _config.GetEnumCreationMode() == CaffoaConfig.EnumCreationMode.Default)
+            .AppendOtherSchemaCopy()
+            .AppendJTokenDeepClone()
+            .AppendArrayCopy()
+            .AppendMapCopy()
+            .Build();
     }
 
     private string FormatProperties(SchemaItem item)
