@@ -121,6 +121,7 @@ paths:
                             registrationDate:
                               type: string
                               format: date-time
+                            diffs: { }
                     - required:
                         - type
                         - email
@@ -363,6 +364,7 @@ paths:
                             registrationDate:
                               type: string
                               format: date-time
+                            diffs: { }
                     - required:
                         - type
                         - email
@@ -590,6 +592,7 @@ paths:
                           registrationDate:
                             type: string
                             format: date-time
+                          diffs: { }
                   - required:
                       - type
                       - email
@@ -704,6 +707,7 @@ paths:
                           registrationDate:
                             type: string
                             format: date-time
+                          diffs: { }
                   - required:
                       - type
                       - email
@@ -906,6 +910,7 @@ paths:
                       registrationDate:
                         type: string
                         format: date-time
+                      diffs: { }
     get:
       tags:
         - user
@@ -1005,6 +1010,7 @@ paths:
                       registrationDate:
                         type: string
                         format: date-time
+                      diffs: { }
     parameters:
       - name: userId
         in: path
@@ -1476,6 +1482,59 @@ paths:
         '200':
           description: a list of neum
           content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  enum:
+                    - enum1
+                    - enum2
+                    - enum space
+                    - enum-sepcial_CHARS
+                  type: string
+    parameters:
+      - name: filter
+        in: query
+        style: form
+        schema:
+          enum:
+            - enum1
+            - enum2
+            - enum space
+            - enum-sepcial_CHARS
+          type: string
+  '/enums/list/filter/{filter}':
+    get:
+      tags:
+        - user
+      operationId: listEnums2
+      responses:
+        '200':
+          description: a list of neum
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  enum:
+                    - enum1
+                    - enum2
+                    - enum space
+                    - enum-sepcial_CHARS
+                  type: string
+    parameters:
+      - name: filter
+        in: path
+        required: true
+        style: simple
+        schema:
+          enum:
+            - enum1
+            - enum2
+            - enum space
+            - enum-sepcial_CHARS
+          type: string
+components: { }
             application/json:
               schema:
                 type: array

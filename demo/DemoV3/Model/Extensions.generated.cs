@@ -1,3 +1,6 @@
+#pragma warning disable CS0612
+#pragma warning disable CS0618
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -46,6 +49,7 @@ namespace DemoV3.Model {
             item.UpdateWithUser(other);
             item.Id = other.Id;
             item.RegistrationDate = other.RegistrationDate;
+            item.Diffs = other.Diffs?.DeepClone();
         }
 
         /// <summary>

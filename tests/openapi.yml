@@ -93,6 +93,7 @@ components:
             registrationDate:
               type: string
               format: date-time
+            diffs: {}
 
     anyUser:
       oneOf:

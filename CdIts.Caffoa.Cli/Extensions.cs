@@ -82,6 +82,7 @@ public static class Extensions
             "number" => $"double{suffix}",
             "boolean" => $"bool{suffix}",
             "string" => "string",
+            null => $"JToken",
             _ => $"{type}{suffix}"
         };
     }

@@ -24,7 +24,8 @@ public class ModelGenerator
         Directory.CreateDirectory(_service.Model!.TargetFolder);
         var interfaces = objects.Where(o => o.Interface != null).ToList();
         var classes = objects.Where(o => o.Interface == null && o.Type == SchemaItem.ObjectType.Regular).ToList();
-        var enumClasses = objects.Where(o => o.Type == SchemaItem.ObjectType.IntEnum || o.Type == SchemaItem.ObjectType.StringEnum).ToList();
+        var enumClasses = objects
+            .Where(o => o.Type == SchemaItem.ObjectType.IntEnum || o.Type == SchemaItem.ObjectType.StringEnum).ToList();
         var enumProperties = objects.Where(o => o.Properties != null && o.Properties.Any(p => p.Enums.Any())).ToList();
         enumProperties.ForEach(WriteEnumClasses);
         enumClasses.ForEach(WriteEnumClass);
@@ -168,7 +169,8 @@ public class ModelGenerator
             throw new CaffoaParserException($"No properties defined for object {schemaItem.Name}");
         }
 
-        var updateCommands = schemaItem.Properties!.Select(property => FormatPropertyUpdate(property, prefix, targetClassName)).ToList();
+        var updateCommands = schemaItem.Properties!
+            .Select(property => FormatPropertyUpdate(property, prefix, targetClassName)).ToList();
 
         if (schemaItem.AdditionalPropertiesAllowed && _config.GenericAdditionalProperties is true)
             updateCommands.Add(
@@ -183,9 +185,10 @@ public class ModelGenerator
         sb.Append(prefix);
         if (!string.IsNullOrEmpty(targetClassName))
             targetClassName += ".";
-        if(_config.GetEnumCreationMode() == CaffoaConfig.EnumCreationMode.Default && property.CanBeEnum() && property.Nullable)
+        if (_config.GetEnumCreationMode() == CaffoaConfig.EnumCreationMode.Default && property.CanBeEnum() &&
+            property.Nullable)
             sb.Append($"{name} = other.{name} is null ? null : ({targetClassName}{name}Value)other.{name}");
-        else if(_config.GetEnumCreationMode() == CaffoaConfig.EnumCreationMode.Default && property.CanBeEnum())
+        else if (_config.GetEnumCreationMode() == CaffoaConfig.EnumCreationMode.Default && property.CanBeEnum())
             sb.Append($"{name} = ({targetClassName}{name}Value)other.{name}");
         else
             sb.Append($"{name} = other.{name}");
@@ -195,6 +198,10 @@ public class ModelGenerator
             if (property.Nullable)
                 sb.Append('?');
             sb.Append($".To{property.TypeName.ToObjectName()}()");
+        }
+        else if (property.TypeName.Trim('?') == "JToken")
+        {
+            sb.Append($"?.DeepClone()");
         }
 
         if (property.IsArray)
@@ -279,11 +286,11 @@ public class ModelGenerator
         format["NULL_HANDLING"] = property.Nullable ? "v == null ? \"null\" : " : "";
         return file.FormatDict(format);
     }
-    
+
     private static string FormatEnumProperty(PropertyData property, Dictionary<string, object> format)
     {
         var file = Templates.GetTemplate("ModelPropertyTemplate.tpl");
-        var enumType = property.Name.ToObjectName() +"Value";
+        var enumType = property.Name.ToObjectName() + "Value";
         var typeName = enumType;
         if (property.Nullable)
             typeName += "?";
@@ -303,6 +310,7 @@ public class ModelGenerator
             cleaned = $"_{cleaned}";
         return cleaned;
     }
+
     private void WriteEnumAsStringClass(PropertyData property, string className)
     {
         var file = Templates.GetTemplate("ModelEnumPropertyClassTemplate.string.tpl");
@@ -392,6 +400,7 @@ public class ModelGenerator
         var formatted = file.FormatDict(format);
         File.WriteAllText(Path.Combine(_service.Model!.TargetFolder, fileName), formatted.ToSystemNewLine());
     }
+
     private void WriteEnumClass(SchemaItem item)
     {
         var file = Templates.GetTemplate("ModelEnumClassTemplate.tpl");
@@ -403,6 +412,7 @@ public class ModelGenerator
             var cleaned = EnumNameForValue(value);
             enums[cleaned] = value;
         }
+
         IEnumerable<string> enumDefs;
         string enumbase = "";
         string jsonproperty = "";

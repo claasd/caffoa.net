@@ -1,3 +1,6 @@
+#pragma warning disable CS0612
+#pragma warning disable CS0618
+
 using System;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -101,6 +104,9 @@ namespace DemoV1a.Model {
         [JsonProperty("registrationDate")]
         public virtual DateTimeOffset RegistrationDate { get; set; }
 
+        [JsonProperty("diffs")]
+        public virtual JToken Diffs { get; set; }
+
         public L1UserWithId(){}
         public L1UserWithId(L1UserWithId other) {
             Name = other.Name;
@@ -115,6 +121,7 @@ namespace DemoV1a.Model {
             LastSessionLength = other.LastSessionLength;
             Id = other.Id;
             RegistrationDate = other.RegistrationDate;
+            Diffs = other.Diffs?.DeepClone();
         }
         public L1UserWithId(L1User other){
             Name = other.Name;
