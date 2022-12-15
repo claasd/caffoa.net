@@ -191,6 +191,15 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/myEnumType"
+            
+    extendedAddress:
+      allOf:
+        - $ref: "base.openapi.yml#/components/schemas/address"
+        - type: object
+          properties: 
+            addressType2:
+              type: string
+      additionalProperties: false
   responses:
     error:
       description: Error

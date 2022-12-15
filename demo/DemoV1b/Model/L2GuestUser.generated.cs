@@ -4,8 +4,9 @@
 using System;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using System.Collections.Immutable;
+using System.Collections.Generic;
 using System.Linq;
+using System.Collections.Immutable;
 using DemoV1b.Model.Base;
 
 namespace DemoV1b.Model {
@@ -36,10 +37,14 @@ namespace DemoV1b.Model {
             }
         }
 
+        [JsonExtensionData]
+        public Dictionary<string, object> AdditionalProperties;
+
         public L2GuestUser(){}
         public L2GuestUser(L2GuestUser other) {
             Email = other.Email;
             Type = other.Type;
+            AdditionalProperties = other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null;
         }
         public L2GuestUser ToL2GuestUser() => new L2GuestUser(this);
         public virtual L2AnyUser ToL2AnyUser() => ToL2GuestUser();

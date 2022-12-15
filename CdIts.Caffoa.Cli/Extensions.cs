@@ -148,4 +148,5 @@ public static class Extensions
     {
         return schema.Enum.Count > 0 && !schema.Type.StartsWith("double") && !schema.Type.StartsWith("float");
     }
+
 }

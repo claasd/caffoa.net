@@ -10,7 +10,6 @@ public class ApiBuilder
 {
     private readonly ServiceConfig _service;
     private readonly CaffoaGlobalConfig _config;
-    private List<SchemaItem>? _model;
     private List<EndPointModel>? _endpoints;
     private readonly ServiceParser _parser;
     public IEnumerable<string> ExtensionData { get; private set; } = Array.Empty<string>();
@@ -33,7 +32,8 @@ public class ApiBuilder
 
     public string ApiName => _parser.ApiName;
     public OpenApiDocument Document => _parser.Document;
-    
+    public List<SchemaItem>? Models { get; private set; }
+
 
     public ApiBuilder(ServiceConfig service, CaffoaGlobalConfig config)
     {
@@ -42,20 +42,21 @@ public class ApiBuilder
         _parser = new ServiceParser(_service, _config);
     }
 
-    public void Parse()
+    public async Task Parse()
     {
+        await _parser.ReadAsync();
         if (_service.Model != null)
-            _model = _parser.GenerateModel();
+            Models = _parser.GenerateModel();
         if (_service.Function != null)
             _endpoints = _parser.GenerateEndpoints();
     }
 
-    public void Generate(Dictionary<string, OpenApiDocument> allDocuments)
+    public void Generate(Dictionary<string, OpenApiDocument> allDocuments, IEnumerable<SchemaItem> otherKnownObjects)
     {
-        if (_service.Model != null && _model != null)
+        if (_service.Model != null && Models != null)
         {
             var generator = new ModelGenerator(_service, _config);
-            ExtensionData = generator.WriteModel(_model);
+            ExtensionData = generator.WriteModel(Models, otherKnownObjects);
         }
 
         if (_service.Function != null && _endpoints != null)

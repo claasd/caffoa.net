@@ -1,79 +1,84 @@
-﻿using System.Text;
+﻿using System.CodeDom.Compiler;
+using System.Reflection;
+using CdIts.Caffoa.Cli.Config;
+using CdIts.Caffoa.Cli.Errors;
 using CdIts.Caffoa.Cli.Model;
 
 namespace CdIts.Caffoa.Cli.Generator;
 
 public class PropertyUpdateBuilder
 {
-    private readonly StringBuilder _sb = new();
-    private readonly PropertyData _property;
-    private readonly string _targetClassName;
-
-    public PropertyUpdateBuilder(string prefix, string targetClassName, PropertyData property, bool useEnums)
+    private readonly SchemaItem _schemaItem;
+    private readonly CaffoaConfig _config;
+    public string Prefix { get; set; } = "";
+    public bool UseOther { get; set; } = true;
+    public string ClassName { get; set; }
+    public bool AllowAdditionalProperties { get; set; } = true; 
+    private PropertyUpdateBuilder(SchemaItem schemaItem,  CaffoaConfig config)
     {
-        _sb.Append(prefix);
-        this._property = property;
-        this._targetClassName = targetClassName;
-        if (useEnums && property.CanBeEnum())
-            EnumCopy();
-        else
-            DefaultCopy();
+        _schemaItem = schemaItem;
+        _config = config;
+        if (schemaItem.Properties is null)
+        {
+            throw new CaffoaParserException($"No properties defined for object {schemaItem.Name}");
+        }
     }
 
-    private void EnumCopy()
+    private string Build(string seperator, string extra = "")
     {
-        var name = _property.Name.ToObjectName();
-        if (_property.Nullable)
-            _sb.Append($"{name} = other.{name} is null ? null : ({_targetClassName}{name}Value)other.{name}");
-        else
-            _sb.Append($"{name} = ({_targetClassName}{name}Value)other.{name}");
+        return string.Join(seperator, Generate()) + extra;
     }
 
-    private void DefaultCopy()
+    private IEnumerable<string> Generate()
     {
-        var name = _property.Name.ToObjectName();
-        _sb.Append($"{name} = other.{name}");
+        var result = new List<string>();
+        foreach (var property in _schemaItem.Properties)
+        {
+            var data = new SinglePropertyUpdateBuilder(Prefix, ClassName, property,
+                    _config.GetEnumCreationMode() == CaffoaConfig.EnumCreationMode.Default, UseOther)
+                .AppendOtherSchemaCopy()
+                .AppendJTokenDeepClone()
+                .AppendArrayCopy()
+                .AppendMapCopy()
+                .Build();
+            result.Add(data);
+        }
+        var other = UseOther ? "other." : "";
+        if (AllowAdditionalProperties && _schemaItem.AdditionalPropertiesAllowed && _config.GenericAdditionalProperties is true)
+            result.Add(
+                $"{Prefix}AdditionalProperties = {other}AdditionalProperties != null ? new Dictionary<string, {_config.GetGenericAdditionalPropertiesType()}>({other}AdditionalProperties) : null");
+        return result;
     }
 
-    public PropertyUpdateBuilder AppendOtherSchemaCopy()
+    public static string BuildConstructor(SchemaItem schemaItem, CaffoaConfig config, SchemaItem targetSchema)
     {
-        if (!_property.IsOtherSchema) return this;
-        if (_property.Nullable)
-            _sb.Append('?');
-        _sb.Append($".To{_property.TypeName.ToObjectName()}()");
-        return this;
+        var builder = new PropertyUpdateBuilder(schemaItem, config)
+        {
+            ClassName = targetSchema.ClassName,
+            AllowAdditionalProperties = targetSchema.AdditionalPropertiesAllowed
+        };
+        return builder.Build(";\n            ", ";");
     }
 
-    public PropertyUpdateBuilder AppendJTokenDeepClone()
+    public static string BuildInitializer(SchemaItem schemaItem, CaffoaConfig config, SchemaItem target)
     {
-        if (_property.TypeName is "JToken")
-            _sb.Append("?.DeepClone()");
-        return this;
+        var builder = new PropertyUpdateBuilder(schemaItem, config)
+        {
+            UseOther = false,
+            ClassName = schemaItem.ClassName,
+            AllowAdditionalProperties = target.AdditionalPropertiesAllowed
+        };
+        return builder.Build(",\n            ");
     }
 
-    public PropertyUpdateBuilder AppendArrayCopy()
+    public static object BuildExternalUpdates(SchemaItem schemaItem, CaffoaGlobalConfig config, string className, bool otherAllowAdditionalProps)
     {
-        if (!_property.IsArray) return this;
-        if (_property.InnerTypeIsOtherSchema)
-            _sb.Append($".Select(value=>value.To{_property.TypeName.ToObjectName()}())");
-        _sb.Append(".ToList()");
-        return this;
-    }
-
-    public PropertyUpdateBuilder AppendMapCopy()
-    {
-        if (!_property.IsMap) return this;
-        
-        _sb.Append(".ToDictionary(entry => entry.Key, entry => entry.Value");
-        if (_property.InnerTypeIsOtherSchema)
-            _sb.Append($".To{_property.TypeName.ToObjectName()}()");
-        _sb.Append(')');
-        return this;
-    }
-
-    public string Build()
-    {
-        _sb.Append(';');
-        return _sb.ToString();
+        var builder = new PropertyUpdateBuilder(schemaItem, config)
+        {
+            ClassName = className,
+            AllowAdditionalProperties = otherAllowAdditionalProps,
+            Prefix = "item."
+        };
+        return builder.Build(";\n            ", ";");
     }
 }

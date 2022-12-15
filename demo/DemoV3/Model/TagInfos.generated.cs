@@ -17,9 +17,13 @@ namespace DemoV3.Model {
         [JsonProperty("user")]
         public virtual Dictionary<string, List<Guid>> User { get; set; } = new Dictionary<string, List<Guid>>();
 
+        [JsonExtensionData]
+        public Dictionary<string, object> AdditionalProperties;
+
         public TagInfos(){}
         public TagInfos(TagInfos other) {
             User = other.User.ToDictionary(entry => entry.Key, entry => entry.Value);
+            AdditionalProperties = other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null;
         }
         public TagInfos ToTagInfos() => new TagInfos(this);
     }

@@ -144,7 +144,9 @@ public class FunctionsGenerator
             var sb = new StringBuilder();
             var typeName = parameter.GetTypeName(_config);
             sb.Append($"{typeName} {parameter.Name}Value");
-            if (parameter.DefaultValue != null)
+            if(parameter.IsEnum && parameter.DefaultValue != null)
+                sb.Append($" = {typeName}.{ModelGenerator.EnumNameForValue(parameter.DefaultValue)};");
+            else if (parameter.DefaultValue != null) 
                 sb.Append($" = {parameter.DefaultValue}");
             else if (!parameter.Required)
                 sb.Append($" = null");

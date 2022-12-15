@@ -21,10 +21,14 @@ namespace DemoV1b.Model {
         [JsonProperty("taxes")]
         public virtual Dictionary<string, double> Taxes { get; set; } = new Dictionary<string, double>();
 
+        [JsonExtensionData]
+        public Dictionary<string, object> AdditionalProperties;
+
         public L2Pricing(){}
         public L2Pricing(L2Pricing other) {
             Price = other.Price;
             Taxes = other.Taxes.ToDictionary(entry => entry.Key, entry => entry.Value);
+            AdditionalProperties = other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null;
         }
         public L2Pricing ToL2Pricing() => new L2Pricing(this);
     }

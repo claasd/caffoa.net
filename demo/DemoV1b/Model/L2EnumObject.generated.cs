@@ -20,10 +20,14 @@ namespace DemoV1b.Model {
         [JsonProperty("array")]
         public virtual ICollection<L2MyEnumType> Array { get; set; } = new List<L2MyEnumType>();
 
+        [JsonExtensionData]
+        public Dictionary<string, object> AdditionalProperties;
+
         public L2EnumObject(){}
         public L2EnumObject(L2EnumObject other) {
             Single = other.Single;
             Array = other.Array.ToList();
+            AdditionalProperties = other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null;
         }
         public L2EnumObject ToL2EnumObject() => new L2EnumObject(this);
     }

@@ -30,9 +30,14 @@ components:
           type: string
         country:
           type: string
+        addressType:
+          type: string
+          enum:
+            - regular
         flags:
           additionalProperties: 
             $ref: "#/components/schemas/flags"
+        
       required:
         - street
         - postalCode

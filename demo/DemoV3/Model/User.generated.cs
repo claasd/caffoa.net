@@ -53,6 +53,9 @@ namespace DemoV3.Model {
         [JsonProperty("lastSessionLength")]
         public virtual TimeSpan LastSessionLength { get; set; }
 
+        [JsonExtensionData]
+        public Dictionary<string, object> AdditionalProperties;
+
         public User(){}
         public User(User other) {
             Name = other.Name;
@@ -60,11 +63,12 @@ namespace DemoV3.Model {
             Birthdate = other.Birthdate;
             Emails = other.Emails.ToList();
             Descriptions = other.Descriptions.ToDictionary(entry => entry.Key, entry => entry.Value);
-            Type = (TypeValue)other.Type;
-            Role = (RoleValue)other.Role;
-            AgeGroup = other.AgeGroup is null ? null : (AgeGroupValue)other.AgeGroup;
+            Type = (User.TypeValue)other.Type;
+            Role = (User.RoleValue)other.Role;
+            AgeGroup = other.AgeGroup is null ? null : (User.AgeGroupValue)other.AgeGroup;
             PreferredContactTime = other.PreferredContactTime;
             LastSessionLength = other.LastSessionLength;
+            AdditionalProperties = other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null;
         }
         public User ToUser() => new User(this);
         public virtual AnyUser ToAnyUser() => ToUser();

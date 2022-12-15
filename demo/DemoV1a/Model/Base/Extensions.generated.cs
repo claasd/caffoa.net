@@ -26,7 +26,9 @@ namespace DemoV1a.Model.Base {
             item.PostalCode = other.PostalCode;
             item.City = other.City;
             item.Country = other.Country;
+            item.AddressType = other.AddressType;
             item.Flags = other.Flags.ToDictionary(entry => entry.Key, entry => entry.Value.ToL1Flags());
+            item.AdditionalProperties = other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null;
         }
     }
 }

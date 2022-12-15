@@ -6,6 +6,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 using System.Linq;
+using System.Collections.Immutable;
 
 namespace DemoV1a.Model.Base {
     /// AUTOGENERED BY caffoa ///
@@ -28,8 +29,29 @@ namespace DemoV1a.Model.Base {
         [JsonProperty("country", Required = Required.Always)]
         public virtual string Country { get; set; }
 
+        [JsonIgnore]
+        private string _addressType;
+
+        [JsonProperty("addressType")]
+        public virtual string AddressType {
+            get => _addressType;
+            set {
+                var _value = AddressTypeValues.AllowedValues.FirstOrDefault(v=>String.Compare(v, value, StringComparison.OrdinalIgnoreCase) == 0, value);
+                if (!AddressTypeValues.AllowedValues.Contains(_value))
+                {
+                    var allowedValues = string.Join(", ", AddressTypeValues.AllowedValues.Select(v => v.ToString()));
+                    throw new ArgumentOutOfRangeException("addressType",
+                        $"{value} is not allowed. Allowed values: [{allowedValues}]");
+                }
+                _addressType = _value;
+            }
+        }
+
         [JsonProperty("flags")]
         public virtual Dictionary<string, L1Flags> Flags { get; set; } = new Dictionary<string, L1Flags>();
+
+        [JsonExtensionData]
+        public Dictionary<string, object> AdditionalProperties;
 
         public L1Address(){}
         public L1Address(L1Address other) {
@@ -38,7 +60,9 @@ namespace DemoV1a.Model.Base {
             PostalCode = other.PostalCode;
             City = other.City;
             Country = other.Country;
+            AddressType = other.AddressType;
             Flags = other.Flags.ToDictionary(entry => entry.Key, entry => entry.Value.ToL1Flags());
+            AdditionalProperties = other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null;
         }
         public L1Address ToL1Address() => new L1Address(this);
     }

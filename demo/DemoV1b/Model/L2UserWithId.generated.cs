@@ -9,6 +9,7 @@ using System.Linq;
 using System.Collections.Immutable;
 using Caffoa.JsonConverter;
 using DemoV1b.Model.Base;
+using DemoV1b.Model;
 
 namespace DemoV1b.Model {
     /// AUTOGENERED BY caffoa ///
@@ -110,6 +111,9 @@ namespace DemoV1b.Model {
         [JsonProperty("diffs")]
         public virtual JToken Diffs { get; set; }
 
+        [JsonExtensionData]
+        public Dictionary<string, object> AdditionalProperties;
+
         public L2UserWithId(){}
         public L2UserWithId(L2UserWithId other) {
             Name = other.Name;
@@ -125,6 +129,7 @@ namespace DemoV1b.Model {
             Id = other.Id;
             RegistrationDate = other.RegistrationDate;
             Diffs = other.Diffs?.DeepClone();
+            AdditionalProperties = other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null;
         }
         public L2UserWithId(L2User other){
             Name = other.Name;
@@ -137,11 +142,24 @@ namespace DemoV1b.Model {
             AgeGroup = other.AgeGroup;
             PreferredContactTime = other.PreferredContactTime;
             LastSessionLength = other.LastSessionLength;
+            AdditionalProperties = other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null;
         }
+        public L2User ToL2User() => new L2User() {
+            Name = Name,
+            Address = Address?.ToL2Address(),
+            Birthdate = Birthdate,
+            Emails = Emails.ToList(),
+            Descriptions = Descriptions.ToDictionary(entry => entry.Key, entry => entry.Value),
+            Type = Type,
+            Role = Role,
+            AgeGroup = AgeGroup,
+            PreferredContactTime = PreferredContactTime,
+            LastSessionLength = LastSessionLength,
+            AdditionalProperties = AdditionalProperties != null ? new Dictionary<string, object>(AdditionalProperties) : null
+        };
         public L2UserWithId ToL2UserWithId() => new L2UserWithId(this);
         public virtual L2AnyUser ToL2AnyUser() => ToL2UserWithId();
         public virtual L2AnyCompleteUser ToL2AnyCompleteUser() => ToL2UserWithId();
         public virtual string TypeDiscriminator => Type.ToString();
-        public virtual L2User ToL2User() => new L2User(this);
     }
 }

@@ -11,24 +11,21 @@ using DemoV1a.Model.Base;
 namespace DemoV1a.Model {
     /// AUTOGENERED BY caffoa ///
     [JsonObject(MemberSerialization.OptIn)]
-    public partial class L1EnumObject {
-        public const string L1EnumObjectObjectName = "enumObject";
+    public partial class L1ExtendedAddress : L1Address {
+        public const string L1ExtendedAddressObjectName = "extendedAddress";
 
-        [JsonProperty("single")]
-        public virtual L1MyEnumType Single { get; set; }
-
-        [JsonProperty("array")]
-        public virtual ICollection<L1MyEnumType> Array { get; set; } = new List<L1MyEnumType>();
+        [JsonProperty("addressType2")]
+        public virtual string AddressType2 { get; set; }
 
         [JsonExtensionData]
         public Dictionary<string, object> AdditionalProperties;
 
-        public L1EnumObject(){}
-        public L1EnumObject(L1EnumObject other) {
-            Single = other.Single;
-            Array = other.Array.ToList();
+        public L1ExtendedAddress(){}
+        public L1ExtendedAddress(L1ExtendedAddress other) : base(other) {
+            AddressType2 = other.AddressType2;
             AdditionalProperties = other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null;
         }
-        public L1EnumObject ToL1EnumObject() => new L1EnumObject(this);
+        public L1ExtendedAddress(L1Address other) : base(other) {}
+        public L1ExtendedAddress ToL1ExtendedAddress() => new L1ExtendedAddress(this);
     }
 }

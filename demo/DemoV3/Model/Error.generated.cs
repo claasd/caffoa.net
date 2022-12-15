@@ -4,6 +4,8 @@
 using System;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System.Collections.Generic;
+using System.Linq;
 using DemoV3.Model.Base;
 
 namespace DemoV3.Model {
@@ -24,10 +26,14 @@ namespace DemoV3.Model {
         [JsonProperty("message", Required = Required.Always)]
         public virtual string Message { get; set; }
 
+        [JsonExtensionData]
+        public Dictionary<string, object> AdditionalProperties;
+
         public Error(){}
         public Error(Error other) {
             Status = other.Status;
             Message = other.Message;
+            AdditionalProperties = other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null;
         }
         public Error ToError() => new Error(this);
     }

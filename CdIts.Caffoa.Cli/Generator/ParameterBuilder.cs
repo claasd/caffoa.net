@@ -42,7 +42,9 @@ public class ParameterBuilder
         {
             var typeName = p.GetTypeName(_useDateOnly);
             var result = $"{typeName} {p.Name}";
-            if (p.DefaultValue != null)
+            if(p.IsEnum && p.DefaultValue != null)
+                result += $" = {typeName}.{ModelGenerator.EnumNameForValue(p.DefaultValue)}";
+            else if (p.DefaultValue != null) 
                 result += $" = {p.DefaultValue}";
             else if (!p.Required)
                 result += $" = null";

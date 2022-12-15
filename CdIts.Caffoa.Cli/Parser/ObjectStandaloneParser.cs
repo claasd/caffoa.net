@@ -12,7 +12,7 @@ public class ObjectStandaloneParser : ObjectParser
 
     protected override OpenApiSchema UpdateSchemaForAllOff(OpenApiSchema schema)
     {
-        foreach (var subSchema in schema.AllOf)
+        foreach (var subSchema in schema.AllOf.Select(ResolveExternal))
         {
             foreach (var (key, value) in subSchema.Properties)
             {
@@ -22,6 +22,19 @@ public class ObjectStandaloneParser : ObjectParser
 
         Item.SubItems = SubItems(schema.AllOf);
         return schema;
+    }
+
+    private OpenApiSchema ResolveExternal(OpenApiSchema subSchema)
+    {
+        if (subSchema.Reference?.IsExternal ?? false)
+        {
+            var result = subSchema.Reference.HostDocument.Workspace.ResolveReference(subSchema.Reference);
+            var schema = result as OpenApiSchema;
+            if (schema != null)
+                return schema;
+
+        }
+        return subSchema;
     }
 
     private List<string> SubItems(IList<OpenApiSchema> schemas)

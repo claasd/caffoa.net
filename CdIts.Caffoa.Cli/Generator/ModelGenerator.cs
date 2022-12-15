@@ -19,7 +19,7 @@ public class ModelGenerator
         _config = mergedConfig;
     }
 
-    public IEnumerable<string> WriteModel(List<SchemaItem> objects)
+    public IEnumerable<string> WriteModel(List<SchemaItem> objects, IEnumerable<SchemaItem> otherKnownObjects)
     {
         Directory.CreateDirectory(_service.Model!.TargetFolder);
         var interfaces = objects.Where(o => o.Interface != null).ToList();
@@ -30,17 +30,18 @@ public class ModelGenerator
         enumProperties.ForEach(WriteEnumClasses);
         enumClasses.ForEach(WriteEnumClass);
         interfaces.ForEach(WriteModelInterface);
-        classes.ForEach(c => WriteModelClass(c, interfaces, classes));
+        var allKnownClasses = otherKnownObjects.Concat(classes).ToList();
+        classes.ForEach(c => WriteModelClass(c, interfaces, allKnownClasses));
         if (_config.Extensions is false)
             return Array.Empty<string>();
-        return classes.Select(c => CreateModelExtensions(c, classes)).Where(d => !string.IsNullOrEmpty(d));
+        return classes.Select(c => CreateModelExtensions(c, allKnownClasses)).Where(d => !string.IsNullOrEmpty(d));
     }
 
     private void WriteModelInterface(SchemaItem item)
     {
         var file = Templates.GetTemplate("ModelInterfaceTemplate.tpl");
         var fileName = $"{item.ClassName}.generated.cs";
-        var formatter = new SchemaItemFormatter(item, _config);
+        var formatter = new SchemaItemFormatter(item, _config, new List<SchemaItem>());
         var parameters = new Dictionary<string, object>();
         parameters["NAMESPACE"] = _service.Model!.Namespace;
         parameters["NAME"] = item.ClassName;
@@ -53,14 +54,14 @@ public class ModelGenerator
     private void WriteModelClass(SchemaItem item, List<SchemaItem> interfaces, List<SchemaItem> otherClasses)
     {
         var file = Templates.GetTemplate("ModelTemplate.tpl");
-        var formatter = new SchemaItemFormatter(item, _config);
+        var formatter = new SchemaItemFormatter(item, _config, otherClasses);
         var fileName = $"{item.ClassName}.generated.cs";
         var parameters = new Dictionary<string, object>();
         parameters["NAMESPACE"] = _service.Model!.Namespace;
         parameters["IMPORTS"] = formatter.Imports(_service.Model.Imports, _config.Imports);
         parameters["NAME"] = item.ClassName;
         parameters["PARENTS"] = formatter.Parents(interfaces);
-        parameters["INTERFACE_METHODS"] = formatter.InterfaceMethods(interfaces) + formatter.SubItemMethods();
+        parameters["INTERFACE_METHODS"] = formatter.InterfaceMethods(interfaces);
         parameters["RAWNAME"] = item.Name;
         parameters["CONSTRUCTORS"] = CreateConstructors(item, otherClasses);
         parameters["PROPERTIES"] = FormatProperties(item);
@@ -73,14 +74,16 @@ public class ModelGenerator
     private string CreateModelExtensions(SchemaItem item, List<SchemaItem> otherSchemas)
     {
         var data = new List<string>();
-        data.Add(CreateModelExtension(item, item));
+        data.Add(CreateModelExtension(item, item.ClassName, item.ClassName, item));
         if (_config.UseInheritance is false)
         {
             foreach (var subItem in item.SubItems)
             {
                 var otherItem = otherSchemas.FirstOrDefault(i => i.ClassName == subItem);
-                if (otherItem != null)
-                    data.Add(CreateModelExtension(item, otherItem));
+                if (otherItem != null) {
+                    data.Add(CreateModelExtension(otherItem, otherItem.ClassName, item.ClassName, item));
+                    data.Add(CreateModelExtension(otherItem, item.ClassName, otherItem.ClassName, item));
+                }
                 else
                 {
                     Console.Error.WriteLine(
@@ -91,15 +94,14 @@ public class ModelGenerator
 
         return string.Join("\n\n", data);
     }
-
-    private string CreateModelExtension(SchemaItem item, SchemaItem otherItem)
+    private string CreateModelExtension(SchemaItem item, string className, string otherClassName, SchemaItem otherItem)
     {
         string file;
         file = Templates.GetTemplate("ModelExtensionContentTemplate.tpl");
         var parameters = new Dictionary<string, object>();
-        parameters["NAME"] = item.ClassName;
-        parameters["OTHER"] = otherItem.ClassName;
-        parameters["UPDATEPROPS"] = FormatExternalPropertiesUpdate(otherItem, item.ClassName);
+        parameters["NAME"] = className;
+        parameters["OTHER"] = otherClassName;
+        parameters["UPDATEPROPS"] = PropertyUpdateBuilder.BuildExternalUpdates(item, _config, className, otherItem.AdditionalPropertiesAllowed);
         var formatted = file.FormatDict(parameters);
         return formatted.ToSystemNewLine();
     }
@@ -108,11 +110,10 @@ public class ModelGenerator
     {
         var builder = new StringBuilder();
         builder.Append($"public {item.ClassName}({item.ClassName} other)");
-        var props = FormatPropertyUpdates(item);
         if (item.Parent != null)
             builder.Append($" : base(other)");
         builder.Append(" {\n            ");
-        builder.Append(props);
+        builder.Append(PropertyUpdateBuilder.BuildConstructor(item, _config, item));
         builder.Append("\n        }");
         if (item.Parent != null)
         {
@@ -125,70 +126,21 @@ public class ModelGenerator
             if (otherItem != null)
             {
                 builder.Append($"\n        public {item.ClassName}({subItem} other){{\n            ");
-                builder.Append(FormatPropertyUpdates(otherItem));
+                builder.Append(PropertyUpdateBuilder.BuildConstructor(otherItem, _config, item));
                 builder.Append("\n        }");
+                
+                builder.Append($"\n        public {subItem} To{subItem}() => new {subItem}() {{\n            ");
+                builder.Append(PropertyUpdateBuilder.BuildInitializer(otherItem, _config, item));
+                builder.Append("\n        };");
             }
             else
             {
                 Console.Error.WriteLine(
-                    $"WARNING: Cloud not create contructor for class {item.ClassName} with parameter {subItem}");
+                    $"WARNING: Cloud not create constructor for class {item.ClassName} with parameter {subItem}");
             }
         }
 
-        foreach (var inheritingItem in otherClasses.Where(o => o.SubItems.Contains(item.ClassName)))
-        {
-            builder.Append($"\n        public {item.ClassName}({inheritingItem.ClassName} other){{\n            ");
-            builder.Append(props);
-            builder.Append("\n        }");
-        }
-
         return builder.ToString();
-    }
-
-    private string FormatExternalPropertiesUpdate(SchemaItem schemaItem, string targetClassName)
-    {
-        var updateCommands = new List<string>();
-        if (schemaItem.Parent != null)
-        {
-            updateCommands.Add($"item.UpdateWith{schemaItem.Parent}(other);");
-        }
-
-        updateCommands.AddRange(FormatPropertyUpdates(schemaItem, "item.", targetClassName));
-        return string.Join("\n            ", updateCommands);
-    }
-
-    private string FormatPropertyUpdates(SchemaItem schemaItem)
-    {
-        return string.Join("\n            ", FormatPropertyUpdates(schemaItem, "", ""));
-    }
-
-    private List<string> FormatPropertyUpdates(SchemaItem schemaItem, string prefix, string targetClassName)
-    {
-        if (schemaItem.Properties is null)
-        {
-            throw new CaffoaParserException($"No properties defined for object {schemaItem.Name}");
-        }
-
-        var updateCommands = schemaItem.Properties!
-            .Select(property => FormatPropertyUpdate(property, prefix, targetClassName)).ToList();
-
-        if (schemaItem.AdditionalPropertiesAllowed && _config.GenericAdditionalProperties is true)
-            updateCommands.Add(
-                $"{prefix}AdditionalProperties = other.AdditionalProperties != null ? new Dictionary<string, {_config.GetGenericAdditionalPropertiesType()}>(other.AdditionalProperties) : null;");
-        return updateCommands;
-    }
-
-    private string FormatPropertyUpdate(PropertyData property, string prefix, string targetClassName)
-    {
-        if (!string.IsNullOrEmpty(targetClassName))
-            targetClassName += ".";
-        return new PropertyUpdateBuilder(prefix, targetClassName, property,
-                _config.GetEnumCreationMode() == CaffoaConfig.EnumCreationMode.Default)
-            .AppendOtherSchemaCopy()
-            .AppendJTokenDeepClone()
-            .AppendArrayCopy()
-            .AppendMapCopy()
-            .Build();
     }
 
     private string FormatProperties(SchemaItem item)
@@ -271,7 +223,7 @@ public class ModelGenerator
         return file.FormatDict(format);
     }
 
-    private static string EnumNameForValue(string value)
+    public static string EnumNameForValue(string value)
     {
         var cleaned = value.Replace("\"", "").FirstCharUpper();
         cleaned = Regex.Replace(cleaned, @"[^A-Za-z0-9]+", "_");

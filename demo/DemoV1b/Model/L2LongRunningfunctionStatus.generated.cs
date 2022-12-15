@@ -4,8 +4,9 @@
 using System;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using System.Collections.Immutable;
+using System.Collections.Generic;
 using System.Linq;
+using System.Collections.Immutable;
 using DemoV1b.Model.Base;
 
 namespace DemoV1b.Model {
@@ -36,10 +37,14 @@ namespace DemoV1b.Model {
         [JsonProperty("result")]
         public virtual L2AnyUser Result { get; set; }
 
+        [JsonExtensionData]
+        public Dictionary<string, object> AdditionalProperties;
+
         public L2LongRunningfunctionStatus(){}
         public L2LongRunningfunctionStatus(L2LongRunningfunctionStatus other) {
             Status = other.Status;
             Result = other.Result?.ToL2AnyUser();
+            AdditionalProperties = other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null;
         }
         public L2LongRunningfunctionStatus ToL2LongRunningfunctionStatus() => new L2LongRunningfunctionStatus(this);
     }

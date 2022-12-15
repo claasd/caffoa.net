@@ -6,6 +6,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 using System.Linq;
+using System.Collections.Immutable;
 
 namespace DemoV3.Model.Base {
     /// AUTOGENERED BY caffoa ///
@@ -28,6 +29,9 @@ namespace DemoV3.Model.Base {
         [JsonProperty("country", Required = Required.Always)]
         public virtual string Country { get; set; }
 
+        [JsonProperty("addressType")]
+        public virtual AddressTypeValue AddressType { get; set; }
+
         [JsonProperty("flags")]
         public virtual Dictionary<string, Flags> Flags { get; set; } = new Dictionary<string, Flags>();
 
@@ -41,6 +45,7 @@ namespace DemoV3.Model.Base {
             PostalCode = other.PostalCode;
             City = other.City;
             Country = other.Country;
+            AddressType = (Address.AddressTypeValue)other.AddressType;
             Flags = other.Flags.ToDictionary(entry => entry.Key, entry => entry.Value.ToFlags());
             AdditionalProperties = other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null;
         }

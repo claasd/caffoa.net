@@ -2,7 +2,7 @@ namespace CdIts.Caffoa.Cli.Config;
 
 public class CaffoaGlobalConfig : CaffoaConfig
 {
-    public bool ClearGeneratedFiles { get; set; }
+    public bool ClearGeneratedFiles { get; set; } = true;
     public string? Duplicates { get; set; }
 
     public CaffoaGlobalConfig() : this(true)

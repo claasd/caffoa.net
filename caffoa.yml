@@ -4,10 +4,10 @@ config:
   routePrefix: api/
   useDateOnly: false
   splitByTag: true # if set to true, multiple function files and interfaces will be generated, based on the first tag of each path item
-  genericAdditionalProperties: false # if set to true, a dictionary for additional properties will be generated
+  genericAdditionalProperties: true # if set to true, a dictionary for additional properties will be generated
   genericAdditionalPropertiesType: object
   asyncArrays: false
-  useInheritance: true
+  useInheritance: false
   requestBodyType: # overwrite the JSON type that is passed to the method for some operations
     - type: JObject
       import: Newtonsoft.Json.Linq
@@ -18,7 +18,7 @@ config:
           - patch
   authorizationLevel: function # function | user | anonymous | system | admin
   extensions: true
-  enumMode: Default
+#  enumMode: Default
 services:
   - apiPath: tests\base.openapi.yml
     config:
@@ -53,13 +53,15 @@ services:
   - apiPath: tests\base.openapi.yml
     config:
       prefix: L1
+      useInheritance: true
+      enumMode: StaticValues
     model:
       namespace: DemoV1a.Model.Base
       targetFolder: ./demo/DemoV1a/Model/Base
       
   - apiPath: tests\openapi.yml
     config:
-      useInheritance: false
+      useInheritance: true
       enumMode: StaticValues
       imports:
         - DemoV1a.Model.Base
@@ -78,6 +80,8 @@ services:
   - apiPath: tests\base.openapi.yml
     config:
       prefix: L2
+      useInheritance: false
+      enumMode: StaticValuesWithoutCheck
     model:
       namespace: DemoV1b.Model.Base
       targetFolder: ./demo/DemoV1b/Model/Base

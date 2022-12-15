@@ -58,7 +58,7 @@ try
         {
             var localConfig = service.Config?.MergedWith(settings.Config) ?? settings.Config;
             var builder = new ApiBuilder(service, localConfig);
-            builder.Parse();
+            await builder.Parse();
             builders.Add(builder);
         }
         catch (ConfigurationMissingException e)
@@ -77,9 +77,11 @@ try
     }
 
     var extensionGenerators = new List<ExtensionGenerator>();
+    var allDocuments = builders.GroupBy(b => b.ApiName, b => b.Document).ToDictionary(g => g.Key, g => g.First());
     foreach (var builder in builders)
     {
-        builder.Generate(builders.GroupBy(b=>b.ApiName,b=>b.Document).ToDictionary(g=>g.Key, g=>g.First()));
+        var otherModels = builders.Where(b => b != builder && b.Models != null).SelectMany(b=>b.Models!);
+        builder.Generate(allDocuments, otherModels);
         if (builder.ExtensionData.Any())
         {
             var generator = extensionGenerators.FirstOrDefault(g =>

@@ -7,11 +7,13 @@ public class SchemaItemFormatter
 {
     private readonly SchemaItem _item;
     private readonly CaffoaConfig _config;
+    private readonly List<SchemaItem> _otherClasses;
 
-    public SchemaItemFormatter(SchemaItem item, CaffoaConfig config)
+    public SchemaItemFormatter(SchemaItem item, CaffoaConfig config, List<SchemaItem> otherClasses)
     {
         _item = item;
         _config = config;
+        _otherClasses = otherClasses;
     }
 
     public object Description
@@ -64,6 +66,12 @@ public class SchemaItemFormatter
             imports.AddRange(modelImports);
         if (configImports != null)
             imports.AddRange(configImports);
+        foreach (var subItem in _item.SubItems)
+        {
+            var otherItem = _otherClasses.FirstOrDefault(c => c.ClassName == subItem);
+            if (otherItem?.Namespace != null)
+                imports.Add(otherItem.Namespace);
+        }
         return imports.Count > 0 ? string.Join("", imports.Distinct().Select(i => $"using {i};\n")) : "";
     }
 
@@ -93,8 +101,13 @@ public class SchemaItemFormatter
     
     public string SubItemMethods()
     {
-        var implementations = _item.SubItems
-            .Select(i => $"        public virtual {i} To{i}() => new {i}(this);\n");
+        var implementations = new List<string>();
+        foreach (var subItem in _item.SubItems)
+        {
+            var otherItem = _otherClasses.FirstOrDefault(c => c.ClassName == subItem);
+            if (otherItem != null)
+                implementations.Add($"        public virtual {subItem} To{subItem}() => new {subItem}(this);\n");
+        }
         return string.Join("", implementations);
     }
 

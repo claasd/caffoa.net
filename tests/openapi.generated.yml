@@ -12,13 +12,11 @@ paths:
       parameters:
         - name: offset
           in: query
-          style: form
           schema:
             type: integer
             default: 0
         - name: limit
           in: query
-          style: form
           schema:
             type: integer
             default: 1000
@@ -60,6 +58,10 @@ paths:
                                 city:
                                   type: string
                                 country:
+                                  type: string
+                                addressType:
+                                  enum:
+                                    - regular
                                   type: string
                                 flags:
                                   additionalProperties:
@@ -122,6 +124,92 @@ paths:
                               type: string
                               format: date-time
                             diffs: { }
+                      properties:
+                        name:
+                          type: string
+                          description: A fancy string with description
+                        address:
+                          required:
+                            - street
+                            - postalCode
+                            - city
+                            - country
+                          type: object
+                          properties:
+                            street:
+                              type: string
+                            street.extra:
+                              type: string
+                              nullable: true
+                            postalCode:
+                              type: string
+                            city:
+                              type: string
+                            country:
+                              type: string
+                            addressType:
+                              enum:
+                                - regular
+                              type: string
+                            flags:
+                              additionalProperties:
+                                type: object
+                                properties:
+                                  id:
+                                    type: string
+                                  desc:
+                                    type: string
+                                additionalProperties: false
+                        birthdate:
+                          type: string
+                          format: date
+                          nullable: true
+                          deprecated: true
+                        emails:
+                          type: array
+                          items:
+                            type: string
+                        descriptions:
+                          additionalProperties:
+                            type: string
+                            description: A fancy string with description
+                        type:
+                          enum:
+                            - simple
+                          type: string
+                          default: simple
+                        role:
+                          enum:
+                            - admin
+                            - reader
+                            - contributor
+                          type: string
+                          default: reader
+                        ageGroup:
+                          enum:
+                            - 18
+                            - 40
+                            - 70
+                            - 120
+                          type: integer
+                          default: 40
+                          nullable: true
+                          x-caffoa-attributes:
+                            - Obsolete("do not use this")
+                        preferredContactTime:
+                          type: string
+                          format: time
+                          default: '12:00'
+                          x-caffoa-converter: CustomTimeConverter
+                        lastSessionLength:
+                          type: string
+                          format: duration
+                        id:
+                          type: string
+                        registrationDate:
+                          type: string
+                          format: date-time
+                        diffs: { }
                     - required:
                         - type
                         - email
@@ -193,6 +281,10 @@ paths:
                         city:
                           type: string
                         country:
+                          type: string
+                        addressType:
+                          enum:
+                            - regular
                           type: string
                         flags:
                           additionalProperties:
@@ -304,6 +396,10 @@ paths:
                                   type: string
                                 country:
                                   type: string
+                                addressType:
+                                  enum:
+                                    - regular
+                                  type: string
                                 flags:
                                   additionalProperties:
                                     type: object
@@ -365,6 +461,92 @@ paths:
                               type: string
                               format: date-time
                             diffs: { }
+                      properties:
+                        name:
+                          type: string
+                          description: A fancy string with description
+                        address:
+                          required:
+                            - street
+                            - postalCode
+                            - city
+                            - country
+                          type: object
+                          properties:
+                            street:
+                              type: string
+                            street.extra:
+                              type: string
+                              nullable: true
+                            postalCode:
+                              type: string
+                            city:
+                              type: string
+                            country:
+                              type: string
+                            addressType:
+                              enum:
+                                - regular
+                              type: string
+                            flags:
+                              additionalProperties:
+                                type: object
+                                properties:
+                                  id:
+                                    type: string
+                                  desc:
+                                    type: string
+                                additionalProperties: false
+                        birthdate:
+                          type: string
+                          format: date
+                          nullable: true
+                          deprecated: true
+                        emails:
+                          type: array
+                          items:
+                            type: string
+                        descriptions:
+                          additionalProperties:
+                            type: string
+                            description: A fancy string with description
+                        type:
+                          enum:
+                            - simple
+                          type: string
+                          default: simple
+                        role:
+                          enum:
+                            - admin
+                            - reader
+                            - contributor
+                          type: string
+                          default: reader
+                        ageGroup:
+                          enum:
+                            - 18
+                            - 40
+                            - 70
+                            - 120
+                          type: integer
+                          default: 40
+                          nullable: true
+                          x-caffoa-attributes:
+                            - Obsolete("do not use this")
+                        preferredContactTime:
+                          type: string
+                          format: time
+                          default: '12:00'
+                          x-caffoa-converter: CustomTimeConverter
+                        lastSessionLength:
+                          type: string
+                          format: duration
+                        id:
+                          type: string
+                        registrationDate:
+                          type: string
+                          format: date-time
+                        diffs: { }
                     - required:
                         - type
                         - email
@@ -423,6 +605,10 @@ paths:
                         city:
                           type: string
                         country:
+                          type: string
+                        addressType:
+                          enum:
+                            - regular
                           type: string
                         flags:
                           additionalProperties:
@@ -532,6 +718,10 @@ paths:
                                 type: string
                               country:
                                 type: string
+                              addressType:
+                                enum:
+                                  - regular
+                                type: string
                               flags:
                                 additionalProperties:
                                   type: object
@@ -593,6 +783,92 @@ paths:
                             type: string
                             format: date-time
                           diffs: { }
+                    properties:
+                      name:
+                        type: string
+                        description: A fancy string with description
+                      address:
+                        required:
+                          - street
+                          - postalCode
+                          - city
+                          - country
+                        type: object
+                        properties:
+                          street:
+                            type: string
+                          street.extra:
+                            type: string
+                            nullable: true
+                          postalCode:
+                            type: string
+                          city:
+                            type: string
+                          country:
+                            type: string
+                          addressType:
+                            enum:
+                              - regular
+                            type: string
+                          flags:
+                            additionalProperties:
+                              type: object
+                              properties:
+                                id:
+                                  type: string
+                                desc:
+                                  type: string
+                              additionalProperties: false
+                      birthdate:
+                        type: string
+                        format: date
+                        nullable: true
+                        deprecated: true
+                      emails:
+                        type: array
+                        items:
+                          type: string
+                      descriptions:
+                        additionalProperties:
+                          type: string
+                          description: A fancy string with description
+                      type:
+                        enum:
+                          - simple
+                        type: string
+                        default: simple
+                      role:
+                        enum:
+                          - admin
+                          - reader
+                          - contributor
+                        type: string
+                        default: reader
+                      ageGroup:
+                        enum:
+                          - 18
+                          - 40
+                          - 70
+                          - 120
+                        type: integer
+                        default: 40
+                        nullable: true
+                        x-caffoa-attributes:
+                          - Obsolete("do not use this")
+                      preferredContactTime:
+                        type: string
+                        format: time
+                        default: '12:00'
+                        x-caffoa-converter: CustomTimeConverter
+                      lastSessionLength:
+                        type: string
+                        format: duration
+                      id:
+                        type: string
+                      registrationDate:
+                        type: string
+                        format: date-time
+                      diffs: { }
                   - required:
                       - type
                       - email
@@ -647,6 +923,10 @@ paths:
                                 type: string
                               country:
                                 type: string
+                              addressType:
+                                enum:
+                                  - regular
+                                type: string
                               flags:
                                 additionalProperties:
                                   type: object
@@ -708,6 +988,92 @@ paths:
                             type: string
                             format: date-time
                           diffs: { }
+                    properties:
+                      name:
+                        type: string
+                        description: A fancy string with description
+                      address:
+                        required:
+                          - street
+                          - postalCode
+                          - city
+                          - country
+                        type: object
+                        properties:
+                          street:
+                            type: string
+                          street.extra:
+                            type: string
+                            nullable: true
+                          postalCode:
+                            type: string
+                          city:
+                            type: string
+                          country:
+                            type: string
+                          addressType:
+                            enum:
+                              - regular
+                            type: string
+                          flags:
+                            additionalProperties:
+                              type: object
+                              properties:
+                                id:
+                                  type: string
+                                desc:
+                                  type: string
+                              additionalProperties: false
+                      birthdate:
+                        type: string
+                        format: date
+                        nullable: true
+                        deprecated: true
+                      emails:
+                        type: array
+                        items:
+                          type: string
+                      descriptions:
+                        additionalProperties:
+                          type: string
+                          description: A fancy string with description
+                      type:
+                        enum:
+                          - simple
+                        type: string
+                        default: simple
+                      role:
+                        enum:
+                          - admin
+                          - reader
+                          - contributor
+                        type: string
+                        default: reader
+                      ageGroup:
+                        enum:
+                          - 18
+                          - 40
+                          - 70
+                          - 120
+                        type: integer
+                        default: 40
+                        nullable: true
+                        x-caffoa-attributes:
+                          - Obsolete("do not use this")
+                      preferredContactTime:
+                        type: string
+                        format: time
+                        default: '12:00'
+                        x-caffoa-converter: CustomTimeConverter
+                      lastSessionLength:
+                        type: string
+                        format: duration
+                      id:
+                        type: string
+                      registrationDate:
+                        type: string
+                        format: date-time
+                      diffs: { }
                   - required:
                       - type
                       - email
@@ -762,6 +1128,10 @@ paths:
                     city:
                       type: string
                     country:
+                      type: string
+                    addressType:
+                      enum:
+                        - regular
                       type: string
                     flags:
                       additionalProperties:
@@ -850,6 +1220,10 @@ paths:
                             type: string
                           country:
                             type: string
+                          addressType:
+                            enum:
+                              - regular
+                            type: string
                           flags:
                             additionalProperties:
                               type: object
@@ -911,6 +1285,92 @@ paths:
                         type: string
                         format: date-time
                       diffs: { }
+                properties:
+                  name:
+                    type: string
+                    description: A fancy string with description
+                  address:
+                    required:
+                      - street
+                      - postalCode
+                      - city
+                      - country
+                    type: object
+                    properties:
+                      street:
+                        type: string
+                      street.extra:
+                        type: string
+                        nullable: true
+                      postalCode:
+                        type: string
+                      city:
+                        type: string
+                      country:
+                        type: string
+                      addressType:
+                        enum:
+                          - regular
+                        type: string
+                      flags:
+                        additionalProperties:
+                          type: object
+                          properties:
+                            id:
+                              type: string
+                            desc:
+                              type: string
+                          additionalProperties: false
+                  birthdate:
+                    type: string
+                    format: date
+                    nullable: true
+                    deprecated: true
+                  emails:
+                    type: array
+                    items:
+                      type: string
+                  descriptions:
+                    additionalProperties:
+                      type: string
+                      description: A fancy string with description
+                  type:
+                    enum:
+                      - simple
+                    type: string
+                    default: simple
+                  role:
+                    enum:
+                      - admin
+                      - reader
+                      - contributor
+                    type: string
+                    default: reader
+                  ageGroup:
+                    enum:
+                      - 18
+                      - 40
+                      - 70
+                      - 120
+                    type: integer
+                    default: 40
+                    nullable: true
+                    x-caffoa-attributes:
+                      - Obsolete("do not use this")
+                  preferredContactTime:
+                    type: string
+                    format: time
+                    default: '12:00'
+                    x-caffoa-converter: CustomTimeConverter
+                  lastSessionLength:
+                    type: string
+                    format: duration
+                  id:
+                    type: string
+                  registrationDate:
+                    type: string
+                    format: date-time
+                  diffs: { }
     get:
       tags:
         - user
@@ -950,6 +1410,10 @@ paths:
                             type: string
                           country:
                             type: string
+                          addressType:
+                            enum:
+                              - regular
+                            type: string
                           flags:
                             additionalProperties:
                               type: object
@@ -1011,12 +1475,97 @@ paths:
                         type: string
                         format: date-time
                       diffs: { }
+                properties:
+                  name:
+                    type: string
+                    description: A fancy string with description
+                  address:
+                    required:
+                      - street
+                      - postalCode
+                      - city
+                      - country
+                    type: object
+                    properties:
+                      street:
+                        type: string
+                      street.extra:
+                        type: string
+                        nullable: true
+                      postalCode:
+                        type: string
+                      city:
+                        type: string
+                      country:
+                        type: string
+                      addressType:
+                        enum:
+                          - regular
+                        type: string
+                      flags:
+                        additionalProperties:
+                          type: object
+                          properties:
+                            id:
+                              type: string
+                            desc:
+                              type: string
+                          additionalProperties: false
+                  birthdate:
+                    type: string
+                    format: date
+                    nullable: true
+                    deprecated: true
+                  emails:
+                    type: array
+                    items:
+                      type: string
+                  descriptions:
+                    additionalProperties:
+                      type: string
+                      description: A fancy string with description
+                  type:
+                    enum:
+                      - simple
+                    type: string
+                    default: simple
+                  role:
+                    enum:
+                      - admin
+                      - reader
+                      - contributor
+                    type: string
+                    default: reader
+                  ageGroup:
+                    enum:
+                      - 18
+                      - 40
+                      - 70
+                      - 120
+                    type: integer
+                    default: 40
+                    nullable: true
+                    x-caffoa-attributes:
+                      - Obsolete("do not use this")
+                  preferredContactTime:
+                    type: string
+                    format: time
+                    default: '12:00'
+                    x-caffoa-converter: CustomTimeConverter
+                  lastSessionLength:
+                    type: string
+                    format: duration
+                  id:
+                    type: string
+                  registrationDate:
+                    type: string
+                    format: date-time
+                  diffs: { }
     parameters:
       - name: userId
         in: path
         description: the user id.
         required: true
-        style: simple
         schema:
           type: string
   '/users/{userId}/uploadImage':
@@ -1043,7 +1592,6 @@ paths:
         in: path
         description: the user id.
         required: true
-        style: simple
         schema:
           type: string
   '/users/born-before/{date}':
@@ -1086,6 +1634,10 @@ paths:
                         city:
                           type: string
                         country:
+                          type: string
+                        addressType:
+                          enum:
+                            - regular
                           type: string
                         flags:
                           additionalProperties:
@@ -1160,7 +1712,6 @@ paths:
       - name: date
         in: path
         required: true
-        style: simple
         schema:
           type: string
           format: date
@@ -1204,6 +1755,10 @@ paths:
                         city:
                           type: string
                         country:
+                          type: string
+                        addressType:
+                          enum:
+                            - regular
                           type: string
                         flags:
                           additionalProperties:
@@ -1278,21 +1833,18 @@ paths:
       - name: before
         in: query
         required: true
-        style: form
         schema:
           type: string
           format: date
       - name: after
         in: query
         required: true
-        style: form
         schema:
           type: string
           format: date
           default: '1950-01-01T00:00:00.0000000'
       - name: maxResults
         in: query
-        style: form
         schema:
           type: integer
           nullable: true
@@ -1346,6 +1898,10 @@ paths:
                               city:
                                 type: string
                               country:
+                                type: string
+                              addressType:
+                                enum:
+                                  - regular
                                 type: string
                               flags:
                                 additionalProperties:
@@ -1422,7 +1978,6 @@ paths:
       - name: id
         in: path
         required: true
-        style: simple
         schema:
           type: string
           format: uuid
@@ -1495,7 +2050,6 @@ paths:
     parameters:
       - name: filter
         in: query
-        style: form
         schema:
           enum:
             - enum1
@@ -1526,7 +2080,6 @@ paths:
       - name: filter
         in: path
         required: true
-        style: simple
         schema:
           enum:
             - enum1
@@ -1534,555 +2087,4 @@ paths:
             - enum space
             - enum-sepcial_CHARS
           type: string
-components: { }
-            application/json:
-              schema:
-                type: array
-                items:
-                  enum:
-                    - enum1
-                    - enum2
-                    - enum space
-                    - enum-sepcial_CHARS
-                  type: string
-    parameters:
-      - name: filter
-        in: query
-        style: form
-        schema:
-          enum:
-            - enum1
-            - enum2
-            - enum space
-            - enum-sepcial_CHARS
-          type: string
-  '/enums/list/filter/{filter}':
-    get:
-      tags:
-        - user
-      operationId: listEnums2
-      responses:
-        '200':
-          description: a list of neum
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  enum:
-                    - enum1
-                    - enum2
-                    - enum space
-                    - enum-sepcial_CHARS
-                  type: string
-    parameters:
-      - name: filter
-        in: path
-        required: true
-        style: simple
-        schema:
-          enum:
-            - enum1
-            - enum2
-            - enum space
-            - enum-sepcial_CHARS
-          type: string
-components: { }string
-                    format: date
-                    nullable: true
-                    deprecated: true
-                  emails:
-                    type: array
-                    items:
-                      type: string
-                  descriptions:
-                    additionalProperties:
-                      type: string
-                      description: A fancy string with description
-                  type:
-                    enum:
-                      - simple
-                    type: string
-                    default: simple
-                  role:
-                    enum:
-                      - admin
-                      - reader
-                      - contributor
-                    type: string
-                    default: reader
-                  ageGroup:
-                    enum:
-                      - 18
-                      - 40
-                      - 70
-                      - 120
-                    type: integer
-                    default: 40
-                    nullable: true
-                    x-caffoa-attributes:
-                      - Obsolete("do not use this")
-                  preferredContactTime:
-                    type: string
-                    format: time
-                    default: '12:00'
-                    x-caffoa-converter: CustomTimeConverter
-                  id:
-                    type: string
-                  registrationDate:
-                    type: string
-                    format: date-time
-    parameters:
-      - name: userId
-        in: path
-        description: the user id.
-        required: true
-        style: simple
-        schema:
-          type: string
-  '/users/{userId}/uploadImage':
-    post:
-      tags:
-        - user
-      operationId: upload-image
-      requestBody:
-        content:
-          multipart/form-data:
-            schema:
-              type: object
-              properties:
-                title:
-                  type: string
-                image:
-                  type: string
-                  format: binary
-      responses:
-        '201':
-          description: Image was created
-    parameters:
-      - name: userId
-        in: path
-        description: the user id.
-        required: true
-        style: simple
-        schema:
-          type: string
-  '/users/born-before/{date}':
-    get:
-      tags:
-        - user
-      description: get
-      operationId: users.get.by.birthdate
-      responses:
-        '200':
-          description: return user object
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  required:
-                    - type
-                    - name
-                  type: object
-                  properties:
-                    name:
-                      type: string
-                      description: A fancy string with description
-                    address:
-                      required:
-                        - street
-                        - postalCode
-                        - city
-                        - country
-                      type: object
-                      properties:
-                        street:
-                          type: string
-                        street.extra:
-                          type: string
-                          nullable: true
-                        postalCode:
-                          type: string
-                        city:
-                          type: string
-                        country:
-                          type: string
-                        flags:
-                          additionalProperties:
-                            type: object
-                            properties:
-                              id:
-                                type: string
-                              desc:
-                                type: string
-                            additionalProperties: false
-                    birthdate:
-                      type: string
-                      format: date
-                      nullable: true
-                      deprecated: true
-                    emails:
-                      type: array
-                      items:
-                        type: string
-                    descriptions:
-                      additionalProperties:
-                        type: string
-                        description: A fancy string with description
-                    type:
-                      enum:
-                        - simple
-                      type: string
-                      default: simple
-                    role:
-                      enum:
-                        - admin
-                        - reader
-                        - contributor
-                      type: string
-                      default: reader
-                    ageGroup:
-                      enum:
-                        - 18
-                        - 40
-                        - 70
-                        - 120
-                      type: integer
-                      default: 40
-                      nullable: true
-                      x-caffoa-attributes:
-                        - Obsolete("do not use this")
-                    preferredContactTime:
-                      type: string
-                      format: time
-                      default: '12:00'
-                      x-caffoa-converter: CustomTimeConverter
-        '400':
-          description: Error
-          content:
-            application/json:
-              schema:
-                required:
-                  - status
-                  - message
-                type: object
-                properties:
-                  status:
-                    type: string
-                    description: Single string based code describing the error.
-                  message:
-                    type: string
-                    description: Human readable error message.
-    parameters:
-      - name: date
-        in: path
-        required: true
-        style: simple
-        schema:
-          type: string
-          format: date
-  /users/filter/byAge:
-    get:
-      tags:
-        - user
-      description: get
-      operationId: users-search-by-date
-      responses:
-        '200':
-          description: return user object
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  required:
-                    - type
-                    - name
-                  type: object
-                  properties:
-                    name:
-                      type: string
-                      description: A fancy string with description
-                    address:
-                      required:
-                        - street
-                        - postalCode
-                        - city
-                        - country
-                      type: object
-                      properties:
-                        street:
-                          type: string
-                        street.extra:
-                          type: string
-                          nullable: true
-                        postalCode:
-                          type: string
-                        city:
-                          type: string
-                        country:
-                          type: string
-                        flags:
-                          additionalProperties:
-                            type: object
-                            properties:
-                              id:
-                                type: string
-                              desc:
-                                type: string
-                            additionalProperties: false
-                    birthdate:
-                      type: string
-                      format: date
-                      nullable: true
-                      deprecated: true
-                    emails:
-                      type: array
-                      items:
-                        type: string
-                    descriptions:
-                      additionalProperties:
-                        type: string
-                        description: A fancy string with description
-                    type:
-                      enum:
-                        - simple
-                      type: string
-                      default: simple
-                    role:
-                      enum:
-                        - admin
-                        - reader
-                        - contributor
-                      type: string
-                      default: reader
-                    ageGroup:
-                      enum:
-                        - 18
-                        - 40
-                        - 70
-                        - 120
-                      type: integer
-                      default: 40
-                      nullable: true
-                      x-caffoa-attributes:
-                        - Obsolete("do not use this")
-                    preferredContactTime:
-                      type: string
-                      format: time
-                      default: '12:00'
-                      x-caffoa-converter: CustomTimeConverter
-        '400':
-          description: Error
-          content:
-            application/json:
-              schema:
-                required:
-                  - status
-                  - message
-                type: object
-                properties:
-                  status:
-                    type: string
-                    description: Single string based code describing the error.
-                  message:
-                    type: string
-                    description: Human readable error message.
-    parameters:
-      - name: before
-        in: query
-        required: true
-        style: form
-        schema:
-          type: string
-          format: date
-      - name: after
-        in: query
-        required: true
-        style: form
-        schema:
-          type: string
-          format: date
-          default: '1950-01-01T00:00:00.0000000'
-      - name: maxResults
-        in: query
-        style: form
-        schema:
-          type: integer
-          nullable: true
-  '/startLongRunningFunction/{id}':
-    post:
-      tags:
-        - maintainance
-      description: start a long running function via durable functions
-      operationId: long-running-function
-      responses:
-        '202':
-          description: started long running function
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  status:
-                    enum:
-                      - running
-                      - success
-                      - failure
-                    type: string
-                  result:
-                    required:
-                      - type
-                    oneOf:
-                      - required:
-                          - type
-                          - name
-                        type: object
-                        properties:
-                          name:
-                            type: string
-                            description: A fancy string with description
-                          address:
-                            required:
-                              - street
-                              - postalCode
-                              - city
-                              - country
-                            type: object
-                            properties:
-                              street:
-                                type: string
-                              street.extra:
-                                type: string
-                                nullable: true
-                              postalCode:
-                                type: string
-                              city:
-                                type: string
-                              country:
-                                type: string
-                              flags:
-                                additionalProperties:
-                                  type: object
-                                  properties:
-                                    id:
-                                      type: string
-                                    desc:
-                                      type: string
-                                  additionalProperties: false
-                          birthdate:
-                            type: string
-                            format: date
-                            nullable: true
-                            deprecated: true
-                          emails:
-                            type: array
-                            items:
-                              type: string
-                          descriptions:
-                            additionalProperties:
-                              type: string
-                              description: A fancy string with description
-                          type:
-                            enum:
-                              - simple
-                            type: string
-                            default: simple
-                          role:
-                            enum:
-                              - admin
-                              - reader
-                              - contributor
-                            type: string
-                            default: reader
-                          ageGroup:
-                            enum:
-                              - 18
-                              - 40
-                              - 70
-                              - 120
-                            type: integer
-                            default: 40
-                            nullable: true
-                            x-caffoa-attributes:
-                              - Obsolete("do not use this")
-                          preferredContactTime:
-                            type: string
-                            format: time
-                            default: '12:00'
-                            x-caffoa-converter: CustomTimeConverter
-                      - required:
-                          - type
-                          - email
-                        type: object
-                        properties:
-                          email:
-                            type: string
-                            format: email
-                          type:
-                            enum:
-                              - guest
-                            type: string
-                            default: guest
-                    discriminator:
-                      propertyName: type
-                      mapping:
-                        simple: '#/components/schemas/user'
-                        guest: '#/components/schemas/guestUser'
-    parameters:
-      - name: id
-        in: path
-        required: true
-        style: simple
-        schema:
-          type: string
-          format: uuid
-  /tags:
-    get:
-      tags:
-        - user
-      operationId: get-tags
-      responses:
-        '200':
-          description: list of elements that have the requested tag
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  user:
-                    type: object
-                    additionalProperties:
-                      type: array
-                      items:
-                        type: string
-                        description: a tag id
-                        format: uuid
-                example:
-                  user:
-                    <userId_1>:
-                      - <tagId_1>
-                      - <tagId_2>
-                    <userId_2>:
-                      - <tagId_2>
-                      - <tagId_3>
-  /tags/users:
-    get:
-      tags:
-        - user
-      operationId: get-user-tags
-      responses:
-        '200':
-          description: tags for the user
-          content:
-            application/json:
-              schema:
-                type: object
-                additionalProperties:
-                  type: array
-                  items:
-                    type: string
-                    description: a tag id
-                    format: uuid
 components: { }

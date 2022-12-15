@@ -14,16 +14,21 @@ public class ServiceParser
 {
     private readonly ServiceConfig _service;
     private readonly CaffoaGlobalConfig _config;
-    private readonly OpenApiDocument _document;
+    private OpenApiDocument _document;
     private readonly Dictionary<string, OpenApiSchema> _knownTypes = new();
     private static readonly List<string> Duplicates = new();
     public OpenApiDocument Document => _document;
-    public string ApiName { get; }
+    public string ApiName { get; set; }
 
     public ServiceParser(ServiceConfig service, CaffoaGlobalConfig config)
     {
         _service = service;
         _config = config;
+    }
+    
+    public async Task ReadAsync() {
+
+        Uri baseUri;
         Stream? input = null;
         try
         {
@@ -31,21 +36,31 @@ public class ServiceParser
             {
                 input = new HttpClient().GetStreamAsync(_service.ApiPath).Result;
                 ApiName = _service.ApiPath;
+                baseUri = new Uri(_service.ApiPath.Substring(0, _service.ApiPath.LastIndexOf('/')));
             }
             else
             {
                 input = File.OpenRead(_service.ApiPath);
                 ApiName = Path.GetFileName(_service.ApiPath);
+                baseUri = new Uri(Path.GetDirectoryName(Path.GetFullPath(_service.ApiPath))!);
             }
 
+            if (!baseUri.AbsoluteUri.EndsWith('/'))
+                baseUri = new Uri($"{baseUri.AbsoluteUri}/");
 
-            var reader = new OpenApiStreamReader();
-            _document = reader.Read(input, out var diagnostic);
-
-            if (diagnostic.Errors.Count > 0)
+            var reader = new OpenApiStreamReader(new OpenApiReaderSettings()
             {
-                throw new CaffoaValidationException($"Error parsing {service.ApiPath}", diagnostic);
+                CustomExternalLoader = null,
+                LoadExternalRefs = true,
+                BaseUrl = baseUri
+            });
+            var readResult = await reader.ReadAsync(input);
+            
+            if (readResult.OpenApiDiagnostic.Errors.Count > 0)
+            {
+                throw new CaffoaValidationException($"Error parsing {_service.ApiPath}", readResult.OpenApiDiagnostic);
             }
+            _document = readResult.OpenApiDocument;
         }
         finally
         {
@@ -80,7 +95,9 @@ public class ServiceParser
         if (_service.Model.Excludes != null)
             schemas = schemas.Where(p => !_service.Model.Excludes.Contains(p.Key))
                 .ToDictionary(p => p.Key, p => p.Value);
-        return ParseObjects(schemas);
+        var objects = ParseObjects(schemas);
+        objects.ForEach(o=>o.Namespace = _service.Model.Namespace);
+        return objects;
     }
 
     public List<EndPointModel> GenerateEndpoints()

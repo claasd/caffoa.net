@@ -11,6 +11,7 @@
      * `StaticValuesWithoutCheck` = uses static values bus does not check the input, was `enumsAsStaticValues`: `true` and `checkEnums`: `false`
 
 * Change of defaults for several configuration parameters. 
+  *  `useInheritance` : `false`  
   *  `withCancelation`: `true`
   *  `parsePathParameters`: `true`
   *  `parseQueryParameters`: `true`

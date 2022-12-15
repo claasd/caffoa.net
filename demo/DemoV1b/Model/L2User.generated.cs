@@ -101,6 +101,9 @@ namespace DemoV1b.Model {
         [JsonProperty("lastSessionLength")]
         public virtual TimeSpan LastSessionLength { get; set; }
 
+        [JsonExtensionData]
+        public Dictionary<string, object> AdditionalProperties;
+
         public L2User(){}
         public L2User(L2User other) {
             Name = other.Name;
@@ -113,18 +116,7 @@ namespace DemoV1b.Model {
             AgeGroup = other.AgeGroup;
             PreferredContactTime = other.PreferredContactTime;
             LastSessionLength = other.LastSessionLength;
-        }
-        public L2User(L2UserWithId other){
-            Name = other.Name;
-            Address = other.Address?.ToL2Address();
-            Birthdate = other.Birthdate;
-            Emails = other.Emails.ToList();
-            Descriptions = other.Descriptions.ToDictionary(entry => entry.Key, entry => entry.Value);
-            Type = other.Type;
-            Role = other.Role;
-            AgeGroup = other.AgeGroup;
-            PreferredContactTime = other.PreferredContactTime;
-            LastSessionLength = other.LastSessionLength;
+            AdditionalProperties = other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null;
         }
         public L2User ToL2User() => new L2User(this);
         public virtual L2AnyUser ToL2AnyUser() => ToL2User();
