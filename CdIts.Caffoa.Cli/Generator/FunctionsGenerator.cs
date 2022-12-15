@@ -187,7 +187,7 @@ public class FunctionsGenerator
         foreach (var (key, type) in model!.Mapping)
         {
             var caseParams = new List<string>(callParams);
-            caseParams.Add($"_jsonParser.ToObject<{type}>(jObject)");
+            caseParams.Add($"_jsonParser.ToObject<{type}>(jToken)");
             if (_config.ParseQueryParameters is not false)
             {
                 caseParams.AddRange(endpoint.QueryParameters().Select(p => $"{p.Name}Value"));
@@ -214,7 +214,7 @@ public class FunctionsGenerator
     {
         var callParams = BuildCallParameterList(endpoint);
         if (endpoint.HasRequestBody && endpoint.RequestBodyType is SimpleBodyModel simple)
-            callParams.Add($"await _jsonParser.Parse<{simple.TypeName}>(request.Body)");
+            callParams.Add($"_jsonParser.Parse<{simple.TypeName}>(request.Body)");
         else if (endpoint.HasRequestBody)
             callParams.Add($"request.Body");
         if (_config.ParseQueryParameters is not false)

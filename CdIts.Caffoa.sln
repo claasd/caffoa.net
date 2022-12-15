@@ -33,6 +33,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DemoV1a", "demo\DemoV1a\Dem
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DemoV1b", "demo\DemoV1b\DemoV1b.csproj", "{DD69DC15-D120-4A89-813A-4798ECBBF61D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CdIts.AzFuncTestHelper", "CdIts.AzFuncTestHelper\CdIts.AzFuncTestHelper.csproj", "{86B1BDD8-F591-41DA-B2C8-68FC9ED23D42}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -71,6 +73,10 @@ Global
 		{DD69DC15-D120-4A89-813A-4798ECBBF61D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DD69DC15-D120-4A89-813A-4798ECBBF61D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DD69DC15-D120-4A89-813A-4798ECBBF61D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{86B1BDD8-F591-41DA-B2C8-68FC9ED23D42}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{86B1BDD8-F591-41DA-B2C8-68FC9ED23D42}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{86B1BDD8-F591-41DA-B2C8-68FC9ED23D42}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{86B1BDD8-F591-41DA-B2C8-68FC9ED23D42}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{8AB164C2-88E8-4C75-BD39-71BCA01F2B37} = {F5DAF376-0D55-4D08-A5B0-DAA3EA4C4E9A}

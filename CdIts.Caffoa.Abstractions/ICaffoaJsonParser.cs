@@ -12,11 +12,11 @@ public interface ICaffoaJsonParser
     /// Should throw an CaffoaClientError for parsing errors.
     /// (See <see cref="ICaffoaErrorHandler"/> for error handling via CI)
     /// </summary>
-    public Task<T> Parse<T>(Stream s);
+    public T Parse<T>(Stream s);
     /// <summary>
     /// Should parse the passed jObject to T with errorHandling.
     /// Should throw an CaffoaClientError for parsing errors.
     /// (See <see cref="ICaffoaErrorHandler"/> for error handling via CI)
     /// </summary>
-    public T ToObject<T>(JObject jObject);
+    public T ToObject<T>(JToken jToken);
 }
