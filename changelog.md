@@ -17,11 +17,13 @@
   *  `parseQueryParameters`: `true`
   *  `genericAdditionalPropertiesType` : `JToken`
   *  `clearGeneratedFiles` : `true`
+  *  `useDateOnly` : `true`
   *  `enumMode`: `Default` (was `enumsAsStaticValues`: `false`)
 
 * For `date-time` objects, the `DateTimeOffset` class is now used instead of `DateTime`.
 * new static class `EnumConverter` to convert string to enums and get defined string values from enums via `enumName.Value()`
 * New interface method in `ICaffoaConverter` to convert strings to enums.
+* Signatures of `ICaffoaJsonParser` have changed. Parsing from stream is now done using `JsonTextReader`, not needing async anymore. From Object now takes the more generic type JToken isntead of JObject 
 * `ParseDate` and `ParseDateTime` interface method in `ICaffoaConverter` now return `DateTimeOffset`
 * Dropped support for enums on number types (double/float)
 

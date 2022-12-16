@@ -62,7 +62,7 @@ public class PropertyUpdateBuilder
 
     public static string BuildInitializer(SchemaItem schemaItem, CaffoaConfig config, SchemaItem target)
     {
-        var builder = new PropertyUpdateBuilder(schemaItem, config, target.ClassName)
+        var builder = new PropertyUpdateBuilder(schemaItem, config, schemaItem.ClassName)
         {
             UseOther = false,
             AllowAdditionalProperties = target.AdditionalPropertiesAllowed

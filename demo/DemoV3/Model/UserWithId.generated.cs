@@ -27,9 +27,9 @@ namespace DemoV3.Model {
         public virtual Address Address { get; set; }
 
         [Obsolete]
-        [JsonConverter(typeof(CaffoaDateConverter))]
+        [JsonConverter(typeof(CaffoaDateOnlyConverter))]
         [JsonProperty("birthdate")]
-        public virtual DateTimeOffset? Birthdate { get; set; }
+        public virtual DateOnly? Birthdate { get; set; }
 
         [JsonProperty("emails")]
         public virtual ICollection<string> Emails { get; set; } = new List<string>();
@@ -49,7 +49,7 @@ namespace DemoV3.Model {
 
         [JsonConverter(typeof(CustomTimeConverter))]
         [JsonProperty("preferredContactTime")]
-        public virtual TimeSpan PreferredContactTime { get; set; } = TimeSpan.Parse("12:00");
+        public virtual TimeOnly PreferredContactTime { get; set; } = TimeOnly.Parse("12:00");
 
         [JsonProperty("lastSessionLength")]
         public virtual TimeSpan LastSessionLength { get; set; }

@@ -13,9 +13,9 @@ public class CaffoaGlobalConfig : CaffoaConfig
     {
         if (setDefaults)
         {
-            UseDateOnly = false;
+            UseDateOnly = true;
             Imports = new List<string>();
-            UseInheritance = true;
+            UseInheritance = false;
             AuthorizationLevel = "function";
             Duplicates = "overwrite";
         }

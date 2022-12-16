@@ -2,7 +2,6 @@ config:
   clearGeneratedFiles: true
   duplicates: once # once, overwrite (default)
   routePrefix: api/
-  useDateOnly: false
   splitByTag: true # if set to true, multiple function files and interfaces will be generated, based on the first tag of each path item
   genericAdditionalProperties: true # if set to true, a dictionary for additional properties will be generated
   genericAdditionalPropertiesType: object

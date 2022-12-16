@@ -186,7 +186,7 @@ namespace DemoV1a
         {
             try {
                 var instance = _factory.Instance(request);
-                var result = await instance.UsersGetByBirthdateAsync(_converter.ParseDateTime(date, "date"), request.HttpContext.RequestAborted);
+                var result = await instance.UsersGetByBirthdateAsync(_converter.ParseDateOnly(date, "date"), request.HttpContext.RequestAborted);
                 return _resultHandler.Json(result, 200);
             } catch(CaffoaClientError err) {
                 return err.Result;
@@ -205,14 +205,14 @@ namespace DemoV1a
             HttpRequest request)
         {
             try {
-                DateTimeOffset beforeValue;
+                DateOnly beforeValue;
                 if(request.Query.TryGetValue("before", out var beforeQueryValue))
-                    beforeValue = _converter.ParseDateTime(beforeQueryValue, "before");
+                    beforeValue = _converter.ParseDateOnly(beforeQueryValue, "before");
                 else
                     throw _errorHandler.RequiredQueryParameterMissing("before");
-                DateTimeOffset afterValue;
+                DateOnly afterValue;
                 if(request.Query.TryGetValue("after", out var afterQueryValue))
-                    afterValue = _converter.ParseDateTime(afterQueryValue, "after");
+                    afterValue = _converter.ParseDateOnly(afterQueryValue, "after");
                 else
                     throw _errorHandler.RequiredQueryParameterMissing("after");
                 int? maxResultsValue = null;

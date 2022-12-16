@@ -34,13 +34,13 @@ namespace DemoV3.Services
             return Task.CompletedTask;
         }
 
-        public async Task<IEnumerable<User>> UsersGetByBirthdateAsync(DateTimeOffset date, CancellationToken cancellationToken = default)
+        public async Task<IEnumerable<User>> UsersGetByBirthdateAsync(DateOnly date, CancellationToken cancellationToken = default)
         {
             var users = await Users.List();
             return users.Where(u => u.Birthdate >= date).Select(u => u.ToUser());
         }
 
-        public async Task<IEnumerable<User>> UsersSearchByDateAsync(DateTimeOffset before, DateTimeOffset after,
+        public async Task<IEnumerable<User>> UsersSearchByDateAsync(DateOnly before, DateOnly after,
             int? maxResults = null, CancellationToken cancellationToken = default)
         {
             var users = await Users.List();
