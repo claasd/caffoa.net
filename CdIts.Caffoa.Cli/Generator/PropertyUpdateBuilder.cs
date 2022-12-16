@@ -12,10 +12,11 @@ public class PropertyUpdateBuilder
     private readonly CaffoaConfig _config;
     public string Prefix { get; set; } = "";
     public bool UseOther { get; set; } = true;
-    public string ClassName { get; set; }
+    public string ClassName { get; }
     public bool AllowAdditionalProperties { get; set; } = true; 
-    private PropertyUpdateBuilder(SchemaItem schemaItem,  CaffoaConfig config)
+    private PropertyUpdateBuilder(SchemaItem schemaItem,  CaffoaConfig config, string className)
     {
+        ClassName = className;
         _schemaItem = schemaItem;
         _config = config;
         if (schemaItem.Properties is null)
@@ -32,7 +33,7 @@ public class PropertyUpdateBuilder
     private IEnumerable<string> Generate()
     {
         var result = new List<string>();
-        foreach (var property in _schemaItem.Properties)
+        foreach (var property in _schemaItem.Properties!)
         {
             var data = new SinglePropertyUpdateBuilder(Prefix, ClassName, property,
                     _config.GetEnumCreationMode() == CaffoaConfig.EnumCreationMode.Default, UseOther)
@@ -52,9 +53,8 @@ public class PropertyUpdateBuilder
 
     public static string BuildConstructor(SchemaItem schemaItem, CaffoaConfig config, SchemaItem targetSchema)
     {
-        var builder = new PropertyUpdateBuilder(schemaItem, config)
+        var builder = new PropertyUpdateBuilder(schemaItem, config, targetSchema.ClassName)
         {
-            ClassName = targetSchema.ClassName,
             AllowAdditionalProperties = targetSchema.AdditionalPropertiesAllowed
         };
         return builder.Build(";\n            ", ";");
@@ -62,10 +62,9 @@ public class PropertyUpdateBuilder
 
     public static string BuildInitializer(SchemaItem schemaItem, CaffoaConfig config, SchemaItem target)
     {
-        var builder = new PropertyUpdateBuilder(schemaItem, config)
+        var builder = new PropertyUpdateBuilder(schemaItem, config, target.ClassName)
         {
             UseOther = false,
-            ClassName = schemaItem.ClassName,
             AllowAdditionalProperties = target.AdditionalPropertiesAllowed
         };
         return builder.Build(",\n            ");
@@ -73,9 +72,8 @@ public class PropertyUpdateBuilder
 
     public static object BuildExternalUpdates(SchemaItem schemaItem, CaffoaGlobalConfig config, string className, bool otherAllowAdditionalProps)
     {
-        var builder = new PropertyUpdateBuilder(schemaItem, config)
+        var builder = new PropertyUpdateBuilder(schemaItem, config, className)
         {
-            ClassName = className,
             AllowAdditionalProperties = otherAllowAdditionalProps,
             Prefix = "item."
         };

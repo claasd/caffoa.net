@@ -11,61 +11,24 @@ using YamlDotNet.Serialization;
 using YamlDotNet.Serialization.NamingConventions;
 using Parser = CommandLine.Parser;
 
-CommandLineOptions options = new CommandLineOptions(); 
-Parser.Default.ParseArguments<CommandLineOptions>(args)
-    .WithParsed(o => options = o);
 try
 {
+    CommandLineOptions options = new CommandLineOptions();
+    Parser.Default.ParseArguments<CommandLineOptions>(args)
+        .WithParsed(o => options = o);
     if (options.InitWithFile != null)
     {
-        var serializer = new SerializerBuilder().WithNamingConvention(CamelCaseNamingConvention.Instance).ConfigureDefaultValuesHandling(DefaultValuesHandling.OmitDefaults).Build();
-        var defaultConfig = new CaffoaSettings()
-        {
-            Config = new CaffoaGlobalConfig(false)
-            {
-                SplitByTag = null,
-            }
-        };
-        defaultConfig.Services.Add(new ServiceConfig()
-        {
-            ApiPath = options.InitWithFile,
-            Function = new FunctionConfig()
-            {
-                Name = options.InitProjectName,
-                Namespace = options.InitProjectName,
-                TargetFolder = options.InitProjectName
-            },
-            Model = new ModelConfig()
-            {
-            Namespace = options.InitProjectName + ".Model",
-            TargetFolder = options.InitProjectName + "/Model"
-        }
-        });
-        using var stream = new StreamWriter(options.ConfigPath);
-        serializer.Serialize(stream, defaultConfig);
+        Main.InitProject(options.InitWithFile, options.InitProjectName, options.ConfigPath);
         return 0;
     }
+    
     var deserializer = new DeserializerBuilder()
         .WithNamingConvention(CamelCaseNamingConvention.Instance)
         .Build();
     using var reader = File.OpenText(options.ConfigPath);
     var settings = deserializer.Deserialize<CaffoaSettings>(reader);
-
-    var builders = new List<ApiBuilder>();
-    foreach (var service in settings.Services)
-    {
-        try
-        {
-            var localConfig = service.Config?.MergedWith(settings.Config) ?? settings.Config;
-            var builder = new ApiBuilder(service, localConfig);
-            await builder.Parse();
-            builders.Add(builder);
-        }
-        catch (ConfigurationMissingException e)
-        {
-            throw new ConfigurationMissingException(e.Message + $" for '{service.ApiPath}'");
-        }
-    }
+    var main = new Main(settings);
+    var builders = await main.GenerateBuilders();
 
     if (settings.Config.ClearGeneratedFiles)
     {
@@ -76,26 +39,7 @@ try
         }
     }
 
-    var extensionGenerators = new List<ExtensionGenerator>();
-    var allDocuments = builders.GroupBy(b => b.ApiName, b => b.Document).ToDictionary(g => g.Key, g => g.First());
-    foreach (var builder in builders)
-    {
-        var otherModels = builders.Where(b => b != builder && b.Models != null).SelectMany(b=>b.Models!);
-        builder.Generate(allDocuments, otherModels);
-        if (builder.ExtensionData.Any())
-        {
-            var generator = extensionGenerators.FirstOrDefault(g =>
-                g.Folder == builder.ExtensionFolder && g.Namespace == builder.ExtensionNamespace);
-            if (generator is null)
-            {
-                generator = new ExtensionGenerator(builder.ExtensionFolder, builder.ExtensionNamespace);
-                extensionGenerators.Add(generator);
-            }
-
-            generator.Add(builder.ExtensionData, builder.ExtensionImports);
-        }
-    }
-    extensionGenerators.ForEach(g => g.Create());
+    main.GenerateCode(builders);
 }
 catch (YamlException e)
 {

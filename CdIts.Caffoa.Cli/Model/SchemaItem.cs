@@ -14,7 +14,7 @@ public class SchemaItem
         ClassName = className;
     }
     
-    public string Namespace { get; set; }
+    public string? Namespace { get; set; }
 
     public  ObjectType Type { get; set; } = ObjectType.Regular;
     public string Name { get; }

@@ -169,6 +169,6 @@ public class CaffoaConverterTests
         });
         Console.WriteLine(duration);
         var obj2 = JsonConvert.DeserializeObject<DurationTestClass>(duration);
-        obj2.Duration.TotalMinutes.Should().Be(920);
+        obj2!.Duration.TotalMinutes.Should().Be(920);
     }
 }

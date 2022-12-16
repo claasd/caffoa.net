@@ -14,11 +14,10 @@ public class ServiceParser
 {
     private readonly ServiceConfig _service;
     private readonly CaffoaGlobalConfig _config;
-    private OpenApiDocument _document;
     private readonly Dictionary<string, OpenApiSchema> _knownTypes = new();
     private static readonly List<string> Duplicates = new();
-    public OpenApiDocument Document => _document;
-    public string ApiName { get; set; }
+    public OpenApiDocument Document { get; private set; } = new();
+    public string ApiName { get; private set; } = "";
 
     public ServiceParser(ServiceConfig service, CaffoaGlobalConfig config)
     {
@@ -60,7 +59,7 @@ public class ServiceParser
             {
                 throw new CaffoaValidationException($"Error parsing {_service.ApiPath}", readResult.OpenApiDiagnostic);
             }
-            _document = readResult.OpenApiDocument;
+            Document = readResult.OpenApiDocument;
         }
         finally
         {
@@ -77,8 +76,8 @@ public class ServiceParser
         {
             workspace.AddDocument(name, doc);
         }
-        workspace.AddDocument("root", _document);
-        _document.Serialize(fileStream, OpenApiSpecVersion.OpenApi3_0, OpenApiFormat.Yaml, new OpenApiWriterSettings()
+        workspace.AddDocument("root", Document);
+        Document.Serialize(fileStream, OpenApiSpecVersion.OpenApi3_0, OpenApiFormat.Yaml, new OpenApiWriterSettings()
         {
             InlineExternalReferences = true,
             InlineLocalReferences = true
@@ -87,7 +86,7 @@ public class ServiceParser
 
     public List<SchemaItem> GenerateModel()
     {
-        var schemas = _document.Components.Schemas;
+        var schemas = Document!.Components.Schemas;
         ParseSimpleTypes(schemas);
         if (_service.Model!.Includes != null && _service.Model.Includes.Any())
             schemas = schemas.Where(p => _service.Model.Includes.Contains(p.Key))
@@ -104,7 +103,7 @@ public class ServiceParser
     {
         var endpoints = new List<EndPointModel>();
         var parser = new PathParser(_config, ClassName, _knownTypes);
-        foreach (var (path, pathItem) in _document.Paths)
+        foreach (var (path, pathItem) in Document!.Paths)
         {
             endpoints.AddRange(parser.Parse(path, pathItem));
         }

@@ -94,14 +94,14 @@ public class ModelGenerator
 
         return string.Join("\n\n", data);
     }
-    private string CreateModelExtension(SchemaItem item, string className, string otherClassName, SchemaItem otherItem)
+    private string CreateModelExtension(SchemaItem subItem, string targetClassName, string sourceClassName, SchemaItem parentItem)
     {
         string file;
         file = Templates.GetTemplate("ModelExtensionContentTemplate.tpl");
         var parameters = new Dictionary<string, object>();
-        parameters["NAME"] = className;
-        parameters["OTHER"] = otherClassName;
-        parameters["UPDATEPROPS"] = PropertyUpdateBuilder.BuildExternalUpdates(item, _config, className, otherItem.AdditionalPropertiesAllowed);
+        parameters["NAME"] = targetClassName;
+        parameters["OTHER"] = sourceClassName;
+        parameters["UPDATEPROPS"] = PropertyUpdateBuilder.BuildExternalUpdates(subItem, _config, targetClassName, parentItem.AdditionalPropertiesAllowed);
         var formatted = file.FormatDict(parameters);
         return formatted.ToSystemNewLine();
     }

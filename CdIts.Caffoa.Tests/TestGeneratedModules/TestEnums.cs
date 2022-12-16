@@ -17,7 +17,7 @@ public class TestEnums
         user["name"] = "Caffoa";
         user["ageGroup"] = 18;
         var parsed = JsonConvert.DeserializeObject<User>(user.ToString());
-        parsed.AgeGroup.Should().Be(User.AgeGroupValue._18);
+        parsed!.AgeGroup.Should().Be(User.AgeGroupValue._18);
     }
     
     [Test]
