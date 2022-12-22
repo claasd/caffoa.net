@@ -214,7 +214,7 @@ public class FunctionsGenerator
     {
         var callParams = BuildCallParameterList(endpoint);
         if (endpoint.HasRequestBody && endpoint.RequestBodyType is SimpleBodyModel simple)
-            callParams.Add($"_jsonParser.Parse<{simple.TypeName}>(request.Body)");
+            callParams.Add($"await _jsonParser.Parse<{simple.TypeName}>(request.Body)");
         else if (endpoint.HasRequestBody)
             callParams.Add($"request.Body");
         if (_config.ParseQueryParameters is not false)

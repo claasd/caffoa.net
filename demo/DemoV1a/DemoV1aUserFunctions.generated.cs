@@ -70,7 +70,7 @@ namespace DemoV1a
         {
             try {
                 var instance = _factory.Instance(request);
-                var jToken = _jsonParser.Parse<JToken>(request.Body);
+                var jToken = await _jsonParser.Parse<JToken>(request.Body);
                 var discriminator = jToken["type"]?.ToString();
                 var task = discriminator switch
                 {
@@ -98,7 +98,7 @@ namespace DemoV1a
         {
             try {
                 var instance = _factory.Instance(request);
-                var jToken = _jsonParser.Parse<JToken>(request.Body);
+                var jToken = await _jsonParser.Parse<JToken>(request.Body);
                 var discriminator = jToken["type"]?.ToString();
                 var task = discriminator switch
                 {
@@ -126,7 +126,7 @@ namespace DemoV1a
         {
             try {
                 var instance = _factory.Instance(request);
-                var result = await instance.UserPatchAsync(userId, _jsonParser.Parse<JObject>(request.Body), request.HttpContext.RequestAborted);
+                var result = await instance.UserPatchAsync(userId, await _jsonParser.Parse<JObject>(request.Body), request.HttpContext.RequestAborted);
                 return _resultHandler.Json(result, 200);
             } catch(CaffoaClientError err) {
                 return err.Result;

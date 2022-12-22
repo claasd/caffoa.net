@@ -17,10 +17,18 @@ public class DefaultCaffoaJsonParser : ICaffoaJsonParser
         ErrorHandler = errorHandler;
     }
 
-    public T Parse<T>(Stream s)
+    public async ValueTask<T> Parse<T>(Stream httpStream)
     {
         try
         {
+            Stream s;
+            if (httpStream.CanSeek)
+                s = httpStream;
+            else
+            {
+                s = new MemoryStream();
+                await httpStream.CopyToAsync(s);
+            }
             if (s.CanSeek)
                 s.Seek(0, SeekOrigin.Begin);
 
