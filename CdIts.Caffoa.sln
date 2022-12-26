@@ -13,9 +13,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionItems", "SolutionIt
 		changelog.md = changelog.md
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DemoV3", "demo\DemoV3\DemoV3.csproj", "{382FB737-ADE4-40B3-B8B6-631B1D58A819}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DemoV2", "demo\DemoV2\DemoV2.csproj", "{382FB737-ADE4-40B3-B8B6-631B1D58A819}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CdIts.Caffoa", "CdIts.Caffoa\CdIts.Caffoa.csproj", "{EE4DC45D-A9FA-4B03-918D-F5BBED802E24}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CdIts.Caffoa.Json.Net", "CdIts.Caffoa.Json.Net\CdIts.Caffoa.Json.Net.csproj", "{EE4DC45D-A9FA-4B03-918D-F5BBED802E24}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "actions", "actions", "{8AB164C2-88E8-4C75-BD39-71BCA01F2B37}"
 	ProjectSection(SolutionItems) = preProject
@@ -24,7 +24,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "actions", "actions", "{8AB1
 		.github\workflows\sonar.yml = .github\workflows\sonar.yml
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CdIts.Caffoa.Abstractions", "CdIts.Caffoa.Abstractions\CdIts.Caffoa.Abstractions.csproj", "{1FAA8813-9041-4A2F-A074-15ADAAA57F70}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CdIts.Caffoa.Base", "CdIts.Caffoa.Base\CdIts.Caffoa.Base.csproj", "{1FAA8813-9041-4A2F-A074-15ADAAA57F70}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CdIts.Caffoa.Tests", "CdIts.Caffoa.Tests\CdIts.Caffoa.Tests.csproj", "{81C95408-37F4-48C2-A3CC-16CEF8CE3829}"
 EndProject

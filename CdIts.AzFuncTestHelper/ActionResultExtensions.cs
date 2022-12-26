@@ -1,4 +1,5 @@
 ﻿using System.Net;
+using System.Net.Mime;
 using System.Text;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
@@ -39,7 +40,7 @@ public static class ActionResultExtensions
             ContentResult contentResult => new HttpResponseMessage(
                 (HttpStatusCode)(contentResult.StatusCode ?? 200))
             {
-                Content = new StringContent(contentResult.Content ?? "", Encoding.UTF8, contentResult.ContentType)
+                Content = new StringContent(contentResult.Content ?? "", Encoding.UTF8, contentResult.ContentType ?? MediaTypeNames.Text.Plain)
             },
             FileStreamResult fileStreamResult => new HttpResponseMessage()
             {

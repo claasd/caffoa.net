@@ -3,7 +3,6 @@ using System.ComponentModel;
 using System.Runtime.Serialization;
 using Caffoa;
 using Caffoa.Defaults;
-using Caffoa.Extensions;
 using CdIts.Caffoa.Tests.TestClasses;
 using FluentAssertions;
 using Microsoft.Extensions.Logging.Abstractions;
@@ -20,7 +19,9 @@ public class CaffoaConverterTests
     [SetUp]
     public void Setup()
     {
-        _converter = new DefaultCaffoaConverter(new DefaultCaffoaErrorHandler(NullLogger.Instance));
+        _converter =
+            new DefaultCaffoaConverter(new DefaultCaffoaErrorHandler(NullLogger.Instance,
+                new DefaultCaffoaResultHandler()));
     }
 
     [Test]
@@ -150,13 +151,13 @@ public class CaffoaConverterTests
     {
         EnumConverter.FromString<TestEnumType>(input).Should().Be(result);
     }
-    
+
     [TestCase("enum12")]
     [TestCase("enum5")]
     [TestCase("enum-space")]
     public void EnumFromStringErrorTests(string input)
     {
-        var act = ()=> EnumConverter.FromString<TestEnumType>(input);
+        var act = () => EnumConverter.FromString<TestEnumType>(input);
         act.Should().Throw<InvalidEnumArgumentException>();
     }
 

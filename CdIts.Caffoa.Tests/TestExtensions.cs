@@ -76,7 +76,7 @@ public class TestExtensions
         {
             ["D1"] = "data"
         };
-        var errorHandler = new DefaultCaffoaErrorHandler(NullLogger.Instance);
+        var errorHandler = new DefaultCaffoaErrorHandler(NullLogger.Instance, new DefaultCaffoaResultHandler());
         a.Invoking(d => d.MergedWith(b)).Should().Throw<JsonSerializationException>();
         a.Invoking(d => d.MergedWith(b, errorHandler: errorHandler)).Should().Throw<CaffoaClientError>();
     }
@@ -92,7 +92,7 @@ public class TestExtensions
         {
             D1 = null,
         };
-        var errorHandler = new DefaultCaffoaErrorHandler(NullLogger.Instance);
+        var errorHandler = new DefaultCaffoaErrorHandler(NullLogger.Instance, new DefaultCaffoaResultHandler());
         a.Invoking(d => d.MergedWith(b)).Should().Throw<JsonSerializationException>();
         a.Invoking(d => d.MergedWith(b, errorHandler: errorHandler)).Should().Throw<CaffoaClientError>();
     }
@@ -109,7 +109,7 @@ public class TestExtensions
             ["D1"] = "D1b",
             ["sub"] = JObject.Parse("{}")
         };
-        var errorHandler = new DefaultCaffoaErrorHandler(NullLogger.Instance);
+        var errorHandler = new DefaultCaffoaErrorHandler(NullLogger.Instance, new DefaultCaffoaResultHandler());
         a.Invoking(d => d.MergedWith(b)).Should().Throw<JsonSerializationException>();
         a.Invoking(d => d.MergedWith(b, errorHandler: errorHandler)).Should().Throw<CaffoaClientError>();
     }
@@ -125,7 +125,7 @@ public class TestExtensions
         {
             ["D1"] = null
         };
-        var errorHandler = new DefaultCaffoaErrorHandler(NullLogger.Instance);
+        var errorHandler = new DefaultCaffoaErrorHandler(NullLogger.Instance, new DefaultCaffoaResultHandler());
         a.Invoking(d => d.MergedWith(b)).Should().Throw<JsonSerializationException>();
         a.Invoking(d => d.MergedWith(b, errorHandler: errorHandler)).Should().Throw<CaffoaClientError>();
     }

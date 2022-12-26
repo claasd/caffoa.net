@@ -13,7 +13,7 @@
             Instead of generating stubs, the goal is to be able to change the api and re-generate the files without overwriting your code.
 
             This is the library that contains Interfaces and abstract classes.</Description>
-        <TargetFramework>netstandard2.0</TargetFramework>
+        <TargetFrameworks>net7.0;net6.0;net5.0;netcoreapp3.1</TargetFrameworks>
 
     </PropertyGroup>
 
@@ -22,7 +22,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\CdIts.Caffoa.Abstractions\CdIts.Caffoa.Abstractions.csproj" />
+      <ProjectReference Include="..\CdIts.Caffoa.Base\CdIts.Caffoa.Base.csproj" />
     </ItemGroup>
 
 </Project>

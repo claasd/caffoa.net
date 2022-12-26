@@ -1,6 +1,11 @@
 # caffoa changelog
 ## 2.0.0
 ### Breaking Changes:
+
+* Renamed `CdIts.Caffoa` dll to `CdIts.Caffoa.Json.Net`
+* Renamed `CdIts.Caffoa.Abstractions` dll to `CdIts.Caffoa.Base`
+* Moved functionality that does not rely on Json.NET to `CdIts.Caffoa.Base`
+
 * use of c# enums for query and path parameters, if the enum is declared as it's own schema elements
 * Removed parameters:
   *  `acceptCaseInvariantEnums`: This will now always treated as true, as Json.NET enums are treated as case-insensitive, and enums are the new default

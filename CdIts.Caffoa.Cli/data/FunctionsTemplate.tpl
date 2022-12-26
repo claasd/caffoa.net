@@ -26,9 +26,9 @@ namespace {NAMESPACE}
         public {CLASSNAME}(ILogger<{CLASSNAME}> logger, ICaffoaFactory<{INTERFACE}> factory, ICaffoaErrorHandler errorHandler = null, ICaffoaJsonParser jsonParser = null, ICaffoaResultHandler resultHandler = null{ADDITIONAL_INTERFACES}) {{
             _logger = logger;
             _factory = factory;
-            _errorHandler = errorHandler ?? new DefaultCaffoaErrorHandler(_logger);            
-            _jsonParser = jsonParser ?? new DefaultCaffoaJsonParser(_errorHandler);
             _resultHandler = resultHandler ?? new DefaultCaffoaResultHandler();
+            _errorHandler = errorHandler ?? new DefaultCaffoaErrorHandler(_logger, _resultHandler);
+            _jsonParser = jsonParser ?? new DefaultCaffoaJsonParser(_errorHandler);
 {ADDITIONAL_INITS}        }}
 {METHODS}
     }}

@@ -17,8 +17,8 @@
     <ItemGroup>
       <ProjectReference Include="..\CdIts.AzFuncTestHelper\CdIts.AzFuncTestHelper.csproj" />
       <ProjectReference Include="..\CdIts.Caffoa.Extensions\CdIts.Caffoa.Extensions.csproj" />
-      <ProjectReference Include="..\CdIts.Caffoa\CdIts.Caffoa.csproj" />
-      <ProjectReference Include="..\demo\DemoV3\DemoV3.csproj" />
+      <ProjectReference Include="..\CdIts.Caffoa.Json.Net\CdIts.Caffoa.Json.Net.csproj" />
+      <ProjectReference Include="..\demo\DemoV2\DemoV2.csproj" />
     </ItemGroup>
 
 </Project>

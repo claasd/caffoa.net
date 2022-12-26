@@ -1,5 +1,5 @@
 ﻿using System;
-using DemoV3.Model;
+using DemoV2.Model;
 using FluentAssertions;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -19,7 +19,7 @@ public class TestEnums
         var parsed = JsonConvert.DeserializeObject<User>(user.ToString());
         parsed!.AgeGroup.Should().Be(User.AgeGroupValue._18);
     }
-    
+
     [Test]
     public void TestIntegerEnumsForbiddenValue()
     {
@@ -30,7 +30,7 @@ public class TestEnums
         Action action = () => JsonConvert.DeserializeObject<User>(user.ToString());
         action.Should().Throw<ArgumentException>().WithMessage("Could not*20*");
     }
-    
+
     [Test]
     public void TestStringEnumsForbiddenValue()
     {
@@ -40,8 +40,8 @@ public class TestEnums
         user["role"] = "Supervisor";
         Action action = () => JsonConvert.DeserializeObject<User>(user.ToString());
         action.Should().Throw<JsonSerializationException>().WithMessage("Error converting*");
-        
     }
+
     [TestCase("admin")]
     [TestCase("Admin")]
     [TestCase("ADMIN")]

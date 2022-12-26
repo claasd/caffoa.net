@@ -24,30 +24,30 @@ services:
       genericAdditionalProperties: true
 #      genericAdditionalPropertiesType: object
     model:
-      namespace: DemoV3.Model.Base
-      targetFolder: ./demo/DemoV3/Model/Base
+      namespace: DemoV2.Model.Base
+      targetFolder: ./demo/DemoV2/Model/Base
       
   - apiPath: tests\base.openapi.yml
     model:
-      namespace: DemoV3.Model
-      targetFolder: ./demo/DemoV3/Model
+      namespace: DemoV2.Model
+      targetFolder: ./demo/DemoV2/Model
 
   - apiPath: tests\openapi.yml
     config:
       generateResolvedApiFile: true
       disposable: true
       imports: 
-        - DemoV3.Model.Base
+        - DemoV2.Model.Base
       durableClient:
         operations:
           - long-running-function
     model:
-      namespace: DemoV3.Model
-      targetFolder: ./demo/DemoV3/Model
+      namespace: DemoV2.Model
+      targetFolder: ./demo/DemoV2/Model
     function:
-      targetFolder: demo/DemoV3
-      namespace: DemoV3
-      name: DemoV3
+      targetFolder: demo/DemoV2
+      namespace: DemoV2
+      name: DemoV2
 
   - apiPath: tests\base.openapi.yml
     config:

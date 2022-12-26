@@ -29,9 +29,9 @@ namespace DemoV1b
         public DemoV1bMaintainanceFunctions(ILogger<DemoV1bMaintainanceFunctions> logger, ICaffoaFactory<IDemoV1bMaintainanceService> factory, ICaffoaErrorHandler errorHandler = null, ICaffoaJsonParser jsonParser = null, ICaffoaResultHandler resultHandler = null, ICaffoaConverter converter = null) {
             _logger = logger;
             _factory = factory;
-            _errorHandler = errorHandler ?? new DefaultCaffoaErrorHandler(_logger);            
-            _jsonParser = jsonParser ?? new DefaultCaffoaJsonParser(_errorHandler);
             _resultHandler = resultHandler ?? new DefaultCaffoaResultHandler();
+            _errorHandler = errorHandler ?? new DefaultCaffoaErrorHandler(_logger, _resultHandler);
+            _jsonParser = jsonParser ?? new DefaultCaffoaJsonParser(_errorHandler);
             _converter = converter ?? new DefaultCaffoaConverter(_errorHandler);
         }
         /// <summary>
