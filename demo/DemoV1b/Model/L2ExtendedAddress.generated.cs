@@ -10,8 +10,7 @@ using System.Collections.Immutable;
 using DemoV1b.Model.Base;
 
 namespace DemoV1b.Model {
-    /// AUTOGENERED BY caffoa ///
-    [JsonObject(MemberSerialization.OptIn)]
+/// AUTOGENERED BY caffoa ///
     public partial class L2ExtendedAddress {
         public const string L2ExtendedAddressObjectName = "extendedAddress";
 

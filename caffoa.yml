@@ -27,16 +27,11 @@ services:
       namespace: DemoV2.Model.Base
       targetFolder: ./demo/DemoV2/Model/Base
       
-  - apiPath: tests\base.openapi.yml
-    model:
-      namespace: DemoV2.Model
-      targetFolder: ./demo/DemoV2/Model
-
   - apiPath: tests\openapi.yml
     config:
       generateResolvedApiFile: true
       disposable: true
-      imports: 
+      imports:
         - DemoV2.Model.Base
       durableClient:
         operations:
@@ -49,6 +44,31 @@ services:
       namespace: DemoV2
       name: DemoV2
 
+  - apiPath: tests\base.openapi.yml
+    config:
+      prefix: 'STJ'
+      flavor: SystemTextJson
+    model:
+      namespace: DemoV2.Text.Json.Model.Base
+      targetFolder: ./demo/DemoV2.Text.Json/Model
+
+  - apiPath: tests\openapi.yml
+    config:
+      prefix: 'STJ'
+      flavor: SystemTextJson
+      imports:
+        - DemoV2.Text.Json.Model.Base
+      durableClient:
+        operations:
+          - long-running-function
+    model:
+      namespace: DemoV2.Text.Json.Model
+      targetFolder: ./demo/DemoV2.Text.Json/Model
+    function:
+      targetFolder: ./demo/DemoV2.Text.Json
+      namespace: DemoV2.Text.Json
+      name: DemoV2TextJson
+      
   - apiPath: tests\base.openapi.yml
     config:
       prefix: L1

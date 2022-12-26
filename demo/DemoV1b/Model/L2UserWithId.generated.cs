@@ -12,8 +12,7 @@ using DemoV1b.Model.Base;
 using DemoV1b.Model;
 
 namespace DemoV1b.Model {
-    /// AUTOGENERED BY caffoa ///
-    [JsonObject(MemberSerialization.OptIn)]
+/// AUTOGENERED BY caffoa ///
     public partial class L2UserWithId : L2AnyUser, L2AnyCompleteUser {
         public const string L2UserWithIdObjectName = "userWithId";
 
@@ -75,25 +74,9 @@ namespace DemoV1b.Model {
             }
         }
 
-        [JsonIgnore]
-        private int? _ageGroup = 40;
-
         [Obsolete("do not use this")]
         [JsonProperty("ageGroup")]
-        public virtual int? AgeGroup {
-            get => _ageGroup;
-            set {
-                var _value = value;
-                // set checkEnums=true in config file to have a value check here //
-                // if (!AgeGroupValues.AllowedValues.Contains(_value))
-                // {
-                //     var allowedValues = string.Join(", ", AgeGroupValues.AllowedValues.Select(v => v == null ? "null" : v.ToString()));
-                //     throw new ArgumentOutOfRangeException("ageGroup",
-                //         $"{value} is not allowed. Allowed values: [{allowedValues}]");
-                // }
-                _ageGroup = _value;
-            }
-        }
+        public virtual int? AgeGroup { get; set; } = 40;
 
         [JsonConverter(typeof(CustomTimeConverter))]
         [JsonProperty("preferredContactTime")]
@@ -109,7 +92,7 @@ namespace DemoV1b.Model {
         public virtual DateTimeOffset RegistrationDate { get; set; }
 
         [JsonProperty("diffs")]
-        public virtual JToken Diffs { get; set; }
+        public virtual object Diffs { get; set; }
 
         [JsonExtensionData]
         public Dictionary<string, object> AdditionalProperties;
@@ -128,7 +111,7 @@ namespace DemoV1b.Model {
             LastSessionLength = other.LastSessionLength;
             Id = other.Id;
             RegistrationDate = other.RegistrationDate;
-            Diffs = other.Diffs?.DeepClone();
+            Diffs = other.Diffs;
             AdditionalProperties = other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null;
         }
         public L2UserWithId(L2User other){

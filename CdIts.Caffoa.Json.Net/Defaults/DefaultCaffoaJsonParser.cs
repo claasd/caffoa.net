@@ -49,8 +49,10 @@ public class DefaultCaffoaJsonParser : ICaffoaJsonParser
         }
     }
 
-    public virtual T ToObject<T>(JToken jToken)
+    public virtual T ToObject<T>(object token)
     {
+        if (token is not JToken jToken)
+            throw new ArgumentException($"ToObject expected a jToken, got {token.GetType()} instead.");
         try
         {
             return jToken.ToObject<T>();

@@ -150,14 +150,17 @@ public class ModelGenerator
             return "";
         foreach (var property in item.Properties)
         {
-            var formatter = new PropertyFormatter(property, _config.UseDateOnly ?? false);
+            var formatter = new PropertyFormatter(property, _config);
             var format = new Dictionary<string, object>();
             format["DESCRIPTION"] = formatter.Description();
+            format["JSON_TAG_NAME"] = formatter.JsonTagName();
             format["JSON_EXTRA"] = formatter.JsonTags();
             format["JSON_PROPERTY_EXTRA"] = formatter.JsonProperty();
+            format["JSON_EXTRA_PROPERTIES"] = formatter.JsonExtraProperties();
             format["TYPE"] = formatter.Type();
             format["NAMEUPPER"] = property.Name.ToObjectName();
             format["NAMELOWER"] = property.Name;
+            
             if (_config.GetEnumCreationMode() == CaffoaConfig.EnumCreationMode.Default && property.CanBeEnum())
             {
                 properties.Add(FormatEnumProperty(property, format));
@@ -258,7 +261,7 @@ public class ModelGenerator
         var allowedNames = new List<string>(enums.Keys);
         if (property.Nullable)
             allowedNames.Add("null");
-        var formatter = new PropertyFormatter(property, false);
+        var formatter = new PropertyFormatter(property, _config);
         var format = new Dictionary<string, object>
         {
             ["NAMESPACE"] = _service.Model!.Namespace,
@@ -305,7 +308,7 @@ public class ModelGenerator
             enumDefs = enums.Select(item => $"{item.Key} = {item.Value}");
         }
 
-        var formatter = new PropertyFormatter(property, false);
+        var formatter = new PropertyFormatter(property, _config);
         var format = new Dictionary<string, object>
         {
             ["NAMESPACE"] = _service.Model!.Namespace,
@@ -315,7 +318,9 @@ public class ModelGenerator
             ["TYPE"] = formatter.Type(),
             ["ENUMS"] = string.Join(",\n            ", enumDefs),
             ["ENUMBASE"] = enumbase,
-            ["JSONPROPERTY"] = jsonproperty
+            ["JSONPROPERTY"] = jsonproperty,
+            ["IMPORTS"] = formatter.Imports()
+
         };
         string fileName = $"{className}.{propName}.generated.cs";
         var formatted = file.FormatDict(format);
@@ -355,7 +360,8 @@ public class ModelGenerator
             ["ENUMNAME"] = item.ClassName,
             ["ENUMS"] = string.Join(",\n        ", enumDefs),
             ["ENUMBASE"] = enumbase,
-            ["JSONPROPERTY"] = jsonproperty
+            ["JSONPROPERTY"] = jsonproperty,
+            ["IMPORTS"] = PropertyFormatter.Imports(_config.Flavor)
         };
         string fileName = $"{item.ClassName}.generated.cs";
         var formatted = file.FormatDict(format);

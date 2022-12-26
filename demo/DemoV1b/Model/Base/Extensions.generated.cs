@@ -4,8 +4,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
 namespace DemoV1b.Model.Base {
     public static partial class Extensions {

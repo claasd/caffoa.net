@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>disable</Nullable>
+        <LangVersion>10</LangVersion>
+        <RootNamespace>Caffoa</RootNamespace>
+        <IsPackable>true</IsPackable>
+        <TargetFramework>net7.0</TargetFramework>
+        <RepositoryUrl>https://github.com/claasd/caffoa.net.git</RepositoryUrl>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <Authors>claasd</Authors>
+        <Description>CAFFOA is a tool to autogenerate azure function templates for .NET from openapi declaration.
+            Instead of generating stubs, the goal is to be able to change the api and re-generate the files without overwriting your code.
+
+            This is the library that contains Default implementations.</Description>
+    </PropertyGroup>
+    <ItemGroup>
+      <ProjectReference Include="..\CdIts.Caffoa.Base\CdIts.Caffoa.Base.csproj" />
+    </ItemGroup>
+    <ItemGroup>
+      <PackageReference Include="Microsoft.AspNetCore.App" Version="2.2.8" />
+    </ItemGroup>
+
+</Project>

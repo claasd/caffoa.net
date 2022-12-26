@@ -4,8 +4,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using DemoV1a.Model.Base;
 
 namespace DemoV1a.Model {
@@ -51,7 +49,7 @@ namespace DemoV1a.Model {
         public static void UpdateWithL1UserWithId(this L1UserWithId item, L1UserWithId other) {
             item.Id = other.Id;
             item.RegistrationDate = other.RegistrationDate;
-            item.Diffs = other.Diffs?.DeepClone();
+            item.Diffs = other.Diffs;
             item.AdditionalProperties = other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null;
         }
 

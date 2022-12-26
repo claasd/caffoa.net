@@ -4,8 +4,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using DemoV1b.Model.Base;
 
 namespace DemoV1b.Model {
@@ -61,7 +59,7 @@ namespace DemoV1b.Model {
             item.LastSessionLength = other.LastSessionLength;
             item.Id = other.Id;
             item.RegistrationDate = other.RegistrationDate;
-            item.Diffs = other.Diffs?.DeepClone();
+            item.Diffs = other.Diffs;
             item.AdditionalProperties = other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null;
         }
 

@@ -9,8 +9,7 @@ using System.Linq;
 using System.Collections.Immutable;
 
 namespace DemoV2.Model.Base {
-    /// AUTOGENERED BY caffoa ///
-    [JsonObject(MemberSerialization.OptIn)]
+/// AUTOGENERED BY caffoa ///
     public partial class Address {
         public const string AddressObjectName = "address";
 

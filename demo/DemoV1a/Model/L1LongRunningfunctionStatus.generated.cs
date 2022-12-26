@@ -10,8 +10,7 @@ using System.Collections.Immutable;
 using DemoV1a.Model.Base;
 
 namespace DemoV1a.Model {
-    /// AUTOGENERED BY caffoa ///
-    [JsonObject(MemberSerialization.OptIn)]
+/// AUTOGENERED BY caffoa ///
     public partial class L1LongRunningfunctionStatus {
         public const string L1LongRunningfunctionStatusObjectName = "longRunningfunctionStatus";
 

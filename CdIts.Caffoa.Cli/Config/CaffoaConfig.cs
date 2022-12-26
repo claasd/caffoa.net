@@ -1,3 +1,5 @@
+using System.Runtime.Serialization;
+
 namespace CdIts.Caffoa.Cli.Config;
 
 public class CaffoaConfig
@@ -34,6 +36,15 @@ public class CaffoaConfig
     }
     public EnumCreationMode? EnumMode { get; set; }
     public EnumCreationMode GetEnumCreationMode() => EnumMode ?? EnumCreationMode.Default;
+    
+    public enum GenerationFlavor
+    {
+        [EnumMember(Value = "System.Text.Json")]SystemTextJson,
+        [EnumMember(Value = "Json.NET")] JsonNet,
+    }
+    
+    public GenerationFlavor? Flavor { get; set; }
+    
     public CaffoaGlobalConfig MergedWith(CaffoaGlobalConfig general)
     {
         return new CaffoaGlobalConfig()
@@ -60,7 +71,8 @@ public class CaffoaConfig
             UseInheritance = UseInheritance ?? general.UseInheritance,
             AuthorizationLevel = AuthorizationLevel ?? general.AuthorizationLevel,
             AsyncArrays = AsyncArrays ?? general.AsyncArrays,
-            EnumMode = EnumMode ?? general.EnumMode
+            EnumMode = EnumMode ?? general.EnumMode,
+            Flavor = Flavor ?? general.Flavor
         };
     }
 }

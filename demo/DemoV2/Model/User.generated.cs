@@ -11,8 +11,7 @@ using Caffoa.JsonConverter;
 using DemoV2.Model.Base;
 
 namespace DemoV2.Model {
-    /// AUTOGENERED BY caffoa ///
-    [JsonObject(MemberSerialization.OptIn)]
+/// AUTOGENERED BY caffoa ///
     public partial class User : AnyUser {
         public const string UserObjectName = "user";
 
@@ -44,7 +43,7 @@ namespace DemoV2.Model {
 
         [Obsolete("do not use this")]
         [JsonProperty("ageGroup")]
-        public virtual AgeGroupValue? AgeGroup { get; set; } = AgeGroupValue._40;
+        public virtual int? AgeGroup { get; set; } = 40;
 
         [JsonConverter(typeof(CustomTimeConverter))]
         [JsonProperty("preferredContactTime")]
@@ -65,7 +64,7 @@ namespace DemoV2.Model {
             Descriptions = other.Descriptions.ToDictionary(entry => entry.Key, entry => entry.Value);
             Type = (User.TypeValue)other.Type;
             Role = (User.RoleValue)other.Role;
-            AgeGroup = other.AgeGroup is null ? null : (User.AgeGroupValue)other.AgeGroup;
+            AgeGroup = other.AgeGroup;
             PreferredContactTime = other.PreferredContactTime;
             LastSessionLength = other.LastSessionLength;
             AdditionalProperties = other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null;

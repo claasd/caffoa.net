@@ -36,6 +36,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DemoV1b", "demo\DemoV1b\Dem
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CdIts.AzFuncTestHelper", "CdIts.AzFuncTestHelper\CdIts.AzFuncTestHelper.csproj", "{86B1BDD8-F591-41DA-B2C8-68FC9ED23D42}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DemoV2.Text.Json", "demo\DemoV2.Text.Json\DemoV2.Text.Json.csproj", "{274853EE-288F-4DAA-9369-8E1109D7DC79}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CdIts.Caffoa.System.Text.Json", "CdIts.Caffoa.System.Text.Json\CdIts.Caffoa.System.Text.Json.csproj", "{E45FB71D-A177-48BD-BDB5-C5D010D1F352}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -78,6 +82,14 @@ Global
 		{86B1BDD8-F591-41DA-B2C8-68FC9ED23D42}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{86B1BDD8-F591-41DA-B2C8-68FC9ED23D42}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{86B1BDD8-F591-41DA-B2C8-68FC9ED23D42}.Release|Any CPU.Build.0 = Release|Any CPU
+		{274853EE-288F-4DAA-9369-8E1109D7DC79}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{274853EE-288F-4DAA-9369-8E1109D7DC79}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{274853EE-288F-4DAA-9369-8E1109D7DC79}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{274853EE-288F-4DAA-9369-8E1109D7DC79}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E45FB71D-A177-48BD-BDB5-C5D010D1F352}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E45FB71D-A177-48BD-BDB5-C5D010D1F352}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E45FB71D-A177-48BD-BDB5-C5D010D1F352}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E45FB71D-A177-48BD-BDB5-C5D010D1F352}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{8AB164C2-88E8-4C75-BD39-71BCA01F2B37} = {F5DAF376-0D55-4D08-A5B0-DAA3EA4C4E9A}

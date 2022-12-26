@@ -9,8 +9,7 @@ using System.Linq;
 using DemoV1a.Model.Base;
 
 namespace DemoV1a.Model {
-    /// AUTOGENERED BY caffoa ///
-    [JsonObject(MemberSerialization.OptIn)]
+/// AUTOGENERED BY caffoa ///
     public partial class L1UserWithId : L1User, L1AnyCompleteUser {
         public const string L1UserWithIdObjectName = "userWithId";
 
@@ -21,7 +20,7 @@ namespace DemoV1a.Model {
         public virtual DateTimeOffset RegistrationDate { get; set; }
 
         [JsonProperty("diffs")]
-        public virtual JToken Diffs { get; set; }
+        public virtual object Diffs { get; set; }
 
         [JsonExtensionData]
         public Dictionary<string, object> AdditionalProperties;
@@ -30,7 +29,7 @@ namespace DemoV1a.Model {
         public L1UserWithId(L1UserWithId other) : base(other) {
             Id = other.Id;
             RegistrationDate = other.RegistrationDate;
-            Diffs = other.Diffs?.DeepClone();
+            Diffs = other.Diffs;
             AdditionalProperties = other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null;
         }
         public L1UserWithId(L1User other) : base(other) {}

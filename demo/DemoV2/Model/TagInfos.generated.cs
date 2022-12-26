@@ -9,8 +9,7 @@ using System.Linq;
 using DemoV2.Model.Base;
 
 namespace DemoV2.Model {
-    /// AUTOGENERED BY caffoa ///
-    [JsonObject(MemberSerialization.OptIn)]
+/// AUTOGENERED BY caffoa ///
     public partial class TagInfos {
         public const string TagInfosObjectName = "tagInfos";
 

@@ -12,8 +12,7 @@ using DemoV2.Model.Base;
 using DemoV2.Model;
 
 namespace DemoV2.Model {
-    /// AUTOGENERED BY caffoa ///
-    [JsonObject(MemberSerialization.OptIn)]
+/// AUTOGENERED BY caffoa ///
     public partial class UserWithId : AnyUser, AnyCompleteUser {
         public const string UserWithIdObjectName = "userWithId";
 
@@ -45,7 +44,7 @@ namespace DemoV2.Model {
 
         [Obsolete("do not use this")]
         [JsonProperty("ageGroup")]
-        public virtual AgeGroupValue? AgeGroup { get; set; } = AgeGroupValue._40;
+        public virtual int? AgeGroup { get; set; } = 40;
 
         [JsonConverter(typeof(CustomTimeConverter))]
         [JsonProperty("preferredContactTime")]
@@ -61,7 +60,7 @@ namespace DemoV2.Model {
         public virtual DateTimeOffset RegistrationDate { get; set; }
 
         [JsonProperty("diffs")]
-        public virtual JToken Diffs { get; set; }
+        public virtual object Diffs { get; set; }
 
         [JsonExtensionData]
         public Dictionary<string, object> AdditionalProperties;
@@ -75,12 +74,12 @@ namespace DemoV2.Model {
             Descriptions = other.Descriptions.ToDictionary(entry => entry.Key, entry => entry.Value);
             Type = (UserWithId.TypeValue)other.Type;
             Role = (UserWithId.RoleValue)other.Role;
-            AgeGroup = other.AgeGroup is null ? null : (UserWithId.AgeGroupValue)other.AgeGroup;
+            AgeGroup = other.AgeGroup;
             PreferredContactTime = other.PreferredContactTime;
             LastSessionLength = other.LastSessionLength;
             Id = other.Id;
             RegistrationDate = other.RegistrationDate;
-            Diffs = other.Diffs?.DeepClone();
+            Diffs = other.Diffs;
             AdditionalProperties = other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null;
         }
         public UserWithId(User other){
@@ -91,7 +90,7 @@ namespace DemoV2.Model {
             Descriptions = other.Descriptions.ToDictionary(entry => entry.Key, entry => entry.Value);
             Type = (UserWithId.TypeValue)other.Type;
             Role = (UserWithId.RoleValue)other.Role;
-            AgeGroup = other.AgeGroup is null ? null : (UserWithId.AgeGroupValue)other.AgeGroup;
+            AgeGroup = other.AgeGroup;
             PreferredContactTime = other.PreferredContactTime;
             LastSessionLength = other.LastSessionLength;
             AdditionalProperties = other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null;
@@ -104,7 +103,7 @@ namespace DemoV2.Model {
             Descriptions = Descriptions.ToDictionary(entry => entry.Key, entry => entry.Value),
             Type = (User.TypeValue)Type,
             Role = (User.RoleValue)Role,
-            AgeGroup = AgeGroup is null ? null : (User.AgeGroupValue)AgeGroup,
+            AgeGroup = AgeGroup,
             PreferredContactTime = PreferredContactTime,
             LastSessionLength = LastSessionLength,
             AdditionalProperties = AdditionalProperties != null ? new Dictionary<string, object>(AdditionalProperties) : null

@@ -6,8 +6,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace DemoV1a.Model.Base {
-    /// AUTOGENERED BY caffoa ///
-    [JsonObject(MemberSerialization.OptIn)]
+/// AUTOGENERED BY caffoa ///
     public partial class L1Flags {
         public const string L1FlagsObjectName = "flags";
 

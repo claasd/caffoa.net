@@ -4,8 +4,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using DemoV2.Model.Base;
 
 namespace DemoV2.Model {
@@ -30,7 +28,7 @@ namespace DemoV2.Model {
             item.Descriptions = other.Descriptions.ToDictionary(entry => entry.Key, entry => entry.Value);
             item.Type = (User.TypeValue)other.Type;
             item.Role = (User.RoleValue)other.Role;
-            item.AgeGroup = other.AgeGroup is null ? null : (User.AgeGroupValue)other.AgeGroup;
+            item.AgeGroup = other.AgeGroup;
             item.PreferredContactTime = other.PreferredContactTime;
             item.LastSessionLength = other.LastSessionLength;
             item.AdditionalProperties = other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null;
@@ -56,12 +54,12 @@ namespace DemoV2.Model {
             item.Descriptions = other.Descriptions.ToDictionary(entry => entry.Key, entry => entry.Value);
             item.Type = (UserWithId.TypeValue)other.Type;
             item.Role = (UserWithId.RoleValue)other.Role;
-            item.AgeGroup = other.AgeGroup is null ? null : (UserWithId.AgeGroupValue)other.AgeGroup;
+            item.AgeGroup = other.AgeGroup;
             item.PreferredContactTime = other.PreferredContactTime;
             item.LastSessionLength = other.LastSessionLength;
             item.Id = other.Id;
             item.RegistrationDate = other.RegistrationDate;
-            item.Diffs = other.Diffs?.DeepClone();
+            item.Diffs = other.Diffs;
             item.AdditionalProperties = other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null;
         }
 
@@ -76,7 +74,7 @@ namespace DemoV2.Model {
             item.Descriptions = other.Descriptions.ToDictionary(entry => entry.Key, entry => entry.Value);
             item.Type = (User.TypeValue)other.Type;
             item.Role = (User.RoleValue)other.Role;
-            item.AgeGroup = other.AgeGroup is null ? null : (User.AgeGroupValue)other.AgeGroup;
+            item.AgeGroup = other.AgeGroup;
             item.PreferredContactTime = other.PreferredContactTime;
             item.LastSessionLength = other.LastSessionLength;
             item.AdditionalProperties = other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null;
@@ -93,7 +91,7 @@ namespace DemoV2.Model {
             item.Descriptions = other.Descriptions.ToDictionary(entry => entry.Key, entry => entry.Value);
             item.Type = (UserWithId.TypeValue)other.Type;
             item.Role = (UserWithId.RoleValue)other.Role;
-            item.AgeGroup = other.AgeGroup is null ? null : (UserWithId.AgeGroupValue)other.AgeGroup;
+            item.AgeGroup = other.AgeGroup;
             item.PreferredContactTime = other.PreferredContactTime;
             item.LastSessionLength = other.LastSessionLength;
             item.AdditionalProperties = other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null;

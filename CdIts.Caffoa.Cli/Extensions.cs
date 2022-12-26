@@ -82,7 +82,7 @@ public static class Extensions
             "number" => $"double{suffix}",
             "boolean" => $"bool{suffix}",
             "string" => "string",
-            null => $"JToken",
+            null => $"object",
             _ => $"{type}{suffix}"
         };
     }
@@ -141,12 +141,12 @@ public static class Extensions
 
     public static bool CanBeEnum(this PropertyData property)
     {
-        return property.Enums.Count > 0 && !property.TypeName.StartsWith("double") && !property.TypeName.StartsWith("float");
+        return property.Enums.Count > 0 && property.TypeName.StartsWith("string");
     }
     
     public static bool CanBeEnum(this OpenApiSchema schema)
     {
-        return schema.Enum.Count > 0 && !schema.Type.StartsWith("double") && !schema.Type.StartsWith("float");
+        return schema.Enum.Count > 0 && schema.Type.StartsWith("string");
     }
 
 }

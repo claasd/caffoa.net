@@ -9,8 +9,7 @@ using System.Linq;
 using DemoV1b.Model.Base;
 
 namespace DemoV1b.Model {
-    /// AUTOGENERED BY caffoa ///
-    [JsonObject(MemberSerialization.OptIn)]
+/// AUTOGENERED BY caffoa ///
     public partial class L2EnumObject {
         public const string L2EnumObjectObjectName = "enumObject";
 

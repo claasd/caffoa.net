@@ -43,6 +43,16 @@ public class SchemaItemFormatter
     public string Imports(List<string>? modelImports, List<string>? configImports)
     {
         var imports = new List<string>();
+        if (_config.Flavor is CaffoaConfig.GenerationFlavor.SystemTextJson)
+        {
+            imports.Add("System.Text.Json");
+            imports.Add("System.Text.Json.Serialization");
+        }
+        else
+        {
+            imports.Add("Newtonsoft.Json");
+            imports.Add("Newtonsoft.Json.Linq");
+        }
         var hasArray = _item.Properties?.FirstOrDefault(p => p.IsArray || p.IsMap) != null;
         var hasExtension = _item.AdditionalPropertiesAllowed && _config.GenericAdditionalProperties is true;
         if (hasArray || hasExtension)

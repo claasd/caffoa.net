@@ -20,7 +20,7 @@ public interface ICaffoaConverter
     /// <param name="parameter">the input string</param>
     /// <param name="parameterName">the name of the variable as defined in the openapi spec</param>
     TimeSpan ParseTimeSpan(string parameter, string parameterName);
-#if NET6_0
+#if NET6_0_OR_GREATER
     DateOnly ParseDateOnly(string parameter, string parameterName);
     TimeOnly ParseTimeOnly(string parameter, string parameterName);
 #endif

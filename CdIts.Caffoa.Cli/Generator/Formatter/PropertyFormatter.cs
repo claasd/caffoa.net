@@ -1,3 +1,4 @@
+using CdIts.Caffoa.Cli.Config;
 using CdIts.Caffoa.Cli.Model;
 
 namespace CdIts.Caffoa.Cli.Generator.Formatter;
@@ -5,12 +6,12 @@ namespace CdIts.Caffoa.Cli.Generator.Formatter;
 public class PropertyFormatter
 {
     private readonly PropertyData _property;
-    private readonly bool _net60;
+    private readonly CaffoaGlobalConfig _config;
 
-    public PropertyFormatter(PropertyData property, bool net60)
+    public PropertyFormatter(PropertyData property, CaffoaGlobalConfig config)
     {
         _property = property;
-        _net60 = net60;
+        _config = config;
     }
 
     public string Description()
@@ -23,6 +24,8 @@ public class PropertyFormatter
 
     public string JsonProperty()
     {
+        if (_config.Flavor is CaffoaConfig.GenerationFlavor.SystemTextJson)
+            return "";
         return _property.Required switch
         {
             true when _property.Nullable => ", Required = Required.AllowNull",
@@ -31,9 +34,16 @@ public class PropertyFormatter
         };
     }
 
+    public string JsonExtraProperties()
+    {
+        if (_property.Required && _config.Flavor is CaffoaConfig.GenerationFlavor.SystemTextJson)
+            return "\n        [JsonRequired]";
+        return "";
+    }
+
     public string Type()
     {
-        var name = _net60
+        var name = _config.UseDateOnly is true
             ? _property.TypeName
             : _property.TypeName.Replace("DateOnly", "DateTimeOffset").Replace("TimeOnly", "TimeSpan");
         if (_property.IsArray)
@@ -46,7 +56,7 @@ public class PropertyFormatter
 
     public string Default(bool addSemicolonEnEmpty)
     {
-        var name = _net60
+        var name = _config.UseDateOnly is true
             ? _property.TypeName
             : _property.TypeName.Replace("DateOnly", "DateTimeOffset").Replace("TimeOnly", "TimeSpan");
         if (_property.IsArray)
@@ -78,23 +88,35 @@ public class PropertyFormatter
         var tags = _property.CustomAttributes.Select(a => $"[{a}]\n        ").ToList();
         if (_property.Deprecated)
             tags.Add("[Obsolete]\n        ");
-        if(!string.IsNullOrEmpty(_property.Converter))
+        if (!string.IsNullOrEmpty(_property.Converter))
             tags.Add($"[JsonConverter(typeof({_property.Converter}))]\n        ");
         else if (_property.TypeName.StartsWith("DateOnly"))
         {
-            if (_net60)
+            if (_config.UseDateOnly is true)
                 tags.Add("[JsonConverter(typeof(CaffoaDateOnlyConverter))]\n        ");
             else
                 tags.Add("[JsonConverter(typeof(CaffoaDateConverter))]\n        ");
         }
         else if (_property.TypeName.StartsWith("TimeOnly"))
         {
-            if (_net60)
+            if (_config.UseDateOnly is true)
                 tags.Add("[JsonConverter(typeof(CaffoaTimeOnlyConverter))]\n        ");
             else
                 tags.Add("[JsonConverter(typeof(CaffoaTimeSpanConverter))]\n        ");
         }
 
         return string.Join("", tags);
+    }
+
+    public string JsonTagName() =>
+        _config.Flavor is CaffoaConfig.GenerationFlavor.SystemTextJson ? "JsonPropertyName" : "JsonProperty";
+
+    public string Imports() => Imports(_config.Flavor);
+
+    public static string Imports(CaffoaConfig.GenerationFlavor? flavor)
+    {
+        if (flavor is CaffoaConfig.GenerationFlavor.SystemTextJson)
+            return "using System.Text.Json.Serialization;";
+        return "using Newtonsoft.Json;using Newtonsoft.Json.Converters;";
     }
 }

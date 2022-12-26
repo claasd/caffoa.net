@@ -11,8 +11,7 @@ using Caffoa.JsonConverter;
 using DemoV1b.Model.Base;
 
 namespace DemoV1b.Model {
-    /// AUTOGENERED BY caffoa ///
-    [JsonObject(MemberSerialization.OptIn)]
+/// AUTOGENERED BY caffoa ///
     public partial class L2User : L2AnyUser {
         public const string L2UserObjectName = "user";
 
@@ -74,25 +73,9 @@ namespace DemoV1b.Model {
             }
         }
 
-        [JsonIgnore]
-        private int? _ageGroup = 40;
-
         [Obsolete("do not use this")]
         [JsonProperty("ageGroup")]
-        public virtual int? AgeGroup {
-            get => _ageGroup;
-            set {
-                var _value = value;
-                // set checkEnums=true in config file to have a value check here //
-                // if (!AgeGroupValues.AllowedValues.Contains(_value))
-                // {
-                //     var allowedValues = string.Join(", ", AgeGroupValues.AllowedValues.Select(v => v == null ? "null" : v.ToString()));
-                //     throw new ArgumentOutOfRangeException("ageGroup",
-                //         $"{value} is not allowed. Allowed values: [{allowedValues}]");
-                // }
-                _ageGroup = _value;
-            }
-        }
+        public virtual int? AgeGroup { get; set; } = 40;
 
         [JsonConverter(typeof(CustomTimeConverter))]
         [JsonProperty("preferredContactTime")]
