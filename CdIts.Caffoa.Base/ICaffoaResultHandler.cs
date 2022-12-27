@@ -11,6 +11,7 @@ public interface ICaffoaResultHandler
     /// Should return a valid JSON result with the passed object as payload and the passed statusCode as statusCode
     /// </summary>
     IActionResult Json(object data, int statusCode);
+    IActionResult Json<T>(IEnumerable<T> data, int statusCode);
 
     string JsonString(object o);
     /// <summary>

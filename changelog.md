@@ -5,10 +5,10 @@
 * Renamed `CdIts.Caffoa` dll to `CdIts.Caffoa.Json.Net`
 * Renamed `CdIts.Caffoa.Abstractions` dll to `CdIts.Caffoa.Base`
 * Moved functionality that does not rely on Json.NET to `CdIts.Caffoa.Base`
-
+* Experimental support of System.Text.Json. See [System.Text.Json README](readme.system.text.json.md)
 * use of c# enums for query and path parameters, if the enum is declared as it's own schema elements
 * Removed parameters:
-  *  `acceptCaseInvariantEnums`: This will now always treated as true, as Json.NET enums are treated as case-insensitive, and enums are the new default
+  *  `acceptCaseInvariantEnums`: This will now always be treated as true, as Json.NET enums are treated as case-insensitive, and enums are the new default
   *  `removeDeprecated`: the deprecated values for static string for enums are removed
   *  `enumsAsStaticValues` and `checkEnums` was moved into `enumMode` with the possible values
      * `Default` = uses c# enums, was `enumsAsStaticValues`: `false`, **is the new default for enums**
@@ -17,7 +17,7 @@
 
 * Change of defaults for several configuration parameters. 
   *  `useInheritance` : `false`  
-  *  `withCancelation`: `true`
+  *  `withCancellation`: `true`
   *  `parsePathParameters`: `true`
   *  `parseQueryParameters`: `true`
   *  `genericAdditionalPropertiesType` : `JToken`

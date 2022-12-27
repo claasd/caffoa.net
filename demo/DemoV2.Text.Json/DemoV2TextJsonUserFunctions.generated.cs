@@ -70,8 +70,8 @@ namespace DemoV2.Text.Json
         {
             try {
                 var instance = _factory.Instance(request);
-                var jsonToken = await _jsonParser.Parse<JsonElement>(request.Body);
-                var discriminator = jsonToken.GetProperty("type").GetString()?.ToLower();
+                var jsonToken = await _jsonParser.Parse<JsonElement?>(request.Body);
+                var discriminator = jsonToken?.GetProperty("type").GetString()?.ToLower();
                 var task = discriminator switch
                 {
                     "simple" => instance.UserPostAsync(_jsonParser.ToObject<STJUser>(jsonToken), request.HttpContext.RequestAborted),
@@ -98,8 +98,8 @@ namespace DemoV2.Text.Json
         {
             try {
                 var instance = _factory.Instance(request);
-                var jsonToken = await _jsonParser.Parse<JsonElement>(request.Body);
-                var discriminator = jsonToken.GetProperty("type").GetString()?.ToLower();
+                var jsonToken = await _jsonParser.Parse<JsonElement?>(request.Body);
+                var discriminator = jsonToken?.GetProperty("type").GetString()?.ToLower();
                 var task = discriminator switch
                 {
                     "simple" => instance.UserPutAsync(userId, _jsonParser.ToObject<STJUser>(jsonToken), request.HttpContext.RequestAborted),

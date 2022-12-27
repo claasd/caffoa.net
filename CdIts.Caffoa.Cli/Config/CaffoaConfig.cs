@@ -18,7 +18,7 @@ public class CaffoaConfig
 
     public string GetGenericAdditionalPropertiesType() => GenericAdditionalPropertiesType ?? GetGenericType();
 
-    public string GetGenericType() => Flavor is GenerationFlavor.SystemTextJson ? "JsonElement" : "JToken";
+    public string GetGenericType() => Flavor is GenerationFlavor.SystemTextJson ? "JsonElement?" : "JToken";
 
     public List<string>? Imports { get; set; }
     public List<RequestBodyTypeConfig>? RequestBodyType { get; set; }

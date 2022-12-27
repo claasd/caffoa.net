@@ -23,8 +23,10 @@ public class DefaultCaffoaResultHandler : ICaffoaResultHandler
         SerializerSettings = serializerSettings;
     }
 
-    public string JsonString(object o) => JsonConvert.SerializeObject(o, SerializerSettings);
 
+    public string JsonString(object o) => JsonConvert.SerializeObject(o, SerializerSettings);
+    public IActionResult Json<T>(IEnumerable<T> data, int statusCode)
+        => Handle(new JsonResult(data) { StatusCode = statusCode, SerializerSettings = SerializerSettings });
     public virtual IActionResult Json(object data, int statusCode)
         => Handle(new JsonResult(data) { StatusCode = statusCode, SerializerSettings = SerializerSettings });
 

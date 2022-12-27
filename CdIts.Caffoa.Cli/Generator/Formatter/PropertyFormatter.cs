@@ -118,6 +118,6 @@ public class PropertyFormatter
     {
         if (flavor is CaffoaConfig.GenerationFlavor.SystemTextJson)
             return "using System.Text.Json.Serialization;";
-        return "using Newtonsoft.Json;using Newtonsoft.Json.Converters;";
+        return "using Newtonsoft.Json;\nusing Newtonsoft.Json.Converters;";
     }
 }

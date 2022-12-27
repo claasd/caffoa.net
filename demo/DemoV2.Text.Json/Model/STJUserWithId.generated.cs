@@ -61,7 +61,7 @@ namespace DemoV2.Text.Json.Model {
         public virtual DateTimeOffset RegistrationDate { get; set; }
 
         [JsonPropertyName("diffs")]
-        public virtual JsonElement Diffs { get; set; }
+        public virtual JsonElement? Diffs { get; set; }
 
         [JsonExtensionData]
         public Dictionary<string, object> AdditionalProperties;

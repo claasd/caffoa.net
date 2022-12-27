@@ -1,6 +1,7 @@
 using System.Runtime.Serialization;
 using Caffoa.JsonConverter;
-using Newtonsoft.Json;using Newtonsoft.Json.Converters;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace DemoV1b.Model {
     [JsonConverter(typeof(StringEnumConverter))]

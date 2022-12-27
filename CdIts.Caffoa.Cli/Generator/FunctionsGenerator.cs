@@ -209,7 +209,7 @@ public class FunctionsGenerator
         parameter["CASES"] = string.Join("\n                    ", cases.Select(c => $"{c},"));
         parameter["GENERIC_TYPE"] = _config.GetGenericType();
         parameter["DISC_READ"] = _config.Flavor is CaffoaConfig.GenerationFlavor.SystemTextJson
-            ? $"jsonToken.GetProperty(\"{model.Disriminator}\").GetString()?.ToLower()"
+            ? $"jsonToken?.GetProperty(\"{model.Disriminator}\").GetString()?.ToLower()"
             : $"jsonToken[\"{model.Disriminator}\"]?.ToString()?.ToLower()";
         return file.FormatDict(parameter);
     }

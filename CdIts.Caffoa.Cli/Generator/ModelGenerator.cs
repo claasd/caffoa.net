@@ -45,6 +45,7 @@ public class ModelGenerator
         parameters["NAME"] = item.ClassName;
         parameters["DESCRIPTION"] = formatter.Description;
         parameters["TYPE"] = item.Interface?.Discriminator?.ToObjectName() ?? "";
+        parameters["IMPORTS"] = PropertyFormatter.Imports(_config.Flavor);
         var formatted = file.FormatDict(parameters);
         File.WriteAllText(Path.Combine(_service.Model.TargetFolder, fileName), formatted.ToSystemNewLine());
     }

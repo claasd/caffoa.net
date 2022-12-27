@@ -11,12 +11,16 @@ If something does not work that you feel should work, create a ticket with your 
 
 It uses [OpenAPI.NET](https://github.com/microsoft/OpenAPI.NET) for parsing the openapi spec.
 
+# Migrating from 1.x
+* The is a [Migration guide](migration_1_to_2.md) to goude you from migrtion from 1.x to 2.x.
+* In 2.x, there is [Experimental support for System.Text.Json](readme.system.text.json.md) 
+
 # Required nuget packages
 
 You will need to install the following nuget packages:
 * `Microsoft.NET.Sdk.Functions` obviously
 * `Microsoft.Azure.Functions.Extensions` for function dependency injection
-* `CdIts.Caffoa` for caffoa interfaces and default implementations
+* `CdIts.Caffoa.Json.Net` for caffoa interfaces and default implementations
 * Optional: `Microsoft.Azure.WebJobs.Extensions.DurableTask` if you want to inject `[DurableClient]` into your methods
 
 # Usage
@@ -115,8 +119,6 @@ namespace MyNamespace {
 }
 ```
 
-
-
 Now implement all the logic in your implementation of the interface. You can now change your API, and regenerate the generated files without overwriting your code.
 
 ## Created data objects from schemas
@@ -128,7 +130,7 @@ The file will contain a partial class, with all properties of the schema. You ca
 * The schema must be defined in the components section.
 * Furthermore, schemas may not be nested without reference.
 (You can easily overcome this restriction by defining more schemas in the components section and have them reference each other.)
-* when using inheritanceMode, allOf is implemented as inheritance, and therefore can only handle allOf with one reference and one direct configuration. When using inheritanceMode=false, you can use multiple elements in allOf
+* when using inheritanceMode, allOf is implemented as inheritance, and therefore can only handle allOf with one reference and one direct configuration. When using useInheritance=false (default in caffoa 2.x), you can use multiple elements in allOf
 
 ## Advanced configuration options
 There are multiple optional configuration options that you can use (shown values represent the default):
@@ -144,18 +146,18 @@ config:
   suffix: "" # A suffix that is added to all model classes
   enumMode: Default # Default | StaticValues | StaticValuesWithoutCheck. Default creates C# enums, others modes create static values with or without check for allowed values
   routePrefix: "" # a route prefix that is added to all routes in function, e.g. 'frontend/'
-  useDateOnly: false # you can set this to true if you use net6.0 and want date types to be de-serialized as DateOnly instead of DateTime.
+  useDateOnly: true # you can set this to true if you use net6.0 and want date types to be de-serialized as DateOnly instead of DateTime.
   splitByTag: false # if set to true, multiple function files and interfaces will be generated, based on the first tag of each path item
   parsePathParameters: true # if set to false, the parameter parsing is left to Functions runtime
   parseQueryParameters: true # if set to false, query parameters will not be parsed, you have to do it yourself
   genericAdditionalProperties: false # if set to true, a dictionary for additional properties will be generated if additionalProperties is set to true or not set at all (true is default)
-  genericAdditionalPropertiesType: JToken  # different type can be used for the additionalProperties dictionary
+  genericAdditionalPropertiesType: JToken  # Default for System.Text.Json is JsonElement? different type can be used for the additionalProperties dictionary
   withCancellation: true # if set to false, caffoa will not add a CancellationToken to all interface methods. It will be triggered when the HTTP Request gets aborted (for example by the client).
   disposable: false # if set to true, Interfaces will derive from IAsyncDisposable, and functions will use `await using var instance = _factory.Instance(..);`
   useInheritance: false # When set to false, instead of inheritance, allOf will create a standalone object with converters to objects that are referenced by allOf.
   imports: [] # a list of imports that will be added to most generated classes
   requestBodyType:  # Default is NULL you can override the request body type for specific operations or methods
-    type: JObject # the body type that JSON should be de-serialized to
+    type: JToken # the body type that JSON should be de-serialized to
     import: Newtonsoft.Json.Linq # optional import for the type
     filter: # filter for the operations/methods where this type should be used
       all: true # optional, uses this type for all functions
@@ -170,7 +172,7 @@ config:
       - long-running-function
     prefix: import # add a durable client to all methods where the operation id starts with this prefix defult ist null
   functionNamePrefix: "" # adds a prefix to all function names (Not interfaces). Useful if you have multiple APIs in one function that have identical operation IDs
-  extensions: true # set to false to not generate extension methods for models
+  extensions: true # set to false to not generate extension methods for models (UpdateWith* methods).
   asyncArrays: false # if set to true, functions that return arrays will use IAsyncEnumerable instead if Task<IEnumerable>
 services:
   - apiPath: userservice.openapi.yml
