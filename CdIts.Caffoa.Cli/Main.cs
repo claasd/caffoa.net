@@ -84,6 +84,9 @@ public class Main
                     extensionGenerators.Add(generator);
                 }
 
+                generator.Imports.Add(builder.Config.Flavor is CaffoaConfig.GenerationFlavor.SystemTextJson
+                    ? "System.Text.Json"
+                    : "Newtonsoft.Json.Linq");
                 generator.Add(builder.ExtensionData, builder.ExtensionImports);
             }
         }

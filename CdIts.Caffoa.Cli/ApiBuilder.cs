@@ -9,7 +9,7 @@ namespace CdIts.Caffoa.Cli;
 public class ApiBuilder
 {
     private readonly ServiceConfig _service;
-    private readonly CaffoaGlobalConfig _config;
+    public CaffoaGlobalConfig Config { get; }
     private List<EndPointModel>? _endpoints;
     private readonly ServiceParser _parser;
     public IEnumerable<string> ExtensionData { get; private set; } = Array.Empty<string>();
@@ -22,8 +22,8 @@ public class ApiBuilder
         {
             var imports = new List<string>();
 
-            if (_config.Imports != null)
-                imports.AddRange(_config.Imports);
+            if (Config.Imports != null)
+                imports.AddRange(Config.Imports);
             if (_service.Model?.Imports != null)
                 imports.AddRange(_service.Model.Imports);
             return imports;
@@ -38,8 +38,8 @@ public class ApiBuilder
     public ApiBuilder(ServiceConfig service, CaffoaGlobalConfig config)
     {
         _service = service;
-        _config = config;
-        _parser = new ServiceParser(_service, _config);
+        Config = config;
+        _parser = new ServiceParser(_service, Config);
     }
 
     public async Task Parse()
@@ -55,21 +55,21 @@ public class ApiBuilder
     {
         if (_service.Model != null && Models != null)
         {
-            var generator = new ModelGenerator(_service, _config);
+            var generator = new ModelGenerator(_service, Config);
             ExtensionData = generator.WriteModel(Models, otherKnownObjects);
         }
 
         if (_service.Function != null && _endpoints != null)
         {
             var interfaceGenerator =
-                new InterfaceGenerator(_service.Function, _config, _service.Model?.Namespace);
+                new InterfaceGenerator(_service.Function, Config, _service.Model?.Namespace);
             interfaceGenerator.GenerateInterface(_endpoints);
             var functionsGenerator =
-                new FunctionsGenerator(_service.Function, _config, _service.Model?.Namespace);
+                new FunctionsGenerator(_service.Function, Config, _service.Model?.Namespace);
             functionsGenerator.GenerateFunctions(_endpoints);
         }
 
-        if (_config.GenerateResolvedApiFile is true)
+        if (Config.GenerateResolvedApiFile is true)
             _parser.WriteGeneratedApiFile(allDocuments);
     }
 }

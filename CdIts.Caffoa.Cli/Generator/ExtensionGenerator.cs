@@ -6,8 +6,8 @@ public class ExtensionGenerator
     public string Namespace { get; }
 
     private readonly List<string> _elements = new();
-    private readonly List<string> _imports = new();
-    
+    public List<string> Imports { get; } = new();
+
     public ExtensionGenerator(string folder, string ns)
     {
         Folder = folder;
@@ -17,7 +17,7 @@ public class ExtensionGenerator
     public void Add(IEnumerable<string> data, IEnumerable<string> imports)
     {
         _elements.AddRange(data);
-        _imports.AddRange(imports);
+        Imports.AddRange(imports);
     }
 
     public void Create()
@@ -26,7 +26,7 @@ public class ExtensionGenerator
         var fileName = "Extensions.generated.cs";
         var parameters = new Dictionary<string, object>();
         parameters["NAMESPACE"] = Namespace;
-        parameters["IMPORTS"] = string.Join("",_imports.Distinct().Select(i => $"using {i};\n"));
+        parameters["IMPORTS"] = string.Join("",Imports.Distinct().Select(i => $"using {i};\n"));
         parameters["CONTENT"] = string.Join("\n\n", _elements);
         var formatted = file.FormatDict(parameters);
         File.WriteAllText(Path.Combine(Folder, fileName), formatted.ToSystemNewLine());
