@@ -4,12 +4,15 @@ using System.Text.Json.Serialization;
 
 namespace Caffoa.JsonConverter;
 
-public class CaffoaDateOnlyConverter : JsonConverter<DateOnly?>
+public class CaffoaDateOnlyConverter : JsonConverter<object>
 {
     public const string DateFormat = "yyyy-MM-dd";
 
-
-    public override DateOnly? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    public override bool CanConvert(Type typeToConvert)
+    {
+        return typeToConvert == typeof(DateOnly) || Nullable.GetUnderlyingType(typeToConvert) == typeof(DateOnly);
+    }
+    public override object Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
         try
         {
@@ -26,11 +29,11 @@ public class CaffoaDateOnlyConverter : JsonConverter<DateOnly?>
         }
     }
 
-    public override void Write(Utf8JsonWriter writer, DateOnly? value, JsonSerializerOptions options)
+    public override void Write(Utf8JsonWriter writer, object value, JsonSerializerOptions options)
     {
         if (value is null)
             writer.WriteNullValue();
         else
-            writer.WriteStringValue(value.Value.ToString(DateFormat, CultureInfo.InvariantCulture));
+            writer.WriteStringValue(((DateOnly)value).ToString(DateFormat, CultureInfo.InvariantCulture));
     }
 }

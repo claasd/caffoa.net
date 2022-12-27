@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using DemoV2.Text.Json.Errors;
 using DemoV2.Text.Json.Model;
 
-namespace DemoV2.Services
+namespace DemoV2.Text.Json.Services
 {
     public class UserRepository<T> where T : STJAnyUser
     {

@@ -2,18 +2,16 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using Caffoa.Extensions;
-using DemoV2.Text.Json;
 using DemoV2.Text.Json.Errors;
 using DemoV2.Text.Json.Model;
-using Microsoft.ApplicationInsights;
-using Newtonsoft.Json.Linq;
 
 #pragma warning disable CS0612
 
-namespace DemoV2.Services
+namespace DemoV2.Text.Json.Services
 {
     public class DemoV2UserService : IDemoV2TextJsonUserService
     {
@@ -101,7 +99,7 @@ namespace DemoV2.Services
             try
             {
                 var user = await Users.GetById(userId);
-                user = user.MergedWith(payload);
+                user.UpdateWithSTJUser(payload);
                 await Users.Edit(user.Id, user);
                 return (user, 200);
             }
@@ -113,7 +111,7 @@ namespace DemoV2.Services
                     RegistrationDate = DateTime.Now,
                     Name = ""
                 };
-                newUser = newUser.MergedWith(payload);
+                newUser.UpdateWithSTJUser(payload);
                 await Users.Add(newUser.Id, newUser);
                 return (newUser, 201);
             }
@@ -140,11 +138,11 @@ namespace DemoV2.Services
             }
         }
 
-        public async Task<STJUserWithId> UserPatchAsync(string userId, JObject payload,
+        public async Task<STJUserWithId> UserPatchAsync(string userId, JsonElement payload,
             CancellationToken cancellationToken = default)
         {
             var user = await Users.GetById(userId);
-            user = user.MergedWith<STJUser, STJUserWithId>(payload);
+//            user = user.MergedWith<STJUser, STJUserWithId>(payload);
             await Users.Edit(user.Id, user);
             return user;
         }

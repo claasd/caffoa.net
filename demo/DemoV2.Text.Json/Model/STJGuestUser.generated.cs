@@ -2,6 +2,7 @@
 #pragma warning disable CS0618
 
 using System;
+using Caffoa;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Collections.Generic;
@@ -15,11 +16,9 @@ namespace DemoV2.Text.Json.Model {
         public const string STJGuestUserObjectName = "guestUser";
 
         [JsonPropertyName("email")]
-        [JsonRequired]
         public virtual string Email { get; set; }
 
         [JsonPropertyName("type")]
-        [JsonRequired]
         public virtual TypeValue Type { get; set; } = TypeValue.Guest;
 
         [JsonExtensionData]
@@ -34,6 +33,6 @@ namespace DemoV2.Text.Json.Model {
         public STJGuestUser ToSTJGuestUser() => new STJGuestUser(this);
         public virtual STJAnyUser ToSTJAnyUser() => ToSTJGuestUser();
         public virtual STJAnyCompleteUser ToSTJAnyCompleteUser() => ToSTJGuestUser();
-        public virtual string TypeDiscriminator => Type.ToString();
+        public virtual string TypeDiscriminator => Type.Value();
     }
 }

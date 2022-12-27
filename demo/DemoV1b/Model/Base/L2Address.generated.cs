@@ -2,6 +2,7 @@
 #pragma warning disable CS0618
 
 using System;
+using Caffoa;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Collections.Generic;

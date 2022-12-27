@@ -5,7 +5,7 @@
         <LangVersion>10</LangVersion>
         <RootNamespace>Caffoa</RootNamespace>
         <IsPackable>true</IsPackable>
-        <TargetFramework>net7.0</TargetFramework>
+        <TargetFrameworks>net7.0;net6.0</TargetFrameworks>
         <RepositoryUrl>https://github.com/claasd/caffoa.net.git</RepositoryUrl>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <Authors>claasd</Authors>
@@ -17,8 +17,4 @@
     <ItemGroup>
       <ProjectReference Include="..\CdIts.Caffoa.Base\CdIts.Caffoa.Base.csproj" />
     </ItemGroup>
-    <ItemGroup>
-      <PackageReference Include="Microsoft.AspNetCore.App" Version="2.2.8" />
-    </ItemGroup>
-
 </Project>

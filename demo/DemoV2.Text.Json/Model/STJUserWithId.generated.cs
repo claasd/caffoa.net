@@ -2,6 +2,7 @@
 #pragma warning disable CS0618
 
 using System;
+using Caffoa;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Collections.Generic;
@@ -60,7 +61,7 @@ namespace DemoV2.Text.Json.Model {
         public virtual DateTimeOffset RegistrationDate { get; set; }
 
         [JsonPropertyName("diffs")]
-        public virtual object Diffs { get; set; }
+        public virtual JsonElement Diffs { get; set; }
 
         [JsonExtensionData]
         public Dictionary<string, object> AdditionalProperties;
@@ -111,6 +112,6 @@ namespace DemoV2.Text.Json.Model {
         public STJUserWithId ToSTJUserWithId() => new STJUserWithId(this);
         public virtual STJAnyUser ToSTJAnyUser() => ToSTJUserWithId();
         public virtual STJAnyCompleteUser ToSTJAnyCompleteUser() => ToSTJUserWithId();
-        public virtual string TypeDiscriminator => Type.ToString();
+        public virtual string TypeDiscriminator => Type.Value();
     }
 }

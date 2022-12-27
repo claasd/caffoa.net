@@ -1,4 +1,5 @@
 using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace Caffoa.Defaults;
 
@@ -10,6 +11,14 @@ public class DefaultCaffoaJsonParser : ICaffoaJsonParser
 {
     public ICaffoaErrorHandler ErrorHandler { get; }
 
+    public JsonSerializerOptions Options { get; set; } = new JsonSerializerOptions
+    {
+        Converters =
+        {
+            new JsonStringEnumConverter()
+        }
+    };
+
     public DefaultCaffoaJsonParser(ICaffoaErrorHandler errorHandler)
     {
         ErrorHandler = errorHandler;
@@ -19,7 +28,7 @@ public class DefaultCaffoaJsonParser : ICaffoaJsonParser
     {
         try
         {
-            return await JsonSerializer.DeserializeAsync<T>(httpStream);
+            return await JsonSerializer.DeserializeAsync<T>(httpStream, Options);
         }
         catch (CaffoaClientError)
         {
@@ -33,11 +42,11 @@ public class DefaultCaffoaJsonParser : ICaffoaJsonParser
 
     public virtual T ToObject<T>(object token)
     {
-        if(token is not JsonElement element)
+        if (token is not JsonElement element)
             throw new ArgumentException($"ToObject expected a JsonElement, got {token.GetType()} instead.");
         try
         {
-            return element.Deserialize<T>();
+            return element.Deserialize<T>(Options);
         }
         catch (Exception e)
         {

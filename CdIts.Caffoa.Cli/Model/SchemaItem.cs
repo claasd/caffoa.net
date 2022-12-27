@@ -5,8 +5,7 @@ public class SchemaItem
     public enum ObjectType
     {
         Regular,
-        StringEnum,
-        IntEnum
+        StringEnum
     };
     public SchemaItem(string name, string className)
     {

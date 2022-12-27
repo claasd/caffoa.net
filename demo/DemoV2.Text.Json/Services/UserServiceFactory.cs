@@ -1,8 +1,7 @@
 using Caffoa;
-using DemoV2.Text.Json;
 using Microsoft.AspNetCore.Http;
 
-namespace DemoV2.Services;
+namespace DemoV2.Text.Json.Services;
 
 public class UserServiceFactory : ICaffoaFactory<IDemoV2TextJsonUserService>
 {

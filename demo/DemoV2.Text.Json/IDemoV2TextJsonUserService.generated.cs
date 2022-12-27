@@ -5,7 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json.Linq;
+using System.Text.Json;
 using DemoV2.Text.Json.Model.Base;
 using DemoV2.Text.Json.Model;
 
@@ -54,7 +54,7 @@ namespace DemoV2.Text.Json
         /// update a user
         /// 200 -> User was updated
         /// </summary>
-        Task<STJUserWithId> UserPatchAsync(string userId, JObject payload, CancellationToken cancellationToken = default);
+        Task<STJUserWithId> UserPatchAsync(string userId, JsonElement payload, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// get information about the users

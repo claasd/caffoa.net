@@ -1,12 +1,11 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using DemoV2.Text.Json;
 using DemoV2.Text.Json.Model;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Azure.WebJobs.Extensions.DurableTask;
 
-namespace DemoV2.Services;
+namespace DemoV2.Text.Json.Services;
 
 public class MaintainanceService : IDemoV2TextJsonMaintainanceService
 {

@@ -2,6 +2,7 @@
 #pragma warning disable CS0618
 
 using System;
+using Caffoa;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Collections.Generic;
@@ -19,7 +20,6 @@ namespace DemoV2.Text.Json.Model {
         /// A fancy string with description
         /// </summary>
         [JsonPropertyName("name")]
-        [JsonRequired]
         public virtual string Name { get; set; }
 
         [JsonPropertyName("address")]
@@ -37,7 +37,6 @@ namespace DemoV2.Text.Json.Model {
         public virtual Dictionary<string, string> Descriptions { get; set; } = new Dictionary<string, string>();
 
         [JsonPropertyName("type")]
-        [JsonRequired]
         public virtual TypeValue Type { get; set; } = TypeValue.Simple;
 
         [JsonPropertyName("role")]
@@ -73,6 +72,6 @@ namespace DemoV2.Text.Json.Model {
         }
         public STJUser ToSTJUser() => new STJUser(this);
         public virtual STJAnyUser ToSTJAnyUser() => ToSTJUser();
-        public virtual string TypeDiscriminator => Type.ToString();
+        public virtual string TypeDiscriminator => Type.Value();
     }
 }

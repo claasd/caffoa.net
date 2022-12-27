@@ -9,25 +9,15 @@
         <Authors>claasd</Authors>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <Description>CSmall Helper class to create HttpRequest Mocks for Testing</Description>
-        <TargetFrameworks>net7.0;net6.0;net5.0;netcoreapp3.1</TargetFrameworks>
+        <TargetFrameworks>net7.0;net6.0;netcoreapp3.1</TargetFrameworks>
     </PropertyGroup>
 
     <ItemGroup>
         <PackageReference Include="FluentAssertions" Version="6.8.0" />
-        <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2" />
-        <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.2.0" />
-        <PackageReference Include="Moq" Version="4.18.2" />
+        <PackageReference Include="Moq" Version="4.18.3" />
+        <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
     </ItemGroup>
-    <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp3.1'" >
-        <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.1.32" />
-    </ItemGroup>
-    <ItemGroup Condition="'$(TargetFramework)' == 'net5.0'" >
-        <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="5.0.17" />
-    </ItemGroup>
-    <ItemGroup Condition="'$(TargetFramework)' == 'net6.0'" >
-        <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="6.0.12" />
-    </ItemGroup>
-    <ItemGroup Condition="'$(TargetFramework)' == 'net7.0'" >
-        <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="7.0.1" />
+    <ItemGroup>
+        <FrameworkReference Include="Microsoft.AspNetCore.App" Version="2.2.8" />
     </ItemGroup>
 </Project>

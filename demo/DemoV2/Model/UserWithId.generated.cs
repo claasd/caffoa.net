@@ -2,6 +2,7 @@
 #pragma warning disable CS0618
 
 using System;
+using Caffoa;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
@@ -60,7 +61,7 @@ namespace DemoV2.Model {
         public virtual DateTimeOffset RegistrationDate { get; set; }
 
         [JsonProperty("diffs")]
-        public virtual object Diffs { get; set; }
+        public virtual JToken Diffs { get; set; }
 
         [JsonExtensionData]
         public Dictionary<string, object> AdditionalProperties;
@@ -111,6 +112,6 @@ namespace DemoV2.Model {
         public UserWithId ToUserWithId() => new UserWithId(this);
         public virtual AnyUser ToAnyUser() => ToUserWithId();
         public virtual AnyCompleteUser ToAnyCompleteUser() => ToUserWithId();
-        public virtual string TypeDiscriminator => Type.ToString();
+        public virtual string TypeDiscriminator => Type.Value();
     }
 }

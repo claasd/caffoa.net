@@ -2,6 +2,7 @@
 #pragma warning disable CS0618
 
 using System;
+using Caffoa;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Collections.Generic;
@@ -17,14 +18,12 @@ namespace DemoV2.Text.Json.Model {
         /// Single string based code describing the error.
         /// </summary>
         [JsonPropertyName("status")]
-        [JsonRequired]
         public virtual string Status { get; set; }
 
         /// <summary>
         /// Human readable error message.
         /// </summary>
         [JsonPropertyName("message")]
-        [JsonRequired]
         public virtual string Message { get; set; }
 
         [JsonExtensionData]

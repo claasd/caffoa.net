@@ -39,8 +39,6 @@ public abstract class ObjectParser
             {
                 if (schema.Type.StartsWith("string"))
                     Item.Type = SchemaItem.ObjectType.StringEnum;
-                if (schema.Type.StartsWith("int"))
-                    Item.Type = SchemaItem.ObjectType.IntEnum;
                 Item.Enums = schema.EnumsAsStrings();
             }
 

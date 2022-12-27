@@ -15,7 +15,10 @@ public class CaffoaConfig
     public bool? GenericAdditionalProperties { get; set; }
 
     public string? GenericAdditionalPropertiesType { get; set; }
-    public string GetGenericAdditionalPropertiesType() => GenericAdditionalPropertiesType ?? "JToken";
+
+    public string GetGenericAdditionalPropertiesType() => GenericAdditionalPropertiesType ?? GetGenericType();
+
+    public string GetGenericType() => Flavor is GenerationFlavor.SystemTextJson ? "JsonElement" : "JToken";
 
     public List<string>? Imports { get; set; }
     public List<RequestBodyTypeConfig>? RequestBodyType { get; set; }
@@ -34,17 +37,19 @@ public class CaffoaConfig
         StaticValues,
         StaticValuesWithoutCheck
     }
+
     public EnumCreationMode? EnumMode { get; set; }
     public EnumCreationMode GetEnumCreationMode() => EnumMode ?? EnumCreationMode.Default;
-    
+
     public enum GenerationFlavor
     {
-        [EnumMember(Value = "System.Text.Json")]SystemTextJson,
+        [EnumMember(Value = "System.Text.Json")]
+        SystemTextJson,
         [EnumMember(Value = "Json.NET")] JsonNet,
     }
-    
+
     public GenerationFlavor? Flavor { get; set; }
-    
+
     public CaffoaGlobalConfig MergedWith(CaffoaGlobalConfig general)
     {
         return new CaffoaGlobalConfig()
@@ -60,7 +65,8 @@ public class CaffoaConfig
             ParsePathParameters = ParsePathParameters ?? general.ParsePathParameters,
             ParseQueryParameters = ParseQueryParameters ?? general.ParseQueryParameters,
             GenericAdditionalProperties = GenericAdditionalProperties ?? general.GenericAdditionalProperties,
-            GenericAdditionalPropertiesType = GenericAdditionalPropertiesType ?? general.GenericAdditionalPropertiesType,
+            GenericAdditionalPropertiesType =
+                GenericAdditionalPropertiesType ?? general.GenericAdditionalPropertiesType,
             DurableClient = DurableClient ?? general.DurableClient,
             SplitByTag = SplitByTag ?? general.SplitByTag,
             WithCancellation = WithCancellation ?? general.WithCancellation,

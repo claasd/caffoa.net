@@ -61,6 +61,14 @@ services:
       durableClient:
         operations:
           - long-running-function
+      requestBodyType: # overwrite the JSON type that is passed to the method for some operations
+        - type: JsonElement
+          import: System.Text.Json
+          filter: # the type is overwritten if one of the filters match
+            operations:
+              - user-patch
+            methods:
+              - patch
     model:
       namespace: DemoV2.Text.Json.Model
       targetFolder: ./demo/DemoV2.Text.Json/Model

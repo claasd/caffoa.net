@@ -1,8 +1,8 @@
 ﻿using System.Text;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Primitives;
 using Moq;
 using Newtonsoft.Json;
+using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace CdIts.AzFuncTestHelper;
 
@@ -19,6 +19,7 @@ public class RequestBuilder
             _query.Values.Add(key, value);
         return this;
     }
+
     public RequestBuilder Query(string key, int? value) => Query(key, value?.ToString());
 
     public RequestBuilder Header(string name, string? value)
@@ -29,7 +30,9 @@ public class RequestBuilder
     }
 
     public RequestBuilder Content<T>(T content) =>
-        Content(JsonConvert.SerializeObject(content));
+        Content(Settings.DefaultJsonFlavor == Settings.JsonFlavor.SystemTextJson
+            ? JsonSerializer.Serialize(content, Settings.JsonOptions)
+            : JsonConvert.SerializeObject(content));
 
     public RequestBuilder Content(string content) => Content(Encoding.UTF8.GetBytes(content));
     public RequestBuilder Content(byte[] data) => Content(new MemoryStream(data) as Stream);

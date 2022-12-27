@@ -70,12 +70,12 @@ namespace DemoV2
         {
             try {
                 await using var instance = _factory.Instance(request);
-                var jToken = await _jsonParser.Parse<JToken>(request.Body);
-                var discriminator = jToken["type"]?.ToString();
+                var jsonToken = await _jsonParser.Parse<JToken>(request.Body);
+                var discriminator = jsonToken["type"]?.ToString()?.ToLower();
                 var task = discriminator switch
                 {
-                    "simple" => instance.UserPostAsync(_jsonParser.ToObject<User>(jToken), request.HttpContext.RequestAborted),
-                    "guest" => instance.UserPostAsync(_jsonParser.ToObject<GuestUser>(jToken), request.HttpContext.RequestAborted),
+                    "simple" => instance.UserPostAsync(_jsonParser.ToObject<User>(jsonToken), request.HttpContext.RequestAborted),
+                    "guest" => instance.UserPostAsync(_jsonParser.ToObject<GuestUser>(jsonToken), request.HttpContext.RequestAborted),
                     _ => throw _errorHandler.WrongContent("type", discriminator, new [] { "simple", "guest" })
                 };
                 var result = await task;
@@ -98,12 +98,12 @@ namespace DemoV2
         {
             try {
                 await using var instance = _factory.Instance(request);
-                var jToken = await _jsonParser.Parse<JToken>(request.Body);
-                var discriminator = jToken["type"]?.ToString();
+                var jsonToken = await _jsonParser.Parse<JToken>(request.Body);
+                var discriminator = jsonToken["type"]?.ToString()?.ToLower();
                 var task = discriminator switch
                 {
-                    "simple" => instance.UserPutAsync(userId, _jsonParser.ToObject<User>(jToken), request.HttpContext.RequestAborted),
-                    "guest" => instance.UserPutAsync(userId, _jsonParser.ToObject<GuestUser>(jToken), request.HttpContext.RequestAborted),
+                    "simple" => instance.UserPutAsync(userId, _jsonParser.ToObject<User>(jsonToken), request.HttpContext.RequestAborted),
+                    "guest" => instance.UserPutAsync(userId, _jsonParser.ToObject<GuestUser>(jsonToken), request.HttpContext.RequestAborted),
                     _ => throw _errorHandler.WrongContent("type", discriminator, new [] { "simple", "guest" })
                 };
                 var (result, code) = await task;

@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using CdIts.AzFuncTestHelper;
-using DemoV2.Services;
 using DemoV2;
 using DemoV2.Model;
 using FluentAssertions;
@@ -19,7 +18,7 @@ public class RoundtripTest
         {
             Name = "Claas"
         };
-        var functions = new DemoV2UserFunctions(NullLogger<DemoV2UserFunctions>.Instance, new UserServiceFactory());
+        var functions = new DemoV2UserFunctions(NullLogger<DemoV2UserFunctions>.Instance, new DemoV2.Services.UserServiceFactory());
         await functions.UserPostAsync(new RequestBuilder().Content(user).Build()).Check();
         var users = await functions.UsersGetAsync(RequestBuilder.Default).Json<List<User>>();
         users.Should().HaveCount(1);

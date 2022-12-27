@@ -1,8 +1,10 @@
 ﻿using System.Net;
 using System.Net.Mime;
 using System.Text;
+using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace CdIts.AzFuncTestHelper;
 
@@ -30,11 +32,26 @@ public static class ActionResultExtensions
     {
         return res switch
         {
-            JsonResult jsonResult => new HttpResponseMessage((HttpStatusCode)(jsonResult.StatusCode ?? 200))
+            JsonResult { SerializerSettings: JsonSerializerSettings settings } jsonResult => new HttpResponseMessage((HttpStatusCode)(jsonResult.StatusCode ?? 200))
             {
                 Content = new StringContent(
                     JsonConvert.SerializeObject(jsonResult.Value, null,
-                        jsonResult.SerializerSettings as JsonSerializerSettings), Encoding.UTF8,
+                        settings), Encoding.UTF8,
+                    "application/json")
+            },
+            JsonResult { SerializerSettings: JsonSerializerOptions options } jsonResult => new HttpResponseMessage((HttpStatusCode)(jsonResult.StatusCode ?? 200))
+            {
+                Content = new StringContent(JsonSerializer.Serialize(jsonResult.Value, options), Encoding.UTF8,
+                    "application/json")
+            },
+            JsonResult jsonResult when Settings.DefaultJsonFlavor == Settings.JsonFlavor.SystemTextJson => new HttpResponseMessage((HttpStatusCode)(jsonResult.StatusCode ?? 200))
+            {
+                Content = new StringContent(JsonSerializer.Serialize(jsonResult.Value), Encoding.UTF8,
+                    "application/json")
+            },
+            JsonResult jsonResult => new HttpResponseMessage((HttpStatusCode)(jsonResult.StatusCode ?? 200))
+            {
+                Content = new StringContent(JsonConvert.SerializeObject(jsonResult.Value), Encoding.UTF8,
                     "application/json")
             },
             ContentResult contentResult => new HttpResponseMessage(

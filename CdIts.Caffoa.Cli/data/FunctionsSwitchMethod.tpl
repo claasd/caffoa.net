@@ -1,5 +1,5 @@
-var jToken = await _jsonParser.Parse<JToken>(request.Body);
-                var discriminator = jToken["{DISC}"]?.ToString();
+var jsonToken = await _jsonParser.Parse<{GENERIC_TYPE}>(request.Body);
+                var discriminator = {DISC_READ};
                 {VARNAME}discriminator switch
                 {{
                     {CASES}

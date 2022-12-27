@@ -105,7 +105,23 @@ public class SchemaItemFormatter
         var implementations = MatchingInterfaces(interfaces)
             .Select(i => $"        public virtual {i} To{i}() => To{_item.ClassName}();\n");
         var discriminators = MatchingDiscriminators(interfaces)
-            .Select(d=>$"        public virtual string {d}Discriminator => {d}.ToString();\n");
+            .Select(d=>
+            {
+                var prop = _item.Properties?.FirstOrDefault(p => p.Name.ToObjectName() == d);
+                if (prop is null)
+                    return ""; // this is inheritance
+                var result = $"        public virtual string {d}Discriminator => {d}";
+                if (_config.GetEnumCreationMode() == CaffoaConfig.EnumCreationMode.Default && (prop!.CanBeEnum()))
+                    result += ".Value();\n";
+                else if(prop!.TypeName.StartsWith("string"))
+                {
+                    result += ";\n";
+                }
+                else
+                    result += ".ToString();\n";
+
+                return result;
+            });
         return string.Join("", implementations.Concat(discriminators));
     }
     

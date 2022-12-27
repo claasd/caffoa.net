@@ -2,6 +2,7 @@
 #pragma warning disable CS0618
 
 using System;
+using Caffoa;
 {IMPORTS}
 namespace {NAMESPACE} {{
 {DESCRIPTION}public partial class {NAME}{PARENTS} {{

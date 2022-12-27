@@ -36,8 +36,8 @@ public class PropertyFormatter
 
     public string JsonExtraProperties()
     {
-        if (_property.Required && _config.Flavor is CaffoaConfig.GenerationFlavor.SystemTextJson)
-            return "\n        [JsonRequired]";
+//        if (_property.Required && _config.Flavor is CaffoaConfig.GenerationFlavor.SystemTextJson)
+//            return "\n        [JsonRequired]";
         return "";
     }
 
@@ -50,7 +50,8 @@ public class PropertyFormatter
             return $"ICollection<{name}>";
         if (_property.IsMap)
             return $"Dictionary<string, {name}>";
-
+        if (_property.TypeName == "object")
+            return _config.GetGenericType();
         return name;
     }
 

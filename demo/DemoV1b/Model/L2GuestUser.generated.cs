@@ -2,6 +2,7 @@
 #pragma warning disable CS0618
 
 using System;
+using Caffoa;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
@@ -48,6 +49,6 @@ namespace DemoV1b.Model {
         public L2GuestUser ToL2GuestUser() => new L2GuestUser(this);
         public virtual L2AnyUser ToL2AnyUser() => ToL2GuestUser();
         public virtual L2AnyCompleteUser ToL2AnyCompleteUser() => ToL2GuestUser();
-        public virtual string TypeDiscriminator => Type.ToString();
+        public virtual string TypeDiscriminator => Type;
     }
 }

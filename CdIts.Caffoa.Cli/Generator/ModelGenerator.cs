@@ -1,8 +1,6 @@
-using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using CdIts.Caffoa.Cli.Config;
-using CdIts.Caffoa.Cli.Errors;
 using CdIts.Caffoa.Cli.Generator.Formatter;
 using CdIts.Caffoa.Cli.Model;
 
@@ -25,7 +23,7 @@ public class ModelGenerator
         var interfaces = objects.Where(o => o.Interface != null).ToList();
         var classes = objects.Where(o => o.Interface == null && o.Type == SchemaItem.ObjectType.Regular).ToList();
         var enumClasses = objects
-            .Where(o => o.Type == SchemaItem.ObjectType.IntEnum || o.Type == SchemaItem.ObjectType.StringEnum).ToList();
+            .Where(o => o.Type == SchemaItem.ObjectType.StringEnum).ToList();
         var enumProperties = objects.Where(o => o.Properties != null && o.Properties.Any(p => p.Enums.Any())).ToList();
         enumProperties.ForEach(WriteEnumClasses);
         enumClasses.ForEach(WriteEnumClass);
@@ -80,7 +78,8 @@ public class ModelGenerator
             foreach (var subItem in item.SubItems)
             {
                 var otherItem = otherSchemas.FirstOrDefault(i => i.ClassName == subItem);
-                if (otherItem != null) {
+                if (otherItem != null)
+                {
                     data.Add(CreateModelExtension(otherItem, otherItem.ClassName, item.ClassName, item));
                     data.Add(CreateModelExtension(otherItem, item.ClassName, otherItem.ClassName, item));
                 }
@@ -94,14 +93,17 @@ public class ModelGenerator
 
         return string.Join("\n\n", data);
     }
-    private string CreateModelExtension(SchemaItem subItem, string targetClassName, string sourceClassName, SchemaItem parentItem)
+
+    private string CreateModelExtension(SchemaItem subItem, string targetClassName, string sourceClassName,
+        SchemaItem parentItem)
     {
         string file;
         file = Templates.GetTemplate("ModelExtensionContentTemplate.tpl");
         var parameters = new Dictionary<string, object>();
         parameters["NAME"] = targetClassName;
         parameters["OTHER"] = sourceClassName;
-        parameters["UPDATEPROPS"] = PropertyUpdateBuilder.BuildExternalUpdates(subItem, _config, targetClassName, parentItem.AdditionalPropertiesAllowed);
+        parameters["UPDATEPROPS"] = PropertyUpdateBuilder.BuildExternalUpdates(subItem, _config, targetClassName,
+            parentItem.AdditionalPropertiesAllowed);
         var formatted = file.FormatDict(parameters);
         return formatted.ToSystemNewLine();
     }
@@ -128,7 +130,7 @@ public class ModelGenerator
                 builder.Append($"\n        public {item.ClassName}({subItem} other){{\n            ");
                 builder.Append(PropertyUpdateBuilder.BuildConstructor(otherItem, _config, item));
                 builder.Append("\n        }");
-                
+
                 builder.Append($"\n        public {subItem} To{subItem}() => new {subItem}() {{\n            ");
                 builder.Append(PropertyUpdateBuilder.BuildInitializer(otherItem, _config, item));
                 builder.Append("\n        };");
@@ -160,7 +162,7 @@ public class ModelGenerator
             format["TYPE"] = formatter.Type();
             format["NAMEUPPER"] = property.Name.ToObjectName();
             format["NAMELOWER"] = property.Name;
-            
+
             if (_config.GetEnumCreationMode() == CaffoaConfig.EnumCreationMode.Default && property.CanBeEnum())
             {
                 properties.Add(FormatEnumProperty(property, format));
@@ -190,7 +192,7 @@ public class ModelGenerator
         {
             if (_config.GetEnumCreationMode() == CaffoaConfig.EnumCreationMode.Default && property.CanBeEnum())
                 WriteEnumPropertyClass(property, item.ClassName);
-            else
+            else if(property.CanBeEnum())
                 WriteEnumAsStringClass(property, item.ClassName);
         }
     }
@@ -320,7 +322,6 @@ public class ModelGenerator
             ["ENUMBASE"] = enumbase,
             ["JSONPROPERTY"] = jsonproperty,
             ["IMPORTS"] = formatter.Imports()
-
         };
         string fileName = $"{className}.{propName}.generated.cs";
         var formatted = file.FormatDict(format);

@@ -6,6 +6,11 @@ namespace Caffoa.JsonConverter;
 
 public class StringEnumConverter: JsonConverter<object>
 {
+    public override bool CanConvert(Type typeToConvert)
+    {
+        return typeToConvert.IsEnum || (Nullable.GetUnderlyingType(typeToConvert)?.IsEnum ?? false);
+    }
+
     public override object Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
         try

@@ -1,16 +1,21 @@
 using System.Globalization;
+using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
 namespace Caffoa.JsonConverter;
 
-public class CaffoaTimeOnlyConverter : JsonConverter<TimeOnly?>
+public class CaffoaTimeOnlyConverter : JsonConverter<object>
 {
     public const string TimeFormat = "HH:mm:ss";
     public const string ParseFormat = "H:m:s";
     public const string FallbackParseFormat = "H:m";
-    
-    public override TimeOnly? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    public override bool CanConvert(Type typeToConvert)
+    {
+        return typeToConvert == typeof(TimeOnly) || Nullable.GetUnderlyingType(typeToConvert) == typeof(TimeOnly);
+    }
+
+    public override object Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
         try
         {
@@ -33,11 +38,11 @@ public class CaffoaTimeOnlyConverter : JsonConverter<TimeOnly?>
         }
     }
 
-    public override void Write(Utf8JsonWriter writer, TimeOnly? value, JsonSerializerOptions options)
+    public override void Write(Utf8JsonWriter writer, object value, JsonSerializerOptions options)
     {
         if (value is null)
             writer.WriteNullValue();
         else
-            writer.WriteStringValue(value.Value.ToString(TimeFormat, CultureInfo.InvariantCulture));
+            writer.WriteStringValue(((TimeOnly)value).ToString(TimeFormat, CultureInfo.InvariantCulture));
     }
 }

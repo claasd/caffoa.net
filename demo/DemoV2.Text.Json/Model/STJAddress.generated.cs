@@ -2,6 +2,7 @@
 #pragma warning disable CS0618
 
 using System;
+using Caffoa;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Collections.Generic;
@@ -14,22 +15,18 @@ namespace DemoV2.Text.Json.Model.Base {
         public const string STJAddressObjectName = "address";
 
         [JsonPropertyName("street")]
-        [JsonRequired]
         public virtual string Street { get; set; }
 
         [JsonPropertyName("street.extra")]
         public virtual string StreetExtra { get; set; }
 
         [JsonPropertyName("postalCode")]
-        [JsonRequired]
         public virtual string PostalCode { get; set; }
 
         [JsonPropertyName("city")]
-        [JsonRequired]
         public virtual string City { get; set; }
 
         [JsonPropertyName("country")]
-        [JsonRequired]
         public virtual string Country { get; set; }
 
         [JsonPropertyName("addressType")]

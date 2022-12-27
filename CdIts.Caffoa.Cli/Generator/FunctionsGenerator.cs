@@ -46,7 +46,7 @@ public class FunctionsGenerator
             imports.AddRange(_config.Imports);
         if (_modelNamespace != null)
             imports.Add(_modelNamespace);
-        if (endpoints.FirstOrDefault(e => e.RequestBodyType is SelectionBodyModel) != null)
+        if (endpoints.FirstOrDefault(e => e.RequestBodyType is SelectionBodyModel) != null && _config.Flavor is not CaffoaConfig.GenerationFlavor.SystemTextJson)
             imports.Add("Newtonsoft.Json.Linq");
         var extraVars = new List<AdditionalInterfaceModel>();
         if (_config.ParsePathParameters is not false || _config.ParseQueryParameters is not false)
@@ -187,7 +187,7 @@ public class FunctionsGenerator
         foreach (var (key, type) in model!.Mapping)
         {
             var caseParams = new List<string>(callParams);
-            caseParams.Add($"_jsonParser.ToObject<{type}>(jToken)");
+            caseParams.Add($"_jsonParser.ToObject<{type}>(jsonToken)");
             if (_config.ParseQueryParameters is not false)
             {
                 caseParams.AddRange(endpoint.QueryParameters().Select(p => $"{p.Name}Value"));
@@ -199,7 +199,7 @@ public class FunctionsGenerator
             }
             
             var call = FormatCall(endpoint, "", caseParams, false);
-            cases.Add($"\"{key}\" => {call}");
+            cases.Add($"\"{key.ToLower()}\" => {call}");
         }
 
         parameter["VARNAME"] = useAwait ? "var task = " : variable;
@@ -207,6 +207,10 @@ public class FunctionsGenerator
         parameter["DISC"] = model.Disriminator;
         parameter["CASES_ALLOWED_VALUES"] = string.Join(", ", model.Mapping.Keys.Select(k => $"\"{k}\""));
         parameter["CASES"] = string.Join("\n                    ", cases.Select(c => $"{c},"));
+        parameter["GENERIC_TYPE"] = _config.GetGenericType();
+        parameter["DISC_READ"] = _config.Flavor is CaffoaConfig.GenerationFlavor.SystemTextJson
+            ? $"jsonToken.GetProperty(\"{model.Disriminator}\").GetString()?.ToLower()"
+            : $"jsonToken[\"{model.Disriminator}\"]?.ToString()?.ToLower()";
         return file.FormatDict(parameter);
     }
 
