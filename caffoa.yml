@@ -19,7 +19,7 @@ config:
   extensions: true
 #  enumMode: Default
 services:
-  - apiPath: tests\base.openapi.yml
+  - apiPath: tests/base.openapi.yml
     config:
       genericAdditionalProperties: true
 #      genericAdditionalPropertiesType: object
@@ -27,7 +27,7 @@ services:
       namespace: DemoV2.Model.Base
       targetFolder: ./demo/DemoV2/Model/Base
       
-  - apiPath: tests\openapi.yml
+  - apiPath: tests/openapi.yml
     config:
       generateResolvedApiFile: true
       disposable: true
@@ -44,7 +44,7 @@ services:
       namespace: DemoV2
       name: DemoV2
 
-  - apiPath: tests\base.openapi.yml
+  - apiPath: tests/base.openapi.yml
     config:
       prefix: 'STJ'
       flavor: SystemTextJson
@@ -52,7 +52,7 @@ services:
       namespace: DemoV2.Text.Json.Model.Base
       targetFolder: ./demo/DemoV2.Text.Json/Model
 
-  - apiPath: tests\openapi.yml
+  - apiPath: tests/openapi.yml
     config:
       prefix: 'STJ'
       flavor: SystemTextJson
@@ -77,7 +77,7 @@ services:
       namespace: DemoV2.Text.Json
       name: DemoV2TextJson
       
-  - apiPath: tests\base.openapi.yml
+  - apiPath: tests/base.openapi.yml
     config:
       prefix: L1
       useInheritance: true
@@ -86,7 +86,7 @@ services:
       namespace: DemoV1a.Model.Base
       targetFolder: ./demo/DemoV1a/Model/Base
       
-  - apiPath: tests\openapi.yml
+  - apiPath: tests/openapi.yml
     config:
       useInheritance: true
       enumMode: StaticValues
@@ -104,7 +104,7 @@ services:
       namespace: DemoV1a
       name: DemoV1a
 
-  - apiPath: tests\base.openapi.yml
+  - apiPath: tests/base.openapi.yml
     config:
       prefix: L2
       useInheritance: false
@@ -113,7 +113,7 @@ services:
       namespace: DemoV1b.Model.Base
       targetFolder: ./demo/DemoV1b/Model/Base
 
-  - apiPath: tests\openapi.yml
+  - apiPath: tests/openapi.yml
     config:
       useInheritance: false
       enumMode: StaticValuesWithoutCheck
