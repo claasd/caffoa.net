@@ -80,21 +80,21 @@ namespace DemoV2.Model {
             LastSessionLength = other.LastSessionLength;
             Id = other.Id;
             RegistrationDate = other.RegistrationDate;
-            Diffs = other.Diffs;
+            Diffs = other.Diffs?.DeepClone();
             AdditionalProperties = other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null;
         }
-        public UserWithId(User other){
+        public UserWithId(User other, bool deepClone = true) {
             Name = other.Name;
-            Address = other.Address?.ToAddress();
+            Address = deepClone ? other.Address?.ToAddress() : other.Address;
             Birthdate = other.Birthdate;
-            Emails = other.Emails.ToList();
-            Descriptions = other.Descriptions.ToDictionary(entry => entry.Key, entry => entry.Value);
+            Emails = deepClone ? other.Emails.ToList() : other.Emails;
+            Descriptions = deepClone ? other.Descriptions.ToDictionary(entry => entry.Key, entry => entry.Value) : other.Descriptions;
             Type = (UserWithId.TypeValue)other.Type;
             Role = (UserWithId.RoleValue)other.Role;
             AgeGroup = other.AgeGroup;
             PreferredContactTime = other.PreferredContactTime;
             LastSessionLength = other.LastSessionLength;
-            AdditionalProperties = other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null;
+            AdditionalProperties = deepClone ? (other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null) : other.AdditionalProperties;
         }
         public User ToUser() => new User() {
             Name = Name,
@@ -108,6 +108,19 @@ namespace DemoV2.Model {
             PreferredContactTime = PreferredContactTime,
             LastSessionLength = LastSessionLength,
             AdditionalProperties = AdditionalProperties != null ? new Dictionary<string, object>(AdditionalProperties) : null
+        };
+        public User AsUser() => new User() {
+            Name = Name,
+            Address = Address,
+            Birthdate = Birthdate,
+            Emails = Emails,
+            Descriptions = Descriptions,
+            Type = (User.TypeValue)Type,
+            Role = (User.RoleValue)Role,
+            AgeGroup = AgeGroup,
+            PreferredContactTime = PreferredContactTime,
+            LastSessionLength = LastSessionLength,
+            AdditionalProperties = AdditionalProperties
         };
         public UserWithId ToUserWithId() => new UserWithId(this);
         public virtual AnyUser ToAnyUser() => ToUserWithId();

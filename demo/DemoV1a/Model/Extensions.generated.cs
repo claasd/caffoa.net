@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Newtonsoft.Json.Linq;
 using DemoV1a.Model.Base;
 
 namespace DemoV1a.Model {
@@ -11,89 +12,89 @@ namespace DemoV1a.Model {
         /// <summary>
         /// Replaces all fields with the data of the passed object
         /// </summary>
-        public static void UpdateWithL1Error(this L1Error item, L1Error other) {
+        public static void UpdateWithL1Error(this L1Error item, L1Error other, bool deepClone = true) {
             item.Status = other.Status;
             item.Message = other.Message;
-            item.AdditionalProperties = other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null;
+            item.AdditionalProperties = deepClone ? (other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null) : other.AdditionalProperties;
         }
 
         /// <summary>
         /// Replaces all fields with the data of the passed object
         /// </summary>
-        public static void UpdateWithL1User(this L1User item, L1User other) {
+        public static void UpdateWithL1User(this L1User item, L1User other, bool deepClone = true) {
             item.Name = other.Name;
-            item.Address = other.Address?.ToL1Address();
+            item.Address = deepClone ? other.Address?.ToL1Address() : other.Address;
             item.Birthdate = other.Birthdate;
-            item.Emails = other.Emails.ToList();
-            item.Descriptions = other.Descriptions.ToDictionary(entry => entry.Key, entry => entry.Value);
+            item.Emails = deepClone ? other.Emails.ToList() : other.Emails;
+            item.Descriptions = deepClone ? other.Descriptions.ToDictionary(entry => entry.Key, entry => entry.Value) : other.Descriptions;
             item.Type = other.Type;
             item.Role = other.Role;
             item.AgeGroup = other.AgeGroup;
             item.PreferredContactTime = other.PreferredContactTime;
             item.LastSessionLength = other.LastSessionLength;
-            item.AdditionalProperties = other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null;
+            item.AdditionalProperties = deepClone ? (other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null) : other.AdditionalProperties;
         }
 
         /// <summary>
         /// Replaces all fields with the data of the passed object
         /// </summary>
-        public static void UpdateWithL1GuestUser(this L1GuestUser item, L1GuestUser other) {
+        public static void UpdateWithL1GuestUser(this L1GuestUser item, L1GuestUser other, bool deepClone = true) {
             item.Email = other.Email;
             item.Type = other.Type;
-            item.AdditionalProperties = other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null;
+            item.AdditionalProperties = deepClone ? (other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null) : other.AdditionalProperties;
         }
 
         /// <summary>
         /// Replaces all fields with the data of the passed object
         /// </summary>
-        public static void UpdateWithL1UserWithId(this L1UserWithId item, L1UserWithId other) {
+        public static void UpdateWithL1UserWithId(this L1UserWithId item, L1UserWithId other, bool deepClone = true) {
             item.Id = other.Id;
             item.RegistrationDate = other.RegistrationDate;
-            item.Diffs = other.Diffs;
-            item.AdditionalProperties = other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null;
+            item.Diffs = deepClone ? other.Diffs?.DeepClone() : other.Diffs;
+            item.AdditionalProperties = deepClone ? (other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null) : other.AdditionalProperties;
         }
 
         /// <summary>
         /// Replaces all fields with the data of the passed object
         /// </summary>
-        public static void UpdateWithL1Pricing(this L1Pricing item, L1Pricing other) {
+        public static void UpdateWithL1Pricing(this L1Pricing item, L1Pricing other, bool deepClone = true) {
             item.Price = other.Price;
-            item.Taxes = other.Taxes.ToDictionary(entry => entry.Key, entry => entry.Value);
-            item.AdditionalProperties = other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null;
+            item.Taxes = deepClone ? other.Taxes.ToDictionary(entry => entry.Key, entry => entry.Value) : other.Taxes;
+            item.AdditionalProperties = deepClone ? (other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null) : other.AdditionalProperties;
         }
 
         /// <summary>
         /// Replaces all fields with the data of the passed object
         /// </summary>
-        public static void UpdateWithL1LongRunningfunctionStatus(this L1LongRunningfunctionStatus item, L1LongRunningfunctionStatus other) {
+        public static void UpdateWithL1LongRunningfunctionStatus(this L1LongRunningfunctionStatus item, L1LongRunningfunctionStatus other, bool deepClone = true) {
             item.Status = other.Status;
-            item.Result = other.Result?.ToL1AnyUser();
-            item.AdditionalProperties = other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null;
+            item.Result = deepClone ? other.Result?.ToL1AnyUser() : other.Result;
+            item.AdditionalProperties = deepClone ? (other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null) : other.AdditionalProperties;
         }
 
         /// <summary>
         /// Replaces all fields with the data of the passed object
         /// </summary>
-        public static void UpdateWithL1TagInfos(this L1TagInfos item, L1TagInfos other) {
-            item.User = other.User.ToDictionary(entry => entry.Key, entry => entry.Value);
-            item.AdditionalProperties = other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null;
+        public static void UpdateWithL1TagInfos(this L1TagInfos item, L1TagInfos other, bool deepClone = true) {
+            item.User = deepClone ? other.User.ToDictionary(entry => entry.Key, entry => entry.Value) : other.User;
+            item.AdditionalProperties = deepClone ? (other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null) : other.AdditionalProperties;
         }
 
         /// <summary>
         /// Replaces all fields with the data of the passed object
         /// </summary>
-        public static void UpdateWithL1EnumObject(this L1EnumObject item, L1EnumObject other) {
+        public static void UpdateWithL1EnumObject(this L1EnumObject item, L1EnumObject other, bool deepClone = true) {
             item.Single = other.Single;
-            item.Array = other.Array.ToList();
-            item.AdditionalProperties = other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null;
+            item.Array = deepClone ? other.Array.ToList() : other.Array;
+            item.AdditionalProperties = deepClone ? (other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null) : other.AdditionalProperties;
         }
 
         /// <summary>
         /// Replaces all fields with the data of the passed object
         /// </summary>
-        public static void UpdateWithL1ExtendedAddress(this L1ExtendedAddress item, L1ExtendedAddress other) {
+        public static void UpdateWithL1ExtendedAddress(this L1ExtendedAddress item, L1ExtendedAddress other, bool deepClone = true) {
             item.AddressType2 = other.AddressType2;
-            item.AdditionalProperties = other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null;
+            item.AdditionalProperties = deepClone ? (other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null) : other.AdditionalProperties;
         }
     }
 }

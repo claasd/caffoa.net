@@ -13,8 +13,11 @@ public class PropertyUpdateBuilder
     public string Prefix { get; set; } = "";
     public bool UseOther { get; set; } = true;
     public string ClassName { get; }
-    public bool AllowAdditionalProperties { get; set; } = true; 
-    private PropertyUpdateBuilder(SchemaItem schemaItem,  CaffoaConfig config, string className)
+    public bool AllowAdditionalProperties { get; set; } = true;
+    public bool ShallowCopy { get; set; }
+    public bool AddDeepClone { get; set; }
+
+    private PropertyUpdateBuilder(SchemaItem schemaItem, CaffoaConfig config, string className)
     {
         ClassName = className;
         _schemaItem = schemaItem;
@@ -35,27 +38,52 @@ public class PropertyUpdateBuilder
         var result = new List<string>();
         foreach (var property in _schemaItem.Properties!)
         {
-            var data = new SinglePropertyUpdateBuilder(Prefix, ClassName, property,
-                    _config.GetEnumCreationMode() == CaffoaConfig.EnumCreationMode.Default, UseOther)
-                .AppendOtherSchemaCopy()
-                .AppendJTokenDeepClone()
-                .AppendArrayCopy()
-                .AppendMapCopy()
-                .Build();
-            result.Add(data);
+            var builder = new SinglePropertyUpdateBuilder(Prefix, ClassName, property,
+                _config.GetEnumCreationMode() == CaffoaConfig.EnumCreationMode.Default, UseOther);
+            if (!ShallowCopy)
+                builder = builder.AppendOtherSchemaCopy()
+                    .AppendJTokenDeepClone(_config.Flavor)
+                    .AppendArrayCopy()
+                    .AppendMapCopy();
+
+            result.Add(builder.Build(AddDeepClone));
         }
+
         var other = UseOther ? "other." : "";
-        if (AllowAdditionalProperties && _schemaItem.AdditionalPropertiesAllowed && _config.GenericAdditionalProperties is true)
-            result.Add(
-                $"{Prefix}AdditionalProperties = {other}AdditionalProperties != null ? new Dictionary<string, {_config.GetGenericAdditionalPropertiesType()}>({other}AdditionalProperties) : null");
+        if (AllowAdditionalProperties && _schemaItem.AdditionalPropertiesAllowed &&
+            _config.GenericAdditionalProperties is true)
+        {
+            var deepCopy =
+                $"{other}AdditionalProperties != null ? new Dictionary<string, {_config.GetGenericAdditionalPropertiesType()}>({other}AdditionalProperties) : null";
+            if (ShallowCopy)
+                result.Add($"{Prefix}AdditionalProperties = {other}AdditionalProperties");
+            else if (AddDeepClone)
+                result.Add($"{Prefix}AdditionalProperties = deepClone ? ({deepCopy}) : {other}AdditionalProperties");
+            else
+                result.Add($"{Prefix}AdditionalProperties = {deepCopy}");
+
+        }
+
         return result;
     }
+
+    
 
     public static string BuildConstructor(SchemaItem schemaItem, CaffoaConfig config, SchemaItem targetSchema)
     {
         var builder = new PropertyUpdateBuilder(schemaItem, config, targetSchema.ClassName)
         {
             AllowAdditionalProperties = targetSchema.AdditionalPropertiesAllowed
+        };
+        return builder.Build(";\n            ", ";");
+    }
+
+    public static string BuildSubConstructor(SchemaItem schemaItem, CaffoaConfig config, SchemaItem targetSchema)
+    {
+        var builder = new PropertyUpdateBuilder(schemaItem, config, targetSchema.ClassName)
+        {
+            AllowAdditionalProperties = targetSchema.AdditionalPropertiesAllowed,
+            AddDeepClone = true
         };
         return builder.Build(";\n            ", ";");
     }
@@ -70,12 +98,26 @@ public class PropertyUpdateBuilder
         return builder.Build(",\n            ");
     }
 
-    public static object BuildExternalUpdates(SchemaItem schemaItem, CaffoaGlobalConfig config, string className, bool otherAllowAdditionalProps)
+    public static string BuildShallowInitializer(SchemaItem schemaItem, CaffoaConfig config, SchemaItem target)
+    {
+        var builder = new PropertyUpdateBuilder(schemaItem, config, schemaItem.ClassName)
+        {
+            UseOther = false,
+            AllowAdditionalProperties = target.AdditionalPropertiesAllowed,
+            ShallowCopy = true
+        };
+        return builder.Build(",\n            ");
+    }
+
+
+    public static object BuildExternalUpdates(SchemaItem schemaItem, CaffoaGlobalConfig config, string className,
+        bool otherAllowAdditionalProps)
     {
         var builder = new PropertyUpdateBuilder(schemaItem, config, className)
         {
             AllowAdditionalProperties = otherAllowAdditionalProps,
-            Prefix = "item."
+            Prefix = "item.",
+            AddDeepClone = true
         };
         return builder.Build(";\n            ", ";");
     }

@@ -5,6 +5,6 @@ namespace {NAMESPACE} {{
     public interface {NAME} {{
         [JsonIgnore]
         string {TYPE}Discriminator {{ get; }}
-        {NAME} To{NAME}(); 
+        {NAME} To{NAME}();
     }}
 }}

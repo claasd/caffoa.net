@@ -4,13 +4,14 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Newtonsoft.Json.Linq;
 
 namespace DemoV1a.Model.Base {
     public static partial class Extensions {
         /// <summary>
         /// Replaces all fields with the data of the passed object
         /// </summary>
-        public static void UpdateWithL1Flags(this L1Flags item, L1Flags other) {
+        public static void UpdateWithL1Flags(this L1Flags item, L1Flags other, bool deepClone = true) {
             item.Id = other.Id;
             item.Desc = other.Desc;
         }
@@ -18,15 +19,15 @@ namespace DemoV1a.Model.Base {
         /// <summary>
         /// Replaces all fields with the data of the passed object
         /// </summary>
-        public static void UpdateWithL1Address(this L1Address item, L1Address other) {
+        public static void UpdateWithL1Address(this L1Address item, L1Address other, bool deepClone = true) {
             item.Street = other.Street;
             item.StreetExtra = other.StreetExtra;
             item.PostalCode = other.PostalCode;
             item.City = other.City;
             item.Country = other.Country;
             item.AddressType = other.AddressType;
-            item.Flags = other.Flags.ToDictionary(entry => entry.Key, entry => entry.Value.ToL1Flags());
-            item.AdditionalProperties = other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null;
+            item.Flags = deepClone ? other.Flags.ToDictionary(entry => entry.Key, entry => entry.Value.ToL1Flags()) : other.Flags;
+            item.AdditionalProperties = deepClone ? (other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null) : other.AdditionalProperties;
         }
     }
 }

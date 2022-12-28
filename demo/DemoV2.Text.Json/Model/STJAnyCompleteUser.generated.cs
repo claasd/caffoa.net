@@ -6,6 +6,6 @@ namespace DemoV2.Text.Json.Model {
     public interface STJAnyCompleteUser {
         [JsonIgnore]
         string TypeDiscriminator { get; }
-        STJAnyCompleteUser ToSTJAnyCompleteUser(); 
+        STJAnyCompleteUser ToSTJAnyCompleteUser();
     }
 }

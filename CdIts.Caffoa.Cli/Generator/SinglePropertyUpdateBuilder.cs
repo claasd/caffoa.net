@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using CdIts.Caffoa.Cli.Config;
 using CdIts.Caffoa.Cli.Model;
 
 namespace CdIts.Caffoa.Cli.Generator;
@@ -8,16 +9,21 @@ public class SinglePropertyUpdateBuilder
     private readonly StringBuilder _sb = new();
     private readonly PropertyData _property;
     private readonly string _targetClassName;
+    private readonly string _shallowBase;
+    private bool _hasCloning;
+    private readonly string _name;
 
-    public SinglePropertyUpdateBuilder(string prefix, string? targetClassName, PropertyData property, bool useEnums, bool useOther = true)
+    public SinglePropertyUpdateBuilder(string prefix, string? targetClassName, PropertyData property, bool useEnums,
+        bool useOther = true)
     {
-        _sb.Append(prefix);
-        this._property = property;
-        this._targetClassName = targetClassName is null ? "" : $"{targetClassName}.";
+        _property = property;
+        _name = $"{prefix}{_property.Name.ToObjectName()}";
+        _targetClassName = targetClassName is null ? "" : $"{targetClassName}.";
         if (useEnums && property.CanBeEnum())
             EnumCopy(useOther);
         else
             DefaultCopy(useOther);
+        _shallowBase = _sb.ToString();
     }
 
     private void EnumCopy(bool useOther)
@@ -25,16 +31,16 @@ public class SinglePropertyUpdateBuilder
         var name = _property.Name.ToObjectName();
         var other = useOther ? "other." : "";
         if (_property.Nullable)
-            _sb.Append($"{name} = {other}{name} is null ? null : ({_targetClassName}{name}Value){other}{name}");
+            _sb.Append($"{other}{name} is null ? null : ({_targetClassName}{name}Value){other}{name}");
         else
-            _sb.Append($"{name} = ({_targetClassName}{name}Value){other}{name}");
+            _sb.Append($"({_targetClassName}{name}Value){other}{name}");
     }
 
     private void DefaultCopy(bool useOther)
     {
         var other = useOther ? "other." : "";
         var name = _property.Name.ToObjectName();
-        _sb.Append($"{name} = {other}{name}");
+        _sb.Append($"{other}{name}");
     }
 
     public SinglePropertyUpdateBuilder AppendOtherSchemaCopy()
@@ -43,13 +49,15 @@ public class SinglePropertyUpdateBuilder
         if (_property.Nullable)
             _sb.Append('?');
         _sb.Append($".To{_property.TypeName.ToObjectName()}()");
+        _hasCloning = true;
         return this;
     }
 
-    public SinglePropertyUpdateBuilder AppendJTokenDeepClone()
+    public SinglePropertyUpdateBuilder AppendJTokenDeepClone(CaffoaConfig.GenerationFlavor? flavor)
     {
-        if (_property.TypeName is "JToken")
-            _sb.Append("?.DeepClone()");
+        if (_property.TypeName is not "object") return this;
+        _sb.Append(flavor is CaffoaConfig.GenerationFlavor.SystemTextJson ? "?.Clone()" : "?.DeepClone()");
+        _hasCloning = true;
         return this;
     }
 
@@ -59,22 +67,26 @@ public class SinglePropertyUpdateBuilder
         if (_property.InnerTypeIsOtherSchema)
             _sb.Append($".Select(value=>value.To{_property.TypeName.ToObjectName()}())");
         _sb.Append(".ToList()");
+        _hasCloning = true;
         return this;
     }
 
     public SinglePropertyUpdateBuilder AppendMapCopy()
     {
         if (!_property.IsMap) return this;
-        
+
         _sb.Append(".ToDictionary(entry => entry.Key, entry => entry.Value");
         if (_property.InnerTypeIsOtherSchema)
             _sb.Append($".To{_property.TypeName.ToObjectName()}()");
         _sb.Append(')');
+        _hasCloning = true;
         return this;
     }
 
-    public string Build()
+    public string Build(bool shallowSeparator)
     {
-        return _sb.ToString();
+        if (!shallowSeparator || !_hasCloning)
+            return $"{_name} = {_sb}";
+        return $"{_name} = deepClone ? {_sb} : {_shallowBase}";
     }
 }

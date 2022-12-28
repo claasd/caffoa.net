@@ -128,12 +128,16 @@ public class ModelGenerator
             var otherItem = otherClasses.FirstOrDefault(c => c.ClassName == subItem);
             if (otherItem != null)
             {
-                builder.Append($"\n        public {item.ClassName}({subItem} other){{\n            ");
-                builder.Append(PropertyUpdateBuilder.BuildConstructor(otherItem, _config, item));
+                builder.Append($"\n        public {item.ClassName}({subItem} other, bool deepClone = true) {{\n            ");
+                builder.Append(PropertyUpdateBuilder.BuildSubConstructor(otherItem, _config, item));
                 builder.Append("\n        }");
 
                 builder.Append($"\n        public {subItem} To{subItem}() => new {subItem}() {{\n            ");
                 builder.Append(PropertyUpdateBuilder.BuildInitializer(otherItem, _config, item));
+                builder.Append("\n        };");
+                
+                builder.Append($"\n        public {subItem} As{subItem}() => new {subItem}() {{\n            ");
+                builder.Append(PropertyUpdateBuilder.BuildShallowInitializer(otherItem, _config, item));
                 builder.Append("\n        };");
             }
             else

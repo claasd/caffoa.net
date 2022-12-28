@@ -7,6 +7,6 @@ namespace DemoV1a.Model {
     public interface L1AnyUser {
         [JsonIgnore]
         string TypeDiscriminator { get; }
-        L1AnyUser ToL1AnyUser(); 
+        L1AnyUser ToL1AnyUser();
     }
 }
