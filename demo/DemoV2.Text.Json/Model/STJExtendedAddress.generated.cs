@@ -50,24 +50,15 @@ namespace DemoV2.Text.Json.Model {
             Flags = other.Flags.ToDictionary(entry => entry.Key, entry => entry.Value.ToSTJFlags());
             AddressType2 = other.AddressType2;
         }
-        public STJExtendedAddress(STJAddress other){
+        public STJExtendedAddress(STJAddress other, bool deepClone = true) {
             Street = other.Street;
             StreetExtra = other.StreetExtra;
             PostalCode = other.PostalCode;
             City = other.City;
             Country = other.Country;
             AddressType = (STJExtendedAddress.AddressTypeValue)other.AddressType;
-            Flags = other.Flags.ToDictionary(entry => entry.Key, entry => entry.Value.ToSTJFlags());
+            Flags = deepClone ? other.Flags.ToDictionary(entry => entry.Key, entry => entry.Value.ToSTJFlags()) : other.Flags;
         }
-        public STJAddress ToSTJAddress() => new STJAddress() {
-            Street = Street,
-            StreetExtra = StreetExtra,
-            PostalCode = PostalCode,
-            City = City,
-            Country = Country,
-            AddressType = (STJAddress.AddressTypeValue)AddressType,
-            Flags = Flags.ToDictionary(entry => entry.Key, entry => entry.Value.ToSTJFlags())
-        };
         public STJExtendedAddress ToSTJExtendedAddress() => new STJExtendedAddress(this);
     }
 }

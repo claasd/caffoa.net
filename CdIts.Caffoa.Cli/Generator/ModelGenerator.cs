@@ -105,6 +105,8 @@ public class ModelGenerator
         parameters["OTHER"] = sourceClassName;
         parameters["UPDATEPROPS"] = PropertyUpdateBuilder.BuildExternalUpdates(subItem, _config, targetClassName,
             parentItem.AdditionalPropertiesAllowed);
+        parameters["INITPROPS"] = PropertyUpdateBuilder.BuildInitializer(subItem, _config, sourceClassName,
+            parentItem.AdditionalPropertiesAllowed);
         var formatted = file.FormatDict(parameters);
         return formatted.ToSystemNewLine();
     }
@@ -122,19 +124,15 @@ public class ModelGenerator
         {
             builder.Append($"\n        public {item.ClassName}({item.Parent} other) : base(other) {{}}");
         }
-
+        
         foreach (var subItem in item.SubItems)
         {
             var otherItem = otherClasses.FirstOrDefault(c => c.ClassName == subItem);
             if (otherItem != null)
             {
-                builder.Append($"\n        public {item.ClassName}({subItem} other){{\n            ");
-                builder.Append(PropertyUpdateBuilder.BuildConstructor(otherItem, _config, item));
+                builder.Append($"\n        public {item.ClassName}({subItem} other, bool deepClone = true) {{\n            ");
+                builder.Append(PropertyUpdateBuilder.BuildSubConstructor(otherItem, _config, item));
                 builder.Append("\n        }");
-
-                builder.Append($"\n        public {subItem} To{subItem}() => new {subItem}() {{\n            ");
-                builder.Append(PropertyUpdateBuilder.BuildInitializer(otherItem, _config, item));
-                builder.Append("\n        };");
             }
             else
             {

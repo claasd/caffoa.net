@@ -112,35 +112,22 @@ namespace DemoV1b.Model {
             LastSessionLength = other.LastSessionLength;
             Id = other.Id;
             RegistrationDate = other.RegistrationDate;
-            Diffs = other.Diffs;
+            Diffs = other.Diffs?.DeepClone();
             AdditionalProperties = other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null;
         }
-        public L2UserWithId(L2User other){
+        public L2UserWithId(L2User other, bool deepClone = true) {
             Name = other.Name;
-            Address = other.Address?.ToL2Address();
+            Address = deepClone ? other.Address?.ToL2Address() : other.Address;
             Birthdate = other.Birthdate;
-            Emails = other.Emails.ToList();
-            Descriptions = other.Descriptions.ToDictionary(entry => entry.Key, entry => entry.Value);
+            Emails = deepClone ? other.Emails.ToList() : other.Emails;
+            Descriptions = deepClone ? other.Descriptions.ToDictionary(entry => entry.Key, entry => entry.Value) : other.Descriptions;
             Type = other.Type;
             Role = other.Role;
             AgeGroup = other.AgeGroup;
             PreferredContactTime = other.PreferredContactTime;
             LastSessionLength = other.LastSessionLength;
-            AdditionalProperties = other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null;
+            AdditionalProperties = deepClone ? (other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null) : other.AdditionalProperties;
         }
-        public L2User ToL2User() => new L2User() {
-            Name = Name,
-            Address = Address?.ToL2Address(),
-            Birthdate = Birthdate,
-            Emails = Emails.ToList(),
-            Descriptions = Descriptions.ToDictionary(entry => entry.Key, entry => entry.Value),
-            Type = Type,
-            Role = Role,
-            AgeGroup = AgeGroup,
-            PreferredContactTime = PreferredContactTime,
-            LastSessionLength = LastSessionLength,
-            AdditionalProperties = AdditionalProperties != null ? new Dictionary<string, object>(AdditionalProperties) : null
-        };
         public L2UserWithId ToL2UserWithId() => new L2UserWithId(this);
         public virtual L2AnyUser ToL2AnyUser() => ToL2UserWithId();
         public virtual L2AnyCompleteUser ToL2AnyCompleteUser() => ToL2UserWithId();

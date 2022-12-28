@@ -66,24 +66,15 @@ namespace DemoV1b.Model {
             Flags = other.Flags.ToDictionary(entry => entry.Key, entry => entry.Value.ToL2Flags());
             AddressType2 = other.AddressType2;
         }
-        public L2ExtendedAddress(L2Address other){
+        public L2ExtendedAddress(L2Address other, bool deepClone = true) {
             Street = other.Street;
             StreetExtra = other.StreetExtra;
             PostalCode = other.PostalCode;
             City = other.City;
             Country = other.Country;
             AddressType = other.AddressType;
-            Flags = other.Flags.ToDictionary(entry => entry.Key, entry => entry.Value.ToL2Flags());
+            Flags = deepClone ? other.Flags.ToDictionary(entry => entry.Key, entry => entry.Value.ToL2Flags()) : other.Flags;
         }
-        public L2Address ToL2Address() => new L2Address() {
-            Street = Street,
-            StreetExtra = StreetExtra,
-            PostalCode = PostalCode,
-            City = City,
-            Country = Country,
-            AddressType = AddressType,
-            Flags = Flags.ToDictionary(entry => entry.Key, entry => entry.Value.ToL2Flags())
-        };
         public L2ExtendedAddress ToL2ExtendedAddress() => new L2ExtendedAddress(this);
     }
 }

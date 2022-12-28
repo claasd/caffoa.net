@@ -7,6 +7,6 @@ namespace DemoV1a.Model {
     public interface L1AnyCompleteUser {
         [JsonIgnore]
         string TypeDiscriminator { get; }
-        L1AnyCompleteUser ToL1AnyCompleteUser(); 
+        L1AnyCompleteUser ToL1AnyCompleteUser();
     }
 }

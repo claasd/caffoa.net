@@ -30,7 +30,7 @@ namespace DemoV1a.Model {
         public L1UserWithId(L1UserWithId other) : base(other) {
             Id = other.Id;
             RegistrationDate = other.RegistrationDate;
-            Diffs = other.Diffs;
+            Diffs = other.Diffs?.DeepClone();
             AdditionalProperties = other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null;
         }
         public L1UserWithId(L1User other) : base(other) {}
