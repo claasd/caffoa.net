@@ -94,12 +94,12 @@ namespace DemoV1a
         /// <summary>
         /// 200 -> a list of neum
         /// </summary>
-        Task<IEnumerable<L1MyEnumType>> ListEnumsAsync(L1MyEnumType? filter = null, CancellationToken cancellationToken = default);
+        Task<IEnumerable<string>> ListEnumsAsync(string filter = null, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// 200 -> a list of neum
         /// </summary>
-        Task<IEnumerable<L1MyEnumType>> ListEnums2Async(L1MyEnumType filter, CancellationToken cancellationToken = default);
+        Task<IEnumerable<string>> ListEnums2Async(string filter, CancellationToken cancellationToken = default);
 
     }
 }

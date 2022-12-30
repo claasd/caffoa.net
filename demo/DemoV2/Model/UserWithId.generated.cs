@@ -16,7 +16,6 @@ namespace DemoV2.Model {
 /// AUTOGENERED BY caffoa ///
     public partial class UserWithId : AnyUser, AnyCompleteUser {
         public const string UserWithIdObjectName = "userWithId";
-
         /// <summary>
         /// A fancy string with description
         /// </summary>

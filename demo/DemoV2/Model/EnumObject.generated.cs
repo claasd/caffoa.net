@@ -13,7 +13,6 @@ namespace DemoV2.Model {
 /// AUTOGENERED BY caffoa ///
     public partial class EnumObject {
         public const string EnumObjectObjectName = "enumObject";
-
         [JsonProperty("single")]
         public virtual MyEnumType Single { get; set; }
 

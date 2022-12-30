@@ -7,18 +7,34 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 using System.Linq;
+using System.Collections.Immutable;
 using DemoV1b.Model.Base;
 
 namespace DemoV1b.Model {
 /// AUTOGENERED BY caffoa ///
     public partial class L2EnumObject {
         public const string L2EnumObjectObjectName = "enumObject";
-
-        [JsonProperty("single")]
-        public virtual L2MyEnumType Single { get; set; }
+            [JsonIgnore]
+            private string _single;
+    
+            [JsonProperty("single")]
+            public virtual string Single {
+                get => _single;
+                set {
+                    var _value = SingleValues.AllowedValues.FirstOrDefault(v=>String.Compare(v, value, StringComparison.OrdinalIgnoreCase) == 0, value);
+                    // set checkEnums=true in config file to have a value check here //
+                // if (!SingleValues.AllowedValues.Contains(_value))
+                    // {
+                    //     var allowedValues = string.Join(", ", SingleValues.AllowedValues.Select(v => v.ToString()));
+                    //     throw new ArgumentOutOfRangeException("single",
+                    //         $"{value} is not allowed. Allowed values: [{allowedValues}]");
+                    // }
+                    _single = _value;
+                }
+            }
 
         [JsonProperty("array")]
-        public virtual ICollection<L2MyEnumType> Array { get; set; } = new List<L2MyEnumType>();
+        public virtual ICollection<string> Array { get; set; } = new List<string>();
 
         [JsonExtensionData]
         public Dictionary<string, object> AdditionalProperties;

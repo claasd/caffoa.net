@@ -50,7 +50,7 @@ services:
       flavor: SystemTextJson
     model:
       namespace: DemoV2.Text.Json.Model.Base
-      targetFolder: ./demo/DemoV2.Text.Json/Model
+      targetFolder: ./demo/DemoV2.Text.Json/Model/Base
 
   - apiPath: tests/openapi.yml
     config:
@@ -107,6 +107,7 @@ services:
   - apiPath: tests/base.openapi.yml
     config:
       prefix: L2
+      useDateTime: true
       useInheritance: false
       enumMode: StaticValuesWithoutCheck
     model:

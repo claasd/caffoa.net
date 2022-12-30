@@ -13,7 +13,6 @@ namespace DemoV2.Text.Json.Model {
 /// AUTOGENERED BY caffoa ///
     public partial class STJError {
         public const string STJErrorObjectName = "error";
-
         /// <summary>
         /// Single string based code describing the error.
         /// </summary>

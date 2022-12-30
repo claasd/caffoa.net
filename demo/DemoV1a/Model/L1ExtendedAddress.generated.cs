@@ -13,7 +13,6 @@ namespace DemoV1a.Model {
 /// AUTOGENERED BY caffoa ///
     public partial class L1ExtendedAddress : L1Address {
         public const string L1ExtendedAddressObjectName = "extendedAddress";
-
         [JsonProperty("addressType2")]
         public virtual string AddressType2 { get; set; }
 

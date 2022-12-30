@@ -15,7 +15,6 @@ namespace DemoV2.Text.Json.Model {
 /// AUTOGENERED BY caffoa ///
     public partial class STJUser : STJAnyUser {
         public const string STJUserObjectName = "user";
-
         /// <summary>
         /// A fancy string with description
         /// </summary>

@@ -14,7 +14,6 @@ namespace DemoV2.Model {
 /// AUTOGENERED BY caffoa ///
     public partial class Pricing {
         public const string PricingObjectName = "pricing";
-
         [JsonProperty("price")]
         public virtual double? Price { get; set; }
 

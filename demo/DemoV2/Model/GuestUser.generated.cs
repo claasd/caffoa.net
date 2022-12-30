@@ -14,7 +14,6 @@ namespace DemoV2.Model {
 /// AUTOGENERED BY caffoa ///
     public partial class GuestUser : AnyUser, AnyCompleteUser {
         public const string GuestUserObjectName = "guestUser";
-
         [JsonProperty("email", Required = Required.Always)]
         public virtual string Email { get; set; }
 

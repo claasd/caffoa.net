@@ -9,6 +9,7 @@ public class CaffoaConfig
     public string? RoutePrefix { get; set; }
     public bool? SplitByTag { get; set; }
     public bool? UseDateOnly { get; set; }
+    public bool? UseDateTime { get; set; }
     public bool? WithCancellation { get; set; }
     public bool? ParsePathParameters { get; set; }
     public bool? ParseQueryParameters { get; set; }
@@ -60,6 +61,7 @@ public class CaffoaConfig
             RequestBodyType = RequestBodyType ?? general.RequestBodyType,
             RoutePrefix = RoutePrefix ?? general.RoutePrefix,
             UseDateOnly = UseDateOnly ?? general.UseDateOnly,
+            UseDateTime = UseDateTime ?? general.UseDateTime,
             Duplicates = general.Duplicates,
             ClearGeneratedFiles = general.ClearGeneratedFiles,
             ParsePathParameters = ParsePathParameters ?? general.ParsePathParameters,

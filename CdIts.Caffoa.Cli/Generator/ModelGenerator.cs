@@ -63,6 +63,7 @@ public class ModelGenerator
         parameters["INTERFACE_METHODS"] = formatter.InterfaceMethods(interfaces);
         parameters["RAWNAME"] = item.Name;
         parameters["CONSTRUCTORS"] = CreateConstructors(item, otherClasses);
+        parameters["INHERIT_CONSTRUCTORS"] = _config.UseInheritance is true ? formatter.CreateConstructors(otherClasses) : "ARG";
         parameters["PROPERTIES"] = FormatProperties(item);
         parameters["ADDITIONAL_PROPS"] = formatter.GenericAdditionalProperties();
         parameters["DESCRIPTION"] = formatter.Description;

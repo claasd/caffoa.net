@@ -7,7 +7,6 @@ using Caffoa;
 namespace {NAMESPACE} {{
 {DESCRIPTION}public partial class {NAME}{PARENTS} {{
         public const string {NAME}ObjectName = "{RAWNAME}";
-
 {PROPERTIES}
 {ADDITIONAL_PROPS}
         public {NAME}(){{}}

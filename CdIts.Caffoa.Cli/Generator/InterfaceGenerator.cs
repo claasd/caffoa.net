@@ -81,7 +81,7 @@ public class InterfaceGenerator
 
     private List<string> GetParams(EndPointModel endpoint)
     {
-        var builder = ParameterBuilder.Instance(_config.UseDateOnly is true && _config.ParsePathParameters is not false)
+        var builder = ParameterBuilder.Instance(_config.UseDateOnly is true && _config.ParsePathParameters is not false, _config.UseDateTime is true)
             .AddPathParameters(endpoint.Parameters);
         if (endpoint.DurableClient)
             builder.AddDurableClient();

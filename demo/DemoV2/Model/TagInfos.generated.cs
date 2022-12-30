@@ -13,7 +13,6 @@ namespace DemoV2.Model {
 /// AUTOGENERED BY caffoa ///
     public partial class TagInfos {
         public const string TagInfosObjectName = "tagInfos";
-
         [JsonProperty("user")]
         public virtual Dictionary<string, List<Guid>> User { get; set; } = new Dictionary<string, List<Guid>>();
 

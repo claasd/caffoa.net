@@ -5,26 +5,28 @@ namespace CdIts.Caffoa.Cli.Generator;
 public class ParameterBuilder
 {
     private readonly bool _useDateOnly;
+    private readonly bool _useDateTime;
     private readonly List<string> _parameters = new();
     private readonly List<string> _queryParameters = new();
     private readonly List<string> _bodies = new();
     private bool _withCancellation;
 
-    private ParameterBuilder(bool useDateOnly)
+    private ParameterBuilder(bool useDateOnly, bool useDateTime)
     {
         _useDateOnly = useDateOnly;
+        _useDateTime = useDateTime;
     }
 
-    public static ParameterBuilder Instance(bool useDateOnly)
+    public static ParameterBuilder Instance(bool useDateOnly, bool useDateTime)
     {
-        return new ParameterBuilder(useDateOnly);
+        return new ParameterBuilder(useDateOnly, useDateTime);
     }
 
     public ParameterBuilder AddPathParameters(IEnumerable<ParameterObject> parameters)
     {
         _parameters.AddRange(parameters.Where(p => !p.IsQueryParameter).Select(p =>
         {
-            var typeName = p.GetTypeName(_useDateOnly);
+            var typeName = p.GetTypeName(_useDateOnly, _useDateTime);
             return $"{typeName} {p.Name}";
         }));
         return this;
@@ -40,7 +42,7 @@ public class ParameterBuilder
     {
         _queryParameters.AddRange(queryParameters.Select(p =>
         {
-            var typeName = p.GetTypeName(_useDateOnly);
+            var typeName = p.GetTypeName(_useDateOnly, _useDateTime);
             var result = $"{typeName} {p.Name}";
             if(p.IsEnum && p.DefaultValue != null)
                 result += $" = {typeName}.{ModelGenerator.EnumNameForValue(p.DefaultValue)}";

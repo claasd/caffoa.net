@@ -10,7 +10,6 @@ namespace DemoV1b.Model.Base {
 /// AUTOGENERED BY caffoa ///
     public partial class L2Flags {
         public const string L2FlagsObjectName = "flags";
-
         [JsonProperty("id")]
         public virtual string Id { get; set; }
 

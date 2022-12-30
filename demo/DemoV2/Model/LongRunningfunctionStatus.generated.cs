@@ -14,7 +14,6 @@ namespace DemoV2.Model {
 /// AUTOGENERED BY caffoa ///
     public partial class LongRunningfunctionStatus {
         public const string LongRunningfunctionStatusObjectName = "longRunningfunctionStatus";
-
         [JsonProperty("status")]
         public virtual StatusValue Status { get; set; }
 

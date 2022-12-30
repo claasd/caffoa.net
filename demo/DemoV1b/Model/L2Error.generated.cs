@@ -13,7 +13,6 @@ namespace DemoV1b.Model {
 /// AUTOGENERED BY caffoa ///
     public partial class L2Error {
         public const string L2ErrorObjectName = "error";
-
         /// <summary>
         /// Single string based code describing the error.
         /// </summary>

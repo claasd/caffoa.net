@@ -14,7 +14,6 @@ namespace DemoV2.Text.Json.Model {
 /// AUTOGENERED BY caffoa ///
     public partial class STJGuestUser : STJAnyUser, STJAnyCompleteUser {
         public const string STJGuestUserObjectName = "guestUser";
-
         [JsonPropertyName("email")]
         public virtual string Email { get; set; }
 

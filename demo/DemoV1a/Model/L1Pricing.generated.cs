@@ -14,7 +14,6 @@ namespace DemoV1a.Model {
 /// AUTOGENERED BY caffoa ///
     public partial class L1Pricing {
         public const string L1PricingObjectName = "pricing";
-
         [JsonProperty("price")]
         public virtual double? Price { get; set; }
 

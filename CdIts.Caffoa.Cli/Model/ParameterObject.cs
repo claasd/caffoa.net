@@ -24,11 +24,12 @@ public class ParameterObject
     public string GetTypeName(CaffoaConfig config)
     {
         // only generate DateOnly parameters if type converting is not done by functions
-        return GetTypeName(config.UseDateOnly is true && config.ParsePathParameters is not false);
+        return GetTypeName(config.UseDateOnly is true && config.ParsePathParameters is not false, config.UseDateTime is true);
     }
 
-    public string GetTypeName(bool useDateOnly)
+    public string GetTypeName(bool useDateOnly, bool useDateTime)
     {
-        return useDateOnly ? TypeName : TypeName.Replace("DateOnly", "DateTimeOffset");
+        var name =  useDateOnly ? TypeName : TypeName.Replace("DateOnly", "DateTimeOffset");
+        return useDateTime ? name.Replace("DateTimeOffset", "DateTime") : name;
     }
 }

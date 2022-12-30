@@ -13,7 +13,6 @@ namespace DemoV2.Text.Json.Model.Base {
 /// AUTOGENERED BY caffoa ///
     public partial class STJAddress {
         public const string STJAddressObjectName = "address";
-
         [JsonPropertyName("street")]
         public virtual string Street { get; set; }
 

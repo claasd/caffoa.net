@@ -116,7 +116,7 @@ public class ServiceParser
         {
             if (!apiSchema.IsPrimitiveType() && !apiSchema.HasOnlyAdditionalProperties())
                 continue;
-            if(apiSchema.CanBeEnum())
+            if(apiSchema.CanBeEnum() && _config.GetEnumCreationMode() == CaffoaConfig.EnumCreationMode.Default)
                 continue;
             var className = ClassName(name);
             _knownTypes[className] = apiSchema;

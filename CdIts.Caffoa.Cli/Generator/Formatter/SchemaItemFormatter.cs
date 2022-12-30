@@ -32,13 +32,16 @@ public class SchemaItemFormatter
     public string Parents(List<SchemaItem> allObjects)
     {
         var parents = new List<string>();
-        if (_item.Parent != null)
+        if(_item.Parent != null)
             parents.Add(_item.Parent);
         parents.AddRange(MatchingInterfaces(allObjects));
         if (parents.Count > 0)
             return " : " + string.Join(", ", parents);
         return "";
     }
+
+    public string Parent()=>_item.Parent is null ? "" : $": {_item.Parent}";
+    
 
     public string Imports(List<string>? modelImports, List<string>? configImports)
     {
@@ -143,5 +146,16 @@ public class SchemaItemFormatter
             return
                 $"\n        [JsonExtensionData]\n        public Dictionary<string, {_config.GetGenericAdditionalPropertiesType()}> AdditionalProperties;\n";
         return "";
+    }
+
+    public string CreateConstructors(List<SchemaItem> otherClasses)
+    {
+        var implementations = new List<string>();
+        implementations.Add($"        public {_item.ClassName}() {{}}\n");
+        implementations.Add($"        public {_item.ClassName}({_item.ClassName} other) : base(other){{}}\n");
+        if(_item.Parent != null)
+            implementations.Add($"        public {_item.ClassName}({_item.Parent} other) : base(other){{}}\n");
+
+        return "\n" + string.Join("", implementations);
     }
 }

@@ -14,7 +14,6 @@ namespace DemoV2.Text.Json.Model {
 /// AUTOGENERED BY caffoa ///
     public partial class STJLongRunningfunctionStatus {
         public const string STJLongRunningfunctionStatusObjectName = "longRunningfunctionStatus";
-
         [JsonPropertyName("status")]
         public virtual StatusValue Status { get; set; }
 

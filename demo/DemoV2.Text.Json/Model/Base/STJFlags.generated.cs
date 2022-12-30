@@ -10,7 +10,6 @@ namespace DemoV2.Text.Json.Model.Base {
 /// AUTOGENERED BY caffoa ///
     public partial class STJFlags {
         public const string STJFlagsObjectName = "flags";
-
         [JsonPropertyName("id")]
         public virtual string Id { get; set; }
 

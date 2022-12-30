@@ -15,7 +15,6 @@ namespace DemoV2.Model {
 /// AUTOGENERED BY caffoa ///
     public partial class User : AnyUser {
         public const string UserObjectName = "user";
-
         /// <summary>
         /// A fancy string with description
         /// </summary>

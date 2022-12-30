@@ -14,7 +14,6 @@ namespace DemoV2.Text.Json.Model {
 /// AUTOGENERED BY caffoa ///
     public partial class STJPricing {
         public const string STJPricingObjectName = "pricing";
-
         [JsonPropertyName("price")]
         public virtual double? Price { get; set; }
 

@@ -278,9 +278,9 @@ namespace DemoV1a
             HttpRequest request)
         {
             try {
-                L1MyEnumType? filterValue = null;
+                string filterValue = null;
                 if(request.Query.TryGetValue("filter", out var filterQueryValue))
-                    filterValue = _converter.ParseEnum<L1MyEnumType>(filterQueryValue, "filter");
+                    filterValue = filterQueryValue;
                 var instance = _factory.Instance(request);
                 var result = await instance.ListEnumsAsync(filterValue, request.HttpContext.RequestAborted);
                 return _resultHandler.Json(result, 200);
@@ -302,7 +302,7 @@ namespace DemoV1a
         {
             try {
                 var instance = _factory.Instance(request);
-                var result = await instance.ListEnums2Async(_converter.ParseEnum<L1MyEnumType>(filter, "filter"), request.HttpContext.RequestAborted);
+                var result = await instance.ListEnums2Async(filter, request.HttpContext.RequestAborted);
                 return _resultHandler.Json(result, 200);
             } catch(CaffoaClientError err) {
                 return err.Result;

@@ -6,7 +6,8 @@ namespace CdIts.Caffoa.Cli.Parser;
 
 public class ObjectInheritanceParser : ObjectParser
 {
-    public ObjectInheritanceParser(SchemaItem item, IDictionary<string, OpenApiSchema> knownTypes, Func<string, string> classNameGenerator) : base(item, knownTypes, classNameGenerator)
+    public ObjectInheritanceParser(SchemaItem item, IDictionary<string, OpenApiSchema> knownTypes,
+        Func<string, string> classNameGenerator) : base(item, knownTypes, classNameGenerator)
     {
     }
 

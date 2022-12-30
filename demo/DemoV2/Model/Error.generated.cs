@@ -13,7 +13,6 @@ namespace DemoV2.Model {
 /// AUTOGENERED BY caffoa ///
     public partial class Error {
         public const string ErrorObjectName = "error";
-
         /// <summary>
         /// Single string based code describing the error.
         /// </summary>

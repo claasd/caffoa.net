@@ -13,7 +13,6 @@ namespace DemoV1a.Model {
 /// AUTOGENERED BY caffoa ///
     public partial class L1UserWithId : L1User, L1AnyCompleteUser {
         public const string L1UserWithIdObjectName = "userWithId";
-
         [JsonProperty("id")]
         public virtual string Id { get; set; }
 

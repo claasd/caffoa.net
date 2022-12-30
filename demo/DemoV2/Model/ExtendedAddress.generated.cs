@@ -14,7 +14,6 @@ namespace DemoV2.Model {
 /// AUTOGENERED BY caffoa ///
     public partial class ExtendedAddress {
         public const string ExtendedAddressObjectName = "extendedAddress";
-
         [JsonProperty("street")]
         public virtual string Street { get; set; }
 

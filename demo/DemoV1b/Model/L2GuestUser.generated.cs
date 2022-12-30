@@ -14,28 +14,27 @@ namespace DemoV1b.Model {
 /// AUTOGENERED BY caffoa ///
     public partial class L2GuestUser : L2AnyUser, L2AnyCompleteUser {
         public const string L2GuestUserObjectName = "guestUser";
-
         [JsonProperty("email", Required = Required.Always)]
         public virtual string Email { get; set; }
 
-        [JsonIgnore]
-        private string _type = "guest";
-
-        [JsonProperty("type", Required = Required.Always)]
-        public virtual string Type {
-            get => _type;
-            set {
-                var _value = TypeValues.AllowedValues.FirstOrDefault(v=>String.Compare(v, value, StringComparison.OrdinalIgnoreCase) == 0, value);
-                // set checkEnums=true in config file to have a value check here //
+            [JsonIgnore]
+            private string _type = "guest";
+    
+            [JsonProperty("type", Required = Required.Always)]
+            public virtual string Type {
+                get => _type;
+                set {
+                    var _value = TypeValues.AllowedValues.FirstOrDefault(v=>String.Compare(v, value, StringComparison.OrdinalIgnoreCase) == 0, value);
+                    // set checkEnums=true in config file to have a value check here //
                 // if (!TypeValues.AllowedValues.Contains(_value))
-                // {
-                //     var allowedValues = string.Join(", ", TypeValues.AllowedValues.Select(v => v.ToString()));
-                //     throw new ArgumentOutOfRangeException("type",
-                //         $"{value} is not allowed. Allowed values: [{allowedValues}]");
-                // }
-                _type = _value;
+                    // {
+                    //     var allowedValues = string.Join(", ", TypeValues.AllowedValues.Select(v => v.ToString()));
+                    //     throw new ArgumentOutOfRangeException("type",
+                    //         $"{value} is not allowed. Allowed values: [{allowedValues}]");
+                    // }
+                    _type = _value;
+                }
             }
-        }
 
         [JsonExtensionData]
         public Dictionary<string, object> AdditionalProperties;

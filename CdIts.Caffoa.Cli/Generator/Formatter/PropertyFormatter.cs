@@ -43,9 +43,7 @@ public class PropertyFormatter
 
     public string Type()
     {
-        var name = _config.UseDateOnly is true
-            ? _property.TypeName
-            : _property.TypeName.Replace("DateOnly", "DateTimeOffset").Replace("TimeOnly", "TimeSpan");
+        var name = HandleDateTypes(_property.TypeName);
         if (_property.IsArray)
             return $"ICollection<{name}>";
         if (_property.IsMap)
@@ -55,33 +53,43 @@ public class PropertyFormatter
         return name;
     }
 
-    public string Default(bool addSemicolonEnEmpty)
+    public string HandleDateTypes(string input)
     {
         var name = _config.UseDateOnly is true
-            ? _property.TypeName
-            : _property.TypeName.Replace("DateOnly", "DateTimeOffset").Replace("TimeOnly", "TimeSpan");
+            ? input
+            : input.Replace("DateOnly", "DateTimeOffset").Replace("TimeOnly", "TimeSpan");
+        name = _config.UseDateTime is true ? name.Replace("DateTimeOffset", "DateTime") : name;
+        return name;
+    }
+    
+    public string Default(bool addSemicolonEnEmpty)
+    {
+        var name = HandleDateTypes(_property.TypeName);
         if (_property.IsArray)
             return $" = new List<{name}>();";
         if (_property.IsMap)
             return $" = new Dictionary<string, {name}>();";
         if (_property.Default != null)
-        {
-            if (name == "DateOnly")
-                return $" = DateOnly.Parse({_property.Default});";
-            if (name == "TimeOnly")
-                return $" = TimeOnly.Parse({_property.Default});";
-            if (name == "DateTimeOffset")
-                return $" = DateTimeOffset.Parse({_property.Default});";
-            if (name == "TimeSpan")
-                return $" = TimeSpan.Parse({_property.Default});";
-            return $" = {_property.Default};";
-        }
+            return DefaultFor(name, _property.Default);
 
         if (!_property.Nullable && _property.IsOtherSchema)
             return $" = new {name}();";
-
-
         return addSemicolonEnEmpty ? ";" : "";
+    }
+
+    private string DefaultFor(string name, string defaultValue)
+    {
+        if (name == "DateOnly")
+            return $" = DateOnly.Parse({defaultValue});";
+        if (name == "TimeOnly")
+            return $" = TimeOnly.Parse({defaultValue});";
+        if (name == "DateTimeOffset")
+            return $" = DateTimeOffset.Parse({defaultValue});";
+        if (name == "DateTime")
+            return $" = DateTime.Parse({defaultValue});";
+        if (name == "TimeSpan")
+            return $" = TimeSpan.Parse({defaultValue});";
+        return $" = {defaultValue};";
     }
 
     public string JsonTags()
