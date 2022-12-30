@@ -9,6 +9,7 @@ Remove the following entries (if you have them):
 acceptCaseInvariantEnums: true
 removeDeprecated: true
 enumsAsStaticValues: false
+checkEnums: false
 ```
 
 Add `enumMode` according to the following table:
