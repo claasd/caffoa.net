@@ -28,23 +28,23 @@ namespace DemoV1a.Model.Base {
         [JsonProperty("country", Required = Required.Always)]
         public virtual string Country { get; set; }
 
-            [JsonIgnore]
-            private string _addressType;
-    
-            [JsonProperty("addressType")]
-            public virtual string AddressType {
-                get => _addressType;
-                set {
-                    var _value = AddressTypeValues.AllowedValues.FirstOrDefault(v=>String.Compare(v, value, StringComparison.OrdinalIgnoreCase) == 0, value);
-                    if (!AddressTypeValues.AllowedValues.Contains(_value))
-                    {
-                        var allowedValues = string.Join(", ", AddressTypeValues.AllowedValues.Select(v => v.ToString()));
-                        throw new ArgumentOutOfRangeException("addressType",
-                            $"{value} is not allowed. Allowed values: [{allowedValues}]");
-                    }
-                    _addressType = _value;
+        [JsonIgnore]
+        private string _addressType;
+
+        [JsonProperty("addressType")]
+        public virtual string AddressType {
+            get => _addressType;
+            set {
+                var _value = AddressTypeValues.AllowedValues.FirstOrDefault(v=>String.Compare(v, value, StringComparison.OrdinalIgnoreCase) == 0, value);
+                if (!AddressTypeValues.AllowedValues.Contains(_value))
+                {
+                    var allowedValues = string.Join(", ", AddressTypeValues.AllowedValues.Select(v => v.ToString()));
+                    throw new ArgumentOutOfRangeException("addressType",
+                        $"{value} is not allowed. Allowed values: [{allowedValues}]");
                 }
+                _addressType = _value;
             }
+        }
 
         [JsonProperty("flags")]
         public virtual Dictionary<string, L1Flags> Flags { get; set; } = new Dictionary<string, L1Flags>();

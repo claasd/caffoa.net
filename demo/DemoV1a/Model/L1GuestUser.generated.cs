@@ -17,23 +17,23 @@ namespace DemoV1a.Model {
         [JsonProperty("email", Required = Required.Always)]
         public virtual string Email { get; set; }
 
-            [JsonIgnore]
-            private string _type = "guest";
-    
-            [JsonProperty("type", Required = Required.Always)]
-            public virtual string Type {
-                get => _type;
-                set {
-                    var _value = TypeValues.AllowedValues.FirstOrDefault(v=>String.Compare(v, value, StringComparison.OrdinalIgnoreCase) == 0, value);
-                    if (!TypeValues.AllowedValues.Contains(_value))
-                    {
-                        var allowedValues = string.Join(", ", TypeValues.AllowedValues.Select(v => v.ToString()));
-                        throw new ArgumentOutOfRangeException("type",
-                            $"{value} is not allowed. Allowed values: [{allowedValues}]");
-                    }
-                    _type = _value;
+        [JsonIgnore]
+        private string _type = "guest";
+
+        [JsonProperty("type", Required = Required.Always)]
+        public virtual string Type {
+            get => _type;
+            set {
+                var _value = TypeValues.AllowedValues.FirstOrDefault(v=>String.Compare(v, value, StringComparison.OrdinalIgnoreCase) == 0, value);
+                if (!TypeValues.AllowedValues.Contains(_value))
+                {
+                    var allowedValues = string.Join(", ", TypeValues.AllowedValues.Select(v => v.ToString()));
+                    throw new ArgumentOutOfRangeException("type",
+                        $"{value} is not allowed. Allowed values: [{allowedValues}]");
                 }
+                _type = _value;
             }
+        }
 
         [JsonExtensionData]
         public Dictionary<string, object> AdditionalProperties;

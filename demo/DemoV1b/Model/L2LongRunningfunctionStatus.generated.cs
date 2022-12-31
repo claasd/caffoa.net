@@ -14,24 +14,24 @@ namespace DemoV1b.Model {
 /// AUTOGENERED BY caffoa ///
     public partial class L2LongRunningfunctionStatus {
         public const string L2LongRunningfunctionStatusObjectName = "longRunningfunctionStatus";
-            [JsonIgnore]
-            private string _status;
-    
-            [JsonProperty("status")]
-            public virtual string Status {
-                get => _status;
-                set {
-                    var _value = StatusValues.AllowedValues.FirstOrDefault(v=>String.Compare(v, value, StringComparison.OrdinalIgnoreCase) == 0, value);
-                    // set checkEnums=true in config file to have a value check here //
+        [JsonIgnore]
+        private string _status;
+
+        [JsonProperty("status")]
+        public virtual string Status {
+            get => _status;
+            set {
+                var _value = StatusValues.AllowedValues.FirstOrDefault(v=>String.Compare(v, value, StringComparison.OrdinalIgnoreCase) == 0, value);
+                // set checkEnums=true in config file to have a value check here //
                 // if (!StatusValues.AllowedValues.Contains(_value))
-                    // {
-                    //     var allowedValues = string.Join(", ", StatusValues.AllowedValues.Select(v => v.ToString()));
-                    //     throw new ArgumentOutOfRangeException("status",
-                    //         $"{value} is not allowed. Allowed values: [{allowedValues}]");
-                    // }
-                    _status = _value;
-                }
+                // {
+                //     var allowedValues = string.Join(", ", StatusValues.AllowedValues.Select(v => v.ToString()));
+                //     throw new ArgumentOutOfRangeException("status",
+                //         $"{value} is not allowed. Allowed values: [{allowedValues}]");
+                // }
+                _status = _value;
             }
+        }
 
         [JsonProperty("result")]
         public virtual L2AnyUser Result { get; set; }
