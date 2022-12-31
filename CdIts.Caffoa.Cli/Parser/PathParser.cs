@@ -183,7 +183,7 @@ public class PathParser
                 p.Schema.Nullable = !p.Required && defaultValue == null;
                 var type = p.Schema.TypeName();
                 var isEnum = false;
-                if (p.Schema.Reference != null && p.Schema.CanBeEnum())
+                if (p.Schema.Reference != null && p.Schema.CanBeEnum() && _config.GetEnumCreationMode() == CaffoaConfig.EnumCreationMode.Default)
                 {
                     type = _classNameFunc(p.Schema.Reference.Name());
                     if (p.Schema.Nullable)
