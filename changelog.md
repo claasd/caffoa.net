@@ -1,12 +1,12 @@
 # caffoa changelog
 ## 2.0.0
-### Breaking Changes:
+### Breaking Changes
 
 * Renamed `CdIts.Caffoa` dll to `CdIts.Caffoa.Json.Net`
 * Renamed `CdIts.Caffoa.Abstractions` dll to `CdIts.Caffoa.Base`
 * Moved functionality that does not rely on Json.NET to `CdIts.Caffoa.Base`
 * Experimental support of System.Text.Json. See [System.Text.Json README](readme.system.text.json.md)
-* use of c# enums for query and path parameters, if the enum is declared as it's own schema elements
+* use of c# enums for query and path parameters, if the enum is declared as it's own schema elements, and enumMode is empty or set to Default
 * Removed parameters:
   *  `acceptCaseInvariantEnums`: This will now always be treated as true, as Json.NET enums are treated as case-insensitive, and enums are the new default
   *  `removeDeprecated`: the deprecated values for static string for enums are removed
@@ -25,7 +25,7 @@
   *  `useDateOnly` : `true`
   *  `enumMode`: `Default` (was `enumsAsStaticValues`: `false`)
 
-* For `date-time` objects, the `DateTimeOffset` class is now used instead of `DateTime`.
+* For `date-time` objects, the `DateTimeOffset` class is now used instead of `DateTime`. Use config option `useDateTime` to go back to `DateTime`.
 * new static class `EnumConverter` to convert string to enums and get defined string values from enums via `enumName.Value()`
 * New interface method in `ICaffoaConverter` to convert strings to enums.
 * Signatures of `ICaffoaJsonParser` have changed. Default parsing from stream is now done using `JsonTextReader`. From Object now takes the more generic type JToken isntead of JObject. 
@@ -35,8 +35,10 @@
 ### other changes
 * Allow enums in arrays, if the enum is declared as it's own schema elements
 * Support for nullable DateOnly and TimeOnly values
-* Support for "Any" properties `propName: {}`. Will be added as JToken.
+* Support for "Any" properties `propName: {}`. Will be added as `JToken` (or `JsonElement?`for System.Text.Json).
 * Support for duration formats (TimeSpan)
+
+## 1.x
 
 ### 1.9.0
 * Refactoring, removed code smells
