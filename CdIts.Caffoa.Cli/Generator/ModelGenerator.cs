@@ -29,7 +29,7 @@ public class ModelGenerator
         enumClasses.ForEach(WriteEnumClass);
         interfaces.ForEach(WriteModelInterface);
         var allKnownClasses = otherKnownObjects.Concat(classes).ToList();
-        classes.ForEach(c => WriteModelClass(c, interfaces, allKnownClasses));
+        classes.ForEach(c => WriteModelClass(c, interfaces, allKnownClasses, enumClasses));
         if (_config.Extensions is false)
             return Array.Empty<string>();
         return classes.Select(c => CreateModelExtensions(c, allKnownClasses)).Where(d => !string.IsNullOrEmpty(d));
@@ -50,7 +50,8 @@ public class ModelGenerator
         File.WriteAllText(Path.Combine(_service.Model.TargetFolder, fileName), formatted.ToSystemNewLine());
     }
 
-    private void WriteModelClass(SchemaItem item, List<SchemaItem> interfaces, List<SchemaItem> otherClasses)
+    private void WriteModelClass(SchemaItem item, List<SchemaItem> interfaces,
+        List<SchemaItem> otherClasses, List<SchemaItem> enumClasses)
     {
         var file = Templates.GetTemplate("ModelTemplate.tpl");
         var formatter = new SchemaItemFormatter(item, _config, otherClasses);
@@ -64,7 +65,7 @@ public class ModelGenerator
         parameters["RAWNAME"] = item.Name;
         parameters["CONSTRUCTORS"] = CreateConstructors(item, otherClasses);
         parameters["INHERIT_CONSTRUCTORS"] = _config.UseInheritance is true ? formatter.CreateConstructors(otherClasses) : "ARG";
-        parameters["PROPERTIES"] = FormatProperties(item);
+        parameters["PROPERTIES"] = FormatProperties(item, enumClasses);
         parameters["ADDITIONAL_PROPS"] = formatter.GenericAdditionalProperties();
         parameters["DESCRIPTION"] = formatter.Description;
         var formatted = file.FormatDict(parameters);
@@ -145,7 +146,7 @@ public class ModelGenerator
         return builder.ToString();
     }
 
-    private string FormatProperties(SchemaItem item)
+    private string FormatProperties(SchemaItem item, List<SchemaItem> enumClasses)
     {
         var properties = new List<string>();
         if (item.Properties is null)
@@ -176,7 +177,7 @@ public class ModelGenerator
 
             else
             {
-                format["DEFAULT"] = formatter.Default(false);
+                format["DEFAULT"] = formatter.Default(false, enumClasses);
                 var file = Templates.GetTemplate("ModelPropertyTemplate.tpl");
                 var formatted = file.FormatDict(format);
                 properties.Add(formatted);

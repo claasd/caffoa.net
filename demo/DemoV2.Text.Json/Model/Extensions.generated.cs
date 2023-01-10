@@ -253,6 +253,7 @@ namespace DemoV2.Text.Json.Model {
         /// </summary>
         public static void UpdateWithSTJEnumObject(this STJEnumObject item, STJEnumObject other, bool deepClone = true) {
             item.Single = other.Single;
+            item.WithDefault = other.WithDefault;
             item.Array = deepClone ? other.Array.ToList() : other.Array;
             item.AdditionalProperties = deepClone ? (other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null) : other.AdditionalProperties;
         }
@@ -263,6 +264,7 @@ namespace DemoV2.Text.Json.Model {
         /// </summary>
         public static STJEnumObject ToSTJEnumObject(this STJEnumObject other, bool deepClone = true) => new STJEnumObject() { 
             Single = other.Single,
+            WithDefault = other.WithDefault,
             Array = deepClone ? other.Array.ToList() : other.Array,
             AdditionalProperties = deepClone ? (other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null) : other.AdditionalProperties
         };

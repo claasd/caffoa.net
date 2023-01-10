@@ -25,4 +25,5 @@ public class SchemaItem
     public bool AdditionalPropertiesAllowed { get; set; }
     public List<string> SubItems { get; set; } = new();
     public List<string?> Enums { get; set; } = new();
+    public string? Default { get; set; }
 }

@@ -253,6 +253,7 @@ namespace DemoV1b.Model {
         /// </summary>
         public static void UpdateWithL2EnumObject(this L2EnumObject item, L2EnumObject other, bool deepClone = true) {
             item.Single = other.Single;
+            item.WithDefault = other.WithDefault;
             item.Array = deepClone ? other.Array.ToList() : other.Array;
             item.AdditionalProperties = deepClone ? (other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null) : other.AdditionalProperties;
         }
@@ -263,6 +264,7 @@ namespace DemoV1b.Model {
         /// </summary>
         public static L2EnumObject ToL2EnumObject(this L2EnumObject other, bool deepClone = true) => new L2EnumObject() { 
             Single = other.Single,
+            WithDefault = other.WithDefault,
             Array = deepClone ? other.Array.ToList() : other.Array,
             AdditionalProperties = deepClone ? (other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null) : other.AdditionalProperties
         };

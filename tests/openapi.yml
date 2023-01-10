@@ -182,11 +182,22 @@ components:
         - enum2
         - enum space
         - enum-sepcial_CHARS
+    
+    myEnumTypeWithDefault:
+      type: string
+      enum:
+        - true
+        - false
+        - undefined
+      default: undefined
+    
     enumObject:
       type: object
       properties: 
         single: 
           $ref: "#/components/schemas/myEnumType"
+        withDefault:
+          $ref: "#/components/schemas/myEnumTypeWithDefault"
         array:
           type: array
           items:

@@ -16,6 +16,9 @@ namespace DemoV2.Model {
         [JsonProperty("single")]
         public virtual MyEnumType Single { get; set; }
 
+        [JsonProperty("withDefault")]
+        public virtual MyEnumTypeWithDefault WithDefault { get; set; } = MyEnumTypeWithDefault.Undefined;
+
         [JsonProperty("array")]
         public virtual ICollection<MyEnumType> Array { get; set; } = new List<MyEnumType>();
 
@@ -25,6 +28,7 @@ namespace DemoV2.Model {
         public EnumObject(){}
         public EnumObject(EnumObject other) {
             Single = other.Single;
+            WithDefault = other.WithDefault;
             Array = other.Array.ToList();
             AdditionalProperties = other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null;
         }

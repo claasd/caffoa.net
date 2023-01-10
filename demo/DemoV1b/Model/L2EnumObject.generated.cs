@@ -33,6 +33,25 @@ namespace DemoV1b.Model {
             }
         }
 
+        [JsonIgnore]
+        private string _withDefault = "undefined";
+
+        [JsonProperty("withDefault")]
+        public virtual string WithDefault {
+            get => _withDefault;
+            set {
+                var _value = WithDefaultValues.AllowedValues.FirstOrDefault(v=>String.Compare(v, value, StringComparison.OrdinalIgnoreCase) == 0, value);
+                // set checkEnums=true in config file to have a value check here //
+                // if (!WithDefaultValues.AllowedValues.Contains(_value))
+                // {
+                //     var allowedValues = string.Join(", ", WithDefaultValues.AllowedValues.Select(v => v.ToString()));
+                //     throw new ArgumentOutOfRangeException("withDefault",
+                //         $"{value} is not allowed. Allowed values: [{allowedValues}]");
+                // }
+                _withDefault = _value;
+            }
+        }
+
         [JsonProperty("array")]
         public virtual ICollection<string> Array { get; set; } = new List<string>();
 
@@ -42,6 +61,7 @@ namespace DemoV1b.Model {
         public L2EnumObject(){}
         public L2EnumObject(L2EnumObject other) {
             Single = other.Single;
+            WithDefault = other.WithDefault;
             Array = other.Array.ToList();
             AdditionalProperties = other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null;
         }

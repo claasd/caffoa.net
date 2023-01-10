@@ -1,4 +1,7 @@
 # caffoa changelog
+## 2.0.1
+* Fixed default generation if enum is defined outside of object
+
 ## 2.0.0
 ### Breaking Changes:
 

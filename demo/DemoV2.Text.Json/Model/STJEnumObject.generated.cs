@@ -16,6 +16,9 @@ namespace DemoV2.Text.Json.Model {
         [JsonPropertyName("single")]
         public virtual STJMyEnumType Single { get; set; }
 
+        [JsonPropertyName("withDefault")]
+        public virtual STJMyEnumTypeWithDefault WithDefault { get; set; } = STJMyEnumTypeWithDefault.Undefined;
+
         [JsonPropertyName("array")]
         public virtual ICollection<STJMyEnumType> Array { get; set; } = new List<STJMyEnumType>();
 
@@ -25,6 +28,7 @@ namespace DemoV2.Text.Json.Model {
         public STJEnumObject(){}
         public STJEnumObject(STJEnumObject other) {
             Single = other.Single;
+            WithDefault = other.WithDefault;
             Array = other.Array.ToList();
             AdditionalProperties = other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null;
         }

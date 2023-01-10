@@ -40,6 +40,7 @@ public abstract class ObjectParser
                 if (schema.Type.StartsWith("string"))
                     Item.Type = SchemaItem.ObjectType.StringEnum;
                 Item.Enums = schema.EnumsAsStrings();
+                Item.Default = schema.DefaultAsString();
             }
 
             Item.Description = schema.Description;
