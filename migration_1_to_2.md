@@ -33,6 +33,7 @@ config:
   genericAdditionalPropertiesType: JObject
   clearGeneratedFiles: false
   useDateOnly: false
+  useDateTime: true
 ```
 
 Remove the package-reference to `CdIts.Caffoa` 1.x.x and add add a package-reference to `CdIts.Caffoa.Json.Net` 2.x.x
