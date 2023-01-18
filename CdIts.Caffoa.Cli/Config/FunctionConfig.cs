@@ -1,3 +1,4 @@
+using System.Text.RegularExpressions;
 using CdIts.Caffoa.Cli.Errors;
 
 namespace CdIts.Caffoa.Cli.Config;
@@ -16,7 +17,7 @@ public class FunctionConfig
 
     public string Namespace
     {
-        get => _ns ?? throw new ConfigurationMissingException("Missing 'namespace' of configuration 'function'");
+        get => _ns ?? Regex.Replace(TargetFolder.Trim('/', '.', ' '), @"\W+", ".");
         set => _ns = value;
     }
 

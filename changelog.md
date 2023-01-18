@@ -2,6 +2,7 @@
 
 ## 2.1.0
 * Added enum arrays for query parameters. can be valid json or comma seperated list.
+* namespace is now optional and will be guessed from path information if missing
 
 ## 2.0.1
 * Fixed default generation if enum is defined outside of object

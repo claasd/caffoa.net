@@ -35,7 +35,7 @@ public class ObjectStandaloneParser : ObjectParser
         }
     }
 
-    private OpenApiSchema ResolveExternal(OpenApiSchema subSchema)
+    public static OpenApiSchema ResolveExternal(OpenApiSchema subSchema)
     {
         if (subSchema.Reference?.IsExternal ?? false)
         {

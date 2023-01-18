@@ -179,26 +179,27 @@ public class PathParser
         return parameters.Where(p => p.In is ParameterLocation.Path or ParameterLocation.Query)
             .Select(p =>
             {
-                var defaultValue = p.Schema.DefaultAsString();
-                p.Schema.Nullable = !p.Required && defaultValue == null;
-                var type = p.Schema.TypeName();
+                var schema = ObjectStandaloneParser.ResolveExternal(p.Schema);
+                var defaultValue = schema.DefaultAsString();
+                schema.Nullable = !p.Required && defaultValue == null;
+                var type = schema.TypeName();
                 var isEnum = false;
                 var isEnumArray = false;
                 string? innerType = null;
-                if (p.Schema.Reference != null && p.Schema.CanBeEnum() && _config.GetEnumCreationMode() == CaffoaConfig.EnumCreationMode.Default)
+                if (schema.Reference != null && schema.CanBeEnum() && _config.GetEnumCreationMode() == CaffoaConfig.EnumCreationMode.Default)
                 {
-                    type = _classNameFunc(p.Schema.Reference.Name());
-                    if (p.Schema.Nullable)
+                    type = _classNameFunc(schema.Reference.Name());
+                    if (schema.Nullable)
                         type += "?";
                     isEnum = true;
                 }
-                else if (p.Schema.IsArray())
+                else if (schema.IsArray())
                 {
                     
-                    if (p.Schema.Items.Reference != null && p.Schema.Items.CanBeEnum() &&
+                    if (schema.Items.Reference != null && schema.Items.CanBeEnum() &&
                         _config.GetEnumCreationMode() == CaffoaConfig.EnumCreationMode.Default)
                     {
-                        innerType = _classNameFunc(p.Schema.Items.Reference.Name());
+                        innerType = _classNameFunc(schema.Items.Reference.Name());
                         type = $"ICollection<{innerType}>";
                         isEnumArray = true;
                     }
