@@ -47,6 +47,14 @@ public interface ICaffoaConverter
     T ParseEnum<T>(string parameter, string parameterName, bool ignoreCase = true)  where T : Enum;
     
     /// <summary>
+    /// Should parse enum types from string to the required enum type list
+    /// </summary>
+    /// <param name="parameter">the input string</param>
+    /// <param name="parameterName">the name of the variable as defined in the openapi spec</param>
+    /// <param name="ignoreCase">set to false to make case-sensitive string-to-enum conversions</param>
+    ICollection<T> ParseEnumArray<T>(ICaffoaJsonParser parser, string parameter, string parameterName, bool ignoreCase = true)  where T : Enum;
+    
+    /// <summary>
     /// Should parse all other items supported by openapi (e.g. int, uint, long, ulong, Guid)
     /// </summary>
     /// <param name="parameter">the input string</param>

@@ -183,6 +183,8 @@ public class PathParser
                 p.Schema.Nullable = !p.Required && defaultValue == null;
                 var type = p.Schema.TypeName();
                 var isEnum = false;
+                var isEnumArray = false;
+                string? innerType = null;
                 if (p.Schema.Reference != null && p.Schema.CanBeEnum() && _config.GetEnumCreationMode() == CaffoaConfig.EnumCreationMode.Default)
                 {
                     type = _classNameFunc(p.Schema.Reference.Name());
@@ -190,13 +192,29 @@ public class PathParser
                         type += "?";
                     isEnum = true;
                 }
-
+                else if (p.Schema.IsArray())
+                {
+                    
+                    if (p.Schema.Items.Reference != null && p.Schema.Items.CanBeEnum() &&
+                        _config.GetEnumCreationMode() == CaffoaConfig.EnumCreationMode.Default)
+                    {
+                        innerType = _classNameFunc(p.Schema.Items.Reference.Name());
+                        type = $"ICollection<{innerType}>";
+                        isEnumArray = true;
+                    }
+                    else
+                    {
+                        type = "string";
+                    }
+                }
                 var result = new ParameterObject(p.Name, type, p.Description,
                     p.In == ParameterLocation.Query)
                 {
                     DefaultValue = defaultValue,
                     Required = p.Required,
-                    IsEnum = isEnum
+                    IsEnum = isEnum,
+                    IsEnumArray = isEnumArray,
+                    InnerType = innerType
                 };
                 return result;
             })

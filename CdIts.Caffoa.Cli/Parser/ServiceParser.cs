@@ -114,7 +114,7 @@ public class ServiceParser
     {
         foreach (var (name, apiSchema) in schemas)
         {
-            if (!apiSchema.IsPrimitiveType() && !apiSchema.HasOnlyAdditionalProperties())
+            if (!apiSchema.IsPrimitiveType() && !apiSchema.HasOnlyAdditionalProperties() && !apiSchema.IsArray())
                 continue;
             if(apiSchema.CanBeEnum() && _config.GetEnumCreationMode() == CaffoaConfig.EnumCreationMode.Default)
                 continue;

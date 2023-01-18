@@ -183,6 +183,11 @@ components:
         - enum space
         - enum-sepcial_CHARS
     
+    myEnumTypeArray:
+      type: array
+      items: 
+        $ref: "#/components/schemas/myEnumType"
+        
     myEnumTypeWithDefault:
       type: string
       enum:
@@ -489,6 +494,19 @@ paths:
         required: false
         schema: 
           $ref: "#/components/schemas/myEnumType"
+      - name: include
+        in: query
+        required: false
+        schema:
+          type: array
+          items:
+            $ref: "#/components/schemas/myEnumType"
+      - name: exclude
+        in: query
+        required: false
+        schema:
+         $ref: "#/components/schemas/myEnumTypeArray"
+
     get:
       operationId: listEnums
       tags:

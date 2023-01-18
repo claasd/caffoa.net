@@ -281,8 +281,14 @@ namespace DemoV2.Text.Json
                 STJMyEnumType? filterValue = null;
                 if(request.Query.TryGetValue("filter", out var filterQueryValue))
                     filterValue = _converter.ParseEnum<STJMyEnumType>(filterQueryValue, "filter");
+                ICollection<STJMyEnumType> includeValue = null;
+                if(request.Query.TryGetValue("include", out var includeQueryValue))
+                    includeValue = _converter.ParseEnumArray<STJMyEnumType>(_jsonParser, includeQueryValue, "include");
+                ICollection<STJMyEnumType> excludeValue = null;
+                if(request.Query.TryGetValue("exclude", out var excludeQueryValue))
+                    excludeValue = _converter.ParseEnumArray<STJMyEnumType>(_jsonParser, excludeQueryValue, "exclude");
                 var instance = _factory.Instance(request);
-                var result = await instance.ListEnumsAsync(filterValue, request.HttpContext.RequestAborted);
+                var result = await instance.ListEnumsAsync(filterValue, includeValue, excludeValue, request.HttpContext.RequestAborted);
                 return _resultHandler.Json(result, 200);
             } catch(CaffoaClientError err) {
                 return err.Result;

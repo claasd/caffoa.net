@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel;
+using System.Linq;
 using System.Runtime.Serialization;
 using Caffoa;
 using Caffoa.Defaults;
@@ -15,13 +16,15 @@ namespace CdIts.Caffoa.Tests;
 public class CaffoaConverterTests
 {
     private ICaffoaConverter _converter = null!;
+    private ICaffoaErrorHandler _errorHandler;
+    private DefaultCaffoaJsonParser _parser;
 
     [SetUp]
     public void Setup()
     {
-        _converter =
-            new DefaultCaffoaConverter(new DefaultCaffoaErrorHandler(NullLogger.Instance,
-                new DefaultCaffoaResultHandler()));
+        _errorHandler = new DefaultCaffoaErrorHandler(NullLogger.Instance, new DefaultCaffoaResultHandler());
+        _converter = new DefaultCaffoaConverter(_errorHandler);
+        _parser = new DefaultCaffoaJsonParser(_errorHandler);
     }
 
     [Test]
@@ -160,6 +163,34 @@ public class CaffoaConverterTests
         var act = () => EnumConverter.FromString<TestEnumType>(input);
         act.Should().Throw<InvalidEnumArgumentException>();
     }
+
+    [TestCase("enum1, enum2", 2)]
+    [TestCase("enum1, ENUM1", 1)]
+    [TestCase("enum1, ENUM2", 2)]
+    [TestCase("enum1, ENUM SPACE,enum2 ", 3)]
+    [TestCase("enum1", 1)]
+    [TestCase("  enum1 ", 1)]
+    [TestCase("", 0)]
+    [TestCase("       ", 0)]
+    public void EnumListWithCommaConverterTests(string input, int numEntries)
+    {
+        var result = _converter.ParseEnumArray<TestEnumType>(_parser, input, "paramName");
+        result.Count.Should().Be(numEntries);
+    }
+
+    [TestCase(new[] { "enum1", "enum2" }, 2)]
+    [TestCase(new[] { "enum1", "ENUM1" }, 1)]
+    [TestCase(new[] { "enum1", "ENUM2" }, 2)]
+    [TestCase(new[] { "enum1", "ENUM SPACE", "enum2 " }, 3)]
+    [TestCase(new[] { "enum1" }, 1)]
+    [TestCase(new[] { "  enum1 " }, 1)]
+    public void EnumListWithCommaConverterTests(string[] input, int numEntries)
+    {
+        var data = JsonConvert.SerializeObject(input);
+        var result = _converter.ParseEnumArray<TestEnumType>(_parser, data, "paramName");
+        result.Count.Should().Be(numEntries);
+    }
+
 
     [Test]
     public void TestDuration()

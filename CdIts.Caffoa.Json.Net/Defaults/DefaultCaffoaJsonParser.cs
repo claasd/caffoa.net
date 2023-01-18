@@ -49,6 +49,8 @@ public class DefaultCaffoaJsonParser : ICaffoaJsonParser
         }
     }
 
+    public T Parse<T>(string data) => JsonConvert.DeserializeObject<T>(data);
+
     public virtual T ToObject<T>(object token)
     {
         if (token is not JToken jToken)

@@ -281,8 +281,14 @@ namespace DemoV1a
                 string filterValue = null;
                 if(request.Query.TryGetValue("filter", out var filterQueryValue))
                     filterValue = filterQueryValue;
+                string includeValue = null;
+                if(request.Query.TryGetValue("include", out var includeQueryValue))
+                    includeValue = includeQueryValue;
+                string excludeValue = null;
+                if(request.Query.TryGetValue("exclude", out var excludeQueryValue))
+                    excludeValue = excludeQueryValue;
                 var instance = _factory.Instance(request);
-                var result = await instance.ListEnumsAsync(filterValue, request.HttpContext.RequestAborted);
+                var result = await instance.ListEnumsAsync(filterValue, includeValue, excludeValue, request.HttpContext.RequestAborted);
                 return _resultHandler.Json(result, 200);
             } catch(CaffoaClientError err) {
                 return err.Result;

@@ -1,4 +1,8 @@
 # caffoa changelog
+
+## 2.1.0
+* Added enum arrays for query parameters. can be valid json or comma seperated list.
+
 ## 2.0.1
 * Fixed default generation if enum is defined outside of object
 

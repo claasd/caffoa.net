@@ -12,6 +12,8 @@ public class ParameterObject
     public string? DefaultValue { get; set; }
     public bool Required { get; set; }
     public bool IsEnum { get; set; }
+    public bool IsEnumArray { get; set; }
+    public string? InnerType { get; set; }
 
     public ParameterObject(string name, string typeName, string description, bool inQuery)
     {

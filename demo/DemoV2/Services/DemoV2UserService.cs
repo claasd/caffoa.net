@@ -68,7 +68,7 @@ namespace DemoV2.Services
         }
 
         public Task<IEnumerable<MyEnumType>> ListEnumsAsync(MyEnumType? filter = null,
-            CancellationToken cancellationToken = default)
+            ICollection<MyEnumType> include = null, ICollection<MyEnumType> excludes = null, CancellationToken cancellationToken = default)
         {
             return Task.FromResult<IEnumerable<MyEnumType>>(new List<MyEnumType>() { MyEnumType.Enum1 });
         }
@@ -76,7 +76,7 @@ namespace DemoV2.Services
         public Task<IEnumerable<MyEnumType>> ListEnums2Async(MyEnumType filter,
             CancellationToken cancellationToken = default)
         {
-            return Task.FromResult<IEnumerable<MyEnumType>>(new List<MyEnumType>() { MyEnumType.Enum2 });
+            return Task.FromResult<IEnumerable<MyEnumType>>(new List<MyEnumType>() { MyEnumType.Enum1 });
         }
 
         public async Task<IEnumerable<AnyCompleteUser>> UserPostAsync(User payload,

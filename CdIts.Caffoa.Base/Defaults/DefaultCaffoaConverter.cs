@@ -2,6 +2,7 @@ using System.ComponentModel;
 using System.Globalization;
 using System.Reflection;
 using System.Runtime.Serialization;
+using System.Text.Json.Serialization;
 
 namespace Caffoa.Defaults;
 
@@ -93,11 +94,27 @@ public class DefaultCaffoaConverter : ICaffoaConverter
     {
         try
         {
-            return EnumConverter.FromString<T>(parameter);
+            return EnumConverter.FromString<T>(parameter.Trim());
         }
         catch (Exception e)
         {
             throw _errorHandler.ParameterConvertError(parameterName, typeof(T).Name, e);
+        }
+    }
+
+    public ICollection<T> ParseEnumArray<T>(ICaffoaJsonParser parser, string parameter, string parameterName, bool ignoreCase = true) where T : Enum
+    {
+        try
+        {
+            if (string.IsNullOrWhiteSpace(parameter))
+                return Array.Empty<T>();
+            parameter = parameter.Trim();
+            IEnumerable<string> stringList = parameter[0] == '[' ? parser.Parse<string[]>(parameter) : parameter.Split(',');
+            return stringList.Select(v => ParseEnum<T>(v, parameterName, ignoreCase)).Distinct().ToArray();
+        }
+        catch (Exception e)
+        {
+            throw _errorHandler.ParameterConvertError(parameterName, $"array[{typeof(T)}", e);
         }
     }
 

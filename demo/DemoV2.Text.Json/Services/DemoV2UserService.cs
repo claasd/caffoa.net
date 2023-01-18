@@ -68,7 +68,7 @@ namespace DemoV2.Text.Json.Services
         }
 
         public Task<IEnumerable<STJMyEnumType>> ListEnumsAsync(STJMyEnumType? filter = null,
-            CancellationToken cancellationToken = default)
+            ICollection<STJMyEnumType> include = null, ICollection<STJMyEnumType> exclude = null, CancellationToken cancellationToken = default)
         {
             return Task.FromResult<IEnumerable<STJMyEnumType>>(new List<STJMyEnumType>() { STJMyEnumType.Enum1 });
         }
