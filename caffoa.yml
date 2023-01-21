@@ -43,7 +43,12 @@ services:
       targetFolder: demo/DemoV2
       namespace: DemoV2
       name: DemoV2
-
+    client:
+      targetFolder: demo/DemoV2/Client
+      namespace: DemoV2.Client
+      name: DemoClient
+      constructorVisibility: private
+      fieldVisibility: internal
   - apiPath: tests/base.openapi.yml
     config:
       prefix: 'STJ'

@@ -22,4 +22,7 @@
       <ProjectReference Include="..\..\CdIts.Caffoa.Extensions\CdIts.Caffoa.Extensions.csproj" />
       <ProjectReference Include="..\..\CdIts.Caffoa.Json.Net\CdIts.Caffoa.Json.Net.csproj" />
     </ItemGroup>
+    <ItemGroup>
+      <Folder Include="Client" />
+    </ItemGroup>
 </Project>

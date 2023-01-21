@@ -11,12 +11,12 @@ namespace Caffoa.Defaults;
 public class DefaultCaffoaErrorHandler : ICaffoaErrorHandler
 {
     private readonly ILogger _logger;
-    private readonly ICaffoaResultHandler _resultHandler;
+    private readonly ICaffoaJsonSerializer _serializer;
 
-    public DefaultCaffoaErrorHandler(ILogger logger, ICaffoaResultHandler resultHandler)
+    public DefaultCaffoaErrorHandler(ILogger logger, ICaffoaJsonSerializer serializer)
     {
         _logger = logger;
-        _resultHandler = resultHandler;
+        _serializer = serializer;
     }
 
     public virtual CaffoaClientError NoContent()
@@ -70,7 +70,7 @@ public class DefaultCaffoaErrorHandler : ICaffoaErrorHandler
             debugInformation["p_" + name] = value.ToString();
         }
         debugInformation["Payload"] = GetPayloadForExceptionLogging(request);
-        _logger.LogCritical("{DebugInfo}", _resultHandler.JsonString(debugInformation));
+        _logger.LogCritical("{DebugInfo}", _serializer.JsonString(debugInformation));
         result = null;
         return false;
     }

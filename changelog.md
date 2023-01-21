@@ -1,4 +1,7 @@
 # caffoa changelog
+## 2.2.0
+* Possibility to generate a client (experimental)
+* Split up some interfaces to have less bloated interfaces
 
 ## 2.1.0
 * Added enum arrays for query parameters. can be valid json or comma seperated list.

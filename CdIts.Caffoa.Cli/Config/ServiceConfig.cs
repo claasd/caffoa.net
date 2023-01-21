@@ -15,4 +15,6 @@ public class ServiceConfig
     public CaffoaConfig? Config { get; set; }
     public FunctionConfig? Function { get; set; }
     public ModelConfig? Model { get; set; }
+    
+    public ClientConfig? Client { get; set; }
 }

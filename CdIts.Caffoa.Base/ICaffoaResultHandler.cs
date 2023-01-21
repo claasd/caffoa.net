@@ -5,7 +5,7 @@ namespace Caffoa;
 /// <summary>
 /// interface for serializing outgoing data
 /// </summary>
-public interface ICaffoaResultHandler
+public interface ICaffoaResultHandler : ICaffoaJsonSerializer
 {
     /// <summary>
     /// Should return a valid JSON result with the passed object as payload and the passed statusCode as statusCode
@@ -13,7 +13,6 @@ public interface ICaffoaResultHandler
     IActionResult Json(object data, int statusCode);
     IActionResult Json<T>(IEnumerable<T> data, int statusCode);
 
-    string JsonString(object o);
     /// <summary>
     /// Should return a valid result without payload and the passed statusCode as statusCode
     /// </summary>

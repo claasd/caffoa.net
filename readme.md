@@ -197,6 +197,12 @@ services:
         - otherObjectToInclude
       imports: # imports that are added in addition to the config section. Default is an empty array
         - someImport
+    client: # Experimental client generation
+      name: MYClientName
+      namespace: MyNamespace.Client
+      targetFolder: ./output/Client
+      constructorVisibility: public
+      fieldVisibility: public
 ```
 
 # Typed parameters and returns

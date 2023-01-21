@@ -38,12 +38,13 @@ public class ParameterBuilder
         return this;
     }
 
-    public void AddQueryParameters(IEnumerable<ParameterObject> queryParameters)
+    public void AddQueryParameters(IEnumerable<ParameterObject> queryParameters, bool nullableDefaults = false)
     {
         _queryParameters.AddRange(queryParameters.Select(p =>
         {
             var typeName = p.GetTypeName(_useDateOnly, _useDateTime);
-            var result = $"{typeName} {p.Name}";
+            var nullableAddition = nullableDefaults && !p.Required && typeName != "string" && !typeName.EndsWith("?")? "?" : "";
+            var result = $"{typeName}{nullableAddition} {p.Name}";
             if(p.IsEnum && p.DefaultValue != null)
                 result += $" = {typeName}.{ModelGenerator.EnumNameForValue(p.DefaultValue)}";
             else if (p.DefaultValue != null) 

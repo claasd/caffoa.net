@@ -68,6 +68,12 @@ public class ApiBuilder
                 new FunctionsGenerator(_service.Function, Config, _service.Model?.Namespace);
             functionsGenerator.GenerateFunctions(_endpoints);
         }
+        
+        if (_service.Client != null && _endpoints != null)
+        {
+            var clientGenerator = new ClientGenerator(_service.Client, Config, _service.Model?.Namespace);
+            clientGenerator.GenerateClient(_endpoints);
+        }
 
         if (Config.GenerateResolvedApiFile is true)
             _parser.WriteGeneratedApiFile(allDocuments);

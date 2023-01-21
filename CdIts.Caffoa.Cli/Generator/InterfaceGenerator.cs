@@ -67,7 +67,7 @@ public class InterfaceGenerator
             foreach (var parameter in GetParams(endpoint))
             {
                 var format = new Dictionary<string, object>();
-                format["RESULT"] = GetResponseType(endpoint);
+                format["RESULT"] = GetResponseType(endpoint, _config.AsyncArrays is true);
                 format["NAME"] = endpoint.Name;
                 format["PARAMS"] = parameter;
                 format["DOC"] = string.Join("\n        /// ", endpoint.DocumentationLines);
@@ -79,15 +79,17 @@ public class InterfaceGenerator
         return string.Join("\n", methods);
     }
 
-    private List<string> GetParams(EndPointModel endpoint)
+    public List<string> GetParams(EndPointModel endpoint) => GetMethodParams(endpoint, _config);
+    
+    public static List<string> GetMethodParams(EndPointModel endpoint, CaffoaConfig config, bool withDurable = true, bool nullableDefaults = false)
     {
-        var builder = ParameterBuilder.Instance(_config.UseDateOnly is true && _config.ParsePathParameters is not false, _config.UseDateTime is true)
+        var builder = ParameterBuilder.Instance(config.UseDateOnly is true && config.ParsePathParameters is not false, config.UseDateTime is true)
             .AddPathParameters(endpoint.Parameters);
-        if (endpoint.DurableClient)
+        if (endpoint.DurableClient && withDurable)
             builder.AddDurableClient();
-        if (_config.ParseQueryParameters is not false)
-            builder.AddQueryParameters(endpoint.QueryParameters());
-        if (_config.WithCancellation is not false)
+        if (config.ParseQueryParameters is not false)
+            builder.AddQueryParameters(endpoint.QueryParameters(), nullableDefaults);
+        if (config.WithCancellation is not false)
             builder.AddCancellationToken();
         if (endpoint.HasRequestBody)
         {
@@ -114,7 +116,7 @@ public class InterfaceGenerator
         return builder.Build();
     }
 
-    private string GetResponseType(EndPointModel endpoint)
+    public static string GetResponseType(EndPointModel endpoint, bool asyncArrays)
     {
         var codes = new List<int>();
         string? typeName = null;
@@ -134,22 +136,22 @@ public class InterfaceGenerator
             if (response.Unknown)
                 typeName = "IActionResult";
         }
-        return FormatResponse(codes, typeName);
+        return FormatResponse(codes, typeName, asyncArrays);
     }
 
-    private string FormatResponse(ICollection codes, string? typeName)
+    private static string FormatResponse(ICollection codes, string? typeName, bool asyncArrays)
     {
         if (codes.Count == 0)
             return "Task<IActionResult>";
         if (codes.Count == 1 && typeName is null)
             return "Task";
-        if (codes.Count == 1 && _config.AsyncArrays is true && typeName!.StartsWith("IEnumerable<"))
+        if (codes.Count == 1 && asyncArrays && typeName!.StartsWith("IEnumerable<"))
             return $"IAsyncEnumerable{typeName[11..]}";
         if (codes.Count == 1)
             return $"Task<{typeName}>";
         if (typeName is null)
             return "Task<int>";
-        if (_config.AsyncArrays is true && typeName!.StartsWith("IEnumerable<"))
+        if (asyncArrays && typeName!.StartsWith("IEnumerable<"))
             return $"(IAsyncEnumerable{typeName[11..]}, int)";
         return $"Task<({typeName}, int)>";
     }

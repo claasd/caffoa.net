@@ -9,9 +9,9 @@ namespace Caffoa.Defaults;
 /// </summary>
 public class DefaultCaffoaJsonParser : ICaffoaJsonParser
 {
-    public ICaffoaErrorHandler ErrorHandler { get; }
+    public ICaffoaParseErrorHandler ErrorHandler { get; }
 
-    public DefaultCaffoaJsonParser(ICaffoaErrorHandler errorHandler)
+    public DefaultCaffoaJsonParser(ICaffoaParseErrorHandler errorHandler)
     {
         ErrorHandler = errorHandler;
     }
