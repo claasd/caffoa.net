@@ -10,6 +10,7 @@ using System.Net.Mime;
 using System.Collections.Specialized;
 using System.Threading.Tasks;
 using System.Text;
+using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Newtonsoft.Json.Linq;
@@ -50,7 +51,7 @@ namespace DemoV2.Client
         /// </summary>
         public async Task<IReadOnlyList<AnyCompleteUser>> UsersGetAsync(int? offset = 0, int? limit = 1000, CancellationToken cancellationToken = default) {
             var uriBuilder = new UriBuilder($"{BaseUri}users");
-            var queryBuilder = new NameValueCollection();
+            var queryBuilder = new QueryBuilder();
             if(offset != null)
                 queryBuilder.Add("offset", $"{offset}");
             if(limit != null)
@@ -214,7 +215,7 @@ namespace DemoV2.Client
         /// 400 -> Error
         /// </summary>
         public async Task<IReadOnlyList<User>> UsersGetByBirthdateAsync(DateOnly date, CancellationToken cancellationToken = default) {
-            var uriBuilder = new UriBuilder($"{BaseUri}users/born-before/{date}");
+            var uriBuilder = new UriBuilder($"{BaseUri}users/born-before/{date:yyyy-MM-dd}");
             using var httpRequest = new HttpRequestMessage(HttpMethod.Get, uriBuilder.ToString());
             PrepareRequest(httpRequest);
             using var httpResult = await Client.SendAsync(httpRequest, cancellationToken);
@@ -237,9 +238,9 @@ namespace DemoV2.Client
         /// </summary>
         public async Task<IReadOnlyList<User>> UsersSearchByDateAsync(DateOnly before, DateOnly after, int? maxResults = null, CancellationToken cancellationToken = default) {
             var uriBuilder = new UriBuilder($"{BaseUri}users/filter/byAge");
-            var queryBuilder = new NameValueCollection();
-            queryBuilder.Add("before", $"{before}");
-            queryBuilder.Add("after", $"{after}");
+            var queryBuilder = new QueryBuilder();
+            queryBuilder.Add("before", before.ToString("yyyy-MM-dd"));
+            queryBuilder.Add("after", after.ToString("yyyy-MM-dd"));
             if(maxResults != null)
                 queryBuilder.Add("maxResults", $"{maxResults}");
             uriBuilder.Query = queryBuilder.ToString() ?? string.Empty;
@@ -318,13 +319,13 @@ namespace DemoV2.Client
         /// </summary>
         public async Task<IReadOnlyList<MyEnumType>> ListEnumsAsync(MyEnumType? filter = null, ICollection<MyEnumType>? include = null, ICollection<MyEnumType>? exclude = null, CancellationToken cancellationToken = default) {
             var uriBuilder = new UriBuilder($"{BaseUri}enums/list");
-            var queryBuilder = new NameValueCollection();
+            var queryBuilder = new QueryBuilder();
             if(filter != null)
                 queryBuilder.Add("filter", filter.Value());
             if(include != null)
-                queryBuilder.Add("include", string.Join(",", include.Select(v=>v.Value())));
+                queryBuilder.Add("include", include.AsStringList());
             if(exclude != null)
-                queryBuilder.Add("exclude", string.Join(",", exclude.Select(v=>v.Value())));
+                queryBuilder.Add("exclude", exclude.AsStringList());
             uriBuilder.Query = queryBuilder.ToString() ?? string.Empty;
             using var httpRequest = new HttpRequestMessage(HttpMethod.Get, uriBuilder.ToString());
             PrepareRequest(httpRequest);
@@ -343,7 +344,7 @@ namespace DemoV2.Client
         /// 200 -> a list of neum
         /// </summary>
         public async Task<IReadOnlyList<MyEnumType>> ListEnums2Async(MyEnumType filter, CancellationToken cancellationToken = default) {
-            var uriBuilder = new UriBuilder($"{BaseUri}enums/list/filter/{filter}");
+            var uriBuilder = new UriBuilder($"{BaseUri}enums/list/filter/{filter.Value()}");
             using var httpRequest = new HttpRequestMessage(HttpMethod.Get, uriBuilder.ToString());
             PrepareRequest(httpRequest);
             using var httpResult = await Client.SendAsync(httpRequest, cancellationToken);

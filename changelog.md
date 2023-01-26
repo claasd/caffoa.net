@@ -1,4 +1,7 @@
 # caffoa changelog
+## 2.2.1
+* Correctly format DateTime, DateTimeOffset, Enums, and EnumLists in path and query parameters of clients
+
 ## 2.2.0
 * Possibility to generate a client (experimental)
 * Split up some interfaces to have less bloated interfaces

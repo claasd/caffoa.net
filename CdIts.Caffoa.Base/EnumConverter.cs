@@ -6,8 +6,19 @@ namespace Caffoa;
 
 public static class EnumConverter
 {
+    /// <summary>
+    /// Returns the [EnumMember] value if present, else returns the name of the enum
+    /// </summary>
     public static string Value(this Enum value) => EnumValue(value);
-    
+
+    /// <summary>
+    /// returns a comma seperated list of enum string values. See <see cref="Value"/>.
+    /// </summary>
+    public static string AsStringList<T>(this IEnumerable<T> values) where T : Enum
+    {
+        return string.Join(",", values.Select(v => v.Value()));
+    }
+
     public static string EnumValue(object value)
     {
         var name = Enum.GetName(value.GetType(), value);
@@ -20,8 +31,9 @@ public static class EnumConverter
 
     public static T FromString<T>(string value, StringComparison comparer = StringComparison.OrdinalIgnoreCase)
         where T : Enum => (T)FromString(typeof(T), value, comparer);
-    
-    public static object FromString(Type type, string value, StringComparison comparer = StringComparison.OrdinalIgnoreCase)
+
+    public static object FromString(Type type, string value,
+        StringComparison comparer = StringComparison.OrdinalIgnoreCase)
     {
         var names = Enum.GetNames(type);
         foreach (var name in names)

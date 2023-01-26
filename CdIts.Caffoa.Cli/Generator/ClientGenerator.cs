@@ -57,7 +57,7 @@ public class ClientGenerator
                 format["PARAMS"] = parameter;
                 format["DOC"] = string.Join("\n        /// ", endpoint.DocumentationLines);
                 format["METHOD"] = endpoint.Operation.ToLower().FirstCharUpper();
-                format["ROUTE"] = endpoint.Route;
+                format["ROUTE"] = FormatRoute(endpoint.Route, endpoint.Parameters);
                 format["PAYLOAD"] = RequestBody(endpoint);
                 format["RESULTCODE"] = Result(endpoint);
                 format["QUERYPARAMS"] = FormatQueryParams(endpoint.Parameters);
@@ -70,8 +70,24 @@ public class ClientGenerator
 
         return string.Join("\n", methods);
     }
-    
-    
+
+    private string FormatRoute(string route, List<ParameterObject> parameters)
+    {
+        foreach (var param in parameters.Where(p=>!p.IsQueryParameter))
+        {
+            if (param.IsEnum)
+                route = route.Replace($"{{{param.Name}}}", $"{{{param.Name}.Value()}}");
+            if(param.IsEnumArray)
+                route = route.Replace($"{{{param.Name}}}", $"{{{param.Name}.AsStringList()}}");
+            if (param.GetTypeName(true, false) == "DateOnly")
+                route = route.Replace($"{{{param.Name}}}", $"{{{param.Name}:yyyy-MM-dd}}");
+            if (param.GetTypeName(true, false) == "DateTimeOffset")
+                route = route.Replace($"{{{param.Name}}}", $"{{{param.Name}:O}}");
+        }
+
+        return route;
+    }
+
 
     private string GetResponse(EndPointModel endpoint)
     {
@@ -126,12 +142,17 @@ public class ClientGenerator
     private string FormatQueryParam(ParameterObject arg)
     {
         string queryAdd;
+        string baseTypeName = arg.GetTypeName(true, false);
         if (arg.IsEnum)
             queryAdd = $"queryBuilder.Add(\"{arg.Name}\", {arg.Name}.Value());";
         else if (arg.IsEnumArray)
-            queryAdd = $"queryBuilder.Add(\"{arg.Name}\", string.Join(\",\", {arg.Name}.Select(v=>v.Value())));";
-        else if (arg.GetTypeName(true, false) == "string")
+            queryAdd = $"queryBuilder.Add(\"{arg.Name}\", {arg.Name}.AsStringList());";
+        else if (baseTypeName == "string")
             queryAdd = $"queryBuilder.Add(\"{arg.Name}\", {arg.Name});";
+        else if(baseTypeName == "DateTimeOffset")
+            queryAdd = $"queryBuilder.Add(\"{arg.Name}\", {arg.Name}.ToString(\"O\"));";
+        else if(baseTypeName == "DateOnly")
+            queryAdd = $"queryBuilder.Add(\"{arg.Name}\", {arg.Name}.ToString(\"yyyy-MM-dd\"));";
         else
             queryAdd = $"queryBuilder.Add(\"{arg.Name}\", $\"{{{arg.Name}}}\");";
         if (!arg.Required)
