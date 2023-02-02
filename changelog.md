@@ -1,4 +1,7 @@
 # caffoa changelog
+## 2.2.2
+* Fix server and client generation if response is a reference to an external file
+
 ## 2.2.1
 * Correctly format DateTime, DateTimeOffset, Enums, and EnumLists in path and query parameters of clients
 

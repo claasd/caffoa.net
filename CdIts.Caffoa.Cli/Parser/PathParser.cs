@@ -1,6 +1,7 @@
 using CdIts.Caffoa.Cli.Config;
 using CdIts.Caffoa.Cli.Errors;
 using CdIts.Caffoa.Cli.Model;
+using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 
 namespace CdIts.Caffoa.Cli.Parser;
@@ -67,8 +68,9 @@ public class PathParser
                 if (responseItem is null)
                     throw new CaffoaParserException(
                         $"Missing Response configuration for Response '{response}' (maybe a wrong reference?)");
-                result.DocumentationLines.Add($"{response} -> {responseItem.Description}");
-                result.Responses.Add(ParseResponse(response, responseItem));
+                var resolvedResponseItem = ResolveExternal(responseItem);
+                result.DocumentationLines.Add($"{response} -> {resolvedResponseItem.Description}");
+                result.Responses.Add(ParseResponse(response, resolvedResponseItem));
             }
 
             if (_config.DurableClient != null && _config.DurableClient.Contains(operation, operationItem))
@@ -140,6 +142,16 @@ public class PathParser
         throw new CaffoaParserException("complex type. Only array, ref or basic types are supported.");
     }
 
+    private OpenApiResponse ResolveExternal(OpenApiResponse response)
+    {
+        if (response.Reference?.IsExternal ?? false)
+        {
+            var result = response.Reference.HostDocument.Workspace.ResolveReference(response.Reference);
+            if (result is OpenApiResponse r)
+                return r;
+        }
+        return response;
+    }
 
     private ResponseModel ParseResponse(string code, OpenApiResponse responseItem)
     {
