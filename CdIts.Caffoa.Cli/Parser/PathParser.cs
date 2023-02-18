@@ -208,10 +208,11 @@ public class PathParser
                 else if (schema.IsArray())
                 {
                     
-                    if (schema.Items.Reference != null && schema.Items.CanBeEnum() &&
+                    var items = ObjectStandaloneParser.ResolveExternal(schema.Items);
+                    if (items.Reference != null && items.CanBeEnum() &&
                         _config.GetEnumCreationMode() == CaffoaConfig.EnumCreationMode.Default)
                     {
-                        innerType = _classNameFunc(schema.Items.Reference.Name());
+                        innerType = _classNameFunc(items.Reference.Name());
                         type = $"ICollection<{innerType}>";
                         isEnumArray = true;
                     }

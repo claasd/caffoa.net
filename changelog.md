@@ -1,5 +1,8 @@
 # caffoa changelog
 
+## 2.2.2
+* Fix issue with enum list in query, when the array item is an enum and defined in a different file
+
 ## 2.2.1
 * Correctly format DateTime, DateTimeOffset, Enums, and EnumLists in path and query parameters of clients
 * Fix server and client generation if response is a reference to an external file
