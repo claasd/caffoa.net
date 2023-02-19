@@ -1,6 +1,7 @@
 using CdIts.Caffoa.Cli.Config;
 using CdIts.Caffoa.Cli.Errors;
 using CdIts.Caffoa.Cli.Model;
+using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 
@@ -11,13 +12,15 @@ public class PathParser
     private readonly CaffoaConfig _config;
     private readonly Func<string, string> _classNameFunc;
     private readonly Dictionary<string, OpenApiSchema> _knownTypes;
+    private readonly ILogger _logger;
 
     public PathParser(CaffoaConfig config, Func<string, string> classNameFunc,
-        Dictionary<string, OpenApiSchema> knownTypes)
+        Dictionary<string, OpenApiSchema> knownTypes, ILogger logger)
     {
         _config = config;
         _classNameFunc = classNameFunc;
         _knownTypes = knownTypes;
+        _logger = logger;
     }
 
     public List<EndPointModel> Parse(string path, OpenApiPathItem item)
@@ -90,12 +93,17 @@ public class PathParser
     private IBodyModel ParseRequestBody(OpenApiRequestBody body)
     {
         if (body.Content.Count > 1)
-            throw new CaffoaParserException("Multiple possible bodies");
+        {
+            _logger.LogWarning(
+                $"Found multiple schemas for requestBody. Only a single application/json body is currently supported. Stream is used for body.");
+            return new NullBodyModel();
+        }
+
         var (type, content) = body.Content.First();
         if (type.ToLower() != "application/json")
         {
-            Console.Error.WriteLine(
-                $"type {type}. Only application/json is currently supported for content, found {type.ToLower()}. Stream is used for body");
+            _logger.LogWarning(
+                $"Found requestBody type {type}. Only application/json is currently supported for content, found {type.ToLower()}. Stream is used for body");
             return new NullBodyModel();
         }
 
@@ -158,8 +166,8 @@ public class PathParser
         var response = new ResponseModel(code);
         if (responseItem.Content.Count > 1)
         {
-            Console.Error.WriteLine(
-                $"WARNING: Multiple possible responses. Only a single application/json response is currently supported for objects.");
+            _logger.LogWarning(
+                $"Multiple possible responses found. Only a single application/json response is currently supported for objects. Using IActionResult as return value");
             response.Unknown = true;
             return response;
         }
@@ -169,8 +177,8 @@ public class PathParser
         var (type, content) = responseItem.Content.First();
         if (type.ToLower() != "application/json")
         {
-            Console.Error.WriteLine(
-                $"WARNING: found content type {type}. Only application/json is currently supported for objects.");
+            _logger.LogWarning(
+                $"found content type {type} for response. Only application/json is currently supported for objects. Using IActionResult as return value");
             response.Unknown = true;
             return response;
         }

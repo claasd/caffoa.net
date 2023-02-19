@@ -1,5 +1,6 @@
 using CdIts.Caffoa.Cli.Errors;
 using CdIts.Caffoa.Cli.Model;
+using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
@@ -9,15 +10,17 @@ namespace CdIts.Caffoa.Cli.Parser;
 public abstract class ObjectParser
 {
     protected readonly Func<string, string> ClassNameFunc;
+    private readonly ILogger _logger;
     protected readonly SchemaItem Item;
     private readonly IDictionary<string, OpenApiSchema> _knownTypes;
 
     protected ObjectParser(SchemaItem item, IDictionary<string, OpenApiSchema> knownTypes,
-        Func<string, string> classNameGenerator)
+        Func<string, string> classNameGenerator, ILogger logger)
     {
         Item = item;
         _knownTypes = knownTypes;
         ClassNameFunc = classNameGenerator;
+        _logger = logger;
     }
 
     public SchemaItem Parse(OpenApiSchema schema)
@@ -122,19 +125,19 @@ public abstract class ObjectParser
         return property;
     }
 
-    private static string? ParseCustomConverter(IDictionary<string, IOpenApiExtension> schemaExtensions, string name)
+    private string? ParseCustomConverter(IDictionary<string, IOpenApiExtension> schemaExtensions, string name)
     {
         if (schemaExtensions.TryGetValue("x-caffoa-converter", out var converter))
         {
             if (converter is OpenApiString converterStr)
                 return converterStr.Value;
-            Console.Error.WriteLine($"Could not parse custom converter of {name}: value is not a string");
+            _logger.LogWarning($"Could not parse custom converter of {name}: value is not a string");
         }
 
         return null;
     }
 
-    private static List<string> ParseCustomAttributes(IDictionary<string, IOpenApiExtension> extensions, string name)
+    private List<string> ParseCustomAttributes(IDictionary<string, IOpenApiExtension> extensions, string name)
     {
         try
         {
@@ -151,7 +154,7 @@ public abstract class ObjectParser
         }
         catch (CaffoaParserException e)
         {
-            Console.Error.WriteLine($"Could not parse custom attributes of {name}: {e.Message}");
+            _logger.LogWarning($"Could not parse custom attributes of {name}: {e.Message}");
             return new List<string>();
         }
     }

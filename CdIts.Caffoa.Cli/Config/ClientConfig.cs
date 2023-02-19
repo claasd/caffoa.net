@@ -7,7 +7,7 @@ public class ClientConfig
 {
     private string? _ns;
     private string? _targetFolder;
-    private string _name;
+    private string? _name;
 
     public string Name
     {

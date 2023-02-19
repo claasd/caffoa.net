@@ -1,6 +1,7 @@
 ﻿using CdIts.Caffoa.Cli.Config;
 using CdIts.Caffoa.Cli.Errors;
 using CdIts.Caffoa.Cli.Generator;
+using Microsoft.Extensions.Logging;
 using YamlDotNet.Serialization;
 using YamlDotNet.Serialization.NamingConventions;
 
@@ -9,9 +10,12 @@ namespace CdIts.Caffoa.Cli;
 public class Main
 {
     private readonly CaffoaSettings _settings;
-    public Main(CaffoaSettings settings)
+    private readonly ILogger _logger;
+
+    public Main(CaffoaSettings settings, ILogger logger)
     {
         _settings = settings;
+        _logger = logger;
     }
 
     public static void InitProject(string apiPath, string projectName, string configPath)
@@ -53,7 +57,7 @@ public class Main
             try
             {
                 var localConfig = service.Config?.MergedWith(_settings.Config) ?? _settings.Config;
-                var builder = new ApiBuilder(service, localConfig);
+                var builder = new ApiBuilder(service, localConfig, _logger);
                 await builder.Parse();
                 builders.Add(builder);
             }

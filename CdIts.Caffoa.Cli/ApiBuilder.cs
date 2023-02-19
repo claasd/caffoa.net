@@ -2,6 +2,7 @@ using CdIts.Caffoa.Cli.Config;
 using CdIts.Caffoa.Cli.Generator;
 using CdIts.Caffoa.Cli.Model;
 using CdIts.Caffoa.Cli.Parser;
+using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 
 namespace CdIts.Caffoa.Cli;
@@ -9,6 +10,7 @@ namespace CdIts.Caffoa.Cli;
 public class ApiBuilder
 {
     private readonly ServiceConfig _service;
+    private readonly ILogger _logger;
     public CaffoaGlobalConfig Config { get; }
     private List<EndPointModel>? _endpoints;
     private readonly ServiceParser _parser;
@@ -35,11 +37,12 @@ public class ApiBuilder
     public List<SchemaItem>? Models { get; private set; }
 
 
-    public ApiBuilder(ServiceConfig service, CaffoaGlobalConfig config)
+    public ApiBuilder(ServiceConfig service, CaffoaGlobalConfig config, ILogger logger)
     {
         _service = service;
+        _logger = logger;
         Config = config;
-        _parser = new ServiceParser(_service, Config);
+        _parser = new ServiceParser(_service, Config, _logger);
     }
 
     public async Task Parse()
@@ -55,14 +58,14 @@ public class ApiBuilder
     {
         if (_service.Model != null && Models != null)
         {
-            var generator = new ModelGenerator(_service, Config);
+            var generator = new ModelGenerator(_service, Config, _logger);
             ExtensionData = generator.WriteModel(Models, otherKnownObjects);
         }
 
         if (_service.Function != null && _endpoints != null)
         {
             var interfaceGenerator =
-                new InterfaceGenerator(_service.Function, Config, _service.Model?.Namespace);
+                new InterfaceGenerator(_service.Function, Config, _service.Model?.Namespace, _logger);
             interfaceGenerator.GenerateInterface(_endpoints);
             var functionsGenerator =
                 new FunctionsGenerator(_service.Function, Config, _service.Model?.Namespace);
@@ -71,7 +74,7 @@ public class ApiBuilder
         
         if (_service.Client != null && _endpoints != null)
         {
-            var clientGenerator = new ClientGenerator(_service.Client, Config, _service.Model?.Namespace);
+            var clientGenerator = new ClientGenerator(_service.Client, Config, _service.Model?.Namespace, _logger);
             clientGenerator.GenerateClient(_endpoints);
         }
 

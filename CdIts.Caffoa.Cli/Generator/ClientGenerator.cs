@@ -2,6 +2,7 @@
 using CdIts.Caffoa.Cli.Config;
 using CdIts.Caffoa.Cli.Generator.Formatter;
 using CdIts.Caffoa.Cli.Model;
+using Microsoft.Extensions.Logging;
 
 namespace CdIts.Caffoa.Cli.Generator;
 
@@ -10,12 +11,14 @@ public class ClientGenerator
     private readonly ClientConfig _clientConfig;
     private readonly CaffoaConfig _config;
     private readonly string? _modelNamespace;
+    private readonly ILogger _logger;
 
-    public ClientGenerator(ClientConfig clientConfig, CaffoaConfig config, string? modelNamespace)
+    public ClientGenerator(ClientConfig clientConfig, CaffoaConfig config, string? modelNamespace, ILogger logger)
     {
         _clientConfig = clientConfig;
         _config = config;
         _modelNamespace = modelNamespace;
+        _logger = logger;
     }
 
     public void GenerateClient(List<EndPointModel> endpoints)
@@ -100,7 +103,7 @@ public class ClientGenerator
             codes.Add(response.Code);
             if (typeName != null && typeName != response.TypeName)
             {
-                Console.Error.WriteLine(
+                _logger.LogWarning(
                     $"Returning different objects is not supported, defaulting to Stream for {endpoint.Name}/{endpoint.Operation}");
                 return "Task<Stream>";
             }

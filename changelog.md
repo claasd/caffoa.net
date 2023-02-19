@@ -1,5 +1,11 @@
 # caffoa changelog
 
+## 2.3.0
+* Changed from simple console information to ConsoleLogger
+
+## 2.2.3
+* No changes, nuget release issue due to https://github.com/dotnet/sdk/issues/30625
+
 ## 2.2.2
 * Fix issue with enum list in query, when the array item is an enum and defined in a different file
 

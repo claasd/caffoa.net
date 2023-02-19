@@ -3,6 +3,7 @@ using System.Text.RegularExpressions;
 using CdIts.Caffoa.Cli.Config;
 using CdIts.Caffoa.Cli.Generator.Formatter;
 using CdIts.Caffoa.Cli.Model;
+using Microsoft.Extensions.Logging;
 
 namespace CdIts.Caffoa.Cli.Generator;
 
@@ -10,11 +11,13 @@ public class ModelGenerator
 {
     private readonly ServiceConfig _service;
     private readonly CaffoaGlobalConfig _config;
+    private readonly ILogger _logger;
 
-    public ModelGenerator(ServiceConfig service, CaffoaGlobalConfig mergedConfig)
+    public ModelGenerator(ServiceConfig service, CaffoaGlobalConfig mergedConfig, ILogger logger)
     {
         _service = service;
         _config = mergedConfig;
+        _logger = logger;
     }
 
     public IEnumerable<string> WriteModel(List<SchemaItem> objects, IEnumerable<SchemaItem> otherKnownObjects)
@@ -88,8 +91,8 @@ public class ModelGenerator
                 }
                 else
                 {
-                    Console.Error.WriteLine(
-                        $"Warning: Could not generate update extension for {item.ClassName} with parameter {subItem}");
+                    _logger.LogWarning(
+                        $"Could not generate update extension for {item.ClassName} with parameter {subItem}");
                 }
             }
         }
@@ -138,8 +141,8 @@ public class ModelGenerator
             }
             else
             {
-                Console.Error.WriteLine(
-                    $"WARNING: Cloud not create constructor for class {item.ClassName} with parameter {subItem}");
+                _logger.LogWarning(
+                    $"Could not create constructor for class {item.ClassName} with parameter {subItem}");
             }
         }
 

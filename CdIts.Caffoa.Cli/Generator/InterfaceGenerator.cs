@@ -2,6 +2,7 @@ using System.Collections;
 using CdIts.Caffoa.Cli.Config;
 using CdIts.Caffoa.Cli.Generator.Formatter;
 using CdIts.Caffoa.Cli.Model;
+using Microsoft.Extensions.Logging;
 
 namespace CdIts.Caffoa.Cli.Generator;
 
@@ -10,12 +11,14 @@ public class InterfaceGenerator
     private readonly FunctionConfig _functionConfig;
     private readonly CaffoaConfig _config;
     private readonly string? _modelNamespace;
+    private readonly ILogger _logger;
 
-    public InterfaceGenerator(FunctionConfig service, CaffoaConfig config, string? modelNamespace)
+    public InterfaceGenerator(FunctionConfig service, CaffoaConfig config, string? modelNamespace, ILogger logger)
     {
         _functionConfig = service;
         _config = config;
         _modelNamespace = modelNamespace;
+        _logger = logger;
     }
 
     public void GenerateInterface(List<EndPointModel> endpoints)
@@ -116,7 +119,7 @@ public class InterfaceGenerator
         return builder.Build();
     }
 
-    public static string GetResponseType(EndPointModel endpoint, bool asyncArrays)
+    public string GetResponseType(EndPointModel endpoint, bool asyncArrays)
     {
         var codes = new List<int>();
         string? typeName = null;
@@ -127,7 +130,7 @@ public class InterfaceGenerator
             codes.Add(response.Code);
             if (typeName != null && typeName != response.TypeName)
             {
-                Console.Error.WriteLine(
+                _logger.LogWarning(
                     $"Returning different objects is not supported, defaulting to IActionResult for {endpoint.Name}/{endpoint.Operation}");
                 return "Task<IActionResult>";
             }

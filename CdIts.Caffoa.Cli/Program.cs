@@ -3,13 +3,24 @@
 using CdIts.Caffoa.Cli;
 using CdIts.Caffoa.Cli.Config;
 using CdIts.Caffoa.Cli.Errors;
-using CdIts.Caffoa.Cli.Generator;
 using CommandLine;
+using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using YamlDotNet.Core;
 using YamlDotNet.Serialization;
 using YamlDotNet.Serialization.NamingConventions;
 using Parser = CommandLine.Parser;
+
+using ILoggerFactory loggerFactory =
+    LoggerFactory.Create(builder =>
+        builder.AddSimpleConsole(options =>
+        {
+            options.IncludeScopes = false;
+            options.SingleLine = true;
+            options.TimestampFormat = "HH:mm:ss ";
+        }));
+
+ILogger logger = loggerFactory.CreateLogger<Program>();
 
 try
 {
@@ -27,7 +38,7 @@ try
         .Build();
     using var reader = File.OpenText(options.ConfigPath);
     var settings = deserializer.Deserialize<CaffoaSettings>(reader);
-    var main = new Main(settings);
+    var main = new Main(settings, logger);
     var builders = await main.GenerateBuilders();
 
     if (settings.Config.ClearGeneratedFiles)
@@ -44,25 +55,25 @@ try
 catch (YamlException e)
 {
     var msg = (e.InnerException ?? e).Message;
-    Console.Error.WriteLine($"Error in your configuration file (Line: {e.Start.Line}): {msg}");
+    logger.LogCritical($"Error in your configuration file (Line: {e.Start.Line}): {msg}");
     return 1;
 }
 catch (ConfigurationMissingException e)
 {
-    Console.Error.WriteLine($"Error in your configuration file: " + e.Message);
+    logger.LogCritical($"Error in your configuration file: " + e.Message);
     return 1;
 }
 catch (CaffoaValidationException e)
 {
-    Console.Error.WriteLine(e.Message);
+    logger.LogCritical(e.Message);
     foreach (var error in e.Diagnostic?.Errors ?? new List<OpenApiError>())
     {
-        Console.Error.WriteLine(error.ToString());
+        logger.LogCritical(error.ToString());
     }
 }
 catch (Exception e)
 {
-    Console.Error.WriteLine(e.Message);
+    logger.LogCritical(e.Message);
 #if DEBUG
     throw;
 #else

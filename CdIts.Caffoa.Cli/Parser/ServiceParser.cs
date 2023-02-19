@@ -1,6 +1,7 @@
 using CdIts.Caffoa.Cli.Config;
 using CdIts.Caffoa.Cli.Errors;
 using CdIts.Caffoa.Cli.Model;
+using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
@@ -14,15 +15,17 @@ public class ServiceParser
 {
     private readonly ServiceConfig _service;
     private readonly CaffoaGlobalConfig _config;
+    private readonly ILogger _logger;
     private readonly Dictionary<string, OpenApiSchema> _knownTypes = new();
     private static readonly List<string> Duplicates = new();
     public OpenApiDocument Document { get; private set; } = new();
     public string ApiName { get; private set; } = "";
 
-    public ServiceParser(ServiceConfig service, CaffoaGlobalConfig config)
+    public ServiceParser(ServiceConfig service, CaffoaGlobalConfig config, ILogger logger)
     {
         _service = service;
         _config = config;
+        _logger = logger;
     }
     
     public async Task ReadAsync() {
@@ -102,7 +105,7 @@ public class ServiceParser
     public List<EndPointModel> GenerateEndpoints()
     {
         var endpoints = new List<EndPointModel>();
-        var parser = new PathParser(_config, ClassName, _knownTypes);
+        var parser = new PathParser(_config, ClassName, _knownTypes, _logger);
         foreach (var (path, pathItem) in Document!.Paths)
         {
             endpoints.AddRange(parser.Parse(path, pathItem));
@@ -134,8 +137,8 @@ public class ServiceParser
             if (_knownTypes.ContainsKey(className))
                 continue;
             ObjectParser parser = _config.UseInheritance is true
-                ? new ObjectInheritanceParser(new SchemaItem(name, className), _knownTypes, ClassName)
-                : new ObjectStandaloneParser(new SchemaItem(name, className), _knownTypes, ClassName);
+                ? new ObjectInheritanceParser(new SchemaItem(name, className), _knownTypes, ClassName, _logger)
+                : new ObjectStandaloneParser(new SchemaItem(name, className), _knownTypes, ClassName, _logger);
             objects.Add(parser.Parse(apiSchema));
             Duplicates.Add(className);
         }
