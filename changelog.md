@@ -2,6 +2,7 @@
 
 ## 2.3.0
 * Changed from simple console information to ConsoleLogger
+* Allow to generate client without generating function
 
 ## 2.2.3
 * No changes, nuget release issue due to https://github.com/dotnet/sdk/issues/30625

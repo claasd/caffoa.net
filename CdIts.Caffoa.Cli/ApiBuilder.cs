@@ -50,7 +50,7 @@ public class ApiBuilder
         await _parser.ReadAsync();
         if (_service.Model != null)
             Models = _parser.GenerateModel();
-        if (_service.Function != null)
+        if (_service.Function != null || _service.Client != null)
             _endpoints = _parser.GenerateEndpoints();
     }
 
