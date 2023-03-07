@@ -79,6 +79,8 @@ public static class Extensions
             "integer" when format == "uint64" => $"ulong{suffix}",
             "integer" when format == "uint32" => $"uint{suffix}",
             "integer" => $"int{suffix}",
+            "number" when format == "float" => $"float{suffix}",
+            "number" when format == "decimal" => $"decimal{suffix}",
             "number" => $"double{suffix}",
             "boolean" => $"bool{suffix}",
             "string" => "string",

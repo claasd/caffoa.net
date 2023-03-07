@@ -1,4 +1,6 @@
 # caffoa changelog
+## 2.4.0
+* Support for `type: number format: decimal`
 
 ## 2.3.0
 * Changed from simple console information to ConsoleLogger
