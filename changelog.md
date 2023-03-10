@@ -1,5 +1,5 @@
 # caffoa changelog
-## 2.4.1
+## 2.4.2
 * Bugfix resolving external properties that are not objects
 
 ## 2.4.0
