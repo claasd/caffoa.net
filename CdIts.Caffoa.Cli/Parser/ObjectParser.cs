@@ -27,6 +27,7 @@ public abstract class ObjectParser
     {
         try
         {
+            schema = ResolveExternal(schema);
             if (schema.AllOf.Count > 0)
                 schema = UpdateSchemaForAllOff(schema);
             if (schema.OneOf.Count > 0)
@@ -57,13 +58,14 @@ public abstract class ObjectParser
 
     private PropertyData ParseProperty(string name, OpenApiSchema schema, bool required)
     {
+        schema = ResolveExternal(schema);
         if (schema.AnyOf.Any())
             throw new CaffoaParserException("anyOf is not supported on object properties");
         var property = new PropertyData(name, required);
         property.Deprecated = schema.Deprecated;
         property.CustomAttributes = ParseCustomAttributes(schema.Extensions, name);
         property.Converter = ParseCustomConverter(schema.Extensions, name);
-    
+        
 
         if (schema.Reference != null &&
             _knownTypes.TryGetValue(ClassNameFunc(schema.Reference.Name()), out var knownSchema))
@@ -174,6 +176,19 @@ public abstract class ObjectParser
 
         return model;
     }
+    
+    public static OpenApiSchema ResolveExternal(OpenApiSchema subSchema)
+    {
+        if (subSchema.Reference?.IsExternal ?? false)
+        {
+            var result = subSchema.Reference.HostDocument.Workspace.ResolveReference(subSchema.Reference);
+            var schema = result as OpenApiSchema;
+            if (schema != null)
+                return schema;
+        }
 
+        return subSchema;
+    }
+    
     protected abstract OpenApiSchema UpdateSchemaForAllOff(OpenApiSchema schema);
 }

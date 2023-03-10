@@ -76,7 +76,7 @@ public class Main
         var allDocuments = builders.GroupBy(b => b.ApiName, b => b.Document).ToDictionary(g => g.Key, g => g.First());
         foreach (var builder in builders)
         {
-            var otherModels = builders.Where(b => b != builder && b.Models != null).SelectMany(b => b.Models!);
+            var otherModels = builders.Where(b => b != builder && b.Models != null).SelectMany(b => b.Models!).ToList();
             builder.Generate(allDocuments, otherModels);
             if (builder.ExtensionData.Any())
             {

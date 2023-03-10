@@ -54,7 +54,7 @@ public class ApiBuilder
             _endpoints = _parser.GenerateEndpoints();
     }
 
-    public void Generate(Dictionary<string, OpenApiDocument> allDocuments, IEnumerable<SchemaItem> otherKnownObjects)
+    public void Generate(Dictionary<string, OpenApiDocument> allDocuments, List<SchemaItem> otherKnownObjects)
     {
         if (_service.Model != null && Models != null)
         {

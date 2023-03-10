@@ -20,7 +20,7 @@ public class ModelGenerator
         _logger = logger;
     }
 
-    public IEnumerable<string> WriteModel(List<SchemaItem> objects, IEnumerable<SchemaItem> otherKnownObjects)
+    public IEnumerable<string> WriteModel(List<SchemaItem> objects, IList<SchemaItem> otherKnownObjects)
     {
         Directory.CreateDirectory(_service.Model!.TargetFolder);
         var interfaces = objects.Where(o => o.Interface != null).ToList();
@@ -32,7 +32,8 @@ public class ModelGenerator
         enumClasses.ForEach(WriteEnumClass);
         interfaces.ForEach(WriteModelInterface);
         var allKnownClasses = otherKnownObjects.Concat(classes).ToList();
-        classes.ForEach(c => WriteModelClass(c, interfaces, allKnownClasses, enumClasses));
+        var allKnownEnumClasses = enumClasses.Concat(otherKnownObjects.Where(o => o.Type == SchemaItem.ObjectType.StringEnum)).ToList(); 
+        classes.ForEach(c => WriteModelClass(c, interfaces, allKnownClasses, allKnownEnumClasses));
         if (_config.Extensions is false)
             return Array.Empty<string>();
         return classes.Select(c => CreateModelExtensions(c, allKnownClasses)).Where(d => !string.IsNullOrEmpty(d));

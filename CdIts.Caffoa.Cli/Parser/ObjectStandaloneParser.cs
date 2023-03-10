@@ -36,19 +36,6 @@ public class ObjectStandaloneParser : ObjectParser
         }
     }
 
-    public static OpenApiSchema ResolveExternal(OpenApiSchema subSchema)
-    {
-        if (subSchema.Reference?.IsExternal ?? false)
-        {
-            var result = subSchema.Reference.HostDocument.Workspace.ResolveReference(subSchema.Reference);
-            var schema = result as OpenApiSchema;
-            if (schema != null)
-                return schema;
-        }
-
-        return subSchema;
-    }
-
     private List<string> SubItems(IList<OpenApiSchema> schemas)
     {
         var result = new List<string>();
