@@ -1,6 +1,7 @@
 using System.Globalization;
 using System.Text;
 using System.Text.RegularExpressions;
+using CdIts.Caffoa.Cli.Config;
 using CdIts.Caffoa.Cli.Model;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
@@ -45,21 +46,26 @@ public static class Extensions
         return schema.Type is "array";
     }
 
+    public static bool IsRealObject(this OpenApiSchema apiSchema, CaffoaConfig.EnumCreationMode mode)
+    {
+        if (!apiSchema.IsPrimitiveType() && !apiSchema.HasOnlyAdditionalProperties() && !apiSchema.IsArray())
+            return true;
+        if(apiSchema.CanBeEnum() && mode == CaffoaConfig.EnumCreationMode.Default)
+            return true;
+        return false;
+    }
+
     public static string GetArrayType(this OpenApiSchema schema, Func<string, string> classNameFunc,
-        IDictionary<string, OpenApiSchema> knownPrimitiveTypes)
+        CaffoaConfig.EnumCreationMode enumMode)
     {
         var item = schema.Items;
-        if (item.Reference != null &&
-            knownPrimitiveTypes.TryGetValue(classNameFunc(item.Reference.Name()), out var primitiveSchema))
-        {
-            item = primitiveSchema;
+        if (!item.IsRealObject(enumMode))
             item.Reference = null;
-        }
         if (item.Reference != null)
             return classNameFunc(item.Reference.Name());
         if (item.IsPrimitiveType())
             return item.TypeName();
-        var innerName = item.GetArrayType(classNameFunc, knownPrimitiveTypes);
+        var innerName = item.GetArrayType(classNameFunc, enumMode);
         return $"List<{innerName}>";
     }
 

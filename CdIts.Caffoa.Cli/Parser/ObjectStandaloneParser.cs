@@ -1,3 +1,4 @@
+using CdIts.Caffoa.Cli.Config;
 using CdIts.Caffoa.Cli.Model;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
@@ -6,8 +7,8 @@ namespace CdIts.Caffoa.Cli.Parser;
 
 public class ObjectStandaloneParser : ObjectParser
 {
-    public ObjectStandaloneParser(SchemaItem item, IDictionary<string, OpenApiSchema> knownTypes,
-        Func<string, string> classNameGenerator, ILogger logger) : base(item, knownTypes, classNameGenerator, logger)
+    public ObjectStandaloneParser(SchemaItem item, CaffoaConfig.EnumCreationMode enumMode,
+        Func<string, string> classNameGenerator, ILogger logger) : base(item, enumMode, classNameGenerator, logger)
     {
     }
 

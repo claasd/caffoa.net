@@ -11,15 +11,12 @@ public class PathParser
 {
     private readonly CaffoaConfig _config;
     private readonly Func<string, string> _classNameFunc;
-    private readonly Dictionary<string, OpenApiSchema> _knownTypes;
     private readonly ILogger _logger;
 
-    public PathParser(CaffoaConfig config, Func<string, string> classNameFunc,
-        Dictionary<string, OpenApiSchema> knownTypes, ILogger logger)
+    public PathParser(CaffoaConfig config, Func<string, string> classNameFunc, ILogger logger)
     {
         _config = config;
         _classNameFunc = classNameFunc;
-        _knownTypes = knownTypes;
         _logger = logger;
     }
 
@@ -136,7 +133,7 @@ public class PathParser
     private string ParseType(OpenApiSchema schema)
     {
         if (schema.IsArray())
-            return $"IEnumerable<{schema.GetArrayType(_classNameFunc, _knownTypes)}>";
+            return $"IEnumerable<{schema.GetArrayType(_classNameFunc, _config.GetEnumCreationMode())}>";
         if (schema.Reference != null)
             return _classNameFunc(schema.Reference.Name());
         if (schema.IsPrimitiveType())

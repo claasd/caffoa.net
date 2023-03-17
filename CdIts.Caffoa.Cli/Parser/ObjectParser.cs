@@ -1,3 +1,4 @@
+using CdIts.Caffoa.Cli.Config;
 using CdIts.Caffoa.Cli.Errors;
 using CdIts.Caffoa.Cli.Model;
 using Microsoft.Extensions.Logging;
@@ -12,13 +13,13 @@ public abstract class ObjectParser
     protected readonly Func<string, string> ClassNameFunc;
     private readonly ILogger _logger;
     protected readonly SchemaItem Item;
-    private readonly IDictionary<string, OpenApiSchema> _knownTypes;
+    private readonly CaffoaConfig.EnumCreationMode _enumMode;
 
-    protected ObjectParser(SchemaItem item, IDictionary<string, OpenApiSchema> knownTypes,
+    protected ObjectParser(SchemaItem item, CaffoaConfig.EnumCreationMode enumMode,
         Func<string, string> classNameGenerator, ILogger logger)
     {
         Item = item;
-        _knownTypes = knownTypes;
+        _enumMode = enumMode;
         ClassNameFunc = classNameGenerator;
         _logger = logger;
     }
@@ -39,7 +40,7 @@ public abstract class ObjectParser
                     .Select(item => ParseProperty(item.Key, item.Value, schema.Required.Contains(item.Key))).ToList();
                 Item.AdditionalPropertiesAllowed = schema.AdditionalPropertiesAllowed;
             }
-            else if(schema.IsPrimitiveType() && schema.CanBeEnum())
+            else if (schema.IsPrimitiveType() && schema.CanBeEnum())
             {
                 if (schema.Type.StartsWith("string"))
                     Item.Type = SchemaItem.ObjectType.StringEnum;
@@ -65,12 +66,9 @@ public abstract class ObjectParser
         property.Deprecated = schema.Deprecated;
         property.CustomAttributes = ParseCustomAttributes(schema.Extensions, name);
         property.Converter = ParseCustomConverter(schema.Extensions, name);
-        
 
-        if (schema.Reference != null &&
-            _knownTypes.TryGetValue(ClassNameFunc(schema.Reference.Name()), out var knownSchema))
+        if (!schema.IsRealObject(_enumMode))
         {
-            schema = knownSchema;
             schema.Reference = null;
         }
 
@@ -85,7 +83,7 @@ public abstract class ObjectParser
         else if (schema.IsArray())
         {
             property.IsArray = true;
-            property.TypeName = schema.GetArrayType(ClassNameFunc, _knownTypes);
+            property.TypeName = schema.GetArrayType(ClassNameFunc, _enumMode);
             property.InnerTypeIsOtherSchema = schema.Items.Reference != null && !schema.Items.IsPrimitiveType();
         }
         else if (schema.AdditionalProperties != null)
@@ -100,7 +98,7 @@ public abstract class ObjectParser
             }
             else if (schema.AdditionalProperties.IsArray())
             {
-                var arrayType = schema.AdditionalProperties.GetArrayType(ClassNameFunc, _knownTypes);
+                var arrayType = schema.AdditionalProperties.GetArrayType(ClassNameFunc, _enumMode);
                 property.TypeName = $"List<{arrayType}>";
                 property.InnerTypeIsOtherSchema = false;
             }
@@ -176,7 +174,7 @@ public abstract class ObjectParser
 
         return model;
     }
-    
+
     public static OpenApiSchema ResolveExternal(OpenApiSchema subSchema)
     {
         if (subSchema.Reference?.IsExternal ?? false)
@@ -186,9 +184,8 @@ public abstract class ObjectParser
             if (schema != null)
                 return schema;
         }
-
         return subSchema;
     }
-    
+
     protected abstract OpenApiSchema UpdateSchemaForAllOff(OpenApiSchema schema);
 }

@@ -16,7 +16,6 @@ public class ServiceParser
     private readonly ServiceConfig _service;
     private readonly CaffoaGlobalConfig _config;
     private readonly ILogger _logger;
-    private readonly Dictionary<string, OpenApiSchema> _knownTypes = new();
     private static readonly List<string> Duplicates = new();
     public OpenApiDocument Document { get; private set; } = new();
     public string ApiName { get; private set; } = "";
@@ -90,7 +89,6 @@ public class ServiceParser
     public List<SchemaItem> GenerateModel()
     {
         var schemas = Document!.Components.Schemas;
-        ParseSimpleTypes(schemas);
         if (_service.Model!.Includes != null && _service.Model.Includes.Any())
             schemas = schemas.Where(p => _service.Model.Includes.Contains(p.Key))
                 .ToDictionary(p => p.Key, p => p.Value);
@@ -105,7 +103,7 @@ public class ServiceParser
     public List<EndPointModel> GenerateEndpoints()
     {
         var endpoints = new List<EndPointModel>();
-        var parser = new PathParser(_config, ClassName, _knownTypes, _logger);
+        var parser = new PathParser(_config, ClassName, _logger);
         foreach (var (path, pathItem) in Document!.Paths)
         {
             endpoints.AddRange(parser.Parse(path, pathItem));
@@ -113,18 +111,6 @@ public class ServiceParser
         return endpoints;
     }
 
-    private void ParseSimpleTypes(IDictionary<string, OpenApiSchema> schemas)
-    {
-        foreach (var (name, apiSchema) in schemas)
-        {
-            if (!apiSchema.IsPrimitiveType() && !apiSchema.HasOnlyAdditionalProperties() && !apiSchema.IsArray())
-                continue;
-            if(apiSchema.CanBeEnum() && _config.GetEnumCreationMode() == CaffoaConfig.EnumCreationMode.Default)
-                continue;
-            var className = ClassName(name);
-            _knownTypes[className] = apiSchema;
-        }
-    }
 
     private List<SchemaItem> ParseObjects(IDictionary<string, OpenApiSchema> schemas)
     {
@@ -134,11 +120,11 @@ public class ServiceParser
             var className = ClassName(name);
             if (_config.Duplicates == "once" && Duplicates.Contains(className))
                 continue;
-            if (_knownTypes.ContainsKey(className))
+            if(!apiSchema.IsRealObject(_config.GetEnumCreationMode()))
                 continue;
             ObjectParser parser = _config.UseInheritance is true
-                ? new ObjectInheritanceParser(new SchemaItem(name, className), _knownTypes, ClassName, _logger)
-                : new ObjectStandaloneParser(new SchemaItem(name, className), _knownTypes, ClassName, _logger);
+                ? new ObjectInheritanceParser(new SchemaItem(name, className), _config.GetEnumCreationMode(), ClassName, _logger)
+                : new ObjectStandaloneParser(new SchemaItem(name, className), _config.GetEnumCreationMode(), ClassName, _logger);
             objects.Add(parser.Parse(apiSchema));
             Duplicates.Add(className);
         }
