@@ -180,8 +180,7 @@ public abstract class ObjectParser
         if (subSchema.Reference?.IsExternal ?? false)
         {
             var result = subSchema.Reference.HostDocument.Workspace.ResolveReference(subSchema.Reference);
-            var schema = result as OpenApiSchema;
-            if (schema != null)
+            if (result is OpenApiSchema schema)
                 return schema;
         }
         return subSchema;
