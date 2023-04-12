@@ -131,7 +131,7 @@ public class PropertyFormatter
     public static string Imports(CaffoaConfig.GenerationFlavor? flavor)
     {
         if (flavor is CaffoaConfig.GenerationFlavor.SystemTextJson)
-            return "using System.Text.Json.Serialization;";
+            return "using System.Text.Json.Serialization;\nusing Caffoa.JsonConverter;";
         return "using Newtonsoft.Json;\nusing Newtonsoft.Json.Converters;";
     }
 }

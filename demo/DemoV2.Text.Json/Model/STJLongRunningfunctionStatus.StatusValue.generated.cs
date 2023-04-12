@@ -1,6 +1,6 @@
 using System.Runtime.Serialization;
-using Caffoa.JsonConverter;
 using System.Text.Json.Serialization;
+using Caffoa.JsonConverter;
 
 namespace DemoV2.Text.Json.Model {
     public partial class STJLongRunningfunctionStatus {

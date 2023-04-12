@@ -1,4 +1,7 @@
 # caffoa changelog
+## 2.4.3
+* Remove reference to Caffoa.JsonConverter from enum classes
+
 ## 2.4.2
 * Bugfix resolving external properties that are not objects
 

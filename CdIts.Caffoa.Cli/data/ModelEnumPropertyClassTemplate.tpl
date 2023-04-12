@@ -1,5 +1,4 @@
 using System.Runtime.Serialization;
-using Caffoa.JsonConverter;
 {IMPORTS}
 
 namespace {NAMESPACE} {{
