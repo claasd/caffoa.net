@@ -1,9 +1,12 @@
 # caffoa changelog
-## 2.4.3
+## 2.4.4
 * Remove reference to Caffoa.JsonConverter from enum classes
 
-## 2.4.2
+## 2.4.3 / 2.4.2
 * Bugfix resolving external properties that are not objects
+
+## 2.4.1
+* Bugfix for properties that are defined in a different openapi file
 
 ## 2.4.0
 * Support for `type: number format: decimal`
