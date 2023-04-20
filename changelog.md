@@ -1,4 +1,7 @@
 # caffoa changelog
+## 2.4.5
+* allow for nullable enums that are declared as own schema
+
 ## 2.4.4
 * Remove reference to Caffoa.JsonConverter from enum classes
 

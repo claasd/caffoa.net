@@ -26,4 +26,5 @@ public class SchemaItem
     public List<string> SubItems { get; set; } = new();
     public List<string?> Enums { get; set; } = new();
     public string? Default { get; set; }
+    public bool NullableEnum { get; set; }
 }

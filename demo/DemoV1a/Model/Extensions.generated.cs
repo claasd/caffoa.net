@@ -165,6 +165,8 @@ namespace DemoV1a.Model {
             item.Single = other.Single;
             item.WithDefault = other.WithDefault;
             item.Array = deepClone ? other.Array.ToList() : other.Array;
+            item.Nullable = other.Nullable;
+            item.NullableReferenced = other.NullableReferenced;
             item.AdditionalProperties = deepClone ? (other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null) : other.AdditionalProperties;
         }
         
@@ -176,6 +178,8 @@ namespace DemoV1a.Model {
             Single = other.Single,
             WithDefault = other.WithDefault,
             Array = deepClone ? other.Array.ToList() : other.Array,
+            Nullable = other.Nullable,
+            NullableReferenced = other.NullableReferenced,
             AdditionalProperties = deepClone ? (other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null) : other.AdditionalProperties
         };
 

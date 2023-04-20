@@ -43,7 +43,11 @@ public abstract class ObjectParser
             else if (schema.IsPrimitiveType() && schema.CanBeEnum())
             {
                 if (schema.Type.StartsWith("string"))
+                {
                     Item.Type = SchemaItem.ObjectType.StringEnum;
+                    Item.NullableEnum = schema.Nullable;
+                }
+
                 Item.Enums = schema.EnumsAsStrings();
                 Item.Default = schema.DefaultAsString();
             }

@@ -22,6 +22,12 @@ namespace DemoV2.Model {
         [JsonProperty("array")]
         public virtual ICollection<MyEnumType> Array { get; set; } = new List<MyEnumType>();
 
+        [JsonProperty("nullable")]
+        public virtual MyNullableEnum? Nullable { get; set; }
+
+        [JsonProperty("nullableReferenced")]
+        public virtual NullableEnum? NullableReferenced { get; set; }
+
         [JsonExtensionData]
         public Dictionary<string, object> AdditionalProperties;
 
@@ -30,6 +36,8 @@ namespace DemoV2.Model {
             Single = other.Single;
             WithDefault = other.WithDefault;
             Array = other.Array.ToList();
+            Nullable = other.Nullable;
+            NullableReferenced = other.NullableReferenced;
             AdditionalProperties = other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null;
         }
         public EnumObject ToEnumObject() => new EnumObject(this);

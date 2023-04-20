@@ -15,7 +15,13 @@ components:
         desc: 
           type: string
       additionalProperties: false
-    
+    nullableEnum:
+      type: string
+      enum:
+        - first
+        - second
+      nullable: true
+      
     address:
       type: object
       properties:

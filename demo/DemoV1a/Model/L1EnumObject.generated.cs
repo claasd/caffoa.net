@@ -53,6 +53,42 @@ namespace DemoV1a.Model {
         [JsonProperty("array")]
         public virtual ICollection<string> Array { get; set; } = new List<string>();
 
+        [JsonIgnore]
+        private string _nullable;
+
+        [JsonProperty("nullable")]
+        public virtual string Nullable {
+            get => _nullable;
+            set {
+                var _value = NullableValues.AllowedValues.FirstOrDefault(v=>String.Compare(v, value, StringComparison.OrdinalIgnoreCase) == 0, value);
+                if (!NullableValues.AllowedValues.Contains(_value))
+                {
+                    var allowedValues = string.Join(", ", NullableValues.AllowedValues.Select(v => v == null ? "null" : v.ToString()));
+                    throw new ArgumentOutOfRangeException("nullable",
+                        $"{value} is not allowed. Allowed values: [{allowedValues}]");
+                }
+                _nullable = _value;
+            }
+        }
+
+        [JsonIgnore]
+        private string _nullableReferenced;
+
+        [JsonProperty("nullableReferenced")]
+        public virtual string NullableReferenced {
+            get => _nullableReferenced;
+            set {
+                var _value = NullableReferencedValues.AllowedValues.FirstOrDefault(v=>String.Compare(v, value, StringComparison.OrdinalIgnoreCase) == 0, value);
+                if (!NullableReferencedValues.AllowedValues.Contains(_value))
+                {
+                    var allowedValues = string.Join(", ", NullableReferencedValues.AllowedValues.Select(v => v == null ? "null" : v.ToString()));
+                    throw new ArgumentOutOfRangeException("nullableReferenced",
+                        $"{value} is not allowed. Allowed values: [{allowedValues}]");
+                }
+                _nullableReferenced = _value;
+            }
+        }
+
         [JsonExtensionData]
         public Dictionary<string, object> AdditionalProperties;
 
@@ -61,6 +97,8 @@ namespace DemoV1a.Model {
             Single = other.Single;
             WithDefault = other.WithDefault;
             Array = other.Array.ToList();
+            Nullable = other.Nullable;
+            NullableReferenced = other.NullableReferenced;
             AdditionalProperties = other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null;
         }
         public L1EnumObject ToL1EnumObject() => new L1EnumObject(this);

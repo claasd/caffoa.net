@@ -26,7 +26,7 @@ public class ModelGenerator
         var interfaces = objects.Where(o => o.Interface != null).ToList();
         var classes = objects.Where(o => o.Interface == null && o.Type == SchemaItem.ObjectType.Regular).ToList();
         var enumClasses = objects
-            .Where(o => o.Type == SchemaItem.ObjectType.StringEnum).ToList();
+            .Where(o => o.Type is SchemaItem.ObjectType.StringEnum).ToList();
         var enumProperties = objects.Where(o => o.Properties != null && o.Properties.Any(p => p.Enums.Any())).ToList();
         enumProperties.ForEach(WriteEnumClasses);
         enumClasses.ForEach(WriteEnumClass);
@@ -159,15 +159,16 @@ public class ModelGenerator
         {
             var formatter = new PropertyFormatter(property, _config);
             var format = new Dictionary<string, object>();
+            var type = formatter.Type();
             format["DESCRIPTION"] = formatter.Description();
             format["JSON_TAG_NAME"] = formatter.JsonTagName();
             format["JSON_EXTRA"] = formatter.JsonTags();
             format["JSON_PROPERTY_EXTRA"] = formatter.JsonProperty();
             format["JSON_EXTRA_PROPERTIES"] = formatter.JsonExtraProperties();
-            format["TYPE"] = formatter.Type();
+            format["TYPE"] = type;
             format["NAMEUPPER"] = property.Name.ToObjectName();
             format["NAMELOWER"] = property.Name;
-
+            
             if (_config.GetEnumCreationMode() == CaffoaConfig.EnumCreationMode.Default && property.CanBeEnum())
             {
                 properties.Add(FormatEnumProperty(property, format));
@@ -182,6 +183,8 @@ public class ModelGenerator
             else
             {
                 format["DEFAULT"] = formatter.Default(false, enumClasses);
+                if(enumClasses.FirstOrDefault(c=>c.ClassName == type)?.NullableEnum ?? false)
+                    format["TYPE"] = type + "?";
                 var file = Templates.GetTemplate("ModelPropertyTemplate.tpl");
                 var formatted = file.FormatDict(format);
                 properties.Add(formatted);

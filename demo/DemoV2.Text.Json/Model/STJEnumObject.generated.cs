@@ -22,6 +22,12 @@ namespace DemoV2.Text.Json.Model {
         [JsonPropertyName("array")]
         public virtual ICollection<STJMyEnumType> Array { get; set; } = new List<STJMyEnumType>();
 
+        [JsonPropertyName("nullable")]
+        public virtual STJMyNullableEnum? Nullable { get; set; }
+
+        [JsonPropertyName("nullableReferenced")]
+        public virtual STJNullableEnum? NullableReferenced { get; set; }
+
         [JsonExtensionData]
         public Dictionary<string, object> AdditionalProperties;
 
@@ -30,6 +36,8 @@ namespace DemoV2.Text.Json.Model {
             Single = other.Single;
             WithDefault = other.WithDefault;
             Array = other.Array.ToList();
+            Nullable = other.Nullable;
+            NullableReferenced = other.NullableReferenced;
             AdditionalProperties = other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null;
         }
         public STJEnumObject ToSTJEnumObject() => new STJEnumObject(this);

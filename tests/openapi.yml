@@ -195,7 +195,12 @@ components:
         - false
         - undefined
       default: undefined
-    
+    myNullableEnum:
+      type: string
+      enum:
+        - first
+        - second
+      nullable: true
     enumObject:
       type: object
       properties: 
@@ -207,6 +212,10 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/myEnumType"
+        nullable:
+          $ref: "#/components/schemas/myNullableEnum"
+        nullableReferenced:
+          $ref: "./base.openapi.yml#/components/schemas/nullableEnum"
             
     extendedAddress:
       allOf:
