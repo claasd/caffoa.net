@@ -101,7 +101,7 @@ public class DefaultCaffoaConverter : ICaffoaConverter
             throw _errorHandler.ParameterConvertError(parameterName, typeof(T).Name, e);
         }
     }
-
+    
     public ICollection<T> ParseEnumArray<T>(ICaffoaJsonParser parser, string parameter, string parameterName, bool ignoreCase = true) where T : Enum
     {
         try

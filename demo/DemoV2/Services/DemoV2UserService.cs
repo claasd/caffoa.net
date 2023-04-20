@@ -67,8 +67,8 @@ namespace DemoV2.Services
             return Tags.ToDictionary(i => i.Key, i => i.Value.Select(v => v));
         }
 
-        public Task<IEnumerable<MyEnumType>> ListEnumsAsync(MyEnumType? filter = null,
-            ICollection<MyEnumType> include = null, ICollection<MyEnumType> excludes = null, CancellationToken cancellationToken = default)
+        public Task<IEnumerable<MyEnumType>> ListEnumsAsync(MyEnumType? filter = null, ICollection<MyEnumType> include = null, ICollection<string> flags = null, ICollection<MyEnumType> exclude = null,
+            CancellationToken cancellationToken = default)
         {
             return Task.FromResult<IEnumerable<MyEnumType>>(new List<MyEnumType>() { MyEnumType.Enum1 });
         }

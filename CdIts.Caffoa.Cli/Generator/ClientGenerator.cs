@@ -80,7 +80,7 @@ public class ClientGenerator
         {
             if (param.IsEnum)
                 route = route.Replace($"{{{param.Name}}}", $"{{{param.Name}.Value()}}");
-            if(param.IsEnumArray)
+            if(param.ArrayType == ParameterArrayType.EnumArray)
                 route = route.Replace($"{{{param.Name}}}", $"{{{param.Name}.AsStringList()}}");
             if (param.GetTypeName(true, false) == "DateOnly")
                 route = route.Replace($"{{{param.Name}}}", $"{{{param.Name}:yyyy-MM-dd}}");
@@ -148,7 +148,7 @@ public class ClientGenerator
         string baseTypeName = arg.GetTypeName(true, false);
         if (arg.IsEnum)
             queryAdd = $"queryBuilder.Add(\"{arg.Name}\", {arg.Name}.Value());";
-        else if (arg.IsEnumArray)
+        else if (arg.ArrayType == ParameterArrayType.EnumArray)
             queryAdd = $"queryBuilder.Add(\"{arg.Name}\", {arg.Name}.AsStringList());";
         else if (baseTypeName == "string")
             queryAdd = $"queryBuilder.Add(\"{arg.Name}\", {arg.Name});";

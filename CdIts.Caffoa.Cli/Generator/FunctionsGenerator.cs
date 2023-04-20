@@ -155,7 +155,7 @@ public class FunctionsGenerator
             sb.Append("\n                    ");
             sb.Append($"{parameter.Name}Value = ");
             sb.Append(FormatConversion(parameter.GetTypeName(_config).Trim('?'), $"{parameter.Name}QueryValue",
-                parameter.Name, parameter.IsEnum, parameter.IsEnumArray, parameter.InnerType));
+                parameter.Name, parameter.IsEnum, parameter.ArrayType, parameter.InnerType));
             sb.Append(";\n                ");
             if (parameter.Required && parameter.DefaultValue is null)
             {
@@ -239,7 +239,7 @@ public class FunctionsGenerator
         var filtered = endpoint.Parameters.Where(p => !p.IsQueryParameter).ToList();
         List<string> result;
         if (_config.ParsePathParameters is not false)
-            result = filtered.Select(p => FormatConversion(p.GetTypeName(_config), p.Name, p.Name, p.IsEnum, p.IsEnumArray, p.InnerType)).ToList();
+            result = filtered.Select(p => FormatConversion(p.GetTypeName(_config), p.Name, p.Name, p.IsEnum, p.ArrayType, p.InnerType)).ToList();
         else
             result = filtered.Select(p => p.Name).ToList();
         if (endpoint.DurableClient)
@@ -248,7 +248,7 @@ public class FunctionsGenerator
     }
 
     private string FormatConversion(string typeName, string variableName, string objectName, bool isEnum,
-        bool isEnumArray, string? innerType)
+        ParameterArrayType arrayType, string? innerType)
     {
         if (typeName == "string")
             return $"{variableName}";
@@ -266,8 +266,10 @@ public class FunctionsGenerator
             return $"_converter.ParseGuid({variableName}, \"{objectName}\")";
         if (isEnum)
             return $"_converter.ParseEnum<{typeName}>({variableName}, \"{objectName}\")";
-        if (isEnumArray)
+        if (arrayType == ParameterArrayType.EnumArray)
             return $"_converter.ParseEnumArray<{innerType}>(_jsonParser, {variableName}, \"{objectName}\")";
+        if (arrayType == ParameterArrayType.StringArray)
+            return $"{variableName}.ToArray()";
         return $"_converter.Parse<{typeName}>({variableName}, \"{objectName}\")";
     }
 

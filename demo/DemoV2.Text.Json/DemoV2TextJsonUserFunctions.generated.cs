@@ -284,11 +284,14 @@ namespace DemoV2.Text.Json
                 ICollection<STJMyEnumType> includeValue = null;
                 if(request.Query.TryGetValue("include", out var includeQueryValue))
                     includeValue = _converter.ParseEnumArray<STJMyEnumType>(_jsonParser, includeQueryValue, "include");
+                ICollection<string> flagsValue = null;
+                if(request.Query.TryGetValue("flags", out var flagsQueryValue))
+                    flagsValue = flagsQueryValue.ToArray();
                 ICollection<STJMyEnumType> excludeValue = null;
                 if(request.Query.TryGetValue("exclude", out var excludeQueryValue))
                     excludeValue = _converter.ParseEnumArray<STJMyEnumType>(_jsonParser, excludeQueryValue, "exclude");
                 var instance = _factory.Instance(request);
-                var result = await instance.ListEnumsAsync(filterValue, includeValue, excludeValue, request.HttpContext.RequestAborted);
+                var result = await instance.ListEnumsAsync(filterValue, includeValue, flagsValue, excludeValue, request.HttpContext.RequestAborted);
                 return _resultHandler.Json(result, 200);
             } catch(CaffoaClientError err) {
                 return err.Result;

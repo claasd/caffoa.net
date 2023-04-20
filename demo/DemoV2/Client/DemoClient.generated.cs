@@ -317,13 +317,15 @@ namespace DemoV2.Client
         /// <summary>
         /// 200 -> a list of neum
         /// </summary>
-        public async Task<IReadOnlyList<MyEnumType>> ListEnumsAsync(MyEnumType? filter = null, ICollection<MyEnumType>? include = null, ICollection<MyEnumType>? exclude = null, CancellationToken cancellationToken = default) {
+        public async Task<IReadOnlyList<MyEnumType>> ListEnumsAsync(MyEnumType? filter = null, ICollection<MyEnumType>? include = null, ICollection<string>? flags = null, ICollection<MyEnumType>? exclude = null, CancellationToken cancellationToken = default) {
             var uriBuilder = new UriBuilder($"{BaseUri}enums/list");
             var queryBuilder = new QueryBuilder();
             if(filter != null)
                 queryBuilder.Add("filter", filter.Value());
             if(include != null)
                 queryBuilder.Add("include", include.AsStringList());
+            if(flags != null)
+                queryBuilder.Add("flags", $"{flags}");
             if(exclude != null)
                 queryBuilder.Add("exclude", exclude.AsStringList());
             uriBuilder.Query = queryBuilder.ToString() ?? string.Empty;

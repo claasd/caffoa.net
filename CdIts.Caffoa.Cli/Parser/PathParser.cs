@@ -201,7 +201,7 @@ public class PathParser
                 schema.Nullable = !p.Required && defaultValue == null;
                 var type = schema.TypeName();
                 var isEnum = false;
-                var isEnumArray = false;
+                var arrayType = ParameterArrayType.NoArray;
                 string? innerType = null;
                 if (schema.Reference != null && schema.CanBeEnum() && _config.GetEnumCreationMode() == CaffoaConfig.EnumCreationMode.Default)
                 {
@@ -219,7 +219,12 @@ public class PathParser
                     {
                         innerType = _classNameFunc(items.Reference.Name());
                         type = $"ICollection<{innerType}>";
-                        isEnumArray = true;
+                        arrayType = ParameterArrayType.EnumArray;
+                    } else if (items.Reference is null && items.Type == "string")
+                    {
+                        arrayType = ParameterArrayType.StringArray;
+                        innerType = "string";
+                        type = $"ICollection<{innerType}>";
                     }
                     else
                     {
@@ -232,7 +237,7 @@ public class PathParser
                     DefaultValue = defaultValue,
                     Required = p.Required,
                     IsEnum = isEnum,
-                    IsEnumArray = isEnumArray,
+                    ArrayType = arrayType,
                     InnerType = innerType
                 };
                 return result;

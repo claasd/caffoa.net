@@ -2,6 +2,13 @@ using CdIts.Caffoa.Cli.Config;
 
 namespace CdIts.Caffoa.Cli.Model;
 
+public enum ParameterArrayType
+{
+    NoArray,
+    StringArray,
+    EnumArray
+}
+
 public class ParameterObject
 {
     public string Name { get; }
@@ -12,7 +19,9 @@ public class ParameterObject
     public string? DefaultValue { get; set; }
     public bool Required { get; set; }
     public bool IsEnum { get; set; }
-    public bool IsEnumArray { get; set; }
+
+    public ParameterArrayType ArrayType { get; set; } = ParameterArrayType.NoArray;
+
     public string? InnerType { get; set; }
 
     public ParameterObject(string name, string typeName, string description, bool inQuery)
@@ -31,7 +40,7 @@ public class ParameterObject
 
     public string GetTypeName(bool useDateOnly, bool useDateTime)
     {
-        var name =  useDateOnly ? TypeName : TypeName.Replace("DateOnly", "DateTimeOffset");
+        var name = useDateOnly ? TypeName : TypeName.Replace("DateOnly", "DateTimeOffset");
         return useDateTime ? name.Replace("DateTimeOffset", "DateTime") : name;
     }
 }

@@ -510,6 +510,13 @@ paths:
           type: array
           items:
             $ref: "#/components/schemas/myEnumType"
+      - name: flags
+        in: query
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
       - name: exclude
         in: query
         required: false

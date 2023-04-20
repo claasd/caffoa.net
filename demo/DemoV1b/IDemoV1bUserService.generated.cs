@@ -94,7 +94,7 @@ namespace DemoV1b
         /// <summary>
         /// 200 -> a list of neum
         /// </summary>
-        Task<IEnumerable<string>> ListEnumsAsync(string filter = null, string include = null, string exclude = null, CancellationToken cancellationToken = default);
+        Task<IEnumerable<string>> ListEnumsAsync(string filter = null, ICollection<string> include = null, ICollection<string> flags = null, ICollection<string> exclude = null, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// 200 -> a list of neum

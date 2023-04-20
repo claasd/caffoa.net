@@ -1,4 +1,7 @@
 # caffoa changelog
+## 2.4.6
+* allow string lists as query parameters
+
 ## 2.4.5
 * allow for nullable enums that are declared as own schema
 

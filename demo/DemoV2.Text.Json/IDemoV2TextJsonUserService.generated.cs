@@ -94,7 +94,7 @@ namespace DemoV2.Text.Json
         /// <summary>
         /// 200 -> a list of neum
         /// </summary>
-        Task<IEnumerable<STJMyEnumType>> ListEnumsAsync(STJMyEnumType? filter = null, ICollection<STJMyEnumType> include = null, ICollection<STJMyEnumType> exclude = null, CancellationToken cancellationToken = default);
+        Task<IEnumerable<STJMyEnumType>> ListEnumsAsync(STJMyEnumType? filter = null, ICollection<STJMyEnumType> include = null, ICollection<string> flags = null, ICollection<STJMyEnumType> exclude = null, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// 200 -> a list of neum
