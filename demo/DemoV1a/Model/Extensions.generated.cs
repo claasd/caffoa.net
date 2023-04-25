@@ -35,8 +35,8 @@ namespace DemoV1a.Model {
             item.Name = other.Name;
             item.Address = deepClone ? other.Address?.ToL1Address() : other.Address;
             item.Birthdate = other.Birthdate;
-            item.Emails = deepClone ? other.Emails.ToList() : other.Emails;
-            item.Descriptions = deepClone ? other.Descriptions.ToDictionary(entry => entry.Key, entry => entry.Value) : other.Descriptions;
+            item.Emails = deepClone ? other.Emails?.ToList() : other.Emails;
+            item.Descriptions = deepClone ? other.Descriptions?.ToDictionary(entry => entry.Key, entry => entry.Value) : other.Descriptions;
             item.Type = other.Type;
             item.Role = other.Role;
             item.AgeGroup = other.AgeGroup;
@@ -53,8 +53,8 @@ namespace DemoV1a.Model {
             Name = other.Name,
             Address = deepClone ? other.Address?.ToL1Address() : other.Address,
             Birthdate = other.Birthdate,
-            Emails = deepClone ? other.Emails.ToList() : other.Emails,
-            Descriptions = deepClone ? other.Descriptions.ToDictionary(entry => entry.Key, entry => entry.Value) : other.Descriptions,
+            Emails = deepClone ? other.Emails?.ToList() : other.Emails,
+            Descriptions = deepClone ? other.Descriptions?.ToDictionary(entry => entry.Key, entry => entry.Value) : other.Descriptions,
             Type = other.Type,
             Role = other.Role,
             AgeGroup = other.AgeGroup,
@@ -108,7 +108,7 @@ namespace DemoV1a.Model {
         /// </summary>
         public static void UpdateWithL1Pricing(this L1Pricing item, L1Pricing other, bool deepClone = true) {
             item.Price = other.Price;
-            item.Taxes = deepClone ? other.Taxes.ToDictionary(entry => entry.Key, entry => entry.Value) : other.Taxes;
+            item.Taxes = deepClone ? other.Taxes?.ToDictionary(entry => entry.Key, entry => entry.Value) : other.Taxes;
             item.AdditionalProperties = deepClone ? (other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null) : other.AdditionalProperties;
         }
         
@@ -118,7 +118,7 @@ namespace DemoV1a.Model {
         /// </summary>
         public static L1Pricing ToL1Pricing(this L1Pricing other, bool deepClone = true) => new L1Pricing() { 
             Price = other.Price,
-            Taxes = deepClone ? other.Taxes.ToDictionary(entry => entry.Key, entry => entry.Value) : other.Taxes,
+            Taxes = deepClone ? other.Taxes?.ToDictionary(entry => entry.Key, entry => entry.Value) : other.Taxes,
             AdditionalProperties = deepClone ? (other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null) : other.AdditionalProperties
         };
 
@@ -145,7 +145,7 @@ namespace DemoV1a.Model {
         /// Replaces all fields with the data of the passed object
         /// </summary>
         public static void UpdateWithL1TagInfos(this L1TagInfos item, L1TagInfos other, bool deepClone = true) {
-            item.User = deepClone ? other.User.ToDictionary(entry => entry.Key, entry => entry.Value) : other.User;
+            item.User = deepClone ? other.User?.ToDictionary(entry => entry.Key, entry => entry.Value) : other.User;
             item.AdditionalProperties = deepClone ? (other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null) : other.AdditionalProperties;
         }
         
@@ -154,7 +154,7 @@ namespace DemoV1a.Model {
         /// if deepClone is set to false, a shallow copy will be created.
         /// </summary>
         public static L1TagInfos ToL1TagInfos(this L1TagInfos other, bool deepClone = true) => new L1TagInfos() { 
-            User = deepClone ? other.User.ToDictionary(entry => entry.Key, entry => entry.Value) : other.User,
+            User = deepClone ? other.User?.ToDictionary(entry => entry.Key, entry => entry.Value) : other.User,
             AdditionalProperties = deepClone ? (other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null) : other.AdditionalProperties
         };
 
@@ -164,7 +164,7 @@ namespace DemoV1a.Model {
         public static void UpdateWithL1EnumObject(this L1EnumObject item, L1EnumObject other, bool deepClone = true) {
             item.Single = other.Single;
             item.WithDefault = other.WithDefault;
-            item.Array = deepClone ? other.Array.ToList() : other.Array;
+            item.Array = deepClone ? other.Array?.ToList() : other.Array;
             item.Nullable = other.Nullable;
             item.NullableReferenced = other.NullableReferenced;
             item.AdditionalProperties = deepClone ? (other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null) : other.AdditionalProperties;
@@ -177,7 +177,7 @@ namespace DemoV1a.Model {
         public static L1EnumObject ToL1EnumObject(this L1EnumObject other, bool deepClone = true) => new L1EnumObject() { 
             Single = other.Single,
             WithDefault = other.WithDefault,
-            Array = deepClone ? other.Array.ToList() : other.Array,
+            Array = deepClone ? other.Array?.ToList() : other.Array,
             Nullable = other.Nullable,
             NullableReferenced = other.NullableReferenced,
             AdditionalProperties = deepClone ? (other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null) : other.AdditionalProperties

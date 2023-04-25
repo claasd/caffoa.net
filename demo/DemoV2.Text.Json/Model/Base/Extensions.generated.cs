@@ -35,7 +35,7 @@ namespace DemoV2.Text.Json.Model.Base {
             item.City = other.City;
             item.Country = other.Country;
             item.AddressType = (STJAddress.AddressTypeValue)other.AddressType;
-            item.Flags = deepClone ? other.Flags.ToDictionary(entry => entry.Key, entry => entry.Value.ToSTJFlags()) : other.Flags;
+            item.Flags = deepClone ? other.Flags?.ToDictionary(entry => entry.Key, entry => entry.Value?.ToSTJFlags()) : other.Flags;
             item.AdditionalProperties = deepClone ? (other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null) : other.AdditionalProperties;
         }
         
@@ -50,7 +50,7 @@ namespace DemoV2.Text.Json.Model.Base {
             City = other.City,
             Country = other.Country,
             AddressType = (STJAddress.AddressTypeValue)other.AddressType,
-            Flags = deepClone ? other.Flags.ToDictionary(entry => entry.Key, entry => entry.Value.ToSTJFlags()) : other.Flags,
+            Flags = deepClone ? other.Flags?.ToDictionary(entry => entry.Key, entry => entry.Value?.ToSTJFlags()) : other.Flags,
             AdditionalProperties = deepClone ? (other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null) : other.AdditionalProperties
         };
     }

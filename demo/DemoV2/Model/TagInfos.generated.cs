@@ -21,7 +21,7 @@ namespace DemoV2.Model {
 
         public TagInfos(){}
         public TagInfos(TagInfos other) {
-            User = other.User.ToDictionary(entry => entry.Key, entry => entry.Value);
+            User = other.User?.ToDictionary(entry => entry.Key, entry => entry.Value);
             AdditionalProperties = other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null;
         }
         public TagInfos ToTagInfos() => new TagInfos(this);

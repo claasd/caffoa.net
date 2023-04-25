@@ -45,7 +45,7 @@ namespace DemoV2.Text.Json.Model.Base {
             City = other.City;
             Country = other.Country;
             AddressType = (STJAddress.AddressTypeValue)other.AddressType;
-            Flags = other.Flags.ToDictionary(entry => entry.Key, entry => entry.Value.ToSTJFlags());
+            Flags = other.Flags?.ToDictionary(entry => entry.Key, entry => entry.Value?.ToSTJFlags());
             AdditionalProperties = other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null;
         }
         public STJAddress ToSTJAddress() => new STJAddress(this);

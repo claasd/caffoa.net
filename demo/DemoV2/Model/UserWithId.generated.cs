@@ -70,8 +70,8 @@ namespace DemoV2.Model {
             Name = other.Name;
             Address = other.Address?.ToAddress();
             Birthdate = other.Birthdate;
-            Emails = other.Emails.ToList();
-            Descriptions = other.Descriptions.ToDictionary(entry => entry.Key, entry => entry.Value);
+            Emails = other.Emails?.ToList();
+            Descriptions = other.Descriptions?.ToDictionary(entry => entry.Key, entry => entry.Value);
             Type = (UserWithId.TypeValue)other.Type;
             Role = (UserWithId.RoleValue)other.Role;
             AgeGroup = other.AgeGroup;
@@ -86,8 +86,8 @@ namespace DemoV2.Model {
             Name = other.Name;
             Address = deepClone ? other.Address?.ToAddress() : other.Address;
             Birthdate = other.Birthdate;
-            Emails = deepClone ? other.Emails.ToList() : other.Emails;
-            Descriptions = deepClone ? other.Descriptions.ToDictionary(entry => entry.Key, entry => entry.Value) : other.Descriptions;
+            Emails = deepClone ? other.Emails?.ToList() : other.Emails;
+            Descriptions = deepClone ? other.Descriptions?.ToDictionary(entry => entry.Key, entry => entry.Value) : other.Descriptions;
             Type = (UserWithId.TypeValue)other.Type;
             Role = (UserWithId.RoleValue)other.Role;
             AgeGroup = other.AgeGroup;

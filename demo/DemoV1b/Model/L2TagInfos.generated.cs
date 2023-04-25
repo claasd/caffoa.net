@@ -21,7 +21,7 @@ namespace DemoV1b.Model {
 
         public L2TagInfos(){}
         public L2TagInfos(L2TagInfos other) {
-            User = other.User.ToDictionary(entry => entry.Key, entry => entry.Value);
+            User = other.User?.ToDictionary(entry => entry.Key, entry => entry.Value);
             AdditionalProperties = other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null;
         }
         public L2TagInfos ToL2TagInfos() => new L2TagInfos(this);

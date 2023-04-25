@@ -26,7 +26,7 @@ namespace DemoV1a.Model {
         public L1Pricing(){}
         public L1Pricing(L1Pricing other) {
             Price = other.Price;
-            Taxes = other.Taxes.ToDictionary(entry => entry.Key, entry => entry.Value);
+            Taxes = other.Taxes?.ToDictionary(entry => entry.Key, entry => entry.Value);
             AdditionalProperties = other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null;
         }
         public L1Pricing ToL1Pricing() => new L1Pricing(this);

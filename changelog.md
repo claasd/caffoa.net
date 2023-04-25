@@ -1,4 +1,8 @@
 # caffoa changelog
+
+## 2.4.7
+* deep copy of lists and maps now use null checking 
+* 
 ## 2.4.6
 * allow string lists as query parameters
 

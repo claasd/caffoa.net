@@ -35,7 +35,7 @@ namespace DemoV1a.Model.Base {
             item.City = other.City;
             item.Country = other.Country;
             item.AddressType = other.AddressType;
-            item.Flags = deepClone ? other.Flags.ToDictionary(entry => entry.Key, entry => entry.Value.ToL1Flags()) : other.Flags;
+            item.Flags = deepClone ? other.Flags?.ToDictionary(entry => entry.Key, entry => entry.Value?.ToL1Flags()) : other.Flags;
             item.AdditionalProperties = deepClone ? (other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null) : other.AdditionalProperties;
         }
         
@@ -50,7 +50,7 @@ namespace DemoV1a.Model.Base {
             City = other.City,
             Country = other.Country,
             AddressType = other.AddressType,
-            Flags = deepClone ? other.Flags.ToDictionary(entry => entry.Key, entry => entry.Value.ToL1Flags()) : other.Flags,
+            Flags = deepClone ? other.Flags?.ToDictionary(entry => entry.Key, entry => entry.Value?.ToL1Flags()) : other.Flags,
             AdditionalProperties = deepClone ? (other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null) : other.AdditionalProperties
         };
     }

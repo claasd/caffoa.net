@@ -60,8 +60,8 @@ namespace DemoV2.Model {
             Name = other.Name;
             Address = other.Address?.ToAddress();
             Birthdate = other.Birthdate;
-            Emails = other.Emails.ToList();
-            Descriptions = other.Descriptions.ToDictionary(entry => entry.Key, entry => entry.Value);
+            Emails = other.Emails?.ToList();
+            Descriptions = other.Descriptions?.ToDictionary(entry => entry.Key, entry => entry.Value);
             Type = (User.TypeValue)other.Type;
             Role = (User.RoleValue)other.Role;
             AgeGroup = other.AgeGroup;

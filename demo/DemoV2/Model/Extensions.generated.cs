@@ -35,8 +35,8 @@ namespace DemoV2.Model {
             item.Name = other.Name;
             item.Address = deepClone ? other.Address?.ToAddress() : other.Address;
             item.Birthdate = other.Birthdate;
-            item.Emails = deepClone ? other.Emails.ToList() : other.Emails;
-            item.Descriptions = deepClone ? other.Descriptions.ToDictionary(entry => entry.Key, entry => entry.Value) : other.Descriptions;
+            item.Emails = deepClone ? other.Emails?.ToList() : other.Emails;
+            item.Descriptions = deepClone ? other.Descriptions?.ToDictionary(entry => entry.Key, entry => entry.Value) : other.Descriptions;
             item.Type = (User.TypeValue)other.Type;
             item.Role = (User.RoleValue)other.Role;
             item.AgeGroup = other.AgeGroup;
@@ -53,8 +53,8 @@ namespace DemoV2.Model {
             Name = other.Name,
             Address = deepClone ? other.Address?.ToAddress() : other.Address,
             Birthdate = other.Birthdate,
-            Emails = deepClone ? other.Emails.ToList() : other.Emails,
-            Descriptions = deepClone ? other.Descriptions.ToDictionary(entry => entry.Key, entry => entry.Value) : other.Descriptions,
+            Emails = deepClone ? other.Emails?.ToList() : other.Emails,
+            Descriptions = deepClone ? other.Descriptions?.ToDictionary(entry => entry.Key, entry => entry.Value) : other.Descriptions,
             Type = (User.TypeValue)other.Type,
             Role = (User.RoleValue)other.Role,
             AgeGroup = other.AgeGroup,
@@ -89,8 +89,8 @@ namespace DemoV2.Model {
             item.Name = other.Name;
             item.Address = deepClone ? other.Address?.ToAddress() : other.Address;
             item.Birthdate = other.Birthdate;
-            item.Emails = deepClone ? other.Emails.ToList() : other.Emails;
-            item.Descriptions = deepClone ? other.Descriptions.ToDictionary(entry => entry.Key, entry => entry.Value) : other.Descriptions;
+            item.Emails = deepClone ? other.Emails?.ToList() : other.Emails;
+            item.Descriptions = deepClone ? other.Descriptions?.ToDictionary(entry => entry.Key, entry => entry.Value) : other.Descriptions;
             item.Type = (UserWithId.TypeValue)other.Type;
             item.Role = (UserWithId.RoleValue)other.Role;
             item.AgeGroup = other.AgeGroup;
@@ -110,8 +110,8 @@ namespace DemoV2.Model {
             Name = other.Name,
             Address = deepClone ? other.Address?.ToAddress() : other.Address,
             Birthdate = other.Birthdate,
-            Emails = deepClone ? other.Emails.ToList() : other.Emails,
-            Descriptions = deepClone ? other.Descriptions.ToDictionary(entry => entry.Key, entry => entry.Value) : other.Descriptions,
+            Emails = deepClone ? other.Emails?.ToList() : other.Emails,
+            Descriptions = deepClone ? other.Descriptions?.ToDictionary(entry => entry.Key, entry => entry.Value) : other.Descriptions,
             Type = (UserWithId.TypeValue)other.Type,
             Role = (UserWithId.RoleValue)other.Role,
             AgeGroup = other.AgeGroup,
@@ -130,8 +130,8 @@ namespace DemoV2.Model {
             item.Name = other.Name;
             item.Address = deepClone ? other.Address?.ToAddress() : other.Address;
             item.Birthdate = other.Birthdate;
-            item.Emails = deepClone ? other.Emails.ToList() : other.Emails;
-            item.Descriptions = deepClone ? other.Descriptions.ToDictionary(entry => entry.Key, entry => entry.Value) : other.Descriptions;
+            item.Emails = deepClone ? other.Emails?.ToList() : other.Emails;
+            item.Descriptions = deepClone ? other.Descriptions?.ToDictionary(entry => entry.Key, entry => entry.Value) : other.Descriptions;
             item.Type = (User.TypeValue)other.Type;
             item.Role = (User.RoleValue)other.Role;
             item.AgeGroup = other.AgeGroup;
@@ -148,8 +148,8 @@ namespace DemoV2.Model {
             Name = other.Name,
             Address = deepClone ? other.Address?.ToAddress() : other.Address,
             Birthdate = other.Birthdate,
-            Emails = deepClone ? other.Emails.ToList() : other.Emails,
-            Descriptions = deepClone ? other.Descriptions.ToDictionary(entry => entry.Key, entry => entry.Value) : other.Descriptions,
+            Emails = deepClone ? other.Emails?.ToList() : other.Emails,
+            Descriptions = deepClone ? other.Descriptions?.ToDictionary(entry => entry.Key, entry => entry.Value) : other.Descriptions,
             Type = (UserWithId.TypeValue)other.Type,
             Role = (UserWithId.RoleValue)other.Role,
             AgeGroup = other.AgeGroup,
@@ -165,8 +165,8 @@ namespace DemoV2.Model {
             item.Name = other.Name;
             item.Address = deepClone ? other.Address?.ToAddress() : other.Address;
             item.Birthdate = other.Birthdate;
-            item.Emails = deepClone ? other.Emails.ToList() : other.Emails;
-            item.Descriptions = deepClone ? other.Descriptions.ToDictionary(entry => entry.Key, entry => entry.Value) : other.Descriptions;
+            item.Emails = deepClone ? other.Emails?.ToList() : other.Emails;
+            item.Descriptions = deepClone ? other.Descriptions?.ToDictionary(entry => entry.Key, entry => entry.Value) : other.Descriptions;
             item.Type = (UserWithId.TypeValue)other.Type;
             item.Role = (UserWithId.RoleValue)other.Role;
             item.AgeGroup = other.AgeGroup;
@@ -183,8 +183,8 @@ namespace DemoV2.Model {
             Name = other.Name,
             Address = deepClone ? other.Address?.ToAddress() : other.Address,
             Birthdate = other.Birthdate,
-            Emails = deepClone ? other.Emails.ToList() : other.Emails,
-            Descriptions = deepClone ? other.Descriptions.ToDictionary(entry => entry.Key, entry => entry.Value) : other.Descriptions,
+            Emails = deepClone ? other.Emails?.ToList() : other.Emails,
+            Descriptions = deepClone ? other.Descriptions?.ToDictionary(entry => entry.Key, entry => entry.Value) : other.Descriptions,
             Type = (User.TypeValue)other.Type,
             Role = (User.RoleValue)other.Role,
             AgeGroup = other.AgeGroup,
@@ -198,7 +198,7 @@ namespace DemoV2.Model {
         /// </summary>
         public static void UpdateWithPricing(this Pricing item, Pricing other, bool deepClone = true) {
             item.Price = other.Price;
-            item.Taxes = deepClone ? other.Taxes.ToDictionary(entry => entry.Key, entry => entry.Value) : other.Taxes;
+            item.Taxes = deepClone ? other.Taxes?.ToDictionary(entry => entry.Key, entry => entry.Value) : other.Taxes;
             item.AdditionalProperties = deepClone ? (other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null) : other.AdditionalProperties;
         }
         
@@ -208,7 +208,7 @@ namespace DemoV2.Model {
         /// </summary>
         public static Pricing ToPricing(this Pricing other, bool deepClone = true) => new Pricing() { 
             Price = other.Price,
-            Taxes = deepClone ? other.Taxes.ToDictionary(entry => entry.Key, entry => entry.Value) : other.Taxes,
+            Taxes = deepClone ? other.Taxes?.ToDictionary(entry => entry.Key, entry => entry.Value) : other.Taxes,
             AdditionalProperties = deepClone ? (other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null) : other.AdditionalProperties
         };
 
@@ -235,7 +235,7 @@ namespace DemoV2.Model {
         /// Replaces all fields with the data of the passed object
         /// </summary>
         public static void UpdateWithTagInfos(this TagInfos item, TagInfos other, bool deepClone = true) {
-            item.User = deepClone ? other.User.ToDictionary(entry => entry.Key, entry => entry.Value) : other.User;
+            item.User = deepClone ? other.User?.ToDictionary(entry => entry.Key, entry => entry.Value) : other.User;
             item.AdditionalProperties = deepClone ? (other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null) : other.AdditionalProperties;
         }
         
@@ -244,7 +244,7 @@ namespace DemoV2.Model {
         /// if deepClone is set to false, a shallow copy will be created.
         /// </summary>
         public static TagInfos ToTagInfos(this TagInfos other, bool deepClone = true) => new TagInfos() { 
-            User = deepClone ? other.User.ToDictionary(entry => entry.Key, entry => entry.Value) : other.User,
+            User = deepClone ? other.User?.ToDictionary(entry => entry.Key, entry => entry.Value) : other.User,
             AdditionalProperties = deepClone ? (other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null) : other.AdditionalProperties
         };
 
@@ -254,7 +254,7 @@ namespace DemoV2.Model {
         public static void UpdateWithEnumObject(this EnumObject item, EnumObject other, bool deepClone = true) {
             item.Single = other.Single;
             item.WithDefault = other.WithDefault;
-            item.Array = deepClone ? other.Array.ToList() : other.Array;
+            item.Array = deepClone ? other.Array?.ToList() : other.Array;
             item.Nullable = other.Nullable;
             item.NullableReferenced = other.NullableReferenced;
             item.AdditionalProperties = deepClone ? (other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null) : other.AdditionalProperties;
@@ -267,7 +267,7 @@ namespace DemoV2.Model {
         public static EnumObject ToEnumObject(this EnumObject other, bool deepClone = true) => new EnumObject() { 
             Single = other.Single,
             WithDefault = other.WithDefault,
-            Array = deepClone ? other.Array.ToList() : other.Array,
+            Array = deepClone ? other.Array?.ToList() : other.Array,
             Nullable = other.Nullable,
             NullableReferenced = other.NullableReferenced,
             AdditionalProperties = deepClone ? (other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null) : other.AdditionalProperties
@@ -283,7 +283,7 @@ namespace DemoV2.Model {
             item.City = other.City;
             item.Country = other.Country;
             item.AddressType = (ExtendedAddress.AddressTypeValue)other.AddressType;
-            item.Flags = deepClone ? other.Flags.ToDictionary(entry => entry.Key, entry => entry.Value.ToFlags()) : other.Flags;
+            item.Flags = deepClone ? other.Flags?.ToDictionary(entry => entry.Key, entry => entry.Value?.ToFlags()) : other.Flags;
             item.AddressType2 = other.AddressType2;
         }
         
@@ -298,7 +298,7 @@ namespace DemoV2.Model {
             City = other.City,
             Country = other.Country,
             AddressType = (ExtendedAddress.AddressTypeValue)other.AddressType,
-            Flags = deepClone ? other.Flags.ToDictionary(entry => entry.Key, entry => entry.Value.ToFlags()) : other.Flags,
+            Flags = deepClone ? other.Flags?.ToDictionary(entry => entry.Key, entry => entry.Value?.ToFlags()) : other.Flags,
             AddressType2 = other.AddressType2
         };
 
@@ -312,7 +312,7 @@ namespace DemoV2.Model {
             item.City = other.City;
             item.Country = other.Country;
             item.AddressType = (Address.AddressTypeValue)other.AddressType;
-            item.Flags = deepClone ? other.Flags.ToDictionary(entry => entry.Key, entry => entry.Value.ToFlags()) : other.Flags;
+            item.Flags = deepClone ? other.Flags?.ToDictionary(entry => entry.Key, entry => entry.Value?.ToFlags()) : other.Flags;
         }
         
         /// <summary>
@@ -326,7 +326,7 @@ namespace DemoV2.Model {
             City = other.City,
             Country = other.Country,
             AddressType = (ExtendedAddress.AddressTypeValue)other.AddressType,
-            Flags = deepClone ? other.Flags.ToDictionary(entry => entry.Key, entry => entry.Value.ToFlags()) : other.Flags
+            Flags = deepClone ? other.Flags?.ToDictionary(entry => entry.Key, entry => entry.Value?.ToFlags()) : other.Flags
         };
 
         /// <summary>
@@ -339,7 +339,7 @@ namespace DemoV2.Model {
             item.City = other.City;
             item.Country = other.Country;
             item.AddressType = (ExtendedAddress.AddressTypeValue)other.AddressType;
-            item.Flags = deepClone ? other.Flags.ToDictionary(entry => entry.Key, entry => entry.Value.ToFlags()) : other.Flags;
+            item.Flags = deepClone ? other.Flags?.ToDictionary(entry => entry.Key, entry => entry.Value?.ToFlags()) : other.Flags;
         }
         
         /// <summary>
@@ -353,7 +353,7 @@ namespace DemoV2.Model {
             City = other.City,
             Country = other.Country,
             AddressType = (Address.AddressTypeValue)other.AddressType,
-            Flags = deepClone ? other.Flags.ToDictionary(entry => entry.Key, entry => entry.Value.ToFlags()) : other.Flags
+            Flags = deepClone ? other.Flags?.ToDictionary(entry => entry.Key, entry => entry.Value?.ToFlags()) : other.Flags
         };
     }
 }

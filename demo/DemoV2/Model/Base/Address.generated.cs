@@ -45,7 +45,7 @@ namespace DemoV2.Model.Base {
             City = other.City;
             Country = other.Country;
             AddressType = (Address.AddressTypeValue)other.AddressType;
-            Flags = other.Flags.ToDictionary(entry => entry.Key, entry => entry.Value.ToFlags());
+            Flags = other.Flags?.ToDictionary(entry => entry.Key, entry => entry.Value?.ToFlags());
             AdditionalProperties = other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null;
         }
         public Address ToAddress() => new Address(this);

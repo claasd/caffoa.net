@@ -21,7 +21,7 @@ namespace DemoV2.Text.Json.Model {
 
         public STJTagInfos(){}
         public STJTagInfos(STJTagInfos other) {
-            User = other.User.ToDictionary(entry => entry.Key, entry => entry.Value);
+            User = other.User?.ToDictionary(entry => entry.Key, entry => entry.Value);
             AdditionalProperties = other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null;
         }
         public STJTagInfos ToSTJTagInfos() => new STJTagInfos(this);

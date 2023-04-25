@@ -65,8 +65,8 @@ public class SinglePropertyUpdateBuilder
     {
         if (!_property.IsArray) return this;
         if (_property.InnerTypeIsOtherSchema)
-            _sb.Append($".Select(value=>value.To{_property.TypeName.ToObjectName()}())");
-        _sb.Append(".ToList()");
+            _sb.Append($"?.Select(value=>value?.To{_property.TypeName.ToObjectName()}())");
+        _sb.Append("?.ToList()");
         _hasCloning = true;
         return this;
     }
@@ -75,9 +75,9 @@ public class SinglePropertyUpdateBuilder
     {
         if (!_property.IsMap) return this;
 
-        _sb.Append(".ToDictionary(entry => entry.Key, entry => entry.Value");
+        _sb.Append("?.ToDictionary(entry => entry.Key, entry => entry.Value");
         if (_property.InnerTypeIsOtherSchema)
-            _sb.Append($".To{_property.TypeName.ToObjectName()}()");
+            _sb.Append($"?.To{_property.TypeName.ToObjectName()}()");
         _sb.Append(')');
         _hasCloning = true;
         return this;

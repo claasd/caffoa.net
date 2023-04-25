@@ -60,8 +60,8 @@ namespace DemoV2.Text.Json.Model {
             Name = other.Name;
             Address = other.Address?.ToSTJAddress();
             Birthdate = other.Birthdate;
-            Emails = other.Emails.ToList();
-            Descriptions = other.Descriptions.ToDictionary(entry => entry.Key, entry => entry.Value);
+            Emails = other.Emails?.ToList();
+            Descriptions = other.Descriptions?.ToDictionary(entry => entry.Key, entry => entry.Value);
             Type = (STJUser.TypeValue)other.Type;
             Role = (STJUser.RoleValue)other.Role;
             AgeGroup = other.AgeGroup;

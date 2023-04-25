@@ -26,7 +26,7 @@ namespace DemoV2.Text.Json.Model {
         public STJPricing(){}
         public STJPricing(STJPricing other) {
             Price = other.Price;
-            Taxes = other.Taxes.ToDictionary(entry => entry.Key, entry => entry.Value);
+            Taxes = other.Taxes?.ToDictionary(entry => entry.Key, entry => entry.Value);
             AdditionalProperties = other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null;
         }
         public STJPricing ToSTJPricing() => new STJPricing(this);

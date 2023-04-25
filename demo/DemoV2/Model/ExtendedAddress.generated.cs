@@ -46,7 +46,7 @@ namespace DemoV2.Model {
             City = other.City;
             Country = other.Country;
             AddressType = (ExtendedAddress.AddressTypeValue)other.AddressType;
-            Flags = other.Flags.ToDictionary(entry => entry.Key, entry => entry.Value.ToFlags());
+            Flags = other.Flags?.ToDictionary(entry => entry.Key, entry => entry.Value?.ToFlags());
             AddressType2 = other.AddressType2;
         }
         public ExtendedAddress(Address other, bool deepClone = true) {
@@ -56,7 +56,7 @@ namespace DemoV2.Model {
             City = other.City;
             Country = other.Country;
             AddressType = (ExtendedAddress.AddressTypeValue)other.AddressType;
-            Flags = deepClone ? other.Flags.ToDictionary(entry => entry.Key, entry => entry.Value.ToFlags()) : other.Flags;
+            Flags = deepClone ? other.Flags?.ToDictionary(entry => entry.Key, entry => entry.Value?.ToFlags()) : other.Flags;
         }
         public ExtendedAddress ToExtendedAddress() => new ExtendedAddress(this);
     }

@@ -70,8 +70,8 @@ namespace DemoV2.Text.Json.Model {
             Name = other.Name;
             Address = other.Address?.ToSTJAddress();
             Birthdate = other.Birthdate;
-            Emails = other.Emails.ToList();
-            Descriptions = other.Descriptions.ToDictionary(entry => entry.Key, entry => entry.Value);
+            Emails = other.Emails?.ToList();
+            Descriptions = other.Descriptions?.ToDictionary(entry => entry.Key, entry => entry.Value);
             Type = (STJUserWithId.TypeValue)other.Type;
             Role = (STJUserWithId.RoleValue)other.Role;
             AgeGroup = other.AgeGroup;
@@ -86,8 +86,8 @@ namespace DemoV2.Text.Json.Model {
             Name = other.Name;
             Address = deepClone ? other.Address?.ToSTJAddress() : other.Address;
             Birthdate = other.Birthdate;
-            Emails = deepClone ? other.Emails.ToList() : other.Emails;
-            Descriptions = deepClone ? other.Descriptions.ToDictionary(entry => entry.Key, entry => entry.Value) : other.Descriptions;
+            Emails = deepClone ? other.Emails?.ToList() : other.Emails;
+            Descriptions = deepClone ? other.Descriptions?.ToDictionary(entry => entry.Key, entry => entry.Value) : other.Descriptions;
             Type = (STJUserWithId.TypeValue)other.Type;
             Role = (STJUserWithId.RoleValue)other.Role;
             AgeGroup = other.AgeGroup;

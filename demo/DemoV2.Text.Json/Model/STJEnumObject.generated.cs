@@ -35,7 +35,7 @@ namespace DemoV2.Text.Json.Model {
         public STJEnumObject(STJEnumObject other) {
             Single = other.Single;
             WithDefault = other.WithDefault;
-            Array = other.Array.ToList();
+            Array = other.Array?.ToList();
             Nullable = other.Nullable;
             NullableReferenced = other.NullableReferenced;
             AdditionalProperties = other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null;

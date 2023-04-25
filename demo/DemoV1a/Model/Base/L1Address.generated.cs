@@ -60,7 +60,7 @@ namespace DemoV1a.Model.Base {
             City = other.City;
             Country = other.Country;
             AddressType = other.AddressType;
-            Flags = other.Flags.ToDictionary(entry => entry.Key, entry => entry.Value.ToL1Flags());
+            Flags = other.Flags?.ToDictionary(entry => entry.Key, entry => entry.Value?.ToL1Flags());
             AdditionalProperties = other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null;
         }
         public L1Address ToL1Address() => new L1Address(this);

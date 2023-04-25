@@ -26,7 +26,7 @@ namespace DemoV2.Model {
         public Pricing(){}
         public Pricing(Pricing other) {
             Price = other.Price;
-            Taxes = other.Taxes.ToDictionary(entry => entry.Key, entry => entry.Value);
+            Taxes = other.Taxes?.ToDictionary(entry => entry.Key, entry => entry.Value);
             AdditionalProperties = other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null;
         }
         public Pricing ToPricing() => new Pricing(this);
