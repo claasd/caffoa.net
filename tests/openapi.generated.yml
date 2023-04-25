@@ -1842,7 +1842,7 @@ paths:
         schema:
           type: string
           format: date
-          default: '1950-01-01T00:00:00.0000000'
+          default: '1950-01-01'
       - name: maxResults
         in: query
         schema:
@@ -2118,6 +2118,7 @@ paths:
             - enum space
             - enum-sepcial_CHARS
           type: string
+components: { }g
 components: { }
         - user
       operationId: listEnums

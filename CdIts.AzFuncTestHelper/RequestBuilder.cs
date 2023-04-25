@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Globalization;
+using System.Text;
 using Microsoft.AspNetCore.Http;
 using Moq;
 using Newtonsoft.Json;
@@ -21,6 +22,20 @@ public class RequestBuilder
     }
 
     public RequestBuilder Query(string key, int? value) => Query(key, value?.ToString());
+    public RequestBuilder Query(string key, long? value) => Query(key, value?.ToString());
+    public RequestBuilder Query(string key, bool? value) => Query(key, value?.ToString());
+    public RequestBuilder Query(string key, float? value) => Query(key, value?.ToString(CultureInfo.InvariantCulture));
+    public RequestBuilder Query(string key, double? value) => Query(key, value?.ToString(CultureInfo.InvariantCulture));
+    public RequestBuilder Query(string key, Guid? value) => Query(key, value?.ToString());
+    public RequestBuilder Query(string key, DateTime? value) => Query(key, value?.ToString("O"));
+    public RequestBuilder Query(string key, DateTimeOffset? value) => Query(key, value?.ToString("O"));
+
+    public RequestBuilder Query(string key, IEnumerable<string>? values)
+    {
+        if (values != null)
+            _query.Values.Add(key, values.ToArray());
+        return this;
+    }
 
     public RequestBuilder Header(string name, string? value)
     {
