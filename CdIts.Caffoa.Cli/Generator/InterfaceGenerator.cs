@@ -144,7 +144,7 @@ public class InterfaceGenerator
 
     private static string FormatResponse(ICollection codes, string? typeName, bool asyncArrays)
     {
-        if (codes.Count == 0)
+        if (codes.Count == 0 || typeName == "IActionResult")
             return "Task<IActionResult>";
         if (codes.Count == 1 && typeName is null)
             return "Task";

@@ -1,5 +1,8 @@
 # caffoa changelog
 
+## 2.5.1
+* fix: Return IActionResult instead of (IActionResult,int) on multiple return codes with non-parsable content
+
 ## 2.5.0
 * dependency updates
 * deep copy of lists and maps now use null checking
