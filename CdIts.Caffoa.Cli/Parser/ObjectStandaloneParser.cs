@@ -42,10 +42,11 @@ public class ObjectStandaloneParser : ObjectParser
         var result = new List<string>();
         foreach (var schema in schemas)
         {
-            if (schema.Reference != null)
-                result.Add(ClassNameFunc(schema.Reference.Name()));
-            result.AddRange(SubItems(schema.AllOf));
-            result.AddRange(SubItems(schema.OneOf));
+            var resolved = ResolveExternal(schema);
+            if (resolved.Reference != null)
+                result.Add(ClassNameFunc(resolved.Reference.Name()));
+            result.AddRange(SubItems(resolved.AllOf));
+            result.AddRange(SubItems(resolved.OneOf));
         }
 
         return result;

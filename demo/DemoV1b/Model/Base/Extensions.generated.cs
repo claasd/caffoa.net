@@ -24,6 +24,14 @@ namespace DemoV1b.Model.Base {
             Id = other.Id,
             Desc = other.Desc
         };
+        
+        /// <summary>
+        /// Selects the type L2Flags from a IQueryable<L2Flags>
+        /// </summary>
+        public static IQueryable<L2Flags> SelectAsL2Flags(this IQueryable<L2Flags> query) => query.Select(other => new L2Flags() { 
+            Id = other.Id,
+            Desc = other.Desc
+        });
 
         /// <summary>
         /// Replaces all fields with the data of the passed object
@@ -53,5 +61,19 @@ namespace DemoV1b.Model.Base {
             Flags = deepClone ? other.Flags?.ToDictionary(entry => entry.Key, entry => entry.Value?.ToL2Flags()) : other.Flags,
             AdditionalProperties = deepClone ? (other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null) : other.AdditionalProperties
         };
+        
+        /// <summary>
+        /// Selects the type L2Address from a IQueryable<L2Address>
+        /// </summary>
+        public static IQueryable<L2Address> SelectAsL2Address(this IQueryable<L2Address> query) => query.Select(other => new L2Address() { 
+            Street = other.Street,
+            StreetExtra = other.StreetExtra,
+            PostalCode = other.PostalCode,
+            City = other.City,
+            Country = other.Country,
+            AddressType = other.AddressType,
+            Flags = other.Flags,
+            AdditionalProperties = other.AdditionalProperties
+        });
     }
 }

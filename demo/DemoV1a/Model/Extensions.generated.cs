@@ -27,6 +27,15 @@ namespace DemoV1a.Model {
             Message = other.Message,
             AdditionalProperties = deepClone ? (other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null) : other.AdditionalProperties
         };
+        
+        /// <summary>
+        /// Selects the type L1Error from a IQueryable<L1Error>
+        /// </summary>
+        public static IQueryable<L1Error> SelectAsL1Error(this IQueryable<L1Error> query) => query.Select(other => new L1Error() { 
+            Status = other.Status,
+            Message = other.Message,
+            AdditionalProperties = other.AdditionalProperties
+        });
 
         /// <summary>
         /// Replaces all fields with the data of the passed object
@@ -62,6 +71,23 @@ namespace DemoV1a.Model {
             LastSessionLength = other.LastSessionLength,
             AdditionalProperties = deepClone ? (other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null) : other.AdditionalProperties
         };
+        
+        /// <summary>
+        /// Selects the type L1User from a IQueryable<L1User>
+        /// </summary>
+        public static IQueryable<L1User> SelectAsL1User(this IQueryable<L1User> query) => query.Select(other => new L1User() { 
+            Name = other.Name,
+            Address = other.Address,
+            Birthdate = other.Birthdate,
+            Emails = other.Emails,
+            Descriptions = other.Descriptions,
+            Type = other.Type,
+            Role = other.Role,
+            AgeGroup = other.AgeGroup,
+            PreferredContactTime = other.PreferredContactTime,
+            LastSessionLength = other.LastSessionLength,
+            AdditionalProperties = other.AdditionalProperties
+        });
 
         /// <summary>
         /// Replaces all fields with the data of the passed object
@@ -81,6 +107,15 @@ namespace DemoV1a.Model {
             Type = other.Type,
             AdditionalProperties = deepClone ? (other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null) : other.AdditionalProperties
         };
+        
+        /// <summary>
+        /// Selects the type L1GuestUser from a IQueryable<L1GuestUser>
+        /// </summary>
+        public static IQueryable<L1GuestUser> SelectAsL1GuestUser(this IQueryable<L1GuestUser> query) => query.Select(other => new L1GuestUser() { 
+            Email = other.Email,
+            Type = other.Type,
+            AdditionalProperties = other.AdditionalProperties
+        });
 
         /// <summary>
         /// Replaces all fields with the data of the passed object
@@ -102,6 +137,16 @@ namespace DemoV1a.Model {
             Diffs = deepClone ? other.Diffs?.DeepClone() : other.Diffs,
             AdditionalProperties = deepClone ? (other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null) : other.AdditionalProperties
         };
+        
+        /// <summary>
+        /// Selects the type L1UserWithId from a IQueryable<L1UserWithId>
+        /// </summary>
+        public static IQueryable<L1UserWithId> SelectAsL1UserWithId(this IQueryable<L1UserWithId> query) => query.Select(other => new L1UserWithId() { 
+            Id = other.Id,
+            RegistrationDate = other.RegistrationDate,
+            Diffs = other.Diffs,
+            AdditionalProperties = other.AdditionalProperties
+        });
 
         /// <summary>
         /// Replaces all fields with the data of the passed object
@@ -121,6 +166,15 @@ namespace DemoV1a.Model {
             Taxes = deepClone ? other.Taxes?.ToDictionary(entry => entry.Key, entry => entry.Value) : other.Taxes,
             AdditionalProperties = deepClone ? (other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null) : other.AdditionalProperties
         };
+        
+        /// <summary>
+        /// Selects the type L1Pricing from a IQueryable<L1Pricing>
+        /// </summary>
+        public static IQueryable<L1Pricing> SelectAsL1Pricing(this IQueryable<L1Pricing> query) => query.Select(other => new L1Pricing() { 
+            Price = other.Price,
+            Taxes = other.Taxes,
+            AdditionalProperties = other.AdditionalProperties
+        });
 
         /// <summary>
         /// Replaces all fields with the data of the passed object
@@ -140,6 +194,15 @@ namespace DemoV1a.Model {
             Result = deepClone ? other.Result?.ToL1AnyUser() : other.Result,
             AdditionalProperties = deepClone ? (other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null) : other.AdditionalProperties
         };
+        
+        /// <summary>
+        /// Selects the type L1LongRunningfunctionStatus from a IQueryable<L1LongRunningfunctionStatus>
+        /// </summary>
+        public static IQueryable<L1LongRunningfunctionStatus> SelectAsL1LongRunningfunctionStatus(this IQueryable<L1LongRunningfunctionStatus> query) => query.Select(other => new L1LongRunningfunctionStatus() { 
+            Status = other.Status,
+            Result = other.Result,
+            AdditionalProperties = other.AdditionalProperties
+        });
 
         /// <summary>
         /// Replaces all fields with the data of the passed object
@@ -157,6 +220,14 @@ namespace DemoV1a.Model {
             User = deepClone ? other.User?.ToDictionary(entry => entry.Key, entry => entry.Value) : other.User,
             AdditionalProperties = deepClone ? (other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null) : other.AdditionalProperties
         };
+        
+        /// <summary>
+        /// Selects the type L1TagInfos from a IQueryable<L1TagInfos>
+        /// </summary>
+        public static IQueryable<L1TagInfos> SelectAsL1TagInfos(this IQueryable<L1TagInfos> query) => query.Select(other => new L1TagInfos() { 
+            User = other.User,
+            AdditionalProperties = other.AdditionalProperties
+        });
 
         /// <summary>
         /// Replaces all fields with the data of the passed object
@@ -182,6 +253,18 @@ namespace DemoV1a.Model {
             NullableReferenced = other.NullableReferenced,
             AdditionalProperties = deepClone ? (other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null) : other.AdditionalProperties
         };
+        
+        /// <summary>
+        /// Selects the type L1EnumObject from a IQueryable<L1EnumObject>
+        /// </summary>
+        public static IQueryable<L1EnumObject> SelectAsL1EnumObject(this IQueryable<L1EnumObject> query) => query.Select(other => new L1EnumObject() { 
+            Single = other.Single,
+            WithDefault = other.WithDefault,
+            Array = other.Array,
+            Nullable = other.Nullable,
+            NullableReferenced = other.NullableReferenced,
+            AdditionalProperties = other.AdditionalProperties
+        });
 
         /// <summary>
         /// Replaces all fields with the data of the passed object
@@ -199,5 +282,13 @@ namespace DemoV1a.Model {
             AddressType2 = other.AddressType2,
             AdditionalProperties = deepClone ? (other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null) : other.AdditionalProperties
         };
+        
+        /// <summary>
+        /// Selects the type L1ExtendedAddress from a IQueryable<L1ExtendedAddress>
+        /// </summary>
+        public static IQueryable<L1ExtendedAddress> SelectAsL1ExtendedAddress(this IQueryable<L1ExtendedAddress> query) => query.Select(other => new L1ExtendedAddress() { 
+            AddressType2 = other.AddressType2,
+            AdditionalProperties = other.AdditionalProperties
+        });
     }
 }

@@ -111,8 +111,8 @@ public class ModelGenerator
         parameters["OTHER"] = sourceClassName;
         parameters["UPDATEPROPS"] = PropertyUpdateBuilder.BuildExternalUpdates(subItem, _config, targetClassName,
             parentItem.AdditionalPropertiesAllowed);
-        parameters["INITPROPS"] = PropertyUpdateBuilder.BuildInitializer(subItem, _config, sourceClassName,
-            parentItem.AdditionalPropertiesAllowed);
+        parameters["INITPROPS"] = PropertyUpdateBuilder.BuildInitializer(subItem, _config, sourceClassName, parentItem.AdditionalPropertiesAllowed);
+        parameters["SELECTPROPS"] = PropertyUpdateBuilder.BuildSelectInitializer(subItem, _config, sourceClassName, parentItem.AdditionalPropertiesAllowed);
         var formatted = file.FormatDict(parameters);
         return formatted.ToSystemNewLine();
     }

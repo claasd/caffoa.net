@@ -1,5 +1,6 @@
 ﻿using System.CodeDom.Compiler;
 using System.Reflection;
+using System.Text;
 using CdIts.Caffoa.Cli.Config;
 using CdIts.Caffoa.Cli.Errors;
 using CdIts.Caffoa.Cli.Model;
@@ -40,6 +41,7 @@ public class PropertyUpdateBuilder
         {
             var builder = new SinglePropertyUpdateBuilder(Prefix, ClassName, property,
                 _config.GetEnumCreationMode() == CaffoaConfig.EnumCreationMode.Default, UseOther);
+            if(!ShallowCopy)
                 builder = builder.AppendOtherSchemaCopy()
                     .AppendJTokenDeepClone(_config.Flavor)
                     .AppendArrayCopy()
@@ -52,11 +54,17 @@ public class PropertyUpdateBuilder
         if (AllowAdditionalProperties && _schemaItem.AdditionalPropertiesAllowed &&
             _config.GenericAdditionalProperties is true)
         {
+            var builder = new StringBuilder($"{Prefix}AdditionalProperties = ");
+            
             var deepCopy =
                 $"{other}AdditionalProperties != null ? new Dictionary<string, {_config.GetGenericAdditionalPropertiesType()}>({other}AdditionalProperties) : null";
-            result.Add(AddDeepClone
-                ? $"{Prefix}AdditionalProperties = deepClone ? ({deepCopy}) : {other}AdditionalProperties"
-                : $"{Prefix}AdditionalProperties = {deepCopy}");
+            if(AddDeepClone)
+                builder.Append($"deepClone ? ({deepCopy}) : {other}AdditionalProperties");
+            else if (ShallowCopy)
+                builder.Append($"{other}AdditionalProperties");
+            else
+                builder.Append(deepCopy);
+            result.Add(builder.ToString());
         }
 
         return result;
@@ -90,6 +98,19 @@ public class PropertyUpdateBuilder
             UseOther = true,
             AllowAdditionalProperties = otherAllowAdditionalProps,
             AddDeepClone = true
+        };
+        return builder.Build(",\n            ");
+    }
+    
+    public static string BuildSelectInitializer(SchemaItem schemaItem, CaffoaConfig config, string className,
+        bool otherAllowAdditionalProps)
+    {
+        var builder = new PropertyUpdateBuilder(schemaItem, config, className)
+        {
+            UseOther = true,
+            AllowAdditionalProperties = otherAllowAdditionalProps,
+            AddDeepClone = false,
+            ShallowCopy = true
         };
         return builder.Build(",\n            ");
     }

@@ -1,5 +1,9 @@
 # caffoa changelog
 
+## 2.6.0
+* Copy/Clone Extensions are now also generated for chained dependencies over files
+* New Extension for each Type: SelectAs{TypeA}, to be used with IQueryable<{TypeB}>, for convenient use with IQueryable concatenations
+
 ## 2.5.1
 * fix: Return IActionResult instead of (IActionResult,int) on multiple return codes with non-parsable content
 

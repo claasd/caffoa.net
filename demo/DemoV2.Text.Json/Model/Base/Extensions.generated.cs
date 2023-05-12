@@ -24,6 +24,14 @@ namespace DemoV2.Text.Json.Model.Base {
             Id = other.Id,
             Desc = other.Desc
         };
+        
+        /// <summary>
+        /// Selects the type STJFlags from a IQueryable<STJFlags>
+        /// </summary>
+        public static IQueryable<STJFlags> SelectAsSTJFlags(this IQueryable<STJFlags> query) => query.Select(other => new STJFlags() { 
+            Id = other.Id,
+            Desc = other.Desc
+        });
 
         /// <summary>
         /// Replaces all fields with the data of the passed object
@@ -53,5 +61,19 @@ namespace DemoV2.Text.Json.Model.Base {
             Flags = deepClone ? other.Flags?.ToDictionary(entry => entry.Key, entry => entry.Value?.ToSTJFlags()) : other.Flags,
             AdditionalProperties = deepClone ? (other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null) : other.AdditionalProperties
         };
+        
+        /// <summary>
+        /// Selects the type STJAddress from a IQueryable<STJAddress>
+        /// </summary>
+        public static IQueryable<STJAddress> SelectAsSTJAddress(this IQueryable<STJAddress> query) => query.Select(other => new STJAddress() { 
+            Street = other.Street,
+            StreetExtra = other.StreetExtra,
+            PostalCode = other.PostalCode,
+            City = other.City,
+            Country = other.Country,
+            AddressType = (STJAddress.AddressTypeValue)other.AddressType,
+            Flags = other.Flags,
+            AdditionalProperties = other.AdditionalProperties
+        });
     }
 }

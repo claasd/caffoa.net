@@ -12,3 +12,10 @@
         public static {OTHER} To{OTHER}(this {NAME} other, bool deepClone = true) => new {OTHER}() {{ 
             {INITPROPS}
         }};
+        
+        /// <summary>
+        /// Selects the type {OTHER} from a IQueryable<{NAME}>
+        /// </summary>
+        public static IQueryable<{OTHER}> SelectAs{OTHER}(this IQueryable<{NAME}> query) => query.Select(other => new {OTHER}() {{ 
+            {SELECTPROPS}
+        }});

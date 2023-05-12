@@ -27,6 +27,15 @@ namespace DemoV2.Model {
             Message = other.Message,
             AdditionalProperties = deepClone ? (other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null) : other.AdditionalProperties
         };
+        
+        /// <summary>
+        /// Selects the type Error from a IQueryable<Error>
+        /// </summary>
+        public static IQueryable<Error> SelectAsError(this IQueryable<Error> query) => query.Select(other => new Error() { 
+            Status = other.Status,
+            Message = other.Message,
+            AdditionalProperties = other.AdditionalProperties
+        });
 
         /// <summary>
         /// Replaces all fields with the data of the passed object
@@ -62,6 +71,23 @@ namespace DemoV2.Model {
             LastSessionLength = other.LastSessionLength,
             AdditionalProperties = deepClone ? (other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null) : other.AdditionalProperties
         };
+        
+        /// <summary>
+        /// Selects the type User from a IQueryable<User>
+        /// </summary>
+        public static IQueryable<User> SelectAsUser(this IQueryable<User> query) => query.Select(other => new User() { 
+            Name = other.Name,
+            Address = other.Address,
+            Birthdate = other.Birthdate,
+            Emails = other.Emails,
+            Descriptions = other.Descriptions,
+            Type = (User.TypeValue)other.Type,
+            Role = (User.RoleValue)other.Role,
+            AgeGroup = other.AgeGroup,
+            PreferredContactTime = other.PreferredContactTime,
+            LastSessionLength = other.LastSessionLength,
+            AdditionalProperties = other.AdditionalProperties
+        });
 
         /// <summary>
         /// Replaces all fields with the data of the passed object
@@ -81,6 +107,15 @@ namespace DemoV2.Model {
             Type = (GuestUser.TypeValue)other.Type,
             AdditionalProperties = deepClone ? (other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null) : other.AdditionalProperties
         };
+        
+        /// <summary>
+        /// Selects the type GuestUser from a IQueryable<GuestUser>
+        /// </summary>
+        public static IQueryable<GuestUser> SelectAsGuestUser(this IQueryable<GuestUser> query) => query.Select(other => new GuestUser() { 
+            Email = other.Email,
+            Type = (GuestUser.TypeValue)other.Type,
+            AdditionalProperties = other.AdditionalProperties
+        });
 
         /// <summary>
         /// Replaces all fields with the data of the passed object
@@ -122,6 +157,26 @@ namespace DemoV2.Model {
             Diffs = deepClone ? other.Diffs?.DeepClone() : other.Diffs,
             AdditionalProperties = deepClone ? (other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null) : other.AdditionalProperties
         };
+        
+        /// <summary>
+        /// Selects the type UserWithId from a IQueryable<UserWithId>
+        /// </summary>
+        public static IQueryable<UserWithId> SelectAsUserWithId(this IQueryable<UserWithId> query) => query.Select(other => new UserWithId() { 
+            Name = other.Name,
+            Address = other.Address,
+            Birthdate = other.Birthdate,
+            Emails = other.Emails,
+            Descriptions = other.Descriptions,
+            Type = (UserWithId.TypeValue)other.Type,
+            Role = (UserWithId.RoleValue)other.Role,
+            AgeGroup = other.AgeGroup,
+            PreferredContactTime = other.PreferredContactTime,
+            LastSessionLength = other.LastSessionLength,
+            Id = other.Id,
+            RegistrationDate = other.RegistrationDate,
+            Diffs = other.Diffs,
+            AdditionalProperties = other.AdditionalProperties
+        });
 
         /// <summary>
         /// Replaces all fields with the data of the passed object
@@ -157,6 +212,23 @@ namespace DemoV2.Model {
             LastSessionLength = other.LastSessionLength,
             AdditionalProperties = deepClone ? (other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null) : other.AdditionalProperties
         };
+        
+        /// <summary>
+        /// Selects the type UserWithId from a IQueryable<User>
+        /// </summary>
+        public static IQueryable<UserWithId> SelectAsUserWithId(this IQueryable<User> query) => query.Select(other => new UserWithId() { 
+            Name = other.Name,
+            Address = other.Address,
+            Birthdate = other.Birthdate,
+            Emails = other.Emails,
+            Descriptions = other.Descriptions,
+            Type = (UserWithId.TypeValue)other.Type,
+            Role = (UserWithId.RoleValue)other.Role,
+            AgeGroup = other.AgeGroup,
+            PreferredContactTime = other.PreferredContactTime,
+            LastSessionLength = other.LastSessionLength,
+            AdditionalProperties = other.AdditionalProperties
+        });
 
         /// <summary>
         /// Replaces all fields with the data of the passed object
@@ -192,6 +264,23 @@ namespace DemoV2.Model {
             LastSessionLength = other.LastSessionLength,
             AdditionalProperties = deepClone ? (other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null) : other.AdditionalProperties
         };
+        
+        /// <summary>
+        /// Selects the type User from a IQueryable<UserWithId>
+        /// </summary>
+        public static IQueryable<User> SelectAsUser(this IQueryable<UserWithId> query) => query.Select(other => new User() { 
+            Name = other.Name,
+            Address = other.Address,
+            Birthdate = other.Birthdate,
+            Emails = other.Emails,
+            Descriptions = other.Descriptions,
+            Type = (User.TypeValue)other.Type,
+            Role = (User.RoleValue)other.Role,
+            AgeGroup = other.AgeGroup,
+            PreferredContactTime = other.PreferredContactTime,
+            LastSessionLength = other.LastSessionLength,
+            AdditionalProperties = other.AdditionalProperties
+        });
 
         /// <summary>
         /// Replaces all fields with the data of the passed object
@@ -211,6 +300,15 @@ namespace DemoV2.Model {
             Taxes = deepClone ? other.Taxes?.ToDictionary(entry => entry.Key, entry => entry.Value) : other.Taxes,
             AdditionalProperties = deepClone ? (other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null) : other.AdditionalProperties
         };
+        
+        /// <summary>
+        /// Selects the type Pricing from a IQueryable<Pricing>
+        /// </summary>
+        public static IQueryable<Pricing> SelectAsPricing(this IQueryable<Pricing> query) => query.Select(other => new Pricing() { 
+            Price = other.Price,
+            Taxes = other.Taxes,
+            AdditionalProperties = other.AdditionalProperties
+        });
 
         /// <summary>
         /// Replaces all fields with the data of the passed object
@@ -230,6 +328,15 @@ namespace DemoV2.Model {
             Result = deepClone ? other.Result?.ToAnyUser() : other.Result,
             AdditionalProperties = deepClone ? (other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null) : other.AdditionalProperties
         };
+        
+        /// <summary>
+        /// Selects the type LongRunningfunctionStatus from a IQueryable<LongRunningfunctionStatus>
+        /// </summary>
+        public static IQueryable<LongRunningfunctionStatus> SelectAsLongRunningfunctionStatus(this IQueryable<LongRunningfunctionStatus> query) => query.Select(other => new LongRunningfunctionStatus() { 
+            Status = (LongRunningfunctionStatus.StatusValue)other.Status,
+            Result = other.Result,
+            AdditionalProperties = other.AdditionalProperties
+        });
 
         /// <summary>
         /// Replaces all fields with the data of the passed object
@@ -247,6 +354,14 @@ namespace DemoV2.Model {
             User = deepClone ? other.User?.ToDictionary(entry => entry.Key, entry => entry.Value) : other.User,
             AdditionalProperties = deepClone ? (other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null) : other.AdditionalProperties
         };
+        
+        /// <summary>
+        /// Selects the type TagInfos from a IQueryable<TagInfos>
+        /// </summary>
+        public static IQueryable<TagInfos> SelectAsTagInfos(this IQueryable<TagInfos> query) => query.Select(other => new TagInfos() { 
+            User = other.User,
+            AdditionalProperties = other.AdditionalProperties
+        });
 
         /// <summary>
         /// Replaces all fields with the data of the passed object
@@ -272,6 +387,18 @@ namespace DemoV2.Model {
             NullableReferenced = other.NullableReferenced,
             AdditionalProperties = deepClone ? (other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null) : other.AdditionalProperties
         };
+        
+        /// <summary>
+        /// Selects the type EnumObject from a IQueryable<EnumObject>
+        /// </summary>
+        public static IQueryable<EnumObject> SelectAsEnumObject(this IQueryable<EnumObject> query) => query.Select(other => new EnumObject() { 
+            Single = other.Single,
+            WithDefault = other.WithDefault,
+            Array = other.Array,
+            Nullable = other.Nullable,
+            NullableReferenced = other.NullableReferenced,
+            AdditionalProperties = other.AdditionalProperties
+        });
 
         /// <summary>
         /// Replaces all fields with the data of the passed object
@@ -301,6 +428,20 @@ namespace DemoV2.Model {
             Flags = deepClone ? other.Flags?.ToDictionary(entry => entry.Key, entry => entry.Value?.ToFlags()) : other.Flags,
             AddressType2 = other.AddressType2
         };
+        
+        /// <summary>
+        /// Selects the type ExtendedAddress from a IQueryable<ExtendedAddress>
+        /// </summary>
+        public static IQueryable<ExtendedAddress> SelectAsExtendedAddress(this IQueryable<ExtendedAddress> query) => query.Select(other => new ExtendedAddress() { 
+            Street = other.Street,
+            StreetExtra = other.StreetExtra,
+            PostalCode = other.PostalCode,
+            City = other.City,
+            Country = other.Country,
+            AddressType = (ExtendedAddress.AddressTypeValue)other.AddressType,
+            Flags = other.Flags,
+            AddressType2 = other.AddressType2
+        });
 
         /// <summary>
         /// Replaces all fields with the data of the passed object
@@ -328,6 +469,19 @@ namespace DemoV2.Model {
             AddressType = (ExtendedAddress.AddressTypeValue)other.AddressType,
             Flags = deepClone ? other.Flags?.ToDictionary(entry => entry.Key, entry => entry.Value?.ToFlags()) : other.Flags
         };
+        
+        /// <summary>
+        /// Selects the type ExtendedAddress from a IQueryable<Address>
+        /// </summary>
+        public static IQueryable<ExtendedAddress> SelectAsExtendedAddress(this IQueryable<Address> query) => query.Select(other => new ExtendedAddress() { 
+            Street = other.Street,
+            StreetExtra = other.StreetExtra,
+            PostalCode = other.PostalCode,
+            City = other.City,
+            Country = other.Country,
+            AddressType = (ExtendedAddress.AddressTypeValue)other.AddressType,
+            Flags = other.Flags
+        });
 
         /// <summary>
         /// Replaces all fields with the data of the passed object
@@ -355,5 +509,18 @@ namespace DemoV2.Model {
             AddressType = (Address.AddressTypeValue)other.AddressType,
             Flags = deepClone ? other.Flags?.ToDictionary(entry => entry.Key, entry => entry.Value?.ToFlags()) : other.Flags
         };
+        
+        /// <summary>
+        /// Selects the type Address from a IQueryable<ExtendedAddress>
+        /// </summary>
+        public static IQueryable<Address> SelectAsAddress(this IQueryable<ExtendedAddress> query) => query.Select(other => new Address() { 
+            Street = other.Street,
+            StreetExtra = other.StreetExtra,
+            PostalCode = other.PostalCode,
+            City = other.City,
+            Country = other.Country,
+            AddressType = (Address.AddressTypeValue)other.AddressType,
+            Flags = other.Flags
+        });
     }
 }

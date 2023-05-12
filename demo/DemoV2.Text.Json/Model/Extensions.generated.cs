@@ -27,6 +27,15 @@ namespace DemoV2.Text.Json.Model {
             Message = other.Message,
             AdditionalProperties = deepClone ? (other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null) : other.AdditionalProperties
         };
+        
+        /// <summary>
+        /// Selects the type STJError from a IQueryable<STJError>
+        /// </summary>
+        public static IQueryable<STJError> SelectAsSTJError(this IQueryable<STJError> query) => query.Select(other => new STJError() { 
+            Status = other.Status,
+            Message = other.Message,
+            AdditionalProperties = other.AdditionalProperties
+        });
 
         /// <summary>
         /// Replaces all fields with the data of the passed object
@@ -62,6 +71,23 @@ namespace DemoV2.Text.Json.Model {
             LastSessionLength = other.LastSessionLength,
             AdditionalProperties = deepClone ? (other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null) : other.AdditionalProperties
         };
+        
+        /// <summary>
+        /// Selects the type STJUser from a IQueryable<STJUser>
+        /// </summary>
+        public static IQueryable<STJUser> SelectAsSTJUser(this IQueryable<STJUser> query) => query.Select(other => new STJUser() { 
+            Name = other.Name,
+            Address = other.Address,
+            Birthdate = other.Birthdate,
+            Emails = other.Emails,
+            Descriptions = other.Descriptions,
+            Type = (STJUser.TypeValue)other.Type,
+            Role = (STJUser.RoleValue)other.Role,
+            AgeGroup = other.AgeGroup,
+            PreferredContactTime = other.PreferredContactTime,
+            LastSessionLength = other.LastSessionLength,
+            AdditionalProperties = other.AdditionalProperties
+        });
 
         /// <summary>
         /// Replaces all fields with the data of the passed object
@@ -81,6 +107,15 @@ namespace DemoV2.Text.Json.Model {
             Type = (STJGuestUser.TypeValue)other.Type,
             AdditionalProperties = deepClone ? (other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null) : other.AdditionalProperties
         };
+        
+        /// <summary>
+        /// Selects the type STJGuestUser from a IQueryable<STJGuestUser>
+        /// </summary>
+        public static IQueryable<STJGuestUser> SelectAsSTJGuestUser(this IQueryable<STJGuestUser> query) => query.Select(other => new STJGuestUser() { 
+            Email = other.Email,
+            Type = (STJGuestUser.TypeValue)other.Type,
+            AdditionalProperties = other.AdditionalProperties
+        });
 
         /// <summary>
         /// Replaces all fields with the data of the passed object
@@ -122,6 +157,26 @@ namespace DemoV2.Text.Json.Model {
             Diffs = deepClone ? other.Diffs?.Clone() : other.Diffs,
             AdditionalProperties = deepClone ? (other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null) : other.AdditionalProperties
         };
+        
+        /// <summary>
+        /// Selects the type STJUserWithId from a IQueryable<STJUserWithId>
+        /// </summary>
+        public static IQueryable<STJUserWithId> SelectAsSTJUserWithId(this IQueryable<STJUserWithId> query) => query.Select(other => new STJUserWithId() { 
+            Name = other.Name,
+            Address = other.Address,
+            Birthdate = other.Birthdate,
+            Emails = other.Emails,
+            Descriptions = other.Descriptions,
+            Type = (STJUserWithId.TypeValue)other.Type,
+            Role = (STJUserWithId.RoleValue)other.Role,
+            AgeGroup = other.AgeGroup,
+            PreferredContactTime = other.PreferredContactTime,
+            LastSessionLength = other.LastSessionLength,
+            Id = other.Id,
+            RegistrationDate = other.RegistrationDate,
+            Diffs = other.Diffs,
+            AdditionalProperties = other.AdditionalProperties
+        });
 
         /// <summary>
         /// Replaces all fields with the data of the passed object
@@ -157,6 +212,23 @@ namespace DemoV2.Text.Json.Model {
             LastSessionLength = other.LastSessionLength,
             AdditionalProperties = deepClone ? (other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null) : other.AdditionalProperties
         };
+        
+        /// <summary>
+        /// Selects the type STJUserWithId from a IQueryable<STJUser>
+        /// </summary>
+        public static IQueryable<STJUserWithId> SelectAsSTJUserWithId(this IQueryable<STJUser> query) => query.Select(other => new STJUserWithId() { 
+            Name = other.Name,
+            Address = other.Address,
+            Birthdate = other.Birthdate,
+            Emails = other.Emails,
+            Descriptions = other.Descriptions,
+            Type = (STJUserWithId.TypeValue)other.Type,
+            Role = (STJUserWithId.RoleValue)other.Role,
+            AgeGroup = other.AgeGroup,
+            PreferredContactTime = other.PreferredContactTime,
+            LastSessionLength = other.LastSessionLength,
+            AdditionalProperties = other.AdditionalProperties
+        });
 
         /// <summary>
         /// Replaces all fields with the data of the passed object
@@ -192,6 +264,23 @@ namespace DemoV2.Text.Json.Model {
             LastSessionLength = other.LastSessionLength,
             AdditionalProperties = deepClone ? (other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null) : other.AdditionalProperties
         };
+        
+        /// <summary>
+        /// Selects the type STJUser from a IQueryable<STJUserWithId>
+        /// </summary>
+        public static IQueryable<STJUser> SelectAsSTJUser(this IQueryable<STJUserWithId> query) => query.Select(other => new STJUser() { 
+            Name = other.Name,
+            Address = other.Address,
+            Birthdate = other.Birthdate,
+            Emails = other.Emails,
+            Descriptions = other.Descriptions,
+            Type = (STJUser.TypeValue)other.Type,
+            Role = (STJUser.RoleValue)other.Role,
+            AgeGroup = other.AgeGroup,
+            PreferredContactTime = other.PreferredContactTime,
+            LastSessionLength = other.LastSessionLength,
+            AdditionalProperties = other.AdditionalProperties
+        });
 
         /// <summary>
         /// Replaces all fields with the data of the passed object
@@ -211,6 +300,15 @@ namespace DemoV2.Text.Json.Model {
             Taxes = deepClone ? other.Taxes?.ToDictionary(entry => entry.Key, entry => entry.Value) : other.Taxes,
             AdditionalProperties = deepClone ? (other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null) : other.AdditionalProperties
         };
+        
+        /// <summary>
+        /// Selects the type STJPricing from a IQueryable<STJPricing>
+        /// </summary>
+        public static IQueryable<STJPricing> SelectAsSTJPricing(this IQueryable<STJPricing> query) => query.Select(other => new STJPricing() { 
+            Price = other.Price,
+            Taxes = other.Taxes,
+            AdditionalProperties = other.AdditionalProperties
+        });
 
         /// <summary>
         /// Replaces all fields with the data of the passed object
@@ -230,6 +328,15 @@ namespace DemoV2.Text.Json.Model {
             Result = deepClone ? other.Result?.ToSTJAnyUser() : other.Result,
             AdditionalProperties = deepClone ? (other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null) : other.AdditionalProperties
         };
+        
+        /// <summary>
+        /// Selects the type STJLongRunningfunctionStatus from a IQueryable<STJLongRunningfunctionStatus>
+        /// </summary>
+        public static IQueryable<STJLongRunningfunctionStatus> SelectAsSTJLongRunningfunctionStatus(this IQueryable<STJLongRunningfunctionStatus> query) => query.Select(other => new STJLongRunningfunctionStatus() { 
+            Status = (STJLongRunningfunctionStatus.StatusValue)other.Status,
+            Result = other.Result,
+            AdditionalProperties = other.AdditionalProperties
+        });
 
         /// <summary>
         /// Replaces all fields with the data of the passed object
@@ -247,6 +354,14 @@ namespace DemoV2.Text.Json.Model {
             User = deepClone ? other.User?.ToDictionary(entry => entry.Key, entry => entry.Value) : other.User,
             AdditionalProperties = deepClone ? (other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null) : other.AdditionalProperties
         };
+        
+        /// <summary>
+        /// Selects the type STJTagInfos from a IQueryable<STJTagInfos>
+        /// </summary>
+        public static IQueryable<STJTagInfos> SelectAsSTJTagInfos(this IQueryable<STJTagInfos> query) => query.Select(other => new STJTagInfos() { 
+            User = other.User,
+            AdditionalProperties = other.AdditionalProperties
+        });
 
         /// <summary>
         /// Replaces all fields with the data of the passed object
@@ -272,6 +387,18 @@ namespace DemoV2.Text.Json.Model {
             NullableReferenced = other.NullableReferenced,
             AdditionalProperties = deepClone ? (other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null) : other.AdditionalProperties
         };
+        
+        /// <summary>
+        /// Selects the type STJEnumObject from a IQueryable<STJEnumObject>
+        /// </summary>
+        public static IQueryable<STJEnumObject> SelectAsSTJEnumObject(this IQueryable<STJEnumObject> query) => query.Select(other => new STJEnumObject() { 
+            Single = other.Single,
+            WithDefault = other.WithDefault,
+            Array = other.Array,
+            Nullable = other.Nullable,
+            NullableReferenced = other.NullableReferenced,
+            AdditionalProperties = other.AdditionalProperties
+        });
 
         /// <summary>
         /// Replaces all fields with the data of the passed object
@@ -301,6 +428,20 @@ namespace DemoV2.Text.Json.Model {
             Flags = deepClone ? other.Flags?.ToDictionary(entry => entry.Key, entry => entry.Value?.ToSTJFlags()) : other.Flags,
             AddressType2 = other.AddressType2
         };
+        
+        /// <summary>
+        /// Selects the type STJExtendedAddress from a IQueryable<STJExtendedAddress>
+        /// </summary>
+        public static IQueryable<STJExtendedAddress> SelectAsSTJExtendedAddress(this IQueryable<STJExtendedAddress> query) => query.Select(other => new STJExtendedAddress() { 
+            Street = other.Street,
+            StreetExtra = other.StreetExtra,
+            PostalCode = other.PostalCode,
+            City = other.City,
+            Country = other.Country,
+            AddressType = (STJExtendedAddress.AddressTypeValue)other.AddressType,
+            Flags = other.Flags,
+            AddressType2 = other.AddressType2
+        });
 
         /// <summary>
         /// Replaces all fields with the data of the passed object
@@ -328,6 +469,19 @@ namespace DemoV2.Text.Json.Model {
             AddressType = (STJExtendedAddress.AddressTypeValue)other.AddressType,
             Flags = deepClone ? other.Flags?.ToDictionary(entry => entry.Key, entry => entry.Value?.ToSTJFlags()) : other.Flags
         };
+        
+        /// <summary>
+        /// Selects the type STJExtendedAddress from a IQueryable<STJAddress>
+        /// </summary>
+        public static IQueryable<STJExtendedAddress> SelectAsSTJExtendedAddress(this IQueryable<STJAddress> query) => query.Select(other => new STJExtendedAddress() { 
+            Street = other.Street,
+            StreetExtra = other.StreetExtra,
+            PostalCode = other.PostalCode,
+            City = other.City,
+            Country = other.Country,
+            AddressType = (STJExtendedAddress.AddressTypeValue)other.AddressType,
+            Flags = other.Flags
+        });
 
         /// <summary>
         /// Replaces all fields with the data of the passed object
@@ -355,5 +509,18 @@ namespace DemoV2.Text.Json.Model {
             AddressType = (STJAddress.AddressTypeValue)other.AddressType,
             Flags = deepClone ? other.Flags?.ToDictionary(entry => entry.Key, entry => entry.Value?.ToSTJFlags()) : other.Flags
         };
+        
+        /// <summary>
+        /// Selects the type STJAddress from a IQueryable<STJExtendedAddress>
+        /// </summary>
+        public static IQueryable<STJAddress> SelectAsSTJAddress(this IQueryable<STJExtendedAddress> query) => query.Select(other => new STJAddress() { 
+            Street = other.Street,
+            StreetExtra = other.StreetExtra,
+            PostalCode = other.PostalCode,
+            City = other.City,
+            Country = other.Country,
+            AddressType = (STJAddress.AddressTypeValue)other.AddressType,
+            Flags = other.Flags
+        });
     }
 }
