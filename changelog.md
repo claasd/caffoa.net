@@ -1,5 +1,8 @@
 # caffoa changelog
 
+## 2.6.1
+* Return parsed timestamps already converted to UTC
+
 ## 2.6.0
 * Copy/Clone Extensions are now also generated for chained dependencies over files
 * New Extension for each Type: SelectAs{TypeA}, to be used with IQueryable<{TypeB}>, for convenient use with IQueryable concatenations

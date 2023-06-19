@@ -70,7 +70,7 @@ public class DefaultCaffoaConverter : ICaffoaConverter
     {
         try
         {
-            return DateTimeOffset.Parse(parameter);
+            return DateTimeOffset.Parse(parameter).ToUniversalTime();
         }
         catch (Exception e)
         {
