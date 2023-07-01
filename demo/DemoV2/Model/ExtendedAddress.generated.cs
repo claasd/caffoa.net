@@ -14,19 +14,19 @@ namespace DemoV2.Model {
 /// AUTOGENERED BY caffoa ///
     public partial class ExtendedAddress {
         public const string ExtendedAddressObjectName = "extendedAddress";
-        [JsonProperty("street")]
+        [JsonProperty("street", Required = Required.Always)]
         public virtual string Street { get; set; }
 
         [JsonProperty("street.extra")]
         public virtual string StreetExtra { get; set; }
 
-        [JsonProperty("postalCode")]
+        [JsonProperty("postalCode", Required = Required.Always)]
         public virtual string PostalCode { get; set; }
 
-        [JsonProperty("city")]
+        [JsonProperty("city", Required = Required.Always)]
         public virtual string City { get; set; }
 
-        [JsonProperty("country")]
+        [JsonProperty("country", Required = Required.Always)]
         public virtual string Country { get; set; }
 
         [JsonProperty("addressType")]

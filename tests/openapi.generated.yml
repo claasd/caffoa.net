@@ -31,7 +31,10 @@ paths:
                   required:
                     - type
                   oneOf:
-                    - allOf:
+                    - required:
+                        - type
+                        - name
+                      allOf:
                         - required:
                             - type
                             - name
@@ -368,7 +371,10 @@ paths:
                   required:
                     - type
                   oneOf:
-                    - allOf:
+                    - required:
+                        - type
+                        - name
+                      allOf:
                         - required:
                             - type
                             - name
@@ -690,7 +696,10 @@ paths:
                 required:
                   - type
                 oneOf:
-                  - allOf:
+                  - required:
+                      - type
+                      - name
+                    allOf:
                       - required:
                           - type
                           - name
@@ -895,7 +904,10 @@ paths:
                 required:
                   - type
                 oneOf:
-                  - allOf:
+                  - required:
+                      - type
+                      - name
+                    allOf:
                       - required:
                           - type
                           - name
@@ -1192,6 +1204,9 @@ paths:
           content:
             application/json:
               schema:
+                required:
+                  - type
+                  - name
                 allOf:
                   - required:
                       - type
@@ -1382,6 +1397,9 @@ paths:
           content:
             application/json:
               schema:
+                required:
+                  - type
+                  - name
                 allOf:
                   - required:
                       - type
@@ -2118,28 +2136,7 @@ paths:
             - enum space
             - enum-sepcial_CHARS
           type: string
-components: { }        - enum1
-                    - enum2
-                    - enum space
-                    - enum-sepcial_CHARS
-                  type: string
-    parameters:
-      - name: filter
-        in: path
-        required: true
-        schema:
-          enum:
-            - enum1
-            - enum2
-            - enum space
-            - enum-sepcial_CHARS
-          type: string
-components: { }        - enum-sepcial_CHARS
-                  type: string
-    parameters:
-      - name: filter
-        in: query
-        schema:
+components: { }      schema:
           enum:
             - enum1
             - enum2

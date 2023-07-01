@@ -19,7 +19,7 @@ namespace DemoV2.Model {
         /// <summary>
         /// A fancy string with description
         /// </summary>
-        [JsonProperty("name")]
+        [JsonProperty("name", Required = Required.Always)]
         public virtual string Name { get; set; }
 
         [JsonProperty("address")]
@@ -36,7 +36,7 @@ namespace DemoV2.Model {
         [JsonProperty("descriptions")]
         public virtual Dictionary<string, string> Descriptions { get; set; } = new Dictionary<string, string>();
 
-        [JsonProperty("type")]
+        [JsonProperty("type", Required = Required.Always)]
         public virtual TypeValue Type { get; set; } = TypeValue.Simple;
 
         [JsonProperty("role")]
