@@ -46,8 +46,7 @@ public class SinglePropertyUpdateBuilder
     public SinglePropertyUpdateBuilder AppendOtherSchemaCopy()
     {
         if (!_property.IsOtherSchema) return this;
-        if (_property.Nullable)
-            _sb.Append('?');
+        _sb.Append('?');
         _sb.Append($".To{_property.TypeName.ToObjectName()}()");
         _hasCloning = true;
         return this;

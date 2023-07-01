@@ -27,7 +27,7 @@ public class ModelGenerator
         var classes = objects.Where(o => o.Interface == null && o.Type == SchemaItem.ObjectType.Regular).ToList();
         var enumClasses = objects
             .Where(o => o.Type is SchemaItem.ObjectType.StringEnum).ToList();
-        var enumProperties = objects.Where(o => o.Properties != null && o.Properties.Any(p => p.Enums.Any())).ToList();
+        var enumProperties = objects.Where(o => o.Properties != null && o.Properties.Exists(p => p.Enums.Any())).ToList();
         enumProperties.ForEach(WriteEnumClasses);
         enumClasses.ForEach(WriteEnumClass);
         interfaces.ForEach(WriteModelInterface);
@@ -84,7 +84,7 @@ public class ModelGenerator
         {
             foreach (var subItem in item.SubItems)
             {
-                var otherItem = otherSchemas.FirstOrDefault(i => i.ClassName == subItem);
+                var otherItem = otherSchemas.Find(i => i.ClassName == subItem);
                 if (otherItem != null)
                 {
                     data.Add(CreateModelExtension(otherItem, otherItem.ClassName, item.ClassName, item));
@@ -133,7 +133,7 @@ public class ModelGenerator
         
         foreach (var subItem in item.SubItems)
         {
-            var otherItem = otherClasses.FirstOrDefault(c => c.ClassName == subItem);
+            var otherItem = otherClasses.Find(c => c.ClassName == subItem);
             if (otherItem != null)
             {
                 builder.Append($"\n        public {item.ClassName}({subItem} other, bool deepClone = true) {{\n            ");
@@ -182,8 +182,8 @@ public class ModelGenerator
 
             else
             {
-                format["DEFAULT"] = formatter.Default(false, enumClasses);
-                if(enumClasses.FirstOrDefault(c=>c.ClassName == type)?.NullableEnum ?? false)
+                format["DEFAULT"] = formatter.Default(false, enumClasses, _config.ConstructorOnRequiredObjects is not false);
+                if(enumClasses.Find(c=>c.ClassName == type)?.NullableEnum ?? false)
                     format["TYPE"] = type + "?";
                 var file = Templates.GetTemplate("ModelPropertyTemplate.tpl");
                 var formatted = file.FormatDict(format);

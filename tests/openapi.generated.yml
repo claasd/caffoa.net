@@ -35,6 +35,7 @@ paths:
                         - required:
                             - type
                             - name
+                            - address
                           type: object
                           properties:
                             name:
@@ -258,6 +259,7 @@ paths:
                 - required:
                     - type
                     - name
+                    - address
                   type: object
                   properties:
                     name:
@@ -372,6 +374,7 @@ paths:
                         - required:
                             - type
                             - name
+                            - address
                           type: object
                           properties:
                             name:
@@ -582,6 +585,7 @@ paths:
                 - required:
                     - type
                     - name
+                    - address
                   type: object
                   properties:
                     name:
@@ -694,6 +698,7 @@ paths:
                       - required:
                           - type
                           - name
+                          - address
                         type: object
                         properties:
                           name:
@@ -899,6 +904,7 @@ paths:
                       - required:
                           - type
                           - name
+                          - address
                         type: object
                         properties:
                           name:
@@ -1105,6 +1111,7 @@ paths:
               required:
                 - type
                 - name
+                - address
               type: object
               properties:
                 name:
@@ -1196,6 +1203,7 @@ paths:
                   - required:
                       - type
                       - name
+                      - address
                     type: object
                     properties:
                       name:
@@ -1386,6 +1394,7 @@ paths:
                   - required:
                       - type
                       - name
+                      - address
                     type: object
                     properties:
                       name:
@@ -1611,6 +1620,7 @@ paths:
                   required:
                     - type
                     - name
+                    - address
                   type: object
                   properties:
                     name:
@@ -1732,6 +1742,7 @@ paths:
                   required:
                     - type
                     - name
+                    - address
                   type: object
                   properties:
                     name:
@@ -1875,6 +1886,7 @@ paths:
                       - required:
                           - type
                           - name
+                          - address
                         type: object
                         properties:
                           name:
@@ -2118,23 +2130,7 @@ paths:
             - enum space
             - enum-sepcial_CHARS
           type: string
-components: { }g
-components: { }
-        - user
-      operationId: listEnums
-      responses:
-        '200':
-          description: a list of neum
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  enum:
-                    - enum1
-                    - enum2
-                    - enum space
-                    - enum-sepcial_CHARS
+components: { }        - enum-sepcial_CHARS
                   type: string
     parameters:
       - name: filter

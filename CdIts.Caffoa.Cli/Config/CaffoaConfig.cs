@@ -48,7 +48,7 @@ public class CaffoaConfig
         SystemTextJson,
         [EnumMember(Value = "Json.NET")] JsonNet,
     }
-
+    public bool? ConstructorOnRequiredObjects { get; set; }
     public GenerationFlavor? Flavor { get; set; }
 
     public CaffoaGlobalConfig MergedWith(CaffoaGlobalConfig general)
@@ -80,7 +80,8 @@ public class CaffoaConfig
             AuthorizationLevel = AuthorizationLevel ?? general.AuthorizationLevel,
             AsyncArrays = AsyncArrays ?? general.AsyncArrays,
             EnumMode = EnumMode ?? general.EnumMode,
-            Flavor = Flavor ?? general.Flavor
+            Flavor = Flavor ?? general.Flavor,
+            ConstructorOnRequiredObjects = ConstructorOnRequiredObjects ?? general.ConstructorOnRequiredObjects
         };
     }
 }

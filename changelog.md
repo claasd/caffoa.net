@@ -1,5 +1,9 @@
 # caffoa changelog
 
+## 2.7.0
+* Always use null conditional copy, even on required objects to avoid null pointer exceptions
+* Allow to not use default constructors on required objects, using new `constructorOnRequiredObjects` config option (default true, to contain backwards compatibility)
+
 ## 2.6.1
 * Return parsed timestamps already converted to UTC
 
