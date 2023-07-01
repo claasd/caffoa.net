@@ -21,7 +21,7 @@ namespace DemoV2.Model {
         [JsonProperty("name", Required = Required.Always)]
         public virtual string Name { get; set; }
 
-        [JsonProperty("address", Required = Required.Always)]
+        [JsonProperty("address")]
         public virtual Address Address { get; set; }
 
         [Obsolete]

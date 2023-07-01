@@ -68,7 +68,6 @@ components:
       required:
         - type
         - name
-        - address
 
     guestUser:
       type: object

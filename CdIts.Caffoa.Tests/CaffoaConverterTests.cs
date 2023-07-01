@@ -62,7 +62,7 @@ public class CaffoaConverterTests
     [Test]
     public void TestConvertDateTime()
     {
-        var input = "2022-02-12T12:30:11";
+        var input = "2022-02-12T12:30:11+00:00";
         var date = _converter.ParseDateTime(input, "name");
         date.ToString("s").Should().Be("2022-02-12T12:30:11");
     }
