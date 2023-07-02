@@ -1,6 +1,9 @@
 # caffoa changelog
 
-## 2.7.2
+## 2.8.1
+* Fix "An expression tree cannot contain pattern-matching 'is' expression"
+
+## 2.8.0
 * Json.NET: New CaffoaEarlySerializingResultHandler. The handler serializes the Json data into a string, and returns a ContentResult instead of a JSON result. A JsonResult will serialize the data very late, with no possibility to catch any serialization exceptions. This handler removes the problem with functions returning error 500, but reporting the function call as successful. It can be used by registering it in the startup function via `AddCaffoaResultHandler`
 
 ## 2.7.1

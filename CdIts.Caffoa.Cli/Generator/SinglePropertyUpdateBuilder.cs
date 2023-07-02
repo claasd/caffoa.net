@@ -31,7 +31,7 @@ public class SinglePropertyUpdateBuilder
         var name = _property.Name.ToObjectName();
         var other = useOther ? "other." : "";
         if (_property.Nullable)
-            _sb.Append($"{other}{name} is null ? null : ({_targetClassName}{name}Value){other}{name}");
+            _sb.Append($"{other}{name} == null ? null : ({_targetClassName}{name}Value){other}{name}");
         else
             _sb.Append($"({_targetClassName}{name}Value){other}{name}");
     }
