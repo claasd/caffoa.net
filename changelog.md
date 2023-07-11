@@ -1,5 +1,8 @@
 # caffoa changelog
 
+## 2.10.0
+* Client: CaffoaWebClientException<T> now inherits from CaffoaWebClientException instead of directly from Exception
+
 ## 2.9.0
 * Initialize array defaults for primitive types as value array
 * new parameter `useConstants: true`. When set to true, values with one single enum and a matching default value will be generated as constants instead of enums. The default is false, to keep backwards compatibility. 

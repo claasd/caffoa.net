@@ -20,12 +20,12 @@ public class CaffoaWebClientException : Exception
 }
 
 [Serializable]
-public class CaffoaWebClientException<T> : Exception where T: class
+public class CaffoaWebClientException<T> : CaffoaWebClientException where T: class
 {
     public int StatusCode { get; }
     public T Result { get; }
 
-    public CaffoaWebClientException(int statusCode, T result) : base($"ErrorCode {statusCode}, see Result for error.")
+    public CaffoaWebClientException(int statusCode, T result) : base(statusCode, $"ErrorCode {statusCode}, see Result for error.")
     {
         StatusCode = statusCode;
         Result = result;
