@@ -47,7 +47,6 @@ public abstract class ObjectParser
                     Item.Type = SchemaItem.ObjectType.StringEnum;
                     Item.NullableEnum = schema.Nullable;
                 }
-
                 Item.Enums = schema.EnumsAsStrings();
                 Item.Default = schema.DefaultAsString();
             }

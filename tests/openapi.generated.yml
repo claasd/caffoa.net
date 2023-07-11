@@ -226,6 +226,11 @@ paths:
                             - guest
                           type: string
                           default: guest
+                        constInt:
+                          enum:
+                            - 1
+                          type: integer
+                          default: 1
                   discriminator:
                     propertyName: type
                     mapping:
@@ -355,6 +360,11 @@ paths:
                         - guest
                       type: string
                       default: guest
+                    constInt:
+                      enum:
+                        - 1
+                      type: integer
+                      default: 1
               discriminator:
                 propertyName: type
                 mapping:
@@ -566,6 +576,11 @@ paths:
                             - guest
                           type: string
                           default: guest
+                        constInt:
+                          enum:
+                            - 1
+                          type: integer
+                          default: 1
                   discriminator:
                     propertyName: type
                     mapping:
@@ -682,6 +697,11 @@ paths:
                         - guest
                       type: string
                       default: guest
+                    constInt:
+                      enum:
+                        - 1
+                      type: integer
+                      default: 1
               discriminator:
                 propertyName: type
                 mapping:
@@ -891,6 +911,11 @@ paths:
                           - guest
                         type: string
                         default: guest
+                      constInt:
+                        enum:
+                          - 1
+                        type: integer
+                        default: 1
                 discriminator:
                   propertyName: type
                   mapping:
@@ -1099,6 +1124,11 @@ paths:
                           - guest
                         type: string
                         default: guest
+                      constInt:
+                        enum:
+                          - 1
+                        type: integer
+                        default: 1
                 discriminator:
                   propertyName: type
                   mapping:
@@ -1987,6 +2017,11 @@ paths:
                               - guest
                             type: string
                             default: guest
+                          constInt:
+                            enum:
+                              - 1
+                            type: integer
+                            default: 1
                     discriminator:
                       propertyName: type
                       mapping:
@@ -2136,31 +2171,7 @@ paths:
             - enum space
             - enum-sepcial_CHARS
           type: string
-components: { }      schema:
-          enum:
-            - enum1
-            - enum2
-            - enum space
-            - enum-sepcial_CHARS
-          type: string
-  '/enums/list/filter/{filter}':
-    get:
-      tags:
-        - user
-      operationId: listEnums2
-      responses:
-        '200':
-          description: a list of neum
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  enum:
-                    - enum1
-                    - enum2
-                    - enum space
-                    - enum-sepcial_CHARS
+components: { }
                   type: string
     parameters:
       - name: filter
@@ -2173,27 +2184,7 @@ components: { }      schema:
             - enum space
             - enum-sepcial_CHARS
           type: string
-components: { }                 - <tagId_1>
-                      - <tagId_2>
-                    <userId_2>:
-                      - <tagId_2>
-                      - <tagId_3>
-  /tags/users:
-    get:
-      tags:
-        - user
-      operationId: get-user-tags
-      responses:
-        '200':
-          description: tags for the user
-          content:
-            application/json:
-              schema:
-                type: object
-                additionalProperties:
-                  type: array
-                  items:
-                    type: string
+components: { }          type: string
                     description: a tag id
                     format: uuid
   /enums/list:

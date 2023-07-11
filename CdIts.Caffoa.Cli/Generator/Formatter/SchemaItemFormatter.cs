@@ -56,7 +56,7 @@ public class SchemaItemFormatter
             imports.Add("Newtonsoft.Json");
             imports.Add("Newtonsoft.Json.Linq");
         }
-        var hasArray = _item.Properties?.FirstOrDefault(p => p.IsArray || p.IsMap) != null;
+        var hasArray = _item.Properties?.Find(p => p.IsArray || p.IsMap) != null;
         var hasExtension = _item.AdditionalPropertiesAllowed && _config.GenericAdditionalProperties is true;
         if (hasArray || hasExtension)
         {
@@ -64,15 +64,15 @@ public class SchemaItemFormatter
             imports.Add("System.Linq");
         }
 
-        var hasEnums = _item.Properties?.FirstOrDefault(p => p.Enums.Count > 0) != null;
+        var hasEnums = _item.Properties?.Find(p => p.Enums.Count > 0) != null;
         if (hasEnums)
         {
             imports.Add("System.Collections.Immutable");
             imports.Add("System.Linq");
         }
 
-        var hasDates = _item.Properties?.Any(p => p.TypeName.StartsWith("DateOnly")) ?? false;
-        var hasTimes = _item.Properties?.Any(p => p.TypeName.StartsWith("TimeOnly")) ?? false;
+        var hasDates = _item.Properties?.Exists(p => p.TypeName.StartsWith("DateOnly")) ?? false;
+        var hasTimes = _item.Properties?.Exists(p => p.TypeName.StartsWith("TimeOnly")) ?? false;
         if (hasDates || hasTimes)
             imports.Add("Caffoa.JsonConverter");
         if (modelImports != null)
@@ -81,7 +81,7 @@ public class SchemaItemFormatter
             imports.AddRange(configImports);
         foreach (var subItem in _item.SubItems)
         {
-            var otherItem = _otherClasses.FirstOrDefault(c => c.ClassName == subItem);
+            var otherItem = _otherClasses.Find(c => c.ClassName == subItem);
             if (otherItem?.Namespace != null)
                 imports.Add(otherItem.Namespace);
         }
@@ -90,16 +90,16 @@ public class SchemaItemFormatter
 
     public List<string> MatchingInterfaces(List<SchemaItem> schemas)
     {
-        return schemas.Where(schema => schema.Interface != null && schema.Interface.Children.Any(
+        return schemas.Where(schema => schema.Interface != null && schema.Interface.Children.Exists(
             interfaceChild => interfaceChild == _item.ClassName ||
-                              _item.SubItems.Any(subItem => subItem == interfaceChild)
+                              _item.SubItems.Contains(interfaceChild)
         )).Select(item => item.ClassName).ToList();
     }
     public List<string> MatchingDiscriminators(List<SchemaItem> schemas)
     {
-        return schemas.Where(schema => schema.Interface?.Discriminator != null && schema.Interface.Children.Any(
+        return schemas.Where(schema => schema.Interface?.Discriminator != null && schema.Interface.Children.Exists(
             interfaceChild => interfaceChild == _item.ClassName ||
-                              _item.SubItems.Any(subItem => subItem == interfaceChild)
+                              _item.SubItems.Contains(interfaceChild)
         )).Select(item => item.Interface!.Discriminator!.ToObjectName()).Distinct().ToList();
     }
 
@@ -110,11 +110,11 @@ public class SchemaItemFormatter
         var discriminators = MatchingDiscriminators(interfaces)
             .Select(d=>
             {
-                var prop = _item.Properties?.FirstOrDefault(p => p.Name.ToObjectName() == d);
+                var prop = _item.Properties?.Find(p => p.Name.ToObjectName() == d);
                 if (prop is null)
                     return ""; // this is inheritance
                 var result = $"        public virtual string {d}Discriminator => {d}";
-                if (_config.GetEnumCreationMode() == CaffoaConfig.EnumCreationMode.Default && (prop!.CanBeEnum()))
+                if ((_config.UseConstants is not true || !prop.CanBeConstant()) && _config.GetEnumCreationMode() == CaffoaConfig.EnumCreationMode.Default && (prop.CanBeEnum()))
                     result += ".Value();\n";
                 else if(prop!.TypeName.StartsWith("string"))
                 {
@@ -133,7 +133,7 @@ public class SchemaItemFormatter
         var implementations = new List<string>();
         foreach (var subItem in _item.SubItems)
         {
-            var otherItem = _otherClasses.FirstOrDefault(c => c.ClassName == subItem);
+            var otherItem = _otherClasses.Find(c => c.ClassName == subItem);
             if (otherItem != null)
                 implementations.Add($"        public virtual {subItem} To{subItem}() => new {subItem}(this);\n");
         }

@@ -147,6 +147,11 @@ public static class Extensions
         return reference.Id.Split("/")[0];
     }
 
+    public static bool CanBeConstant(this PropertyData property)
+    {
+        return property.Enums.Count == 1 && property.TypeName is "string" or "int" or "long" or "ulong" or "uint" && property.Default != null;
+    }
+    
     public static bool CanBeEnum(this PropertyData property)
     {
         return property.Enums.Count > 0 && property.TypeName.StartsWith("string");

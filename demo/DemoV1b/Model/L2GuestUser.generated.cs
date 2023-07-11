@@ -36,6 +36,9 @@ namespace DemoV1b.Model {
             }
         }
 
+        [JsonProperty("constInt")]
+        public virtual int ConstInt { get; set; } = 1;
+
         [JsonExtensionData]
         public Dictionary<string, object> AdditionalProperties;
 
@@ -43,6 +46,7 @@ namespace DemoV1b.Model {
         public L2GuestUser(L2GuestUser other) {
             Email = other.Email;
             Type = other.Type;
+            ConstInt = other.ConstInt;
             AdditionalProperties = other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null;
         }
         public L2GuestUser ToL2GuestUser() => new L2GuestUser(this);

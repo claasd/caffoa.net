@@ -79,6 +79,10 @@ components:
           type: string
           enum: [ guest ]
           default: guest
+        constInt:
+          type: integer
+          enum: [ 1 ]
+          default: 1
       required:
         - type
         - email

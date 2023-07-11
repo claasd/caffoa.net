@@ -174,7 +174,8 @@ config:
   functionNamePrefix: "" # adds a prefix to all function names (Not interfaces). Useful if you have multiple APIs in one function that have identical operation IDs
   extensions: true # set to false to not generate extension methods for models (UpdateWith* methods).
   asyncArrays: false # if set to true, functions that return arrays will use IAsyncEnumerable instead if Task<IEnumerable>
-  constructorOnRequiredObjects: true# if set to false, no constructor will be generated for objects that have required properties, useful if oyu use external classes that do not have constructors without parameters
+  constructorOnRequiredObjects: true # if set to false, no constructor will be generated for objects that have required properties, useful if oyu use external classes that do not have constructors without parameters
+  useConstants: false # When set to true, values with one single enum and a matching default value will be generated as constants for strings and integer types.
 services:
   - apiPath: userservice.openapi.yml
     config: null # optional, can be an config option. That option is then overriden for this api only

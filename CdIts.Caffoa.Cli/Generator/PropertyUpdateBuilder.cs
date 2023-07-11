@@ -39,6 +39,8 @@ public class PropertyUpdateBuilder
         var result = new List<string>();
         foreach (var property in _schemaItem.Properties!)
         {
+            if(_config.UseConstants is true && property.CanBeConstant())
+                continue;
             var builder = new SinglePropertyUpdateBuilder(Prefix, ClassName, property,
                 _config.GetEnumCreationMode() == CaffoaConfig.EnumCreationMode.Default, UseOther);
             if(!ShallowCopy)

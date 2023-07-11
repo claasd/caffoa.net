@@ -20,6 +20,9 @@ namespace DemoV2.Model {
         [JsonProperty("type", Required = Required.Always)]
         public virtual TypeValue Type { get; set; } = TypeValue.Guest;
 
+        [JsonProperty("constInt")]
+        public virtual int ConstInt { get; set; } = 1;
+
         [JsonExtensionData]
         public Dictionary<string, object> AdditionalProperties;
 
@@ -27,6 +30,7 @@ namespace DemoV2.Model {
         public GuestUser(GuestUser other) {
             Email = other.Email;
             Type = (GuestUser.TypeValue)other.Type;
+            ConstInt = other.ConstInt;
             AdditionalProperties = other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null;
         }
         public GuestUser ToGuestUser() => new GuestUser(this);

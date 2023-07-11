@@ -168,8 +168,16 @@ public class ModelGenerator
             format["TYPE"] = type;
             format["NAMEUPPER"] = property.Name.ToObjectName();
             format["NAMELOWER"] = property.Name;
-            
-            if (_config.GetEnumCreationMode() == CaffoaConfig.EnumCreationMode.Default && property.CanBeEnum())
+
+            if (_config.UseConstants is true && property.CanBeConstant())
+            {
+                format["DEFAULT"] = formatter.Default(true);
+                var file = Templates.GetTemplate("ModelConstTemplate.tpl");
+                var formatted = file.FormatDict(format);
+                properties.Add(formatted);
+            }
+                
+            else if (_config.GetEnumCreationMode() == CaffoaConfig.EnumCreationMode.Default && property.CanBeEnum())
             {
                 properties.Add(FormatEnumProperty(property, format));
             }
@@ -198,6 +206,8 @@ public class ModelGenerator
     {
         foreach (var property in item.Properties!.Where(p => p.Enums.Any()))
         {
+            if(_config.UseConstants is true && property.CanBeConstant())
+                continue;
             if (_config.GetEnumCreationMode() == CaffoaConfig.EnumCreationMode.Default && property.CanBeEnum())
                 WriteEnumPropertyClass(property, item.ClassName);
             else if(property.CanBeEnum())

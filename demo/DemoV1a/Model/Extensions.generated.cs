@@ -95,6 +95,7 @@ namespace DemoV1a.Model {
         public static void UpdateWithL1GuestUser(this L1GuestUser item, L1GuestUser other, bool deepClone = true) {
             item.Email = other.Email;
             item.Type = other.Type;
+            item.ConstInt = other.ConstInt;
             item.AdditionalProperties = deepClone ? (other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null) : other.AdditionalProperties;
         }
         
@@ -105,6 +106,7 @@ namespace DemoV1a.Model {
         public static L1GuestUser ToL1GuestUser(this L1GuestUser other, bool deepClone = true) => new L1GuestUser() { 
             Email = other.Email,
             Type = other.Type,
+            ConstInt = other.ConstInt,
             AdditionalProperties = deepClone ? (other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null) : other.AdditionalProperties
         };
         
@@ -114,6 +116,7 @@ namespace DemoV1a.Model {
         public static IQueryable<L1GuestUser> SelectAsL1GuestUser(this IQueryable<L1GuestUser> query) => query.Select(other => new L1GuestUser() { 
             Email = other.Email,
             Type = other.Type,
+            ConstInt = other.ConstInt,
             AdditionalProperties = other.AdditionalProperties
         });
 

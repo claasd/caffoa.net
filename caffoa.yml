@@ -8,6 +8,7 @@ config:
   asyncArrays: false
   useInheritance: false
   constructorOnRequiredObjects: false
+  useConstants: false
   requestBodyType: # overwrite the JSON type that is passed to the method for some operations
     - type: JObject
       import: Newtonsoft.Json.Linq

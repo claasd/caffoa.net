@@ -95,6 +95,7 @@ namespace DemoV2.Text.Json.Model {
         public static void UpdateWithSTJGuestUser(this STJGuestUser item, STJGuestUser other, bool deepClone = true) {
             item.Email = other.Email;
             item.Type = (STJGuestUser.TypeValue)other.Type;
+            item.ConstInt = other.ConstInt;
             item.AdditionalProperties = deepClone ? (other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null) : other.AdditionalProperties;
         }
         
@@ -105,6 +106,7 @@ namespace DemoV2.Text.Json.Model {
         public static STJGuestUser ToSTJGuestUser(this STJGuestUser other, bool deepClone = true) => new STJGuestUser() { 
             Email = other.Email,
             Type = (STJGuestUser.TypeValue)other.Type,
+            ConstInt = other.ConstInt,
             AdditionalProperties = deepClone ? (other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null) : other.AdditionalProperties
         };
         
@@ -114,6 +116,7 @@ namespace DemoV2.Text.Json.Model {
         public static IQueryable<STJGuestUser> SelectAsSTJGuestUser(this IQueryable<STJGuestUser> query) => query.Select(other => new STJGuestUser() { 
             Email = other.Email,
             Type = (STJGuestUser.TypeValue)other.Type,
+            ConstInt = other.ConstInt,
             AdditionalProperties = other.AdditionalProperties
         });
 

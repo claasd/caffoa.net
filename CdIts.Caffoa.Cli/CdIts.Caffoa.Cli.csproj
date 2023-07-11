@@ -32,6 +32,7 @@
         <EmbeddedResource Include="data\FunctionsTemplate.tpl" />
         <EmbeddedResource Include="data\InterfaceMethod.tpl" />
         <EmbeddedResource Include="data\InterfaceTemplate.tpl" />
+        <EmbeddedResource Include="data\ModelConstTemplate.tpl" />
         <EmbeddedResource Include="data\ModelEnumPropertyClassTemplate.string.tpl" />
         <EmbeddedResource Include="data\ModelEnumPropertyClassTemplate.tpl" />
         <EmbeddedResource Include="data\ModelEnumClassTemplate.tpl" />

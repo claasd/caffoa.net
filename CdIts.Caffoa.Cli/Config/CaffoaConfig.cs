@@ -31,6 +31,8 @@ public class CaffoaConfig
     public bool? UseInheritance { get; set; }
     public string? AuthorizationLevel { get; set; }
     public bool? AsyncArrays { get; set; }
+    
+    public bool? UseConstants { get; set; }
 
     public enum EnumCreationMode
     {
@@ -81,7 +83,8 @@ public class CaffoaConfig
             AsyncArrays = AsyncArrays ?? general.AsyncArrays,
             EnumMode = EnumMode ?? general.EnumMode,
             Flavor = Flavor ?? general.Flavor,
-            ConstructorOnRequiredObjects = ConstructorOnRequiredObjects ?? general.ConstructorOnRequiredObjects
+            ConstructorOnRequiredObjects = ConstructorOnRequiredObjects ?? general.ConstructorOnRequiredObjects,
+            UseConstants = UseConstants ?? general.UseConstants
         };
     }
 }
