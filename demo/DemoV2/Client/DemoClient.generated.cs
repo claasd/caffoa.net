@@ -63,8 +63,16 @@ namespace DemoV2.Client
             ProcessResponse(httpResult);
             if(!httpResult.IsSuccessStatusCode) {
                 var errorData = await httpResult.Content.ReadAsStringAsync(cancellationToken);
-                if((int)httpResult.StatusCode == 400)
-                    throw new CaffoaWebClientException<Error>(400, JsonParser.Parse<Error>(errorData));
+                try
+                {
+                    if((int)httpResult.StatusCode == 400)
+                        throw new CaffoaWebClientException<Error>(400, JsonParser.Parse<Error>(errorData), errorData);
+                }
+                catch (Exception)
+                {
+                    throw new CaffoaWebClientException((int)httpResult.StatusCode, errorData);
+                }
+
                 throw new CaffoaWebClientException((int)httpResult.StatusCode, errorData);
             }
             await using var resultStream = await httpResult.Content.ReadAsStreamAsync(cancellationToken);
@@ -222,8 +230,16 @@ namespace DemoV2.Client
             ProcessResponse(httpResult);
             if(!httpResult.IsSuccessStatusCode) {
                 var errorData = await httpResult.Content.ReadAsStringAsync(cancellationToken);
-                if((int)httpResult.StatusCode == 400)
-                    throw new CaffoaWebClientException<Error>(400, JsonParser.Parse<Error>(errorData));
+                try
+                {
+                    if((int)httpResult.StatusCode == 400)
+                        throw new CaffoaWebClientException<Error>(400, JsonParser.Parse<Error>(errorData), errorData);
+                }
+                catch (Exception)
+                {
+                    throw new CaffoaWebClientException((int)httpResult.StatusCode, errorData);
+                }
+
                 throw new CaffoaWebClientException((int)httpResult.StatusCode, errorData);
             }
             await using var resultStream = await httpResult.Content.ReadAsStreamAsync(cancellationToken);
@@ -250,8 +266,16 @@ namespace DemoV2.Client
             ProcessResponse(httpResult);
             if(!httpResult.IsSuccessStatusCode) {
                 var errorData = await httpResult.Content.ReadAsStringAsync(cancellationToken);
-                if((int)httpResult.StatusCode == 400)
-                    throw new CaffoaWebClientException<Error>(400, JsonParser.Parse<Error>(errorData));
+                try
+                {
+                    if((int)httpResult.StatusCode == 400)
+                        throw new CaffoaWebClientException<Error>(400, JsonParser.Parse<Error>(errorData), errorData);
+                }
+                catch (Exception)
+                {
+                    throw new CaffoaWebClientException((int)httpResult.StatusCode, errorData);
+                }
+
                 throw new CaffoaWebClientException((int)httpResult.StatusCode, errorData);
             }
             await using var resultStream = await httpResult.Content.ReadAsStreamAsync(cancellationToken);

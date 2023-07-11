@@ -25,7 +25,12 @@ public class CaffoaWebClientException<T> : CaffoaWebClientException where T: cla
     public int StatusCode { get; }
     public T Result { get; }
 
-    public CaffoaWebClientException(int statusCode, T result) : base(statusCode, $"ErrorCode {statusCode}, see Result for error.")
+    public CaffoaWebClientException(int statusCode, T result) : base(statusCode, $"Error {statusCode}, see Result for error.")
+    {
+        StatusCode = statusCode;
+        Result = result;
+    }
+    public CaffoaWebClientException(int statusCode, T result, string raw) : base(statusCode, $"Error {statusCode}: {raw}")
     {
         StatusCode = statusCode;
         Result = result;

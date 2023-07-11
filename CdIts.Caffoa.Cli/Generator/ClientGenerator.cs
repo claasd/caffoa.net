@@ -29,7 +29,7 @@ public class ClientGenerator
             imports.AddRange(_config.Imports);
         if (_modelNamespace != null)
             imports.Add(_modelNamespace);
-        if (endpoints.FirstOrDefault(e => e.RequestBodyType is SelectionBodyModel) != null &&
+        if (endpoints.Find(e => e.RequestBodyType is SelectionBodyModel) != null &&
             _config.Flavor is not CaffoaConfig.GenerationFlavor.SystemTextJson)
             imports.Add("Newtonsoft.Json.Linq");
         Directory.CreateDirectory(_clientConfig.TargetFolder);
@@ -54,6 +54,14 @@ public class ClientGenerator
         {
             foreach (var parameter in InterfaceGenerator.GetMethodParams(endpoint, _config, false, true))
             {
+                var errorHandling = string.Join("",
+                    endpoint.Responses.Where(r => r.Code >= 400 && r.TypeName != null).Select(FormatErrorHandling));
+                if (!string.IsNullOrEmpty(errorHandling))
+                {
+                    errorHandling = "\n                try\n                {" + errorHandling +
+                                    "\n                }\n                catch (Exception)\n                {\n                    throw new CaffoaWebClientException((int)httpResult.StatusCode, errorData);\n                }\n";
+                }
+
                 var format = new Dictionary<string, object>();
                 format["RESULT"] = GetResponse(endpoint);
                 format["NAME"] = endpoint.Name;
@@ -64,8 +72,7 @@ public class ClientGenerator
                 format["PAYLOAD"] = RequestBody(endpoint);
                 format["RESULTCODE"] = Result(endpoint);
                 format["QUERYPARAMS"] = FormatQueryParams(endpoint.Parameters);
-                format["ERRORHANDLING"] = string.Join("",
-                    endpoint.Responses.Where(r => r.Code >= 400 && r.TypeName != null).Select(FormatErrorHandling));
+                format["ERRORHANDLING"] = errorHandling;
                 var formatted = file.FormatDict(format);
                 methods.Add(formatted);
             }
@@ -76,11 +83,11 @@ public class ClientGenerator
 
     private string FormatRoute(string route, List<ParameterObject> parameters)
     {
-        foreach (var param in parameters.Where(p=>!p.IsQueryParameter))
+        foreach (var param in parameters.Where(p => !p.IsQueryParameter))
         {
             if (param.IsEnum)
                 route = route.Replace($"{{{param.Name}}}", $"{{{param.Name}.Value()}}");
-            if(param.ArrayType == ParameterArrayType.EnumArray)
+            if (param.ArrayType == ParameterArrayType.EnumArray)
                 route = route.Replace($"{{{param.Name}}}", $"{{{param.Name}.AsStringList()}}");
             if (param.GetTypeName(true, false) == "DateOnly")
                 route = route.Replace($"{{{param.Name}}}", $"{{{param.Name}:yyyy-MM-dd}}");
@@ -112,6 +119,7 @@ public class ClientGenerator
             if (response.Unknown)
                 typeName = "Stream";
         }
+
         return FormatResponse(codes, typeName);
     }
 
@@ -139,7 +147,7 @@ public class ClientGenerator
     private string FormatErrorHandling(ResponseModel model)
     {
         return
-            $"\n                if((int)httpResult.StatusCode == {model.Code})\n                    throw new CaffoaWebClientException<{model.TypeName}>({model.Code}, JsonParser.Parse<{model.TypeName}>(errorData));";
+            $"\n                    if((int)httpResult.StatusCode == {model.Code})\n                        throw new CaffoaWebClientException<{model.TypeName}>({model.Code}, JsonParser.Parse<{model.TypeName}>(errorData), errorData);";
     }
 
     private string FormatQueryParam(ParameterObject arg)
@@ -152,9 +160,9 @@ public class ClientGenerator
             queryAdd = $"queryBuilder.Add(\"{arg.Name}\", {arg.Name}.AsStringList());";
         else if (baseTypeName == "string")
             queryAdd = $"queryBuilder.Add(\"{arg.Name}\", {arg.Name});";
-        else if(baseTypeName == "DateTimeOffset")
+        else if (baseTypeName == "DateTimeOffset")
             queryAdd = $"queryBuilder.Add(\"{arg.Name}\", {arg.Name}.ToString(\"O\"));";
-        else if(baseTypeName == "DateOnly")
+        else if (baseTypeName == "DateOnly")
             queryAdd = $"queryBuilder.Add(\"{arg.Name}\", {arg.Name}.ToString(\"yyyy-MM-dd\"));";
         else
             queryAdd = $"queryBuilder.Add(\"{arg.Name}\", $\"{{{arg.Name}}}\");";
@@ -178,11 +186,12 @@ public class ClientGenerator
         {
             return responses.Count > 1 ? "\n             return (int)httpResult.StatusCode;" : "";
         }
+
         if (type.StartsWith("IEnumerable<KeyValuePair<string,"))
             type = $"Dictionary<string, {type[45..^2]}";
         if (type.StartsWith("IEnumerable<"))
             type = $"List{type[11..]}";
-        
+
         var result = "\n            await using var resultStream = await httpResult.Content.ReadAsStreamAsync(cancellationToken);";
         result += $"\n            var resultObject = await JsonParser.Parse<{type}>(resultStream);";
         if (responses.Count > 1)
