@@ -65,6 +65,8 @@ public class PropertyFormatter
     public string Default(bool addSemicolonEnEmpty, List<SchemaItem>? enumClasses = null, bool constructorOnRequired = true)
     {
         var name = HandleDateTypes(_property.TypeName);
+        if (_property.IsArray && _property.ArrayDefaults.Any())
+            return $" = new {name}[] {{ {string.Join(", ", _property.ArrayDefaults)} }};";
         if (_property.IsArray)
             return $" = new List<{name}>();";
         if (_property.IsMap)

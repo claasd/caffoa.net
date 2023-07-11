@@ -89,30 +89,14 @@ public abstract class ObjectParser
             property.IsArray = true;
             property.TypeName = schema.GetArrayType(ClassNameFunc, _enumMode);
             property.InnerTypeIsOtherSchema = schema.Items.Reference != null && !schema.Items.IsPrimitiveType();
+            if (schema.Items.IsPrimitiveType() && schema.Default is OpenApiArray defaultArray)
+            {
+                property.ArrayDefaults = defaultArray.Select(item => item.AnyValue()).Where(v=>v != null).ToArray()!;
+            }
         }
         else if (schema.AdditionalProperties != null)
         {
-            if (schema.Properties.Count > 0)
-                throw new CaffoaParserException(
-                    "object with properties and additional properties are currently not supported.");
-            if (schema.AdditionalProperties.Reference != null)
-            {
-                property.TypeName = ClassNameFunc(schema.AdditionalProperties.Reference.Name());
-                property.InnerTypeIsOtherSchema = true;
-            }
-            else if (schema.AdditionalProperties.IsArray())
-            {
-                var arrayType = schema.AdditionalProperties.GetArrayType(ClassNameFunc, _enumMode);
-                property.TypeName = $"List<{arrayType}>";
-                property.InnerTypeIsOtherSchema = false;
-            }
-            else
-            {
-                property.TypeName = schema.AdditionalProperties.TypeName();
-                property.InnerTypeIsOtherSchema = false;
-            }
-
-            property.IsMap = true;
+            ParseAdditionalProperties(schema, property);
         }
         else if (schema.Properties == null)
         {
@@ -127,6 +111,31 @@ public abstract class ObjectParser
         }
 
         return property;
+    }
+
+    private void ParseAdditionalProperties(OpenApiSchema schema, PropertyData property)
+    {
+        if (schema.Properties.Count > 0)
+            throw new CaffoaParserException(
+                "object with properties and additional properties are currently not supported.");
+        if (schema.AdditionalProperties.Reference != null)
+        {
+            property.TypeName = ClassNameFunc(schema.AdditionalProperties.Reference.Name());
+            property.InnerTypeIsOtherSchema = true;
+        }
+        else if (schema.AdditionalProperties.IsArray())
+        {
+            var arrayType = schema.AdditionalProperties.GetArrayType(ClassNameFunc, _enumMode);
+            property.TypeName = $"List<{arrayType}>";
+            property.InnerTypeIsOtherSchema = false;
+        }
+        else
+        {
+            property.TypeName = schema.AdditionalProperties.TypeName();
+            property.InnerTypeIsOtherSchema = false;
+        }
+
+        property.IsMap = true;
     }
 
     private string? ParseCustomConverter(IDictionary<string, IOpenApiExtension> schemaExtensions, string name)

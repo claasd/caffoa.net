@@ -1,5 +1,8 @@
 # caffoa changelog
 
+## 2.9.0
+* Initialize array defaults for primitive types as value array
+
 ## 2.8.1
 * Fix "An expression tree cannot contain pattern-matching 'is' expression"
 

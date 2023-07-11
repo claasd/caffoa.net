@@ -17,6 +17,7 @@ public class PropertyData
     public bool IsArray { get; set; }
     public bool IsMap { get; set; }
     public string? Default { get; set; }
+    public string[] ArrayDefaults { get; set; } = Array.Empty<string>();
     public bool IsOtherSchema { get; set; }
     public List<string?> Enums { get; set; } = new();
     public List<string> CustomAttributes { get; set; } = new();

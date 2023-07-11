@@ -100,7 +100,7 @@ public static class Extensions
         return AnyValue(schema.Default);
     }
 
-    public static string? AnyValue(IOpenApiAny any)
+    public static string? AnyValue(this IOpenApiAny any)
     {
         switch (any)
         {
@@ -144,7 +144,7 @@ public static class Extensions
 
     public static string Name(this OpenApiReference reference)
     {
-        return reference.Id.Split("/").Last();
+        return reference.Id.Split("/")[0];
     }
 
     public static bool CanBeEnum(this PropertyData property)
