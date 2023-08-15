@@ -254,6 +254,8 @@ paths:
           in: query
       tags:
         - user
+        - testTag
+        - otherTag
       operationId: users-get
       description: get information about the users
       responses:

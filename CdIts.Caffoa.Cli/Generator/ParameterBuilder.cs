@@ -37,13 +37,17 @@ public class ParameterBuilder
         _parameters.Insert(0, "IDurableOrchestrationClient orchestrationClient");
         return this;
     }
-
+    public ParameterBuilder AddTags()
+    {
+        _parameters.Insert(0, "IReadOnlyList<string> openApiTags");
+        return this;
+    }
     public void AddQueryParameters(IEnumerable<ParameterObject> queryParameters, bool nullableDefaults = false)
     {
         _queryParameters.AddRange(queryParameters.Select(p =>
         {
             var typeName = p.GetTypeName(_useDateOnly, _useDateTime);
-            var nullableAddition = nullableDefaults && !p.Required && typeName != "string" && !typeName.EndsWith("?")? "?" : "";
+            var nullableAddition = nullableDefaults && !p.Required && typeName != "string" && !typeName.EndsWith('?')? "?" : "";
             var result = $"{typeName}{nullableAddition} {p.Name}";
             if(p.IsEnum && p.DefaultValue != null)
                 result += $" = {typeName}.{ModelGenerator.EnumNameForValue(p.DefaultValue)}";
@@ -87,4 +91,5 @@ public class ParameterBuilder
             elements.Add("CancellationToken cancellationToken = default");
         return string.Join(", ", elements);
     }
+
 }

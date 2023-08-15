@@ -33,6 +33,7 @@ public class CaffoaConfig
     public bool? AsyncArrays { get; set; }
     
     public bool? UseConstants { get; set; }
+    public bool? PassTags { get; set; }
 
     public enum EnumCreationMode
     {
@@ -84,7 +85,8 @@ public class CaffoaConfig
             EnumMode = EnumMode ?? general.EnumMode,
             Flavor = Flavor ?? general.Flavor,
             ConstructorOnRequiredObjects = ConstructorOnRequiredObjects ?? general.ConstructorOnRequiredObjects,
-            UseConstants = UseConstants ?? general.UseConstants
+            UseConstants = UseConstants ?? general.UseConstants,
+            PassTags = PassTags ?? general.PassTags
         };
     }
 }

@@ -176,6 +176,7 @@ config:
   asyncArrays: false # if set to true, functions that return arrays will use IAsyncEnumerable instead if Task<IEnumerable>
   constructorOnRequiredObjects: true # if set to false, no constructor will be generated for objects that have required properties, useful if oyu use external classes that do not have constructors without parameters
   useConstants: false # When set to true, values with one single enum and a matching default value will be generated as constants for strings and integer types.
+  passTags: false # When set to true, The interface function will have a parameter that contains all openapi tags of that function
 services:
   - apiPath: userservice.openapi.yml
     config: null # optional, can be an config option. That option is then overriden for this api only

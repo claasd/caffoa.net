@@ -40,7 +40,7 @@ public class InterfaceGenerator
     public void GenerateInterface(List<EndPointModel> endpoints, string namePrefix)
     {
         var imports = new List<string>();
-        if (endpoints.FirstOrDefault(e => e.DurableClient) != null)
+        if (endpoints.Find(e => e.DurableClient) != null)
             imports.Add("Microsoft.Azure.WebJobs.Extensions.DurableTask");
         endpoints.ForEach(e => imports.AddRange(e.Imports));
         if (_config.Imports != null)
@@ -88,6 +88,8 @@ public class InterfaceGenerator
     {
         var builder = ParameterBuilder.Instance(config.UseDateOnly is true && config.ParsePathParameters is not false, config.UseDateTime is true)
             .AddPathParameters(endpoint.Parameters);
+        if (config.PassTags is true)
+            builder.AddTags();
         if (endpoint.DurableClient && withDurable)
             builder.AddDurableClient();
         if (config.ParseQueryParameters is not false)

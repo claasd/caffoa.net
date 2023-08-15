@@ -1,5 +1,8 @@
 # caffoa changelog
 
+## 2.11.0
+* new parameter: "passTags". When set to true, The interface function will have a parameter that contains all openapi tags of that function
+
 ## 2.10.0
 * Client: CaffoaWebClientException<T> now inherits from CaffoaWebClientException instead of directly from Exception
 

@@ -37,7 +37,7 @@ public class FunctionsGenerator
     public void GenerateFunctions(List<EndPointModel> endpoints, string namePrefix)
     {
         var imports = new List<string>();
-        if (endpoints.FirstOrDefault(e => e.DurableClient) != null)
+        if (endpoints.Find(e => e.DurableClient) != null)
             imports.Add("Microsoft.Azure.WebJobs.Extensions.DurableTask");
         endpoints.ForEach(e => imports.AddRange(e.Imports));
         if (_functionConfig.InterfaceNamespace != null)
@@ -46,7 +46,7 @@ public class FunctionsGenerator
             imports.AddRange(_config.Imports);
         if (_modelNamespace != null)
             imports.Add(_modelNamespace);
-        if (endpoints.FirstOrDefault(e => e.RequestBodyType is SelectionBodyModel) != null && _config.Flavor is not CaffoaConfig.GenerationFlavor.SystemTextJson)
+        if (endpoints.Find(e => e.RequestBodyType is SelectionBodyModel) != null && _config.Flavor is not CaffoaConfig.GenerationFlavor.SystemTextJson)
             imports.Add("Newtonsoft.Json.Linq");
         var extraVars = new List<AdditionalInterfaceModel>();
         if (_config.ParsePathParameters is not false || _config.ParseQueryParameters is not false)
@@ -242,6 +242,12 @@ public class FunctionsGenerator
             result = filtered.Select(p => FormatConversion(p.GetTypeName(_config), p.Name, p.Name, p.IsEnum, p.ArrayType, p.InnerType)).ToList();
         else
             result = filtered.Select(p => p.Name).ToList();
+        if (_config.PassTags is true)
+        {
+            var tags = string.Join(", ", endpoint.Tags.Select(t => $"\"{t}\""));
+            result.Insert(0, $"new string[] {{ {tags} }}");
+        }
+
         if (endpoint.DurableClient)
             result.Insert(0, "durableClient");
         return result;

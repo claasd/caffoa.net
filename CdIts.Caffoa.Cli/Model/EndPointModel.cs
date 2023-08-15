@@ -5,7 +5,8 @@ public class EndPointModel
     public string Operation { get; }
     public string Name { get; }
     public string Route { get; }
-    public string Tag { get; }
+    public string Tag => Tags.FirstOrDefault() ?? "default";
+    public string[] Tags { get; }
     public List<ParameterObject> Parameters { get; set; } = new();
 
     public List<string> DocumentationLines { get; set; } = new();
@@ -15,11 +16,11 @@ public class EndPointModel
     public List<string> Imports { get; } = new();
     public bool DurableClient { get; set; }
 
-    public EndPointModel(string operation, string name, string route, string tag)
+    public EndPointModel(string operation, string name, string route, string[] tags)
     {
         Operation = operation.ToLower();
         Name = name;
         Route = route;
-        Tag = tag;
+        Tags = tags;
     }
 }

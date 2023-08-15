@@ -9,6 +9,7 @@ config:
   useInheritance: false
   constructorOnRequiredObjects: false
   useConstants: false
+#   passTags: true
   requestBodyType: # overwrite the JSON type that is passed to the method for some operations
     - type: JObject
       import: Newtonsoft.Json.Linq

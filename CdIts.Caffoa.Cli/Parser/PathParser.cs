@@ -38,9 +38,8 @@ public class PathParser
         if (operationItem.OperationId is null)
             throw new CaffoaParserException($"Operation ID must be set on '{operation} {path}'");
         var name = operationItem.OperationId.ToObjectName();
-        var tags = operationItem.Tags.Select(t => t.Name);
-        var tag = tags.FirstOrDefault() ?? "default";
-        var result = new EndPointModel(operation.ToString(), name, path.Trim('/'), tag);
+        var tags = operationItem.Tags.Select(t => t.Name).ToArray();
+        var result = new EndPointModel(operation.ToString(), name, path.Trim('/'), tags);
         try
         {
             result.Parameters.AddRange(baseParams);
@@ -52,7 +51,7 @@ public class PathParser
                 result.RequestBodyType = ParseRequestBody(operationItem.RequestBody);
                 if (_config.RequestBodyType != null)
                 {
-                    var typeOverride = _config.RequestBodyType.FirstOrDefault(requestConfig =>
+                    var typeOverride = _config.RequestBodyType.Find(requestConfig =>
                         requestConfig.Filter.Contains(operation, operationItem));
                     if (typeOverride != null)
                     {
@@ -196,7 +195,7 @@ public class PathParser
         return parameters.Where(p => p.In is ParameterLocation.Path or ParameterLocation.Query)
             .Select(p =>
             {
-                var schema = ObjectStandaloneParser.ResolveExternal(p.Schema);
+                var schema = ObjectParser.ResolveExternal(p.Schema);
                 var defaultValue = schema.DefaultAsString();
                 schema.Nullable = !p.Required && defaultValue == null;
                 var type = schema.TypeName();

@@ -7,6 +7,8 @@ paths:
     get:
       tags:
         - user
+        - testTag
+        - otherTag
       description: get information about the users
       operationId: users-get
       parameters:
@@ -2171,9 +2173,7 @@ paths:
             - enum space
             - enum-sepcial_CHARS
           type: string
-components: { }
-                  type: string
-    parameters:
+components: { }arameters:
       - name: filter
         in: path
         required: true
