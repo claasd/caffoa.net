@@ -2,7 +2,7 @@
 
 ## 2.10.0
 * new parameter: "passTags". When set to true, The interface function will have a parameter that contains all openapi tags of that function
-* Client: CaffoaWebClientException<T> now inherits from CaffoaWebClientException instead of directly from Exception
+* Client: CaffoaWebClientException< T > now inherits from CaffoaWebClientException instead of directly from Exception
 
 ## 2.9.0
 * Initialize array defaults for primitive types as value array
