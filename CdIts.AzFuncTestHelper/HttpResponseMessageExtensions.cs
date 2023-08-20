@@ -42,6 +42,6 @@ public static class HttpResponseMessageExtensions
         if (Settings.DefaultJsonFlavor == Settings.JsonFlavor.SystemTextJson)
             return JsonSerializer.Deserialize<T>(content, Settings.JsonOptions)!;
         else
-            return JsonConvert.DeserializeObject<T>(content)!;
+            return JsonConvert.DeserializeObject<T>(content, Settings.JsonSettings)!;
     }
 }

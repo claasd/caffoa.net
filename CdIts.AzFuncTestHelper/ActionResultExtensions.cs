@@ -46,12 +46,12 @@ public static class ActionResultExtensions
             },
             JsonResult jsonResult when Settings.DefaultJsonFlavor == Settings.JsonFlavor.SystemTextJson => new HttpResponseMessage((HttpStatusCode)(jsonResult.StatusCode ?? 200))
             {
-                Content = new StringContent(JsonSerializer.Serialize(jsonResult.Value), Encoding.UTF8,
+                Content = new StringContent(JsonSerializer.Serialize(jsonResult.Value, Settings.JsonOptions), Encoding.UTF8,
                     "application/json")
             },
             JsonResult jsonResult => new HttpResponseMessage((HttpStatusCode)(jsonResult.StatusCode ?? 200))
             {
-                Content = new StringContent(JsonConvert.SerializeObject(jsonResult.Value), Encoding.UTF8,
+                Content = new StringContent(JsonConvert.SerializeObject(jsonResult.Value, Settings.JsonSettings), Encoding.UTF8,
                     "application/json")
             },
             ContentResult contentResult => new HttpResponseMessage(

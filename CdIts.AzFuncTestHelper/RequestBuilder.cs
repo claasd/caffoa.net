@@ -47,7 +47,7 @@ public class RequestBuilder
     public RequestBuilder Content<T>(T content) =>
         Content(Settings.DefaultJsonFlavor == Settings.JsonFlavor.SystemTextJson
             ? JsonSerializer.Serialize(content, Settings.JsonOptions)
-            : JsonConvert.SerializeObject(content));
+            : JsonConvert.SerializeObject(content, Settings.JsonSettings));
 
     public RequestBuilder Content(string content) => Content(Encoding.UTF8.GetBytes(content));
     public RequestBuilder Content(byte[] data) => Content(new MemoryStream(data) as Stream);

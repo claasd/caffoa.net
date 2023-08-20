@@ -212,7 +212,7 @@ public class PathParser
                 else if (schema.IsArray())
                 {
                     
-                    var items = ObjectStandaloneParser.ResolveExternal(schema.Items);
+                    var items = ObjectParser.ResolveExternal(schema.Items);
                     if (items.Reference != null && items.CanBeEnum() &&
                         _config.GetEnumCreationMode() == CaffoaConfig.EnumCreationMode.Default)
                     {
