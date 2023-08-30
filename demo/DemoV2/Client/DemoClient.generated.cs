@@ -68,7 +68,7 @@ namespace DemoV2.Client
                     if((int)httpResult.StatusCode == 400)
                         throw new CaffoaWebClientException<Error>(400, JsonParser.Parse<Error>(errorData), errorData);
                 }
-                catch (Exception)
+                catch (Exception e) when(e is not CaffoaWebClientException)
                 {
                     throw new CaffoaWebClientException((int)httpResult.StatusCode, errorData);
                 }
@@ -235,7 +235,7 @@ namespace DemoV2.Client
                     if((int)httpResult.StatusCode == 400)
                         throw new CaffoaWebClientException<Error>(400, JsonParser.Parse<Error>(errorData), errorData);
                 }
-                catch (Exception)
+                catch (Exception e) when(e is not CaffoaWebClientException)
                 {
                     throw new CaffoaWebClientException((int)httpResult.StatusCode, errorData);
                 }
@@ -271,7 +271,7 @@ namespace DemoV2.Client
                     if((int)httpResult.StatusCode == 400)
                         throw new CaffoaWebClientException<Error>(400, JsonParser.Parse<Error>(errorData), errorData);
                 }
-                catch (Exception)
+                catch (Exception e) when(e is not CaffoaWebClientException)
                 {
                     throw new CaffoaWebClientException((int)httpResult.StatusCode, errorData);
                 }

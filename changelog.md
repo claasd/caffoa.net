@@ -1,5 +1,8 @@
 # caffoa changelog
 
+## 2.10.2
+* Client: do not catch correctly thrown CaffoaWebClientException< T > 
+
 ## 2.10.1
 * fixes to Json serializer not using settings in test library
  

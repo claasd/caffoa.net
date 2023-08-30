@@ -59,7 +59,7 @@ public class ClientGenerator
                 if (!string.IsNullOrEmpty(errorHandling))
                 {
                     errorHandling = "\n                try\n                {" + errorHandling +
-                                    "\n                }\n                catch (Exception)\n                {\n                    throw new CaffoaWebClientException((int)httpResult.StatusCode, errorData);\n                }\n";
+                                    "\n                }\n                catch (Exception e) when(e is not CaffoaWebClientException)\n                {\n                    throw new CaffoaWebClientException((int)httpResult.StatusCode, errorData);\n                }\n";
                 }
 
                 var format = new Dictionary<string, object>();
