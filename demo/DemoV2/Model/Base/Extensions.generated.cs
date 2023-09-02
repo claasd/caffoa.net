@@ -11,7 +11,7 @@ namespace DemoV2.Model.Base {
         /// <summary>
         /// Replaces all fields with the data of the passed object
         /// </summary>
-        public static void UpdateWithFlags(this Flags item, Flags other, bool deepClone = true) {
+        public static void UpdateWithFlags(this Flags item, Flags other, bool deepClone = false) {
             item.Id = other.Id;
             item.Desc = other.Desc;
         }
@@ -20,7 +20,7 @@ namespace DemoV2.Model.Base {
         /// Returns a new object of Flags with fileds filled from Flags. 
         /// if deepClone is set to false, a shallow copy will be created.
         /// </summary>
-        public static Flags ToFlags(this Flags other, bool deepClone = true) => new Flags() { 
+        public static Flags ToFlags(this Flags other, bool deepClone = false) => new Flags() { 
             Id = other.Id,
             Desc = other.Desc
         };
@@ -36,7 +36,7 @@ namespace DemoV2.Model.Base {
         /// <summary>
         /// Replaces all fields with the data of the passed object
         /// </summary>
-        public static void UpdateWithAddress(this Address item, Address other, bool deepClone = true) {
+        public static void UpdateWithAddress(this Address item, Address other, bool deepClone = false) {
             item.Street = other.Street;
             item.StreetExtra = other.StreetExtra;
             item.PostalCode = other.PostalCode;
@@ -51,7 +51,7 @@ namespace DemoV2.Model.Base {
         /// Returns a new object of Address with fileds filled from Address. 
         /// if deepClone is set to false, a shallow copy will be created.
         /// </summary>
-        public static Address ToAddress(this Address other, bool deepClone = true) => new Address() { 
+        public static Address ToAddress(this Address other, bool deepClone = false) => new Address() { 
             Street = other.Street,
             StreetExtra = other.StreetExtra,
             PostalCode = other.PostalCode,

@@ -46,6 +46,7 @@ namespace DemoV2.Text.Json.Model {
         [JsonPropertyName("ageGroup")]
         public virtual int? AgeGroup { get; set; } = 40;
 
+        [Obsolete("do not use this")]
         [JsonConverter(typeof(CustomTimeConverter))]
         [JsonPropertyName("preferredContactTime")]
         public virtual TimeOnly PreferredContactTime { get; set; } = TimeOnly.Parse("12:00");

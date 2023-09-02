@@ -118,6 +118,7 @@ paths:
                               format: time
                               default: '12:00'
                               x-caffoa-converter: CustomTimeConverter
+                              x-caffoa-attribute: Obsolete("do not use this")
                             lastSessionLength:
                               type: string
                               format: duration
@@ -206,6 +207,7 @@ paths:
                           format: time
                           default: '12:00'
                           x-caffoa-converter: CustomTimeConverter
+                          x-caffoa-attribute: Obsolete("do not use this")
                         lastSessionLength:
                           type: string
                           format: duration
@@ -346,6 +348,7 @@ paths:
                       format: time
                       default: '12:00'
                       x-caffoa-converter: CustomTimeConverter
+                      x-caffoa-attribute: Obsolete("do not use this")
                     lastSessionLength:
                       type: string
                       format: duration
@@ -468,6 +471,7 @@ paths:
                               format: time
                               default: '12:00'
                               x-caffoa-converter: CustomTimeConverter
+                              x-caffoa-attribute: Obsolete("do not use this")
                             lastSessionLength:
                               type: string
                               format: duration
@@ -556,6 +560,7 @@ paths:
                           format: time
                           default: '12:00'
                           x-caffoa-converter: CustomTimeConverter
+                          x-caffoa-attribute: Obsolete("do not use this")
                         lastSessionLength:
                           type: string
                           format: duration
@@ -683,6 +688,7 @@ paths:
                       format: time
                       default: '12:00'
                       x-caffoa-converter: CustomTimeConverter
+                      x-caffoa-attribute: Obsolete("do not use this")
                     lastSessionLength:
                       type: string
                       format: duration
@@ -803,6 +809,7 @@ paths:
                             format: time
                             default: '12:00'
                             x-caffoa-converter: CustomTimeConverter
+                            x-caffoa-attribute: Obsolete("do not use this")
                           lastSessionLength:
                             type: string
                             format: duration
@@ -891,6 +898,7 @@ paths:
                         format: time
                         default: '12:00'
                         x-caffoa-converter: CustomTimeConverter
+                        x-caffoa-attribute: Obsolete("do not use this")
                       lastSessionLength:
                         type: string
                         format: duration
@@ -1016,6 +1024,7 @@ paths:
                             format: time
                             default: '12:00'
                             x-caffoa-converter: CustomTimeConverter
+                            x-caffoa-attribute: Obsolete("do not use this")
                           lastSessionLength:
                             type: string
                             format: duration
@@ -1104,6 +1113,7 @@ paths:
                         format: time
                         default: '12:00'
                         x-caffoa-converter: CustomTimeConverter
+                        x-caffoa-attribute: Obsolete("do not use this")
                       lastSessionLength:
                         type: string
                         format: duration
@@ -1227,6 +1237,7 @@ paths:
                   format: time
                   default: '12:00'
                   x-caffoa-converter: CustomTimeConverter
+                  x-caffoa-attribute: Obsolete("do not use this")
                 lastSessionLength:
                   type: string
                   format: duration
@@ -1321,6 +1332,7 @@ paths:
                         format: time
                         default: '12:00'
                         x-caffoa-converter: CustomTimeConverter
+                        x-caffoa-attribute: Obsolete("do not use this")
                       lastSessionLength:
                         type: string
                         format: duration
@@ -1409,6 +1421,7 @@ paths:
                     format: time
                     default: '12:00'
                     x-caffoa-converter: CustomTimeConverter
+                    x-caffoa-attribute: Obsolete("do not use this")
                   lastSessionLength:
                     type: string
                     format: duration
@@ -1514,6 +1527,7 @@ paths:
                         format: time
                         default: '12:00'
                         x-caffoa-converter: CustomTimeConverter
+                        x-caffoa-attribute: Obsolete("do not use this")
                       lastSessionLength:
                         type: string
                         format: duration
@@ -1602,6 +1616,7 @@ paths:
                     format: time
                     default: '12:00'
                     x-caffoa-converter: CustomTimeConverter
+                    x-caffoa-attribute: Obsolete("do not use this")
                   lastSessionLength:
                     type: string
                     format: duration
@@ -1739,6 +1754,7 @@ paths:
                       format: time
                       default: '12:00'
                       x-caffoa-converter: CustomTimeConverter
+                      x-caffoa-attribute: Obsolete("do not use this")
                     lastSessionLength:
                       type: string
                       format: duration
@@ -1860,6 +1876,7 @@ paths:
                       format: time
                       default: '12:00'
                       x-caffoa-converter: CustomTimeConverter
+                      x-caffoa-attribute: Obsolete("do not use this")
                     lastSessionLength:
                       type: string
                       format: duration
@@ -2003,6 +2020,7 @@ paths:
                             format: time
                             default: '12:00'
                             x-caffoa-converter: CustomTimeConverter
+                            x-caffoa-attribute: Obsolete("do not use this")
                           lastSessionLength:
                             type: string
                             format: duration
@@ -2173,61 +2191,7 @@ paths:
             - enum space
             - enum-sepcial_CHARS
           type: string
-components: { }arameters:
-      - name: filter
-        in: path
-        required: true
-        schema:
-          enum:
-            - enum1
-            - enum2
-            - enum space
-            - enum-sepcial_CHARS
-          type: string
-components: { }          type: string
-                    description: a tag id
-                    format: uuid
-  /enums/list:
-    get:
-      tags:
-        - user
-      operationId: listEnums
-      responses:
-        '200':
-          description: a list of neum
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  enum:
-                    - enum1
-                    - enum2
-                    - enum space
-                    - enum-sepcial_CHARS
-                  type: string
-    parameters:
-      - name: filter
-        in: query
-        schema:
-          enum:
-            - enum1
-            - enum2
-            - enum space
-            - enum-sepcial_CHARS
-          type: string
-  '/enums/list/filter/{filter}':
-    get:
-      tags:
-        - user
-      operationId: listEnums2
-      responses:
-        '200':
-          description: a list of neum
-          content:
-            application/json:
-              schema:
-                type: array
+components: { }type: array
                 items:
                   enum:
                     - enum1

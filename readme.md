@@ -254,7 +254,7 @@ To use your own converter for a type, add `x-caffoa-converter: MyCustomConverter
 
 ## Attributes
 Sometimes, it is desirable to add custom attributes, for example if you want to use the generated classes for SQL.
-You can use the annotation `x-caffoa-attributes` and specify a list of attributes.
+You can use the annotation `x-caffoa-attributes` and specify a list of attributes. You can also use the shortcut x-caffoa-attribute to assign a single attribute
 Example: 
 ```yaml
 user:
@@ -262,8 +262,13 @@ user:
   properties:
     id:
       type: string
+      x-caffoa-attribute: PrimaryKey
+    someAttribute:
+      type: string
       x-caffoa-attributes:
-        - PrimaryKey
+        - Computed
+        - Obsolete("Do not set this attribute, it is automatically genereated")
+
 ```
 this will add the annotation `[PrimaryKey]` the the `id` property.
 

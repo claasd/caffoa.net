@@ -58,14 +58,14 @@ public class PropertyUpdateBuilder
         {
             var builder = new StringBuilder($"{Prefix}AdditionalProperties = ");
             
-            var deepCopy =
+            var deepClone =
                 $"{other}AdditionalProperties != null ? new Dictionary<string, {_config.GetGenericAdditionalPropertiesType()}>({other}AdditionalProperties) : null";
             if(AddDeepClone)
-                builder.Append($"deepClone ? ({deepCopy}) : {other}AdditionalProperties");
+                builder.Append($"deepClone ? ({deepClone}) : {other}AdditionalProperties");
             else if (ShallowCopy)
                 builder.Append($"{other}AdditionalProperties");
             else
-                builder.Append(deepCopy);
+                builder.Append(deepClone);
             result.Add(builder.ToString());
         }
 

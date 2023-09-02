@@ -26,6 +26,7 @@ services:
     config:
       genericAdditionalProperties: true
 #      genericAdditionalPropertiesType: object
+      deepCopyDefaultValue: false
     model:
       namespace: DemoV2.Model.Base
       targetFolder: ./demo/DemoV2/Model/Base
@@ -34,6 +35,7 @@ services:
     config:
       generateResolvedApiFile: true
       disposable: true
+      deepCopyDefaultValue: false
       imports:
         - DemoV2.Model.Base
       durableClient:

@@ -153,14 +153,19 @@ public abstract class ObjectParser
     {
         try
         {
+            if (extensions.TryGetValue("x-caffoa-attribute", out var singleAnnotation))
+            {
+                var strItem = singleAnnotation as OpenApiString ?? throw new CaffoaParserException("x-caffoa-attribute value must be a string");
+                return new List<string>() { strItem.Value };
+            }
             if (!extensions.TryGetValue("x-caffoa-attributes", out var annotations))
                 return new List<string>();
             var annotationsArray = annotations as OpenApiArray;
             if (annotationsArray is null)
-                throw new CaffoaParserException("Not an array");
+                throw new CaffoaParserException("x-caffoa-attributes is not an array");
             return annotationsArray.Select(item =>
             {
-                var strItem = item as OpenApiString ?? throw new CaffoaParserException("one item is not a string");
+                var strItem = item as OpenApiString ?? throw new CaffoaParserException("one item of x-caffoa-attributes is not a string");
                 return strItem.Value;
             }).ToList();
         }

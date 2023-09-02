@@ -62,6 +62,7 @@ components:
           format: time
           default: "12:00"
           x-caffoa-converter: CustomTimeConverter
+          x-caffoa-attribute: Obsolete("do not use this")
         lastSessionLength:
           type: string
           format: duration

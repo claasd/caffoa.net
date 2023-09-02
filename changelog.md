@@ -1,5 +1,9 @@
 # caffoa changelog
 
+## 2.11.0
+* allow to set deepCopy default value via `deepCopyDefaultValue` config option. Default is true due to backward compatibility
+* x-caffoa-attribute annotation to put a single attribute on a generated member
+
 ## 2.10.2
 * Client: do not catch correctly thrown CaffoaWebClientException< T > 
 

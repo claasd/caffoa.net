@@ -12,7 +12,7 @@ namespace DemoV2.Model {
         /// <summary>
         /// Replaces all fields with the data of the passed object
         /// </summary>
-        public static void UpdateWithError(this Error item, Error other, bool deepClone = true) {
+        public static void UpdateWithError(this Error item, Error other, bool deepClone = false) {
             item.Status = other.Status;
             item.Message = other.Message;
             item.AdditionalProperties = deepClone ? (other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null) : other.AdditionalProperties;
@@ -22,7 +22,7 @@ namespace DemoV2.Model {
         /// Returns a new object of Error with fileds filled from Error. 
         /// if deepClone is set to false, a shallow copy will be created.
         /// </summary>
-        public static Error ToError(this Error other, bool deepClone = true) => new Error() { 
+        public static Error ToError(this Error other, bool deepClone = false) => new Error() { 
             Status = other.Status,
             Message = other.Message,
             AdditionalProperties = deepClone ? (other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null) : other.AdditionalProperties
@@ -40,7 +40,7 @@ namespace DemoV2.Model {
         /// <summary>
         /// Replaces all fields with the data of the passed object
         /// </summary>
-        public static void UpdateWithUser(this User item, User other, bool deepClone = true) {
+        public static void UpdateWithUser(this User item, User other, bool deepClone = false) {
             item.Name = other.Name;
             item.Address = deepClone ? other.Address?.ToAddress() : other.Address;
             item.Birthdate = other.Birthdate;
@@ -58,7 +58,7 @@ namespace DemoV2.Model {
         /// Returns a new object of User with fileds filled from User. 
         /// if deepClone is set to false, a shallow copy will be created.
         /// </summary>
-        public static User ToUser(this User other, bool deepClone = true) => new User() { 
+        public static User ToUser(this User other, bool deepClone = false) => new User() { 
             Name = other.Name,
             Address = deepClone ? other.Address?.ToAddress() : other.Address,
             Birthdate = other.Birthdate,
@@ -92,7 +92,7 @@ namespace DemoV2.Model {
         /// <summary>
         /// Replaces all fields with the data of the passed object
         /// </summary>
-        public static void UpdateWithGuestUser(this GuestUser item, GuestUser other, bool deepClone = true) {
+        public static void UpdateWithGuestUser(this GuestUser item, GuestUser other, bool deepClone = false) {
             item.Email = other.Email;
             item.Type = (GuestUser.TypeValue)other.Type;
             item.ConstInt = other.ConstInt;
@@ -103,7 +103,7 @@ namespace DemoV2.Model {
         /// Returns a new object of GuestUser with fileds filled from GuestUser. 
         /// if deepClone is set to false, a shallow copy will be created.
         /// </summary>
-        public static GuestUser ToGuestUser(this GuestUser other, bool deepClone = true) => new GuestUser() { 
+        public static GuestUser ToGuestUser(this GuestUser other, bool deepClone = false) => new GuestUser() { 
             Email = other.Email,
             Type = (GuestUser.TypeValue)other.Type,
             ConstInt = other.ConstInt,
@@ -123,7 +123,7 @@ namespace DemoV2.Model {
         /// <summary>
         /// Replaces all fields with the data of the passed object
         /// </summary>
-        public static void UpdateWithUserWithId(this UserWithId item, UserWithId other, bool deepClone = true) {
+        public static void UpdateWithUserWithId(this UserWithId item, UserWithId other, bool deepClone = false) {
             item.Name = other.Name;
             item.Address = deepClone ? other.Address?.ToAddress() : other.Address;
             item.Birthdate = other.Birthdate;
@@ -144,7 +144,7 @@ namespace DemoV2.Model {
         /// Returns a new object of UserWithId with fileds filled from UserWithId. 
         /// if deepClone is set to false, a shallow copy will be created.
         /// </summary>
-        public static UserWithId ToUserWithId(this UserWithId other, bool deepClone = true) => new UserWithId() { 
+        public static UserWithId ToUserWithId(this UserWithId other, bool deepClone = false) => new UserWithId() { 
             Name = other.Name,
             Address = deepClone ? other.Address?.ToAddress() : other.Address,
             Birthdate = other.Birthdate,
@@ -184,7 +184,7 @@ namespace DemoV2.Model {
         /// <summary>
         /// Replaces all fields with the data of the passed object
         /// </summary>
-        public static void UpdateWithUserWithId(this User item, UserWithId other, bool deepClone = true) {
+        public static void UpdateWithUserWithId(this User item, UserWithId other, bool deepClone = false) {
             item.Name = other.Name;
             item.Address = deepClone ? other.Address?.ToAddress() : other.Address;
             item.Birthdate = other.Birthdate;
@@ -202,7 +202,7 @@ namespace DemoV2.Model {
         /// Returns a new object of UserWithId with fileds filled from User. 
         /// if deepClone is set to false, a shallow copy will be created.
         /// </summary>
-        public static UserWithId ToUserWithId(this User other, bool deepClone = true) => new UserWithId() { 
+        public static UserWithId ToUserWithId(this User other, bool deepClone = false) => new UserWithId() { 
             Name = other.Name,
             Address = deepClone ? other.Address?.ToAddress() : other.Address,
             Birthdate = other.Birthdate,
@@ -236,7 +236,7 @@ namespace DemoV2.Model {
         /// <summary>
         /// Replaces all fields with the data of the passed object
         /// </summary>
-        public static void UpdateWithUser(this UserWithId item, User other, bool deepClone = true) {
+        public static void UpdateWithUser(this UserWithId item, User other, bool deepClone = false) {
             item.Name = other.Name;
             item.Address = deepClone ? other.Address?.ToAddress() : other.Address;
             item.Birthdate = other.Birthdate;
@@ -254,7 +254,7 @@ namespace DemoV2.Model {
         /// Returns a new object of User with fileds filled from UserWithId. 
         /// if deepClone is set to false, a shallow copy will be created.
         /// </summary>
-        public static User ToUser(this UserWithId other, bool deepClone = true) => new User() { 
+        public static User ToUser(this UserWithId other, bool deepClone = false) => new User() { 
             Name = other.Name,
             Address = deepClone ? other.Address?.ToAddress() : other.Address,
             Birthdate = other.Birthdate,
@@ -288,7 +288,7 @@ namespace DemoV2.Model {
         /// <summary>
         /// Replaces all fields with the data of the passed object
         /// </summary>
-        public static void UpdateWithPricing(this Pricing item, Pricing other, bool deepClone = true) {
+        public static void UpdateWithPricing(this Pricing item, Pricing other, bool deepClone = false) {
             item.Price = other.Price;
             item.Taxes = deepClone ? other.Taxes?.ToDictionary(entry => entry.Key, entry => entry.Value) : other.Taxes;
             item.AdditionalProperties = deepClone ? (other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null) : other.AdditionalProperties;
@@ -298,7 +298,7 @@ namespace DemoV2.Model {
         /// Returns a new object of Pricing with fileds filled from Pricing. 
         /// if deepClone is set to false, a shallow copy will be created.
         /// </summary>
-        public static Pricing ToPricing(this Pricing other, bool deepClone = true) => new Pricing() { 
+        public static Pricing ToPricing(this Pricing other, bool deepClone = false) => new Pricing() { 
             Price = other.Price,
             Taxes = deepClone ? other.Taxes?.ToDictionary(entry => entry.Key, entry => entry.Value) : other.Taxes,
             AdditionalProperties = deepClone ? (other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null) : other.AdditionalProperties
@@ -316,7 +316,7 @@ namespace DemoV2.Model {
         /// <summary>
         /// Replaces all fields with the data of the passed object
         /// </summary>
-        public static void UpdateWithLongRunningfunctionStatus(this LongRunningfunctionStatus item, LongRunningfunctionStatus other, bool deepClone = true) {
+        public static void UpdateWithLongRunningfunctionStatus(this LongRunningfunctionStatus item, LongRunningfunctionStatus other, bool deepClone = false) {
             item.Status = (LongRunningfunctionStatus.StatusValue)other.Status;
             item.Result = deepClone ? other.Result?.ToAnyUser() : other.Result;
             item.AdditionalProperties = deepClone ? (other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null) : other.AdditionalProperties;
@@ -326,7 +326,7 @@ namespace DemoV2.Model {
         /// Returns a new object of LongRunningfunctionStatus with fileds filled from LongRunningfunctionStatus. 
         /// if deepClone is set to false, a shallow copy will be created.
         /// </summary>
-        public static LongRunningfunctionStatus ToLongRunningfunctionStatus(this LongRunningfunctionStatus other, bool deepClone = true) => new LongRunningfunctionStatus() { 
+        public static LongRunningfunctionStatus ToLongRunningfunctionStatus(this LongRunningfunctionStatus other, bool deepClone = false) => new LongRunningfunctionStatus() { 
             Status = (LongRunningfunctionStatus.StatusValue)other.Status,
             Result = deepClone ? other.Result?.ToAnyUser() : other.Result,
             AdditionalProperties = deepClone ? (other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null) : other.AdditionalProperties
@@ -344,7 +344,7 @@ namespace DemoV2.Model {
         /// <summary>
         /// Replaces all fields with the data of the passed object
         /// </summary>
-        public static void UpdateWithTagInfos(this TagInfos item, TagInfos other, bool deepClone = true) {
+        public static void UpdateWithTagInfos(this TagInfos item, TagInfos other, bool deepClone = false) {
             item.User = deepClone ? other.User?.ToDictionary(entry => entry.Key, entry => entry.Value) : other.User;
             item.AdditionalProperties = deepClone ? (other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null) : other.AdditionalProperties;
         }
@@ -353,7 +353,7 @@ namespace DemoV2.Model {
         /// Returns a new object of TagInfos with fileds filled from TagInfos. 
         /// if deepClone is set to false, a shallow copy will be created.
         /// </summary>
-        public static TagInfos ToTagInfos(this TagInfos other, bool deepClone = true) => new TagInfos() { 
+        public static TagInfos ToTagInfos(this TagInfos other, bool deepClone = false) => new TagInfos() { 
             User = deepClone ? other.User?.ToDictionary(entry => entry.Key, entry => entry.Value) : other.User,
             AdditionalProperties = deepClone ? (other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null) : other.AdditionalProperties
         };
@@ -369,7 +369,7 @@ namespace DemoV2.Model {
         /// <summary>
         /// Replaces all fields with the data of the passed object
         /// </summary>
-        public static void UpdateWithEnumObject(this EnumObject item, EnumObject other, bool deepClone = true) {
+        public static void UpdateWithEnumObject(this EnumObject item, EnumObject other, bool deepClone = false) {
             item.Single = other.Single;
             item.WithDefault = other.WithDefault;
             item.Array = deepClone ? other.Array?.ToList() : other.Array;
@@ -382,7 +382,7 @@ namespace DemoV2.Model {
         /// Returns a new object of EnumObject with fileds filled from EnumObject. 
         /// if deepClone is set to false, a shallow copy will be created.
         /// </summary>
-        public static EnumObject ToEnumObject(this EnumObject other, bool deepClone = true) => new EnumObject() { 
+        public static EnumObject ToEnumObject(this EnumObject other, bool deepClone = false) => new EnumObject() { 
             Single = other.Single,
             WithDefault = other.WithDefault,
             Array = deepClone ? other.Array?.ToList() : other.Array,
@@ -406,7 +406,7 @@ namespace DemoV2.Model {
         /// <summary>
         /// Replaces all fields with the data of the passed object
         /// </summary>
-        public static void UpdateWithExtendedAddress(this ExtendedAddress item, ExtendedAddress other, bool deepClone = true) {
+        public static void UpdateWithExtendedAddress(this ExtendedAddress item, ExtendedAddress other, bool deepClone = false) {
             item.Street = other.Street;
             item.StreetExtra = other.StreetExtra;
             item.PostalCode = other.PostalCode;
@@ -421,7 +421,7 @@ namespace DemoV2.Model {
         /// Returns a new object of ExtendedAddress with fileds filled from ExtendedAddress. 
         /// if deepClone is set to false, a shallow copy will be created.
         /// </summary>
-        public static ExtendedAddress ToExtendedAddress(this ExtendedAddress other, bool deepClone = true) => new ExtendedAddress() { 
+        public static ExtendedAddress ToExtendedAddress(this ExtendedAddress other, bool deepClone = false) => new ExtendedAddress() { 
             Street = other.Street,
             StreetExtra = other.StreetExtra,
             PostalCode = other.PostalCode,
@@ -449,7 +449,7 @@ namespace DemoV2.Model {
         /// <summary>
         /// Replaces all fields with the data of the passed object
         /// </summary>
-        public static void UpdateWithExtendedAddress(this Address item, ExtendedAddress other, bool deepClone = true) {
+        public static void UpdateWithExtendedAddress(this Address item, ExtendedAddress other, bool deepClone = false) {
             item.Street = other.Street;
             item.StreetExtra = other.StreetExtra;
             item.PostalCode = other.PostalCode;
@@ -463,7 +463,7 @@ namespace DemoV2.Model {
         /// Returns a new object of ExtendedAddress with fileds filled from Address. 
         /// if deepClone is set to false, a shallow copy will be created.
         /// </summary>
-        public static ExtendedAddress ToExtendedAddress(this Address other, bool deepClone = true) => new ExtendedAddress() { 
+        public static ExtendedAddress ToExtendedAddress(this Address other, bool deepClone = false) => new ExtendedAddress() { 
             Street = other.Street,
             StreetExtra = other.StreetExtra,
             PostalCode = other.PostalCode,
@@ -489,7 +489,7 @@ namespace DemoV2.Model {
         /// <summary>
         /// Replaces all fields with the data of the passed object
         /// </summary>
-        public static void UpdateWithAddress(this ExtendedAddress item, Address other, bool deepClone = true) {
+        public static void UpdateWithAddress(this ExtendedAddress item, Address other, bool deepClone = false) {
             item.Street = other.Street;
             item.StreetExtra = other.StreetExtra;
             item.PostalCode = other.PostalCode;
@@ -503,7 +503,7 @@ namespace DemoV2.Model {
         /// Returns a new object of Address with fileds filled from ExtendedAddress. 
         /// if deepClone is set to false, a shallow copy will be created.
         /// </summary>
-        public static Address ToAddress(this ExtendedAddress other, bool deepClone = true) => new Address() { 
+        public static Address ToAddress(this ExtendedAddress other, bool deepClone = false) => new Address() { 
             Street = other.Street,
             StreetExtra = other.StreetExtra,
             PostalCode = other.PostalCode,

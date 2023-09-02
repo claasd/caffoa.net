@@ -32,7 +32,7 @@ public class ModelGenerator
         enumClasses.ForEach(WriteEnumClass);
         interfaces.ForEach(WriteModelInterface);
         var allKnownClasses = otherKnownObjects.Concat(classes).ToList();
-        var allKnownEnumClasses = enumClasses.Concat(otherKnownObjects.Where(o => o.Type == SchemaItem.ObjectType.StringEnum)).ToList(); 
+        var allKnownEnumClasses = enumClasses.Concat(otherKnownObjects.Where(o => o.Type == SchemaItem.ObjectType.StringEnum)).ToList();
         classes.ForEach(c => WriteModelClass(c, interfaces, allKnownClasses, allKnownEnumClasses));
         if (_config.Extensions is false)
             return Array.Empty<string>();
@@ -112,7 +112,9 @@ public class ModelGenerator
         parameters["UPDATEPROPS"] = PropertyUpdateBuilder.BuildExternalUpdates(subItem, _config, targetClassName,
             parentItem.AdditionalPropertiesAllowed);
         parameters["INITPROPS"] = PropertyUpdateBuilder.BuildInitializer(subItem, _config, sourceClassName, parentItem.AdditionalPropertiesAllowed);
-        parameters["SELECTPROPS"] = PropertyUpdateBuilder.BuildSelectInitializer(subItem, _config, sourceClassName, parentItem.AdditionalPropertiesAllowed);
+        parameters["DEEPCLONEDEFAULT"] = _config.DeepCopyDefaultValue is false ? "false" : "true";
+        parameters["SELECTPROPS"] =
+            PropertyUpdateBuilder.BuildSelectInitializer(subItem, _config, sourceClassName, parentItem.AdditionalPropertiesAllowed);
         var formatted = file.FormatDict(parameters);
         return formatted.ToSystemNewLine();
     }
@@ -120,23 +122,25 @@ public class ModelGenerator
     private string CreateConstructors(SchemaItem item, List<SchemaItem> otherClasses)
     {
         var builder = new StringBuilder();
+        var deepCloneDefault = _config.DeepCopyDefaultValue is false ? "false" : "true";
         builder.Append($"public {item.ClassName}({item.ClassName} other)");
         if (item.Parent != null)
             builder.Append($" : base(other)");
         builder.Append(" {\n            ");
         builder.Append(PropertyUpdateBuilder.BuildConstructor(item, _config, item));
         builder.Append("\n        }");
+        
         if (item.Parent != null)
         {
             builder.Append($"\n        public {item.ClassName}({item.Parent} other) : base(other) {{}}");
         }
-        
+
         foreach (var subItem in item.SubItems)
         {
             var otherItem = otherClasses.Find(c => c.ClassName == subItem);
             if (otherItem != null)
             {
-                builder.Append($"\n        public {item.ClassName}({subItem} other, bool deepClone = true) {{\n            ");
+                builder.Append($"\n        public {item.ClassName}({subItem} other, bool deepClone = {deepCloneDefault}) {{\n            ");
                 builder.Append(PropertyUpdateBuilder.BuildSubConstructor(otherItem, _config, item));
                 builder.Append("\n        }");
             }
@@ -176,7 +180,7 @@ public class ModelGenerator
                 var formatted = file.FormatDict(format);
                 properties.Add(formatted);
             }
-                
+
             else if (_config.GetEnumCreationMode() == CaffoaConfig.EnumCreationMode.Default && property.CanBeEnum())
             {
                 properties.Add(FormatEnumProperty(property, format));
@@ -191,7 +195,7 @@ public class ModelGenerator
             else
             {
                 format["DEFAULT"] = formatter.Default(false, enumClasses, _config.ConstructorOnRequiredObjects is not false);
-                if(enumClasses.Find(c=>c.ClassName == type)?.NullableEnum ?? false)
+                if (enumClasses.Find(c => c.ClassName == type)?.NullableEnum ?? false)
                     format["TYPE"] = type + "?";
                 var file = Templates.GetTemplate("ModelPropertyTemplate.tpl");
                 var formatted = file.FormatDict(format);
@@ -206,11 +210,11 @@ public class ModelGenerator
     {
         foreach (var property in item.Properties!.Where(p => p.Enums.Any()))
         {
-            if(_config.UseConstants is true && property.CanBeConstant())
+            if (_config.UseConstants is true && property.CanBeConstant())
                 continue;
             if (_config.GetEnumCreationMode() == CaffoaConfig.EnumCreationMode.Default && property.CanBeEnum())
                 WriteEnumPropertyClass(property, item.ClassName);
-            else if(property.CanBeEnum())
+            else if (property.CanBeEnum())
                 WriteEnumAsStringClass(property, item.ClassName);
         }
     }

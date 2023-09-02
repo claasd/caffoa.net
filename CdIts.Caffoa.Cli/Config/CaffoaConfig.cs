@@ -34,6 +34,7 @@ public class CaffoaConfig
     
     public bool? UseConstants { get; set; }
     public bool? PassTags { get; set; }
+    public bool? DeepCopyDefaultValue { get; set; }
 
     public enum EnumCreationMode
     {
@@ -86,7 +87,8 @@ public class CaffoaConfig
             Flavor = Flavor ?? general.Flavor,
             ConstructorOnRequiredObjects = ConstructorOnRequiredObjects ?? general.ConstructorOnRequiredObjects,
             UseConstants = UseConstants ?? general.UseConstants,
-            PassTags = PassTags ?? general.PassTags
+            PassTags = PassTags ?? general.PassTags,
+            DeepCopyDefaultValue = DeepCopyDefaultValue ?? general.DeepCopyDefaultValue
         };
     }
 }

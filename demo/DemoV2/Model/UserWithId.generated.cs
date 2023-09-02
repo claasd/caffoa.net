@@ -46,6 +46,7 @@ namespace DemoV2.Model {
         [JsonProperty("ageGroup")]
         public virtual int? AgeGroup { get; set; } = 40;
 
+        [Obsolete("do not use this")]
         [JsonConverter(typeof(CustomTimeConverter))]
         [JsonProperty("preferredContactTime")]
         public virtual TimeOnly PreferredContactTime { get; set; } = TimeOnly.Parse("12:00");
@@ -82,7 +83,7 @@ namespace DemoV2.Model {
             Diffs = other.Diffs?.DeepClone();
             AdditionalProperties = other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null;
         }
-        public UserWithId(User other, bool deepClone = true) {
+        public UserWithId(User other, bool deepClone = false) {
             Name = other.Name;
             Address = deepClone ? other.Address?.ToAddress() : other.Address;
             Birthdate = other.Birthdate;

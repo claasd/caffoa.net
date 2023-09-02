@@ -49,7 +49,7 @@ namespace DemoV2.Model {
             Flags = other.Flags?.ToDictionary(entry => entry.Key, entry => entry.Value?.ToFlags());
             AddressType2 = other.AddressType2;
         }
-        public ExtendedAddress(Address other, bool deepClone = true) {
+        public ExtendedAddress(Address other, bool deepClone = false) {
             Street = other.Street;
             StreetExtra = other.StreetExtra;
             PostalCode = other.PostalCode;
