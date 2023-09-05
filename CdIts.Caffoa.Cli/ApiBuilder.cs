@@ -50,7 +50,7 @@ public class ApiBuilder
         await _parser.ReadAsync();
         if (_service.Model != null)
             Models = _parser.GenerateModel();
-        if (_service.Function != null || _service.Client != null)
+        if (_service.Function != null || _service.Client != null || _service.Controller != null)
             _endpoints = _parser.GenerateEndpoints();
     }
 
@@ -76,6 +76,12 @@ public class ApiBuilder
         {
             var clientGenerator = new ClientGenerator(_service.Client, Config, _service.Model?.Namespace, _logger);
             clientGenerator.GenerateClient(_endpoints);
+        }
+
+        if (_service.Controller != null && _endpoints != null)
+        {
+         var controllerGenerator = new ControllerGenerator(_service.Controller, Config, _service.Model?.Namespace, _logger);
+         controllerGenerator.GenerateController(_endpoints);
         }
 
         if (Config.GenerateResolvedApiFile is true)

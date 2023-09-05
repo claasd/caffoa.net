@@ -17,4 +17,6 @@ public class ServiceConfig
     public ModelConfig? Model { get; set; }
     
     public ClientConfig? Client { get; set; }
+
+    public ControllerConfig? Controller { get; set; }
 }

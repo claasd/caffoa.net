@@ -16,6 +16,10 @@
         </Description>
         <TargetFrameworks>net7.0;net6.0;netcoreapp3.1</TargetFrameworks>
     </PropertyGroup>
+    <ItemGroup>
+      <None Remove="data\ControllerMethod.tpl" />
+      <None Remove="data\ControllerTemplate.tpl" />
+    </ItemGroup>
 
     <ItemGroup>
         <PackageReference Include="CommandLineParser" Version="2.9.1" />
@@ -27,10 +31,12 @@
     <ItemGroup>
         <EmbeddedResource Include="data\ClientMethod.tpl" />
         <EmbeddedResource Include="data\ClientTemplate.tpl" />
+        <EmbeddedResource Include="data\ControllerMethod.tpl" />
         <EmbeddedResource Include="data\FunctionsMethod.tpl" />
         <EmbeddedResource Include="data\FunctionsSwitchMethod.tpl" />
         <EmbeddedResource Include="data\FunctionsTemplate.tpl" />
         <EmbeddedResource Include="data\InterfaceMethod.tpl" />
+        <EmbeddedResource Include="data\ControllerTemplate.tpl" />
         <EmbeddedResource Include="data\InterfaceTemplate.tpl" />
         <EmbeddedResource Include="data\ModelConstTemplate.tpl" />
         <EmbeddedResource Include="data\ModelEnumPropertyClassTemplate.string.tpl" />
