@@ -324,9 +324,9 @@ public class ModelGenerator
         {
             jsonproperty = _config.Flavor switch
             {
-                CaffoaConfig.GenerationFlavor.JsonNet => "StringEnumConverter",
                 CaffoaConfig.GenerationFlavor.SystemTextJson => "JsonStringEnumConverter",
-            };
+                _ => "StringEnumConverter",
+             };
             enumDefs = enums.Select(item => $"[EnumMember(Value = {item.Value})] {item.Key}");
         }
         else
