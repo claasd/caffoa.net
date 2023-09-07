@@ -89,6 +89,7 @@ public class ControllerGenerator
                 format["OPERATION"] = endpoint.Operation.ToObjectName();
                 format["PARAMS"] = new ParameterBuilder.Overload(signature).Declaration; 
                 format["CALLPARAMS"] = string.Join(", ", call);
+                format["STATUSCODE"] = endpoint.Responses.First().Code;
                 format["PATH"] = endpoint.Route;
                 format["DOC"] = string.Join("\n    /// ", endpoint.DocumentationLines);
                 format["TAGS"] = _config.PassTags ?? false ? $"var tags = new[] {{{string.Join(", ", endpoint.Tags.Select(t => $"\"{t}\""))}}};\n        " : "";

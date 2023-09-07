@@ -10,7 +10,12 @@ public class ParameterBuilder
     {
         public string? DefaultValue { get; set; }
         public List<string> Attributes { get; set; } = new();
-        public string Declaration => $"{string.Join(" ", Attributes)} {Type} {Name}{(DefaultValue != null ? $" = {DefaultValue}" : "")};".Trim();
+        public string Declaration => $"{string.Join(" ", Attributes)} {Type} {Name}{(DefaultValue != null ? $" = {DefaultValue}" : "")}".Trim();
+        public static implicit operator string(Parameter p) => p.Declaration;
+        public override string ToString()
+        {
+            return this;
+        }
     }
 
     public record Overload(IEnumerable<Parameter> ParametersIncludingBody)
@@ -30,7 +35,7 @@ public class ParameterBuilder
     private readonly List<Parameter> _queryParameters = new();
     private readonly List<Parameter> _bodies = new();
     private bool _withCancellation;
-    private Parameter? CancellationToken => _withCancellation? new Parameter("CancellationToken", "cancellationToken") : null;
+    private Parameter? CancellationToken => _withCancellation? new Parameter("CancellationToken", "cancellationToken") { DefaultValue = "default"} : null;
 
     private ParameterBuilder(bool useDateOnly, bool useDateTime, bool addAspNetAttributes)
     {

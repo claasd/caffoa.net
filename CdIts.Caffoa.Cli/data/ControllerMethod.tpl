@@ -2,5 +2,5 @@
     /// {DOC}
     ///</summary>
     [Http{OPERATION}("{PATH}")]
-    public {RESULT} {NAME}Async({PARAMS}) => GetService().{NAME}Async({CALLPARAMS});
+    public async {RESULT} {NAME}Async({PARAMS}) => StatusCode({STATUSCODE}, await GetService().{NAME}Async({CALLPARAMS}));
 

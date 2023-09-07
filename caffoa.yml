@@ -62,6 +62,35 @@ services:
       namespace: DemoV2.Text.Json.Model.Base
       targetFolder: ./demo/DemoV2.Text.Json/Model/Base
 
+  - apiPath: tests/base.openapi.yml
+    config:
+      prefix: 'ASP'
+      flavor: SystemTextJson
+    model:
+      namespace: DemoV2.AspNet.Model.Base
+      targetFolder: ./demo/DemoV2.AspNet/Model/Base
+  - apiPath: tests/openapi.yml
+    config:
+      prefix: 'ASP'
+      flavor: SystemTextJson
+      imports:
+        - DemoV2.AspNet.Model.Base
+      requestBodyType: # overwrite the JSON type that is passed to the method for some operations
+        - type: JsonElement
+          import: System.Text.Json
+          filter: # the type is overwritten if one of the filters match
+            operations:
+              - user-patch
+            methods:
+              - patch
+    model:
+      namespace: DemoV2.AspNet.Model
+      targetFolder: ./demo/DemoV2.AspNet/Model
+    controller:
+      targetFolder: ./demo/DemoV2.AspNet
+      namespace: DemoV2.AspNet
+      name: DemoV2AspNet
+
   - apiPath: tests/openapi.yml
     config:
       prefix: 'STJ'
@@ -86,10 +115,6 @@ services:
       targetFolder: ./demo/DemoV2.Text.Json
       namespace: DemoV2.Text.Json
       name: DemoV2TextJson
-    controller:
-      targetFolder: ./demo/DemoV2.AspNet
-      namespace: DemoV2.AspNet
-      name: DemoV2AspNet
       
   - apiPath: tests/base.openapi.yml
     config:
