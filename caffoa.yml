@@ -86,6 +86,10 @@ services:
       targetFolder: ./demo/DemoV2.Text.Json
       namespace: DemoV2.Text.Json
       name: DemoV2TextJson
+    controller:
+      targetFolder: ./demo/DemoV2.AspNet
+      namespace: DemoV2.AspNet
+      name: DemoV2AspNet
       
   - apiPath: tests/base.openapi.yml
     config:
