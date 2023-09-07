@@ -11,5 +11,13 @@ namespace {NAMESPACE};
 [Route("{BASEPATH}")]
 public class {CLASSNAME} : ControllerBase
 {{
-   // *** Caffoa insertion point. New Methods will be inserted above this comment by caffoa. ***
+    private readonly ICaffoaFactory<{INTERFACE}> _factory;
+    
+    public {CLASSNAME}(ICaffoaFactory<{INTERFACE}> factory)
+    {{
+        _factory = factory;
+    }}
+    public {INTERFACE} GetService() => _factory.Instance(Request);
+
+{METHODS}
 }}

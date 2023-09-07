@@ -2,8 +2,5 @@
     /// {DOC}
     ///</summary>
     [Http{OPERATION}("{PATH}")]
-    public async {RESULT} {NAME}Async({PARAMS})
-    {{
-        {TAGS}throw new NotImplementedException(nameof({NAME}Async));
-    }}
+    public {RESULT} {NAME}Async({PARAMS}) => GetService().{NAME}Async({CALLPARAMS});
 

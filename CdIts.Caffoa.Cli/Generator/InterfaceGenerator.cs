@@ -8,14 +8,14 @@ namespace CdIts.Caffoa.Cli.Generator;
 
 public class InterfaceGenerator
 {
-    private readonly FunctionConfig _functionConfig;
+    private readonly IInterfaceConfig _interfaceConfig;
     private readonly CaffoaConfig _config;
     private readonly string? _modelNamespace;
     private readonly ILogger _logger;
 
-    public InterfaceGenerator(FunctionConfig service, CaffoaConfig config, string? modelNamespace, ILogger logger)
+    public InterfaceGenerator(IInterfaceConfig service, CaffoaConfig config, string? modelNamespace, ILogger logger)
     {
-        _functionConfig = service;
+        _interfaceConfig = service;
         _config = config;
         _modelNamespace = modelNamespace;
         _logger = logger;
@@ -47,12 +47,13 @@ public class InterfaceGenerator
             imports.AddRange(_config.Imports);
         if (_modelNamespace != null)
             imports.Add(_modelNamespace);
-        var targetFolder = _functionConfig.InterfaceTargetFolder ?? _functionConfig.TargetFolder;
-        var name = _functionConfig.GetInterfaceName(namePrefix);
+        var targetFolder = _interfaceConfig.GetInterfaceTargetFolder();
+        var name = _interfaceConfig.GetInterfaceName(namePrefix);
+        var ns = _interfaceConfig.GetInterfaceNamespace();
         Directory.CreateDirectory(targetFolder);
         var file = Templates.GetTemplate("InterfaceTemplate.tpl");
         var format = new Dictionary<string, object>();
-        format["NAMESPACE"] = _functionConfig.InterfaceNamespace ?? _functionConfig.Namespace;
+        format["NAMESPACE"] = ns;
         format["CLASSNAME"] = name;
         format["PARENTS"] = _config.Disposable is true ? " : IAsyncDisposable" : "";
         format["IMPORTS"] = string.Join("", imports.Distinct().Select(i => $"using {i};\n"));
@@ -72,7 +73,7 @@ public class InterfaceGenerator
                 var format = new Dictionary<string, object>();
                 format["RESULT"] = GetResponseType(endpoint, _config.AsyncArrays is true);
                 format["NAME"] = endpoint.Name;
-                format["PARAMS"] = parameter;
+                format["PARAMS"] = parameter.Declaration;
                 format["DOC"] = string.Join("\n        /// ", endpoint.DocumentationLines);
                 var formatted = file.FormatDict(format);
                 methods.Add(formatted);
@@ -82,11 +83,11 @@ public class InterfaceGenerator
         return string.Join("\n", methods);
     }
 
-    public List<string> GetParams(EndPointModel endpoint) => GetMethodParams(endpoint, _config);
+    public List<ParameterBuilder.Overload> GetParams(EndPointModel endpoint) => GetMethodParams(endpoint, _config);
     
-    public static List<string> GetMethodParams(EndPointModel endpoint, CaffoaConfig config, bool withDurable = true, bool nullableDefaults = false)
+    public static List<ParameterBuilder.Overload> GetMethodParams(EndPointModel endpoint, CaffoaConfig config, bool withDurable = true, bool nullableDefaults = false, bool addAspNetAttributes = false)
     {
-        var builder = ParameterBuilder.Instance(config.UseDateOnly is true && config.ParsePathParameters is not false, config.UseDateTime is true)
+        var builder = ParameterBuilder.Instance(config.UseDateOnly is true && config.ParsePathParameters is not false, config.UseDateTime is true, addAspNetAttributes)
             .AddPathParameters(endpoint.Parameters);
         if (config.PassTags is true)
             builder.AddTags();
@@ -104,21 +105,21 @@ public class InterfaceGenerator
                 {
                     foreach (var value in selection.Mapping.Values)
                     {
-                        builder.AddBody($"{value} payload");
+                        builder.AddBody(value, "payload");
                     }
 
                     break;
                 }
                 case SimpleBodyModel simple:
-                    builder.AddBody($"{simple.TypeName} payload");
+                    builder.AddBody(simple.TypeName, "payload");
                     break;
                 default:
-                    builder.AddBody("Stream stream");
+                    builder.AddBody("Stream", "stream");
                     break;
             }
         }
 
-        return builder.Build();
+        return builder.BuildOverloads();
     }
 
     public string GetResponseType(EndPointModel endpoint, bool asyncArrays)

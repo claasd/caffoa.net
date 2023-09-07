@@ -3,7 +3,7 @@ using CdIts.Caffoa.Cli.Errors;
 
 namespace CdIts.Caffoa.Cli.Config;
 
-public class FunctionConfig
+public class FunctionConfig : IInterfaceConfig
 {
     private string? _name;
     private string? _ns;
@@ -58,4 +58,8 @@ public class FunctionConfig
             name = $"{prefix}{name}";
         return name;
     }
+
+    public string GetInterfaceTargetFolder() => InterfaceTargetFolder ?? TargetFolder;
+
+    public string GetInterfaceNamespace() => InterfaceNamespace ?? Namespace;
 }

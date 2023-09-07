@@ -80,8 +80,11 @@ public class ApiBuilder
 
         if (_service.Controller != null && _endpoints != null)
         {
-         var controllerGenerator = new ControllerGenerator(_service.Controller, Config, _service.Model?.Namespace, _logger);
-         controllerGenerator.GenerateController(_endpoints);
+            if (Config.DurableClient != null) _logger.LogError("Durable Client not supported for ASP.NET Core Applications");
+            var interfaceGenerator = new InterfaceGenerator(_service.Controller, Config, _service.Model?.Namespace, _logger);
+            interfaceGenerator.GenerateInterface(_endpoints);
+            var controllerGenerator = new ControllerGenerator(_service.Controller, Config, _service.Model?.Namespace, _logger);
+            controllerGenerator.GenerateController(_endpoints);
         }
 
         if (Config.GenerateResolvedApiFile is true)

@@ -4,13 +4,33 @@ namespace CdIts.Caffoa.Cli.Generator;
 
 public class ParameterBuilder
 {
+    public const string OpenapiTagsParameterName = "openApiTags";
+
+    public record Parameter(string Type, string Name)
+    {
+        public string? DefaultValue { get; set; }
+        public List<string> Attributes { get; set; } = new();
+        public string Declaration => $"{string.Join(" ", Attributes)} {Type} {Name}{(DefaultValue != null ? $" = {DefaultValue}" : "")};".Trim();
+    }
+
+    public record Overload(IEnumerable<Parameter> ParametersIncludingBody)
+    {
+        public string Declaration => string.Join(", ", ParametersIncludingBody);
+        public static implicit operator string(Overload overload) => overload.Declaration;
+        public override string ToString()
+        {
+            return this;
+        }
+    }
+    
     private readonly bool _useDateOnly;
     private readonly bool _useDateTime;
     private readonly bool _addAspNetAttributes;
-    private readonly List<string> _parameters = new();
-    private readonly List<string> _queryParameters = new();
-    private readonly List<string> _bodies = new();
+    private readonly List<Parameter> _parameters = new();
+    private readonly List<Parameter> _queryParameters = new();
+    private readonly List<Parameter> _bodies = new();
     private bool _withCancellation;
+    private Parameter? CancellationToken => _withCancellation? new Parameter("CancellationToken", "cancellationToken") : null;
 
     private ParameterBuilder(bool useDateOnly, bool useDateTime, bool addAspNetAttributes)
     {
@@ -29,8 +49,9 @@ public class ParameterBuilder
         _parameters.AddRange(parameters.Where(p => !p.IsQueryParameter).Select(p =>
         {
             var typeName = p.GetTypeName(_useDateOnly, _useDateTime);
-            var result = $"{typeName} {p.Name}";
-            if (_addAspNetAttributes) result = $"[FromRoute] {result}";
+           
+            var result = new Parameter(typeName, p.Name);
+            if (_addAspNetAttributes) result.Attributes.Add("[FromRoute]");
             return result;
         }));
         return this;
@@ -38,12 +59,12 @@ public class ParameterBuilder
 
     public ParameterBuilder AddDurableClient()
     {
-        _parameters.Insert(0, "IDurableOrchestrationClient orchestrationClient");
+        _parameters.Insert(0, new Parameter("IDurableOrchestrationClient","orchestrationClient"));
         return this;
     }
     public ParameterBuilder AddTags()
     {
-        _parameters.Insert(0, "IReadOnlyList<string> openApiTags");
+        _parameters.Insert(0, new Parameter("IReadOnlyList<string>", OpenapiTagsParameterName));
         return this;
     }
     public void AddQueryParameters(IEnumerable<ParameterObject> queryParameters, bool nullableDefaults = false)
@@ -52,14 +73,14 @@ public class ParameterBuilder
         {
             var typeName = p.GetTypeName(_useDateOnly, _useDateTime);
             var nullableAddition = nullableDefaults && !p.Required && typeName != "string" && !typeName.EndsWith('?')? "?" : "";
-            var result = $"{typeName}{nullableAddition} {p.Name}";
-            if (_addAspNetAttributes) result = $"[FromQuery] {result}";
+            var result = new Parameter($"{typeName}{nullableAddition}", p.Name);
+            if (_addAspNetAttributes) result.Attributes.Add("[FromQuery]");
             if (p.IsEnum && p.DefaultValue != null)
-                result += $" = {typeName}.{ModelGenerator.EnumNameForValue(p.DefaultValue)}";
-            else if (p.DefaultValue != null) 
-                result += $" = {p.DefaultValue}";
+                result.DefaultValue = $"{typeName}.{ModelGenerator.EnumNameForValue(p.DefaultValue)}";
+            else if (p.DefaultValue != null)
+                result.DefaultValue = p.DefaultValue;
             else if (!p.Required)
-                result += $" = null";
+                result.DefaultValue = "null";
             return result;
         }));
     }
@@ -70,41 +91,29 @@ public class ParameterBuilder
         return this;
     }
 
-    public ParameterBuilder AddBody(string bodyParam)
+    public ParameterBuilder AddBody(string type, string name)
     {
-        _bodies.Add(_addAspNetAttributes ? $"[FromBody] {bodyParam}" : bodyParam);
+        var result = new Parameter(type, name);
+        if (_addAspNetAttributes) result.Attributes.Add("[FromBody]"); 
+        _bodies.Add(result);
         return this;
     }
 
-    public List<string> Build()
+    public List<Overload> BuildOverloads()
     {
-        var result = new List<string>();
-        if(_bodies.Any())
-            result.AddRange(_bodies.Select(BuildForBody));
-        else
-            result.Add(BuildForBody(null));
-        return result;
-    }
-    public IEnumerable<(string parameters, string body)> BuildWithBodies()
-    {
-        if (_bodies.Any())
-            foreach (var body in _bodies)
-            {
-                yield return (BuildForBody(body), body);
-            }
-        else
-            yield return (BuildForBody(null), "");
+        if (_bodies.Any()) 
+            return _bodies.Select(b=>new Overload(GetOrderedParameters(b))).ToList();
+        return new() { new Overload(GetOrderedParameters(null)) };
+
     }
 
-    protected string BuildForBody(string? body)
-    {
-        var elements = new List<string>(_parameters);
-        if(body != null)
-            elements.Add(body);
-        elements.AddRange(_queryParameters);
-        if(_withCancellation)
-            elements.Add("CancellationToken cancellationToken = default");
-        return string.Join(", ", elements);
-    }
+    public List<string> Build() => BuildOverloads().Select(o=>o.Declaration).ToList();
 
+    private IEnumerable<Parameter> GetOrderedParameters(Parameter? body)
+    {
+        foreach (var parameter in _parameters) yield return parameter;
+        if (body != null) yield return body;
+        foreach (var parameter in _queryParameters) yield return parameter;
+        if (CancellationToken != null) yield return CancellationToken;
+    }
 }

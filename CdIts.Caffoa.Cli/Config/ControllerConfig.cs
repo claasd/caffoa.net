@@ -3,7 +3,7 @@ using CdIts.Caffoa.Cli.Errors;
 
 namespace CdIts.Caffoa.Cli.Config;
 
-public class ControllerConfig
+public class ControllerConfig:IInterfaceConfig
 {
     private string? _name;
     private string? _ns;
@@ -28,6 +28,11 @@ public class ControllerConfig
         set => _targetFolder = value;
     }
     public string? ControllerName { get; set; }
+    public string? InterfaceName { get; set; }
+
+    public string? InterfaceNamespace { get; set; }
+
+    public string? InterfaceTargetFolder { get; set; }
 
     public string GetControllerName(string prefix)
     {
@@ -40,4 +45,19 @@ public class ControllerConfig
             name = $"{prefix}{name}";
         return name;
     }
+
+    public string GetInterfaceName(string prefix)
+    {
+        var name = InterfaceName;
+        if (name == null)
+            name = $"I{Name}{prefix}Service";
+        else if (name.Contains("{Tag}"))
+            name = name.Replace("{Tag}", prefix);
+        else
+            name = $"{prefix}{name}";
+        return name;
+    }
+    public string GetInterfaceTargetFolder() => InterfaceTargetFolder ?? TargetFolder;
+
+    public string GetInterfaceNamespace() => InterfaceNamespace ?? Namespace;
 }

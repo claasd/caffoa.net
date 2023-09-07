@@ -244,7 +244,7 @@ public class FunctionsGenerator
             result = filtered.Select(p => p.Name).ToList();
         if (_config.PassTags is true)
         {
-            var tags = string.Join(", ", endpoint.Tags.Select(t => $"\"{t}\""));
+            var tags = string.Join(", ", endpoint.Tags.Quote());
             result.Insert(0, $"new string[] {{ {tags} }}");
         }
 

@@ -65,7 +65,7 @@ public class ClientGenerator
                 var format = new Dictionary<string, object>();
                 format["RESULT"] = GetResponse(endpoint);
                 format["NAME"] = endpoint.Name;
-                format["PARAMS"] = parameter;
+                format["PARAMS"] = parameter.Declaration;
                 format["DOC"] = string.Join("\n        /// ", endpoint.DocumentationLines);
                 format["METHOD"] = endpoint.Operation.ToLower().FirstCharUpper();
                 format["ROUTE"] = FormatRoute(endpoint.Route, endpoint.Parameters);
