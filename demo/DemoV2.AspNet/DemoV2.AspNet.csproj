@@ -21,9 +21,6 @@
         </None>
     </ItemGroup>
     <ItemGroup>
-        <FrameworkReference Include="Microsoft.AspNetCore.App" />
-    </ItemGroup>
-    <ItemGroup>
         <ProjectReference Include="..\..\CdIts.Caffoa.Base\CdIts.Caffoa.Base.csproj" />
         <ProjectReference Include="..\..\CdIts.Caffoa.Extensions\CdIts.Caffoa.Extensions.csproj" />
         <ProjectReference Include="..\..\CdIts.Caffoa.System.Text.Json\CdIts.Caffoa.System.Text.Json.csproj" />

@@ -79,20 +79,20 @@ public class ControllerGenerator
                 var signature = interfaceSignature.ParametersIncludingBody.ToList();
                 signature.RemoveAll(p => p.Name == ParameterBuilder.OpenapiTagsParameterName);
                 
-                var call = interfaceSignature.ParametersIncludingBody.Select(p=>p.Name).ToList();
-                var tagsIndex = call.IndexOf(ParameterBuilder.OpenapiTagsParameterName);
-                if (tagsIndex > 0) call[tagsIndex] = $"new string[] {{ {string.Join(", ", endpoint.Tags.Quote())} }}";
+                var callParams = interfaceSignature.ParametersIncludingBody.Select(p=>p.Name).ToList();
+                var tagsIndex = callParams.IndexOf(ParameterBuilder.OpenapiTagsParameterName);
+                if (tagsIndex > 0) callParams[tagsIndex] = $"new string[] {{ {string.Join(", ", endpoint.Tags.Quote())} }}";
+                var (responseType, bodyFormatString) = GetResponseType(endpoint, _config.AsyncArrays is true);
+                var body = string.Format(bodyFormatString, $"GetService().{endpoint.Name}Async({string.Join(", ", callParams)})");
                 
                 var format = new Dictionary<string, object>();
-                format["RESULT"] = GetResponseType(endpoint, _config.AsyncArrays is true);
+                format["RESULT"] = responseType;
                 format["NAME"] = endpoint.Name;
                 format["OPERATION"] = endpoint.Operation.ToObjectName();
-                format["PARAMS"] = new ParameterBuilder.Overload(signature).Declaration; 
-                format["CALLPARAMS"] = string.Join(", ", call);
-                format["STATUSCODE"] = endpoint.Responses.First().Code;
+                format["PARAMS"] = new ParameterBuilder.Overload(signature).Declaration;
+                format["BODY"] = body;
                 format["PATH"] = endpoint.Route;
                 format["DOC"] = string.Join("\n    /// ", endpoint.DocumentationLines);
-                format["TAGS"] = _config.PassTags ?? false ? $"var tags = new[] {{{string.Join(", ", endpoint.Tags.Select(t => $"\"{t}\""))}}};\n        " : "";
                 var formatted = methodTemplate.FormatDict(format);
                 methods.Add(formatted);
             }
@@ -101,7 +101,7 @@ public class ControllerGenerator
         return string.Join("\n", methods);
     }
 
-    public string GetResponseType(EndPointModel endpoint, bool asyncArrays)
+    public (string response, string body) GetResponseType(EndPointModel endpoint, bool asyncArrays)
     {
         var codes = new List<int>();
         string? typeName = null;
@@ -114,15 +114,34 @@ public class ControllerGenerator
             {
                 _logger.LogWarning(
                     $"Returning different objects is not supported, defaulting to IActionResult for {endpoint.Name}/{endpoint.Operation}");
-                return "IActionResult";
+                return ("IActionResult", "=> {0};");
             }
 
             typeName = response.TypeName;
             if (response.Unknown)
                 typeName = "IActionResult";
         }
-        return FormatResponse(codes, typeName, asyncArrays);
+        return (FormatResponse(codes, typeName, asyncArrays), FormatBody(codes, typeName, asyncArrays));
     }
+
+    private static string FormatBody(List<int> codes, string? typeName, bool asyncArrays)
+    {
+        // Fill {0} with the call 
+        if (codes.Count == 0 || typeName == "IActionResult")
+            return "=> await {0};";
+        if (codes.Count == 1 && typeName is null)
+            return $"{{{{ await {{0}}; return StatusCode({codes.First()}); }}}}";
+        if (codes.Count == 1 && asyncArrays && typeName!.StartsWith("IEnumerable<"))
+            return $"=> StatusCode({codes.First()}, {{0}});";
+        if (codes.Count == 1)
+            return $"=> StatusCode({codes.First()}, await {{0}});";
+        if (typeName is null)
+            return "=> StatusCode(await {0});";
+        if (asyncArrays && typeName!.StartsWith("IEnumerable<"))
+            return "{{ var (res, code) = {0}; return StatusCode(code, res); }}";
+        return "{{ var (res, code) = await {0}; return StatusCode(code, res); }}"; 
+    }
+
     private static string FormatResponse(ICollection codes, string? typeName, bool asyncArrays)
     {
         if (codes.Count == 0 || typeName == "IActionResult")
@@ -130,7 +149,7 @@ public class ControllerGenerator
         if (codes.Count == 1 && typeName is null)
             return "Task<IActionResult>";
         if (codes.Count == 1 && asyncArrays && typeName!.StartsWith("IEnumerable<"))
-            return $"IAsyncEnumerable{typeName[11..]}";
+            return $"IActionResult<IAsyncEnumerable{typeName[11..]}>";
         if (codes.Count == 1)
             return $"Task<ActionResult<{typeName}>>";
         if (typeName is null)
