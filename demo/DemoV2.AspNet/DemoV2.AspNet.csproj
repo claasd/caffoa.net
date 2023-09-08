@@ -24,6 +24,5 @@
         <ProjectReference Include="..\..\CdIts.Caffoa.Base\CdIts.Caffoa.Base.csproj" />
         <ProjectReference Include="..\..\CdIts.Caffoa.Extensions\CdIts.Caffoa.Extensions.csproj" />
         <ProjectReference Include="..\..\CdIts.Caffoa.System.Text.Json\CdIts.Caffoa.System.Text.Json.csproj" />
-        <ProjectReference Include="..\DemoV2.Text.Json\DemoV2.Text.Json.csproj" />
     </ItemGroup>
 </Project>
