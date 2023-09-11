@@ -24,4 +24,6 @@ public class PropertyData
     public bool Deprecated { get; set; }
     public string? Converter { get; set; }
     public bool InnerTypeIsOtherSchema { get; set; }
+    public bool Generate { get; set; } = true;
+    public bool Delegate { get; set; }
 }

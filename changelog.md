@@ -1,4 +1,7 @@
 # caffoa changelog
+## 2.12.0
+* new attribute: `x-caffoa-generate`. If set to false, the property will not be generated
+* new attribute: `x-caffoa-delegate`. If et to true, the implementation of the property getter and setter will be delegated to user-written partial method.
 
 ## 2.11.0
 * allow to set deepCopy default value via `deepCopyDefaultValue` config option. Default is true due to backward compatibility

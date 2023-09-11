@@ -161,6 +161,8 @@ public class ModelGenerator
             return "";
         foreach (var property in item.Properties)
         {
+            if (!property.Generate)
+                continue;
             var formatter = new PropertyFormatter(property, _config);
             var format = new Dictionary<string, object>();
             var type = formatter.Type();
@@ -173,7 +175,15 @@ public class ModelGenerator
             format["NAMEUPPER"] = property.Name.ToObjectName();
             format["NAMELOWER"] = property.Name;
 
-            if (_config.UseConstants is true && property.CanBeConstant())
+            if (property.Delegate)
+            {
+                if (enumClasses.Find(c => c.ClassName == type)?.NullableEnum ?? false)
+                    format["TYPE"] = type + "?";
+                var file = Templates.GetTemplate("ModelPropertyDelegateTemplate.tpl");
+                var formatted = file.FormatDict(format);
+                properties.Add(formatted);
+            }
+            else if (_config.UseConstants is true && property.CanBeConstant())
             {
                 format["DEFAULT"] = formatter.Default(true);
                 var file = Templates.GetTemplate("ModelConstTemplate.tpl");

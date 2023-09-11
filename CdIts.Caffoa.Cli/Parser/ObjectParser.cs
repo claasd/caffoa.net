@@ -68,6 +68,8 @@ public abstract class ObjectParser
         var property = new PropertyData(name, required);
         property.Deprecated = schema.Deprecated;
         property.CustomAttributes = ParseCustomAttributes(schema.Extensions, name);
+        property.Generate = ParseGenerateAttribute(schema.Extensions);
+        property.Delegate = ParseDelegateAttribute(schema.Extensions);
         property.Converter = ParseCustomConverter(schema.Extensions, name);
 
         if (!schema.IsRealObject(_enumMode))
@@ -149,6 +151,21 @@ public abstract class ObjectParser
         return null;
     }
 
+    private bool ParseGenerateAttribute(IDictionary<string, IOpenApiExtension> extensions)
+    {
+        if (!extensions.TryGetValue("x-caffoa-generate", out var singleAnnotation)) return true;
+        var item = singleAnnotation as OpenApiBoolean ?? new OpenApiBoolean(true);
+        return item.Value;
+    }
+    
+    private bool ParseDelegateAttribute(IDictionary<string, IOpenApiExtension> extensions)
+    {
+        if (!extensions.TryGetValue("x-caffoa-delegate", out var singleAnnotation)) return false;
+        var item = singleAnnotation as OpenApiBoolean ?? new OpenApiBoolean(false);
+        return item.Value;
+
+    }
+    
     private List<string> ParseCustomAttributes(IDictionary<string, IOpenApiExtension> extensions, string name)
     {
         try

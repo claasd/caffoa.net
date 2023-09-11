@@ -272,6 +272,20 @@ user:
 ```
 this will add the annotation `[PrimaryKey]` the the `id` property.
 
+## Removing generation of schema properties
+it is possible to add a `x-caffoa-generate: false` annotation to a schema property. Then this property, as well as any copying, will not be generated.
+
+## Delegegation implementation of properties to manually written methods
+it is possible to add a `x-caffoa-delegate: true` annotation to a schema property. This will then generate partial methods to get/set this property. At least the getter must be implementeed in a shared class, the setter can be omited if the attribute is a read-only attribute.
+For example, if a property 'CombinedName' has a delegate attribute, the property will be generated as follows:
+```dotnet
+public virtual string CombinedName {
+    get => GetCombinedName();
+    set => SetCombinedName();
+}
+public partial string GetCombinedName();
+partial void SetCombinedName(string value);
+```
 
 # Changelog
 The changelog is [here](changelog.md)

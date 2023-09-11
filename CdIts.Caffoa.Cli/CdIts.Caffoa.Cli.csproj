@@ -39,6 +39,7 @@
         <EmbeddedResource Include="data\ModelEnumPropertyTemplate.tpl" />
         <EmbeddedResource Include="data\ModelExtensionContentTemplate.tpl" />
         <EmbeddedResource Include="data\ModelInterfaceTemplate.tpl" />
+        <EmbeddedResource Include="data\ModelPropertyDelegateTemplate.tpl" />
         <EmbeddedResource Include="data\ModelPropertyTemplate.tpl" />
         <EmbeddedResource Include="data\ModelTemplate.tpl" />
         <EmbeddedResource Include="data\ModelExtensionTemplate.tpl" />
