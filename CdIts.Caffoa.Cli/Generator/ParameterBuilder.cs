@@ -10,6 +10,7 @@ public class ParameterBuilder
     {
         public string? DefaultValue { get; set; }
         public List<string> Attributes { get; set; } = new();
+        public bool IsBody { get; set; }
         public string Declaration => $"{string.Join(" ", Attributes)} {Type} {Name}{(DefaultValue != null ? $" = {DefaultValue}" : "")}".Trim();
         public static implicit operator string(Parameter p) => p.Declaration;
         public override string ToString()
@@ -21,6 +22,7 @@ public class ParameterBuilder
     public record Overload(IEnumerable<Parameter> ParametersIncludingBody)
     {
         public string Declaration => string.Join(", ", ParametersIncludingBody);
+        public Parameter? BodyParameter => ParametersIncludingBody.FirstOrDefault(p => p.IsBody);
         public static implicit operator string(Overload overload) => overload.Declaration;
         public override string ToString()
         {
@@ -98,7 +100,7 @@ public class ParameterBuilder
 
     public ParameterBuilder AddBody(string type, string name)
     {
-        var result = new Parameter(type, name);
+        var result = new Parameter(type, name) { IsBody = true };
         if (_addAspNetAttributes) result.Attributes.Add("[FromBody]"); 
         _bodies.Add(result);
         return this;

@@ -32,6 +32,7 @@
         <EmbeddedResource Include="data\ClientMethod.tpl" />
         <EmbeddedResource Include="data\ClientTemplate.tpl" />
         <EmbeddedResource Include="data\ControllerMethod.tpl" />
+        <EmbeddedResource Include="data\ControllerSelectionBody.tpl" />
         <EmbeddedResource Include="data\FunctionsMethod.tpl" />
         <EmbeddedResource Include="data\FunctionsSwitchMethod.tpl" />
         <EmbeddedResource Include="data\FunctionsTemplate.tpl" />
