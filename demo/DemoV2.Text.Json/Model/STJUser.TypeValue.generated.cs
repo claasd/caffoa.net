@@ -5,7 +5,7 @@ using Caffoa.JsonConverter;
 namespace DemoV2.Text.Json.Model {
     public partial class STJUser {
         // enum values for "type"
-        [JsonConverter(typeof(StringEnumConverter))]
+        [JsonConverter(typeof(JsonStringEnumConverter))]
         public enum TypeValue {
             [EnumMember(Value = "simple")] Simple
         }

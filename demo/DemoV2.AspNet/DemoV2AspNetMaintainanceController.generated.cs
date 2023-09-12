@@ -32,7 +32,7 @@ public class DemoV2AspNetMaintainanceController : ControllerBase
     /// 202 -> started long running function
     ///</summary>
     [HttpPost("startLongRunningFunction/{id}")]
-    public async Task<ActionResult<ASPLongRunningfunctionStatus>> LongRunningFunctionAsync([FromRoute] Guid id, CancellationToken cancellationToken = default) => StatusCode(202, await GetService().LongRunningFunctionAsync(id, cancellationToken));
+    public async Task<ActionResult<ASPLongRunningfunctionStatus>> LongRunningFunctionAsync([FromRoute] Guid id, CancellationToken cancellationToken = default) { return StatusCode(202, await GetService().LongRunningFunctionAsync(id, cancellationToken)); }
 
 
 }

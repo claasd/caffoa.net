@@ -48,6 +48,7 @@ public class ModelGenerator
         parameters["NAMESPACE"] = _service.Model!.Namespace;
         parameters["NAME"] = item.ClassName;
         parameters["DESCRIPTION"] = formatter.Description;
+        parameters["ATTRIBUTES"] = _config.Flavor == CaffoaConfig.GenerationFlavor.SystemTextJson ? string.Join("\n    ", item.Interface!.Children.Select(c => $"[JsonDerivedType(typeof({c}))]")) : string.Empty;
         parameters["TYPE"] = item.Interface?.Discriminator?.ToObjectName() ?? "";
         parameters["IMPORTS"] = PropertyFormatter.Imports(_config.Flavor);
         var formatted = file.FormatDict(parameters);

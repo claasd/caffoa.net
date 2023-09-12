@@ -1,7 +1,7 @@
 {IMPORTS}
 
 namespace {NAMESPACE} {{
-    {DESCRIPTION}
+    {DESCRIPTION}{ATTRIBUTES}
     public interface {NAME} {{
         [JsonIgnore]
         string {TYPE}Discriminator {{ get; }}

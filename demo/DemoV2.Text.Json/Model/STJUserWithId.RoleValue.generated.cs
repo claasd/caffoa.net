@@ -5,7 +5,7 @@ using Caffoa.JsonConverter;
 namespace DemoV2.Text.Json.Model {
     public partial class STJUserWithId {
         // enum values for "role"
-        [JsonConverter(typeof(StringEnumConverter))]
+        [JsonConverter(typeof(JsonStringEnumConverter))]
         public enum RoleValue {
             [EnumMember(Value = "admin")] Admin,
             [EnumMember(Value = "reader")] Reader,
