@@ -91,6 +91,33 @@ services:
       namespace: DemoV2.AspNet
       name: DemoV2AspNet
 
+  - apiPath: tests/base.openapi.yml
+    config:
+      prefix: 'ASPN'
+    model:
+      namespace: DemoV2.AspNetNewtonSoft.Model.Base
+      targetFolder: ./demo/DemoV2.AspNetNewtonSoft/Model/Base
+  - apiPath: tests/openapi.yml
+    config:
+      prefix: 'ASPN'
+      imports:
+        - DemoV2.AspNetNewtonSoft.Model.Base
+      requestBodyType: # overwrite the JSON type that is passed to the method for some operations
+        - type: JToken
+          import: Newtonsoft.Json.Linq
+          filter: # the type is overwritten if one of the filters match
+            operations:
+              - user-patch
+            methods:
+              - patch
+    model:
+      namespace: DemoV2.AspNetNewtonSoft.Model
+      targetFolder: ./demo/DemoV2.AspNetNewtonSoft/Model
+    controller:
+      targetFolder: ./demo/DemoV2.AspNetNewtonSoft
+      namespace: DemoV2.AspNetNewtonSoft
+      name: DemoV2AspNetNewtonSoft
+
   - apiPath: tests/openapi.yml
     config:
       prefix: 'STJ'
