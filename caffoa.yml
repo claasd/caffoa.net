@@ -65,14 +65,14 @@ services:
   - apiPath: tests/base.openapi.yml
     config:
       prefix: 'ASP'
-      flavor: SystemTextJson
+      flavor: SystemTextJson70
     model:
       namespace: DemoV2.AspNet.Model.Base
       targetFolder: ./demo/DemoV2.AspNet/Model/Base
   - apiPath: tests/openapi.yml
     config:
       prefix: 'ASP'
-      flavor: SystemTextJson
+      flavor: SystemTextJson70
       imports:
         - DemoV2.AspNet.Model.Base
       requestBodyType: # overwrite the JSON type that is passed to the method for some operations

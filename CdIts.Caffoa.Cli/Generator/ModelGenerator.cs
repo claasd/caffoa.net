@@ -48,8 +48,12 @@ public class ModelGenerator
         parameters["NAMESPACE"] = _service.Model!.Namespace;
         parameters["NAME"] = item.ClassName;
         parameters["DESCRIPTION"] = formatter.Description;
-        parameters["ATTRIBUTES"] = (_config.Flavor == CaffoaConfig.GenerationFlavor.SystemTextJson && _service.Controller !=null && _service.Function == null ) 
-            ? string.Join("\n    ", item.Interface!.Children.Select(c => $"[JsonDerivedType(typeof({c}))]")) : string.Empty; //Needed to serialize interfaces. supported starting .NET 7. So only use when generating controllers.
+        parameters["ATTRIBUTES"] = _config.Flavor switch
+        {
+            CaffoaConfig.GenerationFlavor.SystemTextJson => "",
+            CaffoaConfig.GenerationFlavor.SystemTextJson70 => string.Join("\n    ", item.Interface!.Children.Select(c => $"[JsonDerivedType(typeof({c}))]")),
+            _ => string.Empty
+        }; //Needed to serialize interfaces. supported starting .NET 7. So only use when generating controllers.
         parameters["TYPE"] = item.Interface?.Discriminator?.ToObjectName() ?? "";
         parameters["IMPORTS"] = PropertyFormatter.Imports(_config.Flavor);
         var formatted = file.FormatDict(parameters);
@@ -327,6 +331,7 @@ public class ModelGenerator
             jsonproperty = _config.Flavor switch
             {
                 CaffoaConfig.GenerationFlavor.SystemTextJson => "JsonStringEnumConverter",
+                CaffoaConfig.GenerationFlavor.SystemTextJson70 => "JsonStringEnumConverter",
                 _ => "StringEnumConverter",
              };
             enumDefs = enums.Select(item => $"[EnumMember(Value = {item.Value})] {item.Key}");

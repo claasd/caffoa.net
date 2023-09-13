@@ -47,7 +47,7 @@ public class Main
         serializer.Serialize(stream, defaultConfig);
     }
 
-    
+
     public async Task<List<ApiBuilder>> GenerateBuilders()
     {
 
@@ -88,9 +88,12 @@ public class Main
                     extensionGenerators.Add(generator);
                 }
 
-                generator.Imports.Add(builder.Config.Flavor is CaffoaConfig.GenerationFlavor.SystemTextJson
-                    ? "System.Text.Json"
-                    : "Newtonsoft.Json.Linq");
+                generator.Imports.Add(builder.Config.Flavor switch
+                {
+                    CaffoaConfig.GenerationFlavor.SystemTextJson => "System.Text.Json",
+                    CaffoaConfig.GenerationFlavor.SystemTextJson70 => "System.Text.Json",
+                    _ => "Newtonsoft.Json.Linq"
+                });
                 generator.Add(builder.ExtensionData, builder.ExtensionImports);
             }
         }

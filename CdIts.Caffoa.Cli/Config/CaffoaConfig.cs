@@ -19,7 +19,12 @@ public class CaffoaConfig
 
     public string GetGenericAdditionalPropertiesType() => GenericAdditionalPropertiesType ?? GetGenericType();
 
-    public string GetGenericType() => Flavor is GenerationFlavor.SystemTextJson ? "JsonElement?" : "JToken";
+    public string GetGenericType() => Flavor switch
+    {
+        GenerationFlavor.SystemTextJson => "JsonElement?",
+        GenerationFlavor.SystemTextJson70 => "JsonElement?",
+        _ => "JToken"
+    };
 
     public List<string>? Imports { get; set; }
     public List<RequestBodyTypeConfig>? RequestBodyType { get; set; }
@@ -51,6 +56,7 @@ public class CaffoaConfig
         [EnumMember(Value = "System.Text.Json")]
         SystemTextJson,
         [EnumMember(Value = "Json.NET")] JsonNet,
+        [EnumMember(Value= "System.Text.Json_NET70")] SystemTextJson70,
     }
     public bool? ConstructorOnRequiredObjects { get; set; }
     public GenerationFlavor? Flavor { get; set; }

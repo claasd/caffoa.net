@@ -46,7 +46,7 @@ public class FunctionsGenerator
             imports.AddRange(_config.Imports);
         if (_modelNamespace != null)
             imports.Add(_modelNamespace);
-        if (endpoints.Find(e => e.RequestBodyType is SelectionBodyModel) != null && _config.Flavor is not CaffoaConfig.GenerationFlavor.SystemTextJson)
+        if (endpoints.Find(e => e.RequestBodyType is SelectionBodyModel) != null && (_config.Flavor ?? CaffoaConfig.GenerationFlavor.JsonNet) is CaffoaConfig.GenerationFlavor.JsonNet)
             imports.Add("Newtonsoft.Json.Linq");
         var extraVars = new List<AdditionalInterfaceModel>();
         if (_config.ParsePathParameters is not false || _config.ParseQueryParameters is not false)
@@ -208,9 +208,12 @@ public class FunctionsGenerator
         parameter["CASES_ALLOWED_VALUES"] = string.Join(", ", model.Mapping.Keys.Select(k => $"\"{k}\""));
         parameter["CASES"] = string.Join("\n                    ", cases.Select(c => $"{c},"));
         parameter["GENERIC_TYPE"] = _config.GetGenericType();
-        parameter["DISC_READ"] = _config.Flavor is CaffoaConfig.GenerationFlavor.SystemTextJson
-            ? $"jsonToken?.GetProperty(\"{model.Disriminator}\").GetString()?.ToLower()"
-            : $"jsonToken[\"{model.Disriminator}\"]?.ToString()?.ToLower()";
+        parameter["DISC_READ"] = _config.Flavor switch
+        {
+            CaffoaConfig.GenerationFlavor.SystemTextJson => $"jsonToken?.GetProperty(\"{model.Disriminator}\").GetString()?.ToLower()",
+            CaffoaConfig.GenerationFlavor.SystemTextJson70 => $"jsonToken?.GetProperty(\"{model.Disriminator}\").GetString()?.ToLower()",
+            _ => $"jsonToken[\"{model.Disriminator}\"]?.ToString()?.ToLower()"
+        };
         return file.FormatDict(parameter);
     }
 

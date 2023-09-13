@@ -49,7 +49,7 @@ public class ControllerGenerator
             imports.AddRange(_config.Imports);
         if (_modelNamespace != null)
             imports.Add(_modelNamespace);
-        if (endpoints.Find(e => e.RequestBodyType is SelectionBodyModel) != null && _config.Flavor is not CaffoaConfig.GenerationFlavor.SystemTextJson)
+        if (endpoints.Find(e => e.RequestBodyType is SelectionBodyModel) != null && (_config.Flavor ?? CaffoaConfig.GenerationFlavor.JsonNet) is CaffoaConfig.GenerationFlavor.JsonNet)
             imports.Add("Newtonsoft.Json.Linq");
 
         var name = _controllerConfig.GetControllerName(namePrefix);
@@ -87,7 +87,12 @@ public class ControllerGenerator
             if (endpoint.RequestBodyType is SelectionBodyModel)
             {
                 var bodyIndex = signature.FindIndex(p => p.IsBody);
-                signature[bodyIndex] = new ParameterBuilder.Parameter(_config.Flavor == CaffoaConfig.GenerationFlavor.SystemTextJson ? "JsonDocument": "JToken", "payload");
+                signature[bodyIndex] = new ParameterBuilder.Parameter(_config.Flavor switch
+                {
+                    CaffoaConfig.GenerationFlavor.SystemTextJson => "JsonDocument",
+                    CaffoaConfig.GenerationFlavor.SystemTextJson70 => "JsonDocument",
+                    _ => "JToken"
+                }, "payload");
             }
 
             var format = new Dictionary<string, object>();
@@ -116,13 +121,23 @@ public class ControllerGenerator
             if (tagsIndex > 0) callParams[tagsIndex] = $"new string[] {{ {string.Join(", ", endpoint.Tags.Quote())} }}";
             var bodyParameter = x.Second.BodyParameter!;
             var bodyIndex = callParams.IndexOf(bodyParameter.Name);
-            callParams[bodyIndex] = _config.Flavor == CaffoaConfig.GenerationFlavor.SystemTextJson ? $"{bodyParameter.Name}.RootElement.Deserialize<{bodyParameter.Type}>()" : $"{bodyParameter.Name}.ToObject<{bodyParameter.Type}>()";
+            callParams[bodyIndex] = _config.Flavor switch
+            {
+                CaffoaConfig.GenerationFlavor.SystemTextJson => $"{bodyParameter.Name}.RootElement.Deserialize<{bodyParameter.Type}>()",
+                CaffoaConfig.GenerationFlavor.SystemTextJson70 => $"{bodyParameter.Name}.RootElement.Deserialize<{bodyParameter.Type}>()",
+                _ => $"{bodyParameter.Name}.ToObject<{bodyParameter.Type}>()"
+            };
             var call = string.Format(bodyFormatString, $"GetService().{endpoint.Name}Async({string.Join(", ", callParams)})");
             return $"case {x.First.Quote()}: {{ {call} }}";
         });
         body = selectionBodyTemplate.FormatDict(new Dictionary<string, object>
         {
-            ["SWITCHON"] = _config.Flavor == CaffoaConfig.GenerationFlavor.SystemTextJson? $"payload.RootElement.GetProperty({selectionBodyModel.Disriminator.Quote()}).GetString()": $"payload.Value<string>({selectionBodyModel.Disriminator.Quote()})",
+            ["SWITCHON"] = _config.Flavor switch
+            {
+                CaffoaConfig.GenerationFlavor.SystemTextJson => $"payload.RootElement.GetProperty({selectionBodyModel.Disriminator.Quote()}).GetString()",
+                CaffoaConfig.GenerationFlavor.SystemTextJson70 => $"payload.RootElement.GetProperty({selectionBodyModel.Disriminator.Quote()}).GetString()",
+                _ => $"payload.Value<string>({selectionBodyModel.Disriminator.Quote()})"
+            },
             ["CASES"] = string.Join("\n        ", cases),
         });
         return body;
