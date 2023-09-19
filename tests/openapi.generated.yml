@@ -2191,6 +2191,98 @@ paths:
             - enum space
             - enum-sepcial_CHARS
           type: string
+components: { }
+                    format: uuid
+  /enums/list:
+    get:
+      tags:
+        - user
+      operationId: listEnums
+      responses:
+        '200':
+          description: a list of neum
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  enum:
+                    - enum1
+                    - enum2
+                    - enum space
+                    - enum-sepcial_CHARS
+                  type: string
+    parameters:
+      - name: filter
+        in: query
+        schema:
+          enum:
+            - enum1
+            - enum2
+            - enum space
+            - enum-sepcial_CHARS
+          type: string
+      - name: include
+        in: query
+        schema:
+          type: array
+          items:
+            enum:
+              - enum1
+              - enum2
+              - enum space
+              - enum-sepcial_CHARS
+            type: string
+          nullable: true
+      - name: flags
+        in: query
+        schema:
+          type: array
+          items:
+            type: string
+          nullable: true
+      - name: exclude
+        in: query
+        schema:
+          type: array
+          items:
+            enum:
+              - enum1
+              - enum2
+              - enum space
+              - enum-sepcial_CHARS
+            type: string
+          nullable: true
+  '/enums/list/filter/{filter}':
+    get:
+      tags:
+        - user
+      operationId: listEnums2
+      responses:
+        '200':
+          description: a list of neum
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  enum:
+                    - enum1
+                    - enum2
+                    - enum space
+                    - enum-sepcial_CHARS
+                  type: string
+    parameters:
+      - name: filter
+        in: path
+        required: true
+        schema:
+          enum:
+            - enum1
+            - enum2
+            - enum space
+            - enum-sepcial_CHARS
+          type: string
 components: { }type: array
                 items:
                   enum:

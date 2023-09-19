@@ -121,6 +121,25 @@ namespace MyNamespace {
 
 Now implement all the logic in your implementation of the interface. You can now change your API, and regenerate the generated files without overwriting your code.
 
+## Crated ASP.NET Controller template
+If you specified the `controller` part in the config file, the tool will create files in the specified target folder:
+* `MyClassNameController.generated.cs`
+* `IMyClassNameService.generated.cs`
+
+The concept is the same as for `functions` described in the previous section. You will need to supply your factory via APS.NET Dependency injection usually assembled `Main()`. Example:
+``` csharp
+using Caffoa;
+
+var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddControllers().AddNewtonsoftJson(); //Add Controler and use NewtonSoft JSON
+builder.Services.AddCaffoaFactory<IMyClassName, MyFactory>();
+var app = builder.Build();
+app.MapControllers();
+await app.RunAsync();
+```
+To use Newtonsofts Json.NET you have to install the `Microsoft.AspNetCore.Mvc.NewtonsoftJson` Package and call `AddNewtonsoftJson()` as in the example above.
+Support for System.Text.Json is still experimental in Caffoa. You can enable it with the config option `flavor: SystemTextJson70` to target .NET 7's System.Text.Json that is much more sophisticated. 
+
 ## Created data objects from schemas
 
 If you specified the `model` part in the config file, the tool will generate a file for each schema defined in the components section of the openapi definition. The filename will be the schema name converted to UpperCamelCase with generated.cs added to the end (Example: `user`will create a class `User` defined in the file `User.generated.cs`).
@@ -180,11 +199,19 @@ config:
 services:
   - apiPath: userservice.openapi.yml
     config: null # optional, can be an config option. That option is then overriden for this api only
-    function:
+    function: # Generate Azure Functions for the API
       name: MyClassName
       namespace: MyNamespace
       targetFolder: ./output
       functionsName: null # name of the functions class. defaults to {name}Functions 
+      interfaceName: null # name of the interface class. defaults to I{name}Service. 
+      interfaceNamespace: null # defaults to 'namespace'. If given, the interface uses this namespace
+      interfaceTargetFolder: null # defaults to 'targetFolder'. If given, the interface is written to this folder
+    controller: # Generate ASP.NET Controller for the API
+      name: MyClassName
+      namespace: MyNamespace
+      targetFolder: ./output
+      controllerName: null # name of the ASP.NET controller class. defaults to {name}Controller
       interfaceName: null # name of the interface class. defaults to I{name}Service. 
       interfaceNamespace: null # defaults to 'namespace'. If given, the interface uses this namespace
       interfaceTargetFolder: null # defaults to 'targetFolder'. If given, the interface is written to this folder

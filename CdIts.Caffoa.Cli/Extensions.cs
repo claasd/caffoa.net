@@ -30,6 +30,8 @@ public static class Extensions
             return str[..1].ToUpper() + str[1..];
         return str;
     }
+    public static string Quote(this string str) => $"\"{str}\"";
+    public static IEnumerable<string> Quote(this IEnumerable<string> str) => str.Select(s => s.Quote());
 
     public static bool IsPrimitiveType(this OpenApiSchema schema)
     {

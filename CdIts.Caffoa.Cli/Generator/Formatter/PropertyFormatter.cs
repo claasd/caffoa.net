@@ -24,20 +24,23 @@ public class PropertyFormatter
 
     public string JsonProperty()
     {
-        if (_config.Flavor is CaffoaConfig.GenerationFlavor.SystemTextJson)
-            return "";
-        return _property.Required switch
+        return _config.Flavor switch
         {
-            true when _property.Nullable => ", Required = Required.AllowNull",
-            true => ", Required = Required.Always",
-            _ => ""
+            CaffoaConfig.GenerationFlavor.SystemTextJson => "",
+            CaffoaConfig.GenerationFlavor.SystemTextJson70 => "",
+            _ => _property.Required switch
+            {
+                true when _property.Nullable => ", Required = Required.AllowNull",
+                true => ", Required = Required.Always",
+                _ => ""
+            },
         };
     }
 
     public string JsonExtraProperties()
     {
-//        if (_property.Required && _config.Flavor is CaffoaConfig.GenerationFlavor.SystemTextJson)
-//            return "\n        [JsonRequired]";
+        //        if (_property.Required && _config.Flavor is CaffoaConfig.GenerationFlavor.SystemTextJson)
+        //            return "\n        [JsonRequired]";
         return "";
     }
 
@@ -61,7 +64,7 @@ public class PropertyFormatter
         name = _config.UseDateTime is true ? name.Replace("DateTimeOffset", "DateTime") : name;
         return name;
     }
-    
+
     public string Default(bool addSemicolonEnEmpty, List<SchemaItem>? enumClasses = null, bool constructorOnRequired = true)
     {
         var name = HandleDateTypes(_property.TypeName);
@@ -126,14 +129,22 @@ public class PropertyFormatter
     }
 
     public string JsonTagName() =>
-        _config.Flavor is CaffoaConfig.GenerationFlavor.SystemTextJson ? "JsonPropertyName" : "JsonProperty";
+        _config.Flavor switch
+        {
+            CaffoaConfig.GenerationFlavor.SystemTextJson => "JsonPropertyName",
+            CaffoaConfig.GenerationFlavor.SystemTextJson70 => "JsonPropertyName",
+            _ => "JsonProperty"
+        };
 
     public string Imports() => Imports(_config.Flavor);
 
     public static string Imports(CaffoaConfig.GenerationFlavor? flavor)
     {
-        if (flavor is CaffoaConfig.GenerationFlavor.SystemTextJson)
-            return "using System.Text.Json.Serialization;\nusing Caffoa.JsonConverter;";
-        return "using Newtonsoft.Json;\nusing Newtonsoft.Json.Converters;";
+        return flavor switch
+        {
+            CaffoaConfig.GenerationFlavor.SystemTextJson => "using System.Text.Json.Serialization;\nusing Caffoa.JsonConverter;",
+            CaffoaConfig.GenerationFlavor.SystemTextJson70 => "using System.Text.Json.Serialization;\nusing Caffoa.JsonConverter;",
+            _ => "using Newtonsoft.Json;\nusing Newtonsoft.Json.Converters;"
+        };
     }
 }

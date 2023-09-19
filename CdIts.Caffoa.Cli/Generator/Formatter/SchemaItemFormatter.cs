@@ -46,7 +46,7 @@ public class SchemaItemFormatter
     public string Imports(List<string>? modelImports, List<string>? configImports)
     {
         var imports = new List<string>();
-        if (_config.Flavor is CaffoaConfig.GenerationFlavor.SystemTextJson)
+        if (_config.Flavor is CaffoaConfig.GenerationFlavor.SystemTextJson || _config.Flavor is CaffoaConfig.GenerationFlavor.SystemTextJson70)
         {
             imports.Add("System.Text.Json");
             imports.Add("System.Text.Json.Serialization");

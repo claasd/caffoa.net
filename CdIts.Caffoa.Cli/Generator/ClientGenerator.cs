@@ -30,7 +30,7 @@ public class ClientGenerator
         if (_modelNamespace != null)
             imports.Add(_modelNamespace);
         if (endpoints.Find(e => e.RequestBodyType is SelectionBodyModel) != null &&
-            _config.Flavor is not CaffoaConfig.GenerationFlavor.SystemTextJson)
+            (_config.Flavor ?? CaffoaConfig.GenerationFlavor.JsonNet) is CaffoaConfig.GenerationFlavor.JsonNet)
             imports.Add("Newtonsoft.Json.Linq");
         Directory.CreateDirectory(_clientConfig.TargetFolder);
         var format = new Dictionary<string, object>();
@@ -65,7 +65,7 @@ public class ClientGenerator
                 var format = new Dictionary<string, object>();
                 format["RESULT"] = GetResponse(endpoint);
                 format["NAME"] = endpoint.Name;
-                format["PARAMS"] = parameter;
+                format["PARAMS"] = parameter.Declaration;
                 format["DOC"] = string.Join("\n        /// ", endpoint.DocumentationLines);
                 format["METHOD"] = endpoint.Operation.ToLower().FirstCharUpper();
                 format["ROUTE"] = FormatRoute(endpoint.Route, endpoint.Parameters);

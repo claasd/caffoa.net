@@ -55,7 +55,12 @@ public class SinglePropertyUpdateBuilder
     public SinglePropertyUpdateBuilder AppendJTokenDeepClone(CaffoaConfig.GenerationFlavor? flavor)
     {
         if (_property.TypeName is not "object") return this;
-        _sb.Append(flavor is CaffoaConfig.GenerationFlavor.SystemTextJson ? "?.Clone()" : "?.DeepClone()");
+        _sb.Append(flavor switch
+        {
+            CaffoaConfig.GenerationFlavor.SystemTextJson => "?.Clone()",
+            CaffoaConfig.GenerationFlavor.SystemTextJson70 => "?.Clone()",
+            _ => "?.DeepClone()"
+        });
         _hasCloning = true;
         return this;
     }

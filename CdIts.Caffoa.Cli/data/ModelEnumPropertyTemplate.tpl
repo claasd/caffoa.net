@@ -1,7 +1,7 @@
         [JsonIgnore]
         private {TYPE} _{NAMELOWER}{DEFAULT}
 
-        {DESCRIPTION}{JSON_EXTRA}[JsonProperty("{NAMELOWER}"{JSON_PROPERTY_EXTRA})]
+        {DESCRIPTION}{JSON_EXTRA}[{JSON_TAG_NAME}("{NAMELOWER}"{JSON_PROPERTY_EXTRA})]
         public virtual {TYPE} {NAMEUPPER} {{
             get => _{NAMELOWER};
             set {{
