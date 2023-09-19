@@ -1,4 +1,8 @@
 # caffoa changelog
+## 3.0.0
+* drop support of netcore 3.1
+* experimental support for ASPCore controller generation, see [readme](readme.md#crated-aspnet-controller-template) for details
+
 ## 2.12.0
 * new attribute: `x-caffoa-generate`. If set to false, the property will not be generated
 * new attribute: `x-caffoa-delegate`. If set to true, the implementation of the property getter and setter will be delegated to user-written partial method.
