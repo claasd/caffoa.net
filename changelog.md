@@ -1,7 +1,10 @@
 # caffoa changelog
+
 ## 3.0.0
-* drop support of netcore 3.1
+* drop support of netcore 3.1 for CLI
 * experimental support for ASPCore controller generation, see [readme](readme.md#crated-aspnet-controller-template) for details
+* Fix for client generation if `withCancellation` is set to `false`
+* Fix for client generation of Key/Value Pairs
 
 ## 2.12.0
 * new attribute: `x-caffoa-generate`. If set to false, the property will not be generated

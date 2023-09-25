@@ -52,7 +52,7 @@ public class ClientGenerator
         var file = Templates.GetTemplate("ClientMethod.tpl");
         foreach (var endpoint in endpoints)
         {
-            foreach (var parameter in InterfaceGenerator.GetMethodParams(endpoint, _config, false, true))
+            foreach (var parameter in InterfaceGenerator.GetMethodParams(endpoint, _config, false, true, forceCancellation: true))
             {
                 var errorHandling = string.Join("",
                     endpoint.Responses.Where(r => r.Code >= 400 && r.TypeName != null).Select(FormatErrorHandling));
@@ -130,7 +130,7 @@ public class ClientGenerator
         if (typeName is null)
             return codes.Count == 1 ? "Task" : "Task<int>";
         if (typeName.StartsWith("IEnumerable<KeyValuePair<string,"))
-            typeName = $"IReadOnlyDictionary<string, {typeName[45..^2]}";
+            typeName = $"IReadOnlyDictionary<string, {typeName[32..^2]}>";
         if (typeName.StartsWith("IEnumerable<"))
             typeName = $"IReadOnlyList{typeName[11..]}";
         return codes.Count == 1 ? $"Task<{typeName}>" : $"Task<({typeName}, int)>";
@@ -188,7 +188,7 @@ public class ClientGenerator
         }
 
         if (type.StartsWith("IEnumerable<KeyValuePair<string,"))
-            type = $"Dictionary<string, {type[45..^2]}";
+            type = $"Dictionary<string, {type[32..^2]}>";
         if (type.StartsWith("IEnumerable<"))
             type = $"List{type[11..]}";
 
