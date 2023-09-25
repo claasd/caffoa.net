@@ -14,7 +14,7 @@
             
             This is the CLI that can be istalled via dotnet tool install.
         </Description>
-        <TargetFrameworks>net7.0;net6.0</TargetFrameworks>
+        <TargetFrameworks>net7.0;net6.0;netcoreapp3.1</TargetFrameworks>
     </PropertyGroup>
     <ItemGroup>
       <None Remove="data\ControllerMethod.tpl" />
