@@ -31,6 +31,7 @@ public class ModelGenerator
         enumProperties.ForEach(WriteEnumClasses);
         enumClasses.ForEach(WriteEnumClass);
         interfaces.ForEach(WriteModelInterface);
+
         var allKnownClasses = otherKnownObjects.Concat(classes).ToList();
         var allKnownEnumClasses = enumClasses.Concat(otherKnownObjects.Where(o => o.Type == SchemaItem.ObjectType.StringEnum)).ToList();
         classes.ForEach(c => WriteModelClass(c, interfaces, allKnownClasses, allKnownEnumClasses));
@@ -51,13 +52,24 @@ public class ModelGenerator
         parameters["ATTRIBUTES"] = _config.Flavor switch
         {
             CaffoaConfig.GenerationFlavor.SystemTextJson => "",
-            CaffoaConfig.GenerationFlavor.SystemTextJson70 => string.Join("\n    ", item.Interface!.Children.Select(c => $"[JsonDerivedType(typeof({c}))]")),
-            _ => string.Empty
+            CaffoaConfig.GenerationFlavor.SystemTextJson70 => string.Join("\n    ", item.Interface!.Mapping.Select(c => $"[JsonDerivedType(typeof({c.Value}), \"{c.Key}\")]")),
+            _ => JsonNetSubtypes(item.Interface!),
         }; //Needed to serialize interfaces. supported starting .NET 7. So only use when generating controllers.
         parameters["TYPE"] = item.Interface?.Discriminator?.ToObjectName() ?? "";
-        parameters["IMPORTS"] = PropertyFormatter.Imports(_config.Flavor);
+        parameters["IMPORTS"] = PropertyFormatter.Imports(_config.Flavor, true);
         var formatted = file.FormatDict(parameters);
         File.WriteAllText(Path.Combine(_service.Model.TargetFolder, fileName), formatted.ToSystemNewLine());
+    }
+
+    private static string JsonNetSubtypes(InterfaceModel item)
+    {
+        var attributes = new StringBuilder($"\n    [JsonConverter(typeof(JsonSubtypes), \"{item.Discriminator}\")]");
+        foreach (var (key,name) in item.Mapping)
+        {
+            attributes.Append($"\n    [JsonSubtypes.KnownSubType(typeof({name}), \"{key}\")]");
+        }
+
+        return attributes.ToString();
     }
 
     private void WriteModelClass(SchemaItem item, List<SchemaItem> interfaces,

@@ -79,6 +79,16 @@ namespace DemoV2.Text.Json.Services
             return Task.FromResult<IEnumerable<STJMyEnumType>>(new List<STJMyEnumType>() { STJMyEnumType.Enum2 });
         }
 
+        public Task<STJGroupedOneOf> EchoOneOfAsync(STJGroupedOneOf payload, CancellationToken cancellationToken = default)
+        {
+            return Task.FromResult(payload);
+        }
+
+        public Task<IEnumerable<STJAnyUser>> EchoOneOfArrayAsync(IEnumerable<STJAnyUser> payload, CancellationToken cancellationToken = default)
+        {
+            return Task.FromResult(payload);
+        }
+
         public async Task<IEnumerable<STJAnyCompleteUser>> UserPostAsync(STJUser payload,
             CancellationToken cancellationToken = default)
         {
@@ -156,6 +166,11 @@ namespace DemoV2.Text.Json.Services
         {
             await Task.Yield();
             GC.SuppressFinalize(this);
+        }
+        
+        public Task<IEnumerable<STJAnyUser>> EchoOneOfAsync(IEnumerable<STJAnyUser> payload, CancellationToken cancellationToken = default)
+        {
+            return Task.FromResult(payload);
         }
     }
 }

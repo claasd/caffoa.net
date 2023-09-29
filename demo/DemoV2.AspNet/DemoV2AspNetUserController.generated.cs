@@ -135,4 +135,18 @@ public class DemoV2AspNetUserController : ControllerBase
     public async Task<ActionResult<IEnumerable<ASPMyEnumType>>> ListEnums2Async([FromRoute] ASPMyEnumType filter, CancellationToken cancellationToken = default) { return StatusCode(200, await GetService().ListEnums2Async(filter, cancellationToken)); }
 
 
+    /// <summary>
+    /// 200 -> a list of neum
+    ///</summary>
+    [HttpGet("echo/oneOfTest")]
+    public async Task<ActionResult<ASPGroupedOneOf>> EchoOneOfAsync([FromBody] ASPGroupedOneOf payload, CancellationToken cancellationToken = default) { return StatusCode(200, await GetService().EchoOneOfAsync(payload, cancellationToken)); }
+
+
+    /// <summary>
+    /// 200 -> a list of neum
+    ///</summary>
+    [HttpGet("echo/oneOfTestArray")]
+    public async Task<ActionResult<IEnumerable<ASPAnyUser>>> EchoOneOfArrayAsync([FromBody] IEnumerable<ASPAnyUser> payload, CancellationToken cancellationToken = default) { return StatusCode(200, await GetService().EchoOneOfArrayAsync(payload, cancellationToken)); }
+
+
 }

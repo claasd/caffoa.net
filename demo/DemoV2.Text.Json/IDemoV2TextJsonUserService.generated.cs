@@ -101,5 +101,15 @@ namespace DemoV2.Text.Json
         /// </summary>
         Task<IEnumerable<STJMyEnumType>> ListEnums2Async(STJMyEnumType filter, CancellationToken cancellationToken = default);
 
+        /// <summary>
+        /// 200 -> a list of neum
+        /// </summary>
+        Task<STJGroupedOneOf> EchoOneOfAsync(STJGroupedOneOf payload, CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// 200 -> a list of neum
+        /// </summary>
+        Task<IEnumerable<STJAnyUser>> EchoOneOfArrayAsync(IEnumerable<STJAnyUser> payload, CancellationToken cancellationToken = default);
+
     }
 }

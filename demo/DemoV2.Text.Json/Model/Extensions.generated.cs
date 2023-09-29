@@ -525,5 +525,30 @@ namespace DemoV2.Text.Json.Model {
             AddressType = (STJAddress.AddressTypeValue)other.AddressType,
             Flags = other.Flags
         });
+
+        /// <summary>
+        /// Replaces all fields with the data of the passed object
+        /// </summary>
+        public static void UpdateWithSTJGroupedOneOf(this STJGroupedOneOf item, STJGroupedOneOf other, bool deepClone = true) {
+            item.Element = deepClone ? other.Element?.ToSTJAnyUser() : other.Element;
+            item.AdditionalProperties = deepClone ? (other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null) : other.AdditionalProperties;
+        }
+        
+        /// <summary>
+        /// Returns a new object of STJGroupedOneOf with fileds filled from STJGroupedOneOf. 
+        /// if deepClone is set to false, a shallow copy will be created.
+        /// </summary>
+        public static STJGroupedOneOf ToSTJGroupedOneOf(this STJGroupedOneOf other, bool deepClone = true) => new STJGroupedOneOf() { 
+            Element = deepClone ? other.Element?.ToSTJAnyUser() : other.Element,
+            AdditionalProperties = deepClone ? (other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null) : other.AdditionalProperties
+        };
+        
+        /// <summary>
+        /// Selects the type STJGroupedOneOf from a IQueryable<STJGroupedOneOf>
+        /// </summary>
+        public static IQueryable<STJGroupedOneOf> SelectAsSTJGroupedOneOf(this IQueryable<STJGroupedOneOf> query) => query.Select(other => new STJGroupedOneOf() { 
+            Element = other.Element,
+            AdditionalProperties = other.AdditionalProperties
+        });
     }
 }

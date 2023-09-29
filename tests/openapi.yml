@@ -180,6 +180,7 @@ components:
               "<userId_2>": [ "<tagId_2>", "<tagId_3>" ],
             },
           }
+      
     myEnumType:
       type: string
       enum:
@@ -230,6 +231,11 @@ components:
             addressType2:
               type: string
       additionalProperties: false
+    groupedOneOf:
+      type: object
+      properties:
+        element:
+          $ref: "#/components/schemas/anyUser"
   responses:
     error:
       description: Error
@@ -542,7 +548,7 @@ paths:
               schema: 
                 type: array
                 items: 
-                  $ref: "#/components/schema/myEnumType"
+                  $ref: "#/components/schemas/myEnumType"
                   
   /enums/list/filter/{filter}:
     parameters:
@@ -563,4 +569,43 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schema/myEnumType"
+                  $ref: "#/components/schemas/myEnumType"
+
+  /echo/oneOfTest:
+    get:
+      operationId: EchoOneOf
+      tags:
+        - user
+      requestBody: 
+        content: 
+          application/json:
+            schema:
+              $ref: "#/components/schemas/groupedOneOf"
+      responses:
+        200:
+          description: a list of neum
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/groupedOneOf"
+  /echo/oneOfTestArray:
+    get:
+      operationId: EchoOneOfArray
+      tags:
+        - user
+      requestBody: 
+        content: 
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: "#/components/schemas/anyUser"
+      responses:
+        200:
+          description: a list of neum
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/anyUser"

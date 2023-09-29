@@ -321,5 +321,45 @@ namespace DemoV2.Text.Json
                 throw;
             }
         }
+        /// <summary>
+        /// auto-generated function invocation.
+        ///</summary>
+        [FunctionName("EchoOneOfAsync")]
+        public async Task<IActionResult> EchoOneOfAsync(
+            [HttpTrigger(AuthorizationLevel.Function, "get", Route = "api/echo/oneOfTest")]
+            HttpRequest request)
+        {
+            try {
+                var instance = _factory.Instance(request);
+                var result = await instance.EchoOneOfAsync(await _jsonParser.Parse<STJGroupedOneOf>(request.Body), request.HttpContext.RequestAborted);
+                return _resultHandler.Json(result, 200);
+            } catch(CaffoaClientError err) {
+                return err.Result;
+            } catch (Exception e) {
+                if(_errorHandler.TryHandleFunctionException(e, out var errorHandlerResult, request, "EchoOneOf", "api/echo/oneOfTest", "get"))
+                    return errorHandlerResult;
+                throw;
+            }
+        }
+        /// <summary>
+        /// auto-generated function invocation.
+        ///</summary>
+        [FunctionName("EchoOneOfArrayAsync")]
+        public async Task<IActionResult> EchoOneOfArrayAsync(
+            [HttpTrigger(AuthorizationLevel.Function, "get", Route = "api/echo/oneOfTestArray")]
+            HttpRequest request)
+        {
+            try {
+                var instance = _factory.Instance(request);
+                var result = await instance.EchoOneOfArrayAsync(await _jsonParser.Parse<IEnumerable<STJAnyUser>>(request.Body), request.HttpContext.RequestAborted);
+                return _resultHandler.Json(result, 200);
+            } catch(CaffoaClientError err) {
+                return err.Result;
+            } catch (Exception e) {
+                if(_errorHandler.TryHandleFunctionException(e, out var errorHandlerResult, request, "EchoOneOfArray", "api/echo/oneOfTestArray", "get"))
+                    return errorHandlerResult;
+                throw;
+            }
+        }
     }
 }

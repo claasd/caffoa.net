@@ -525,5 +525,30 @@ namespace DemoV2.Model {
             AddressType = (Address.AddressTypeValue)other.AddressType,
             Flags = other.Flags
         });
+
+        /// <summary>
+        /// Replaces all fields with the data of the passed object
+        /// </summary>
+        public static void UpdateWithGroupedOneOf(this GroupedOneOf item, GroupedOneOf other, bool deepClone = false) {
+            item.Element = deepClone ? other.Element?.ToAnyUser() : other.Element;
+            item.AdditionalProperties = deepClone ? (other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null) : other.AdditionalProperties;
+        }
+        
+        /// <summary>
+        /// Returns a new object of GroupedOneOf with fileds filled from GroupedOneOf. 
+        /// if deepClone is set to false, a shallow copy will be created.
+        /// </summary>
+        public static GroupedOneOf ToGroupedOneOf(this GroupedOneOf other, bool deepClone = false) => new GroupedOneOf() { 
+            Element = deepClone ? other.Element?.ToAnyUser() : other.Element,
+            AdditionalProperties = deepClone ? (other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null) : other.AdditionalProperties
+        };
+        
+        /// <summary>
+        /// Selects the type GroupedOneOf from a IQueryable<GroupedOneOf>
+        /// </summary>
+        public static IQueryable<GroupedOneOf> SelectAsGroupedOneOf(this IQueryable<GroupedOneOf> query) => query.Select(other => new GroupedOneOf() { 
+            Element = other.Element,
+            AdditionalProperties = other.AdditionalProperties
+        });
     }
 }

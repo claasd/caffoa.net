@@ -39,8 +39,8 @@ public class PropertyFormatter
 
     public string JsonExtraProperties()
     {
-        //        if (_property.Required && _config.Flavor is CaffoaConfig.GenerationFlavor.SystemTextJson)
-        //            return "\n        [JsonRequired]";
+        if (_property.Required && _config.Flavor is CaffoaConfig.GenerationFlavor.SystemTextJson70)
+            return "\n        [JsonRequired]";
         return "";
     }
 
@@ -138,13 +138,13 @@ public class PropertyFormatter
 
     public string Imports() => Imports(_config.Flavor);
 
-    public static string Imports(CaffoaConfig.GenerationFlavor? flavor)
+    public static string Imports(CaffoaConfig.GenerationFlavor? flavor, bool addSubtypes = false)
     {
         return flavor switch
         {
             CaffoaConfig.GenerationFlavor.SystemTextJson => "using System.Text.Json.Serialization;\nusing Caffoa.JsonConverter;",
             CaffoaConfig.GenerationFlavor.SystemTextJson70 => "using System.Text.Json.Serialization;\nusing Caffoa.JsonConverter;",
-            _ => "using Newtonsoft.Json;\nusing Newtonsoft.Json.Converters;"
+            _ => "using Newtonsoft.Json;\nusing Newtonsoft.Json.Converters;" + (addSubtypes ? "\nusing Caffoa.JsonSubTypes;" : "")
         };
     }
 }

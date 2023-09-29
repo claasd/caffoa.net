@@ -72,6 +72,16 @@ namespace DemoV2.AspNet.Services
             return Task.FromResult<IEnumerable<ASPMyEnumType>>(new List<ASPMyEnumType>() { ASPMyEnumType.Enum2 });
         }
 
+        public Task<ASPGroupedOneOf> EchoOneOfAsync(ASPGroupedOneOf payload, CancellationToken cancellationToken = default)
+        {
+            return Task.FromResult(payload);
+        }
+
+        public Task<IEnumerable<ASPAnyUser>> EchoOneOfArrayAsync(IEnumerable<ASPAnyUser> payload, CancellationToken cancellationToken = default)
+        {
+            return Task.FromResult(payload);
+        }
+
         public async Task<IEnumerable<ASPAnyCompleteUser>> UserPostAsync(ASPUser payload,
             CancellationToken cancellationToken = default)
         {

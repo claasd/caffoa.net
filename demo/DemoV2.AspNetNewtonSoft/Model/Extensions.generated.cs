@@ -525,5 +525,30 @@ namespace DemoV2.AspNetNewtonSoft.Model {
             AddressType = (ASPNAddress.AddressTypeValue)other.AddressType,
             Flags = other.Flags
         });
+
+        /// <summary>
+        /// Replaces all fields with the data of the passed object
+        /// </summary>
+        public static void UpdateWithASPNGroupedOneOf(this ASPNGroupedOneOf item, ASPNGroupedOneOf other, bool deepClone = true) {
+            item.Element = deepClone ? other.Element?.ToASPNAnyUser() : other.Element;
+            item.AdditionalProperties = deepClone ? (other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null) : other.AdditionalProperties;
+        }
+        
+        /// <summary>
+        /// Returns a new object of ASPNGroupedOneOf with fileds filled from ASPNGroupedOneOf. 
+        /// if deepClone is set to false, a shallow copy will be created.
+        /// </summary>
+        public static ASPNGroupedOneOf ToASPNGroupedOneOf(this ASPNGroupedOneOf other, bool deepClone = true) => new ASPNGroupedOneOf() { 
+            Element = deepClone ? other.Element?.ToASPNAnyUser() : other.Element,
+            AdditionalProperties = deepClone ? (other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null) : other.AdditionalProperties
+        };
+        
+        /// <summary>
+        /// Selects the type ASPNGroupedOneOf from a IQueryable<ASPNGroupedOneOf>
+        /// </summary>
+        public static IQueryable<ASPNGroupedOneOf> SelectAsASPNGroupedOneOf(this IQueryable<ASPNGroupedOneOf> query) => query.Select(other => new ASPNGroupedOneOf() { 
+            Element = other.Element,
+            AdditionalProperties = other.AdditionalProperties
+        });
     }
 }

@@ -3,6 +3,7 @@
 ## 3.0.0
 * drop support of netcore 3.1 for CLI
 * experimental support for ASPCore controller generation, see [readme](readme.md#crated-aspnet-controller-template) for details
+* Support for serializing/deserializing nested oneOf data types using a copy of Subtypes library from (https://github.com/manuc66/JsonSubTypes) 
 * Fix for client generation if `withCancellation` is set to `false`
 * Fix for client generation of Key/Value Pairs
 

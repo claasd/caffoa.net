@@ -197,15 +197,21 @@ public abstract class ObjectParser
     {
         if (openApiDiscriminator.PropertyName is null)
             throw new CaffoaParserException("cannot create oneOf interface without discriminator property");
+        var mapping = openApiDiscriminator.Mapping.ToDictionary(m => m.Value, m => m.Key);
         var model = new InterfaceModel
         {
-            Discriminator = openApiDiscriminator.PropertyName
+            Discriminator = openApiDiscriminator.PropertyName,
         };
-        model.Children.AddRange(schemaOneOf.Select(schema =>
-            schema.Reference is null
-                ? throw new CaffoaParserException("did not find $ref as child of oneOf")
-                : ClassNameFunc(schema.Reference.Name())));
-
+        foreach (var reference in schemaOneOf.Select(s => s.Reference))
+        {
+            if (reference is null)
+                throw new CaffoaParserException("did not find $ref as child of oneOf");
+            if (!mapping.TryGetValue(reference.ReferenceV3, out var mapName))
+                mapName = reference.Name();
+            var typeName = ClassNameFunc(reference.Name());
+            model.Mapping[mapName] = typeName;
+            model.Children.Add(typeName);
+        }
         return model;
     }
 

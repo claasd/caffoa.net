@@ -323,7 +323,7 @@ namespace DemoV2.Client
         /// <summary>
         /// 200 -> tags for the user
         /// </summary>
-        public async Task<IReadOnlyDictionary<string, Guid>> GetUserTagsAsync(CancellationToken cancellationToken = default) {
+        public async Task<IReadOnlyDictionary<string,  IEnumerable<Guid>>> GetUserTagsAsync(CancellationToken cancellationToken = default) {
             var uriBuilder = new UriBuilder($"{BaseUri}tags/users");
             using var httpRequest = new HttpRequestMessage(HttpMethod.Get, uriBuilder.ToString());
             PrepareRequest(httpRequest);
@@ -334,7 +334,7 @@ namespace DemoV2.Client
                 throw new CaffoaWebClientException((int)httpResult.StatusCode, errorData);
             }
             await using var resultStream = await httpResult.Content.ReadAsStreamAsync(cancellationToken);
-            var resultObject = await JsonParser.Parse<Dictionary<string, Guid>>(resultStream);
+            var resultObject = await JsonParser.Parse<Dictionary<string,  IEnumerable<Guid>>>(resultStream);
             return resultObject;
         }
 
@@ -381,6 +381,44 @@ namespace DemoV2.Client
             }
             await using var resultStream = await httpResult.Content.ReadAsStreamAsync(cancellationToken);
             var resultObject = await JsonParser.Parse<List<MyEnumType>>(resultStream);
+            return resultObject;
+        }
+
+        /// <summary>
+        /// 200 -> a list of neum
+        /// </summary>
+        public async Task<GroupedOneOf> EchoOneOfAsync(GroupedOneOf payload, CancellationToken cancellationToken = default) {
+            var uriBuilder = new UriBuilder($"{BaseUri}echo/oneOfTest");
+            using var httpRequest = new HttpRequestMessage(HttpMethod.Get, uriBuilder.ToString());
+            httpRequest.Content = new StringContent(JsonSerializer.JsonString(payload), Encoding.UTF8, MediaTypeNames.Application.Json);
+            PrepareRequest(httpRequest);
+            using var httpResult = await Client.SendAsync(httpRequest, cancellationToken);
+            ProcessResponse(httpResult);
+            if(!httpResult.IsSuccessStatusCode) {
+                var errorData = await httpResult.Content.ReadAsStringAsync(cancellationToken);
+                throw new CaffoaWebClientException((int)httpResult.StatusCode, errorData);
+            }
+            await using var resultStream = await httpResult.Content.ReadAsStreamAsync(cancellationToken);
+            var resultObject = await JsonParser.Parse<GroupedOneOf>(resultStream);
+            return resultObject;
+        }
+
+        /// <summary>
+        /// 200 -> a list of neum
+        /// </summary>
+        public async Task<IReadOnlyList<AnyUser>> EchoOneOfArrayAsync(IEnumerable<AnyUser> payload, CancellationToken cancellationToken = default) {
+            var uriBuilder = new UriBuilder($"{BaseUri}echo/oneOfTestArray");
+            using var httpRequest = new HttpRequestMessage(HttpMethod.Get, uriBuilder.ToString());
+            httpRequest.Content = new StringContent(JsonSerializer.JsonString(payload), Encoding.UTF8, MediaTypeNames.Application.Json);
+            PrepareRequest(httpRequest);
+            using var httpResult = await Client.SendAsync(httpRequest, cancellationToken);
+            ProcessResponse(httpResult);
+            if(!httpResult.IsSuccessStatusCode) {
+                var errorData = await httpResult.Content.ReadAsStringAsync(cancellationToken);
+                throw new CaffoaWebClientException((int)httpResult.StatusCode, errorData);
+            }
+            await using var resultStream = await httpResult.Content.ReadAsStreamAsync(cancellationToken);
+            var resultObject = await JsonParser.Parse<List<AnyUser>>(resultStream);
             return resultObject;
         }
     }

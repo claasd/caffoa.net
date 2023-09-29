@@ -24,4 +24,54 @@ public class RoundtripTest
         users.Should().HaveCount(1);
         users[0].Name.Should().Be("Claas");
     }
+
+    [Test]
+    public async Task TestOneOfWithGestUser()
+    {
+        GroupedOneOf data = new()
+        {
+            Element = new GuestUser()
+            {
+                Email = "guest@email.de",
+            }
+        };
+        var functions = new DemoV2UserFunctions(NullLogger<DemoV2UserFunctions>.Instance, new DemoV2.Services.UserServiceFactory());
+        var result = await functions.EchoOneOfAsync(new RequestBuilder().Content(data).Build()).Json<GroupedOneOf>();
+        result.Element.Should().BeOfType<GuestUser>();
+    }
+    
+    [Test]
+    public async Task TestOneOfWithUser()
+    {
+        GroupedOneOf data = new()
+        {
+            Element = new User()
+            {
+                Name = "Test"
+            }
+        };
+        var functions = new DemoV2UserFunctions(NullLogger<DemoV2UserFunctions>.Instance, new DemoV2.Services.UserServiceFactory());
+        var result = await functions.EchoOneOfAsync(new RequestBuilder().Content(data).Build()).Json<GroupedOneOf>();
+        result.Element.Should().BeOfType<User>();
+    }
+    
+    
+    [Test]
+    public async Task TestOneOfArray()
+    {
+        var data = new List<AnyUser>();
+        data.Add(new GuestUser()
+        {
+            Email = "guest@email.de",
+        });
+        data.Add(new User()
+        {
+            Name = "TestUser"
+        });
+        var functions = new DemoV2UserFunctions(NullLogger<DemoV2UserFunctions>.Instance, new DemoV2.Services.UserServiceFactory());
+        var result = await functions.EchoOneOfArrayAsync(new RequestBuilder().Content(data).Build()).Json<List<AnyUser>>();
+        result.Should().HaveCount(2);
+        result[0].Should().BeOfType<GuestUser>();
+        result[1].Should().BeOfType<User>();
+    }
 }

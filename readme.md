@@ -9,7 +9,8 @@ Instead of generating stubs, the goal is to be able to change the api and re-gen
 
 If something does not work that you feel should work, create a ticket with your openapi spec.
 
-It uses [OpenAPI.NET](https://github.com/microsoft/OpenAPI.NET) for parsing the openapi spec.
+* It uses [OpenAPI.NET](https://github.com/microsoft/OpenAPI.NET) for parsing the openapi spec.
+* It uses a copy of version 2.0.1 of [JsonSubtypes](https://github.com/manuc66/JsonSubTypes)
 
 # Migrating from 1.x
 * The is a [Migration guide](migration_1_to_2.md) to goude you from migrtion from 1.x to 2.x.

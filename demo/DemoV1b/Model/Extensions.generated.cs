@@ -525,5 +525,30 @@ namespace DemoV1b.Model {
             AddressType = other.AddressType,
             Flags = other.Flags
         });
+
+        /// <summary>
+        /// Replaces all fields with the data of the passed object
+        /// </summary>
+        public static void UpdateWithL2GroupedOneOf(this L2GroupedOneOf item, L2GroupedOneOf other, bool deepClone = true) {
+            item.Element = deepClone ? other.Element?.ToL2AnyUser() : other.Element;
+            item.AdditionalProperties = deepClone ? (other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null) : other.AdditionalProperties;
+        }
+        
+        /// <summary>
+        /// Returns a new object of L2GroupedOneOf with fileds filled from L2GroupedOneOf. 
+        /// if deepClone is set to false, a shallow copy will be created.
+        /// </summary>
+        public static L2GroupedOneOf ToL2GroupedOneOf(this L2GroupedOneOf other, bool deepClone = true) => new L2GroupedOneOf() { 
+            Element = deepClone ? other.Element?.ToL2AnyUser() : other.Element,
+            AdditionalProperties = deepClone ? (other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null) : other.AdditionalProperties
+        };
+        
+        /// <summary>
+        /// Selects the type L2GroupedOneOf from a IQueryable<L2GroupedOneOf>
+        /// </summary>
+        public static IQueryable<L2GroupedOneOf> SelectAsL2GroupedOneOf(this IQueryable<L2GroupedOneOf> query) => query.Select(other => new L2GroupedOneOf() { 
+            Element = other.Element,
+            AdditionalProperties = other.AdditionalProperties
+        });
     }
 }

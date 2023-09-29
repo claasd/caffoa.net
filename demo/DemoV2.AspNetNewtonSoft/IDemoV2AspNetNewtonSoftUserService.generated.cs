@@ -101,5 +101,15 @@ namespace DemoV2.AspNetNewtonSoft
         /// </summary>
         Task<IEnumerable<ASPNMyEnumType>> ListEnums2Async(ASPNMyEnumType filter, CancellationToken cancellationToken = default);
 
+        /// <summary>
+        /// 200 -> a list of neum
+        /// </summary>
+        Task<ASPNGroupedOneOf> EchoOneOfAsync(ASPNGroupedOneOf payload, CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// 200 -> a list of neum
+        /// </summary>
+        Task<IEnumerable<ASPNAnyUser>> EchoOneOfArrayAsync(IEnumerable<ASPNAnyUser> payload, CancellationToken cancellationToken = default);
+
     }
 }

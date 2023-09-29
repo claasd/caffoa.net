@@ -66,6 +66,7 @@ services:
     config:
       prefix: 'ASP'
       flavor: SystemTextJson70
+      
     model:
       namespace: DemoV2.AspNet.Model.Base
       targetFolder: ./demo/DemoV2.AspNet/Model/Base

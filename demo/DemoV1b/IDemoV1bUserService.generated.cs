@@ -101,5 +101,15 @@ namespace DemoV1b
         /// </summary>
         Task<IEnumerable<string>> ListEnums2Async(string filter, CancellationToken cancellationToken = default);
 
+        /// <summary>
+        /// 200 -> a list of neum
+        /// </summary>
+        Task<L2GroupedOneOf> EchoOneOfAsync(L2GroupedOneOf payload, CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// 200 -> a list of neum
+        /// </summary>
+        Task<IEnumerable<L2AnyUser>> EchoOneOfArrayAsync(IEnumerable<L2AnyUser> payload, CancellationToken cancellationToken = default);
+
     }
 }

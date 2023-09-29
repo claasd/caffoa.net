@@ -72,6 +72,16 @@ namespace DemoV2.AspNetNewtonSoft.Services
             return Task.FromResult<IEnumerable<ASPNMyEnumType>>(new List<ASPNMyEnumType>() { ASPNMyEnumType.Enum2 });
         }
 
+        public Task<ASPNGroupedOneOf> EchoOneOfAsync(ASPNGroupedOneOf payload, CancellationToken cancellationToken = default)
+        {
+            return Task.FromResult(payload);
+        }
+
+        public Task<IEnumerable<ASPNAnyUser>> EchoOneOfArrayAsync(IEnumerable<ASPNAnyUser> payload, CancellationToken cancellationToken = default)
+        {
+            return Task.FromResult(payload);
+        }
+
         public async Task<IEnumerable<ASPNAnyCompleteUser>> UserPostAsync(ASPNUser payload,
             CancellationToken cancellationToken = default)
         {
@@ -150,5 +160,6 @@ namespace DemoV2.AspNetNewtonSoft.Services
             await Task.Yield();
             GC.SuppressFinalize(this);
         }
+        
     }
 }

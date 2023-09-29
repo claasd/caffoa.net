@@ -525,5 +525,30 @@ namespace DemoV2.AspNet.Model {
             AddressType = (ASPAddress.AddressTypeValue)other.AddressType,
             Flags = other.Flags
         });
+
+        /// <summary>
+        /// Replaces all fields with the data of the passed object
+        /// </summary>
+        public static void UpdateWithASPGroupedOneOf(this ASPGroupedOneOf item, ASPGroupedOneOf other, bool deepClone = true) {
+            item.Element = deepClone ? other.Element?.ToASPAnyUser() : other.Element;
+            item.AdditionalProperties = deepClone ? (other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null) : other.AdditionalProperties;
+        }
+        
+        /// <summary>
+        /// Returns a new object of ASPGroupedOneOf with fileds filled from ASPGroupedOneOf. 
+        /// if deepClone is set to false, a shallow copy will be created.
+        /// </summary>
+        public static ASPGroupedOneOf ToASPGroupedOneOf(this ASPGroupedOneOf other, bool deepClone = true) => new ASPGroupedOneOf() { 
+            Element = deepClone ? other.Element?.ToASPAnyUser() : other.Element,
+            AdditionalProperties = deepClone ? (other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null) : other.AdditionalProperties
+        };
+        
+        /// <summary>
+        /// Selects the type ASPGroupedOneOf from a IQueryable<ASPGroupedOneOf>
+        /// </summary>
+        public static IQueryable<ASPGroupedOneOf> SelectAsASPGroupedOneOf(this IQueryable<ASPGroupedOneOf> query) => query.Select(other => new ASPGroupedOneOf() { 
+            Element = other.Element,
+            AdditionalProperties = other.AdditionalProperties
+        });
     }
 }
