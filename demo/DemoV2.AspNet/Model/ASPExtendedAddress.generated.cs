@@ -15,18 +15,22 @@ namespace DemoV2.AspNet.Model {
     public partial class ASPExtendedAddress {
         public const string ASPExtendedAddressObjectName = "extendedAddress";
         [JsonPropertyName("street")]
+        [JsonRequired]
         public virtual string Street { get; set; }
 
         [JsonPropertyName("street.extra")]
         public virtual string StreetExtra { get; set; }
 
         [JsonPropertyName("postalCode")]
+        [JsonRequired]
         public virtual string PostalCode { get; set; }
 
         [JsonPropertyName("city")]
+        [JsonRequired]
         public virtual string City { get; set; }
 
         [JsonPropertyName("country")]
+        [JsonRequired]
         public virtual string Country { get; set; }
 
         [JsonPropertyName("addressType")]

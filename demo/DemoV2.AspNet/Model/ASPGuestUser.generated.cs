@@ -15,9 +15,11 @@ namespace DemoV2.AspNet.Model {
     public partial class ASPGuestUser : ASPAnyUser, ASPAnyCompleteUser {
         public const string ASPGuestUserObjectName = "guestUser";
         [JsonPropertyName("email")]
+        [JsonRequired]
         public virtual string Email { get; set; }
 
         [JsonPropertyName("type")]
+        [JsonRequired]
         public virtual TypeValue Type { get; set; } = TypeValue.Guest;
 
         [JsonPropertyName("constInt")]

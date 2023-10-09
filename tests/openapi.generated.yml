@@ -256,6 +256,7 @@ paths:
                   message:
                     type: string
                     description: Human readable error message.
+                    readOnly: true
     post:
       tags:
         - user
@@ -1774,6 +1775,7 @@ paths:
                   message:
                     type: string
                     description: Human readable error message.
+                    readOnly: true
     parameters:
       - name: date
         in: path
@@ -1896,6 +1898,7 @@ paths:
                   message:
                     type: string
                     description: Human readable error message.
+                    readOnly: true
     parameters:
       - name: before
         in: query

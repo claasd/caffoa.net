@@ -2,15 +2,17 @@ namespace CdIts.Caffoa.Cli.Model;
 
 public class PropertyData
 {
-    public PropertyData(string name, bool required)
+    public PropertyData(string name, bool required, bool readOnly)
     {
         Name = name;
         TypeName = name.ToObjectName();
         Required = required;
+        ReadOnly = readOnly;
     }
 
     public string Name { get; }
     public bool Required { get; }
+    public bool ReadOnly { get; }
     public string TypeName { get; set; }
     public bool Nullable { get; set; }
     public string? Description { get; set; }

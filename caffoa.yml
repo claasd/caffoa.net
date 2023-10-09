@@ -7,8 +7,9 @@ config:
   genericAdditionalPropertiesType: object
   asyncArrays: false
   useInheritance: false
-  constructorOnRequiredObjects: false
+  constructorOnRequiredObjects: true
   useConstants: false
+  removeRequiredOnReadonly: false
 #   passTags: true
   requestBodyType: # overwrite the JSON type that is passed to the method for some operations
     - type: JObject

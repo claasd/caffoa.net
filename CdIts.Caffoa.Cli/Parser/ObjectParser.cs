@@ -65,7 +65,7 @@ public abstract class ObjectParser
         schema = ResolveExternal(schema);
         if (schema.AnyOf.Any())
             throw new CaffoaParserException("anyOf is not supported on object properties");
-        var property = new PropertyData(name, required);
+        var property = new PropertyData(name, required, schema.ReadOnly);
         property.Deprecated = schema.Deprecated;
         property.CustomAttributes = ParseCustomAttributes(schema.Extensions, name);
         property.Generate = ParseGenerateAttribute(schema.Extensions);

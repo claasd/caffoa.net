@@ -40,6 +40,7 @@ public class CaffoaConfig
     public bool? UseConstants { get; set; }
     public bool? PassTags { get; set; }
     public bool? DeepCopyDefaultValue { get; set; }
+    public bool? RemoveRequiredOnReadonly { get; set; }
 
     public enum EnumCreationMode
     {
@@ -94,7 +95,8 @@ public class CaffoaConfig
             ConstructorOnRequiredObjects = ConstructorOnRequiredObjects ?? general.ConstructorOnRequiredObjects,
             UseConstants = UseConstants ?? general.UseConstants,
             PassTags = PassTags ?? general.PassTags,
-            DeepCopyDefaultValue = DeepCopyDefaultValue ?? general.DeepCopyDefaultValue
+            DeepCopyDefaultValue = DeepCopyDefaultValue ?? general.DeepCopyDefaultValue,
+            RemoveRequiredOnReadonly = RemoveRequiredOnReadonly ?? general.RemoveRequiredOnReadonly
         };
     }
 }

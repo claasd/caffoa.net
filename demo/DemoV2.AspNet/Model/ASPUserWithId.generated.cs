@@ -20,6 +20,7 @@ namespace DemoV2.AspNet.Model {
         /// A fancy string with description
         /// </summary>
         [JsonPropertyName("name")]
+        [JsonRequired]
         public virtual string Name { get; set; }
 
         [JsonPropertyName("address")]
@@ -37,6 +38,7 @@ namespace DemoV2.AspNet.Model {
         public virtual Dictionary<string, string> Descriptions { get; set; } = new Dictionary<string, string>();
 
         [JsonPropertyName("type")]
+        [JsonRequired]
         public virtual TypeValue Type { get; set; } = TypeValue.Simple;
 
         [JsonPropertyName("role")]

@@ -22,13 +22,15 @@ public class PropertyFormatter
         return $"/// <summary>\n        /// {itemDesc}\n        /// </summary>\n        ";
     }
 
+    public bool ShouldGenerateRequired => !(_config.RemoveRequiredOnReadonly is true && _property.ReadOnly);
+    public bool ResolvedRequired => ShouldGenerateRequired && _property.Required;
     public string JsonProperty()
     {
         return _config.Flavor switch
         {
             CaffoaConfig.GenerationFlavor.SystemTextJson => "",
             CaffoaConfig.GenerationFlavor.SystemTextJson70 => "",
-            _ => _property.Required switch
+            _ => ResolvedRequired switch
             {
                 true when _property.Nullable => ", Required = Required.AllowNull",
                 true => ", Required = Required.Always",
@@ -39,7 +41,7 @@ public class PropertyFormatter
 
     public string JsonExtraProperties()
     {
-        if (_property.Required && _config.Flavor is CaffoaConfig.GenerationFlavor.SystemTextJson70)
+        if (ResolvedRequired && _config.Flavor is CaffoaConfig.GenerationFlavor.SystemTextJson70)
             return "\n        [JsonRequired]";
         return "";
     }
