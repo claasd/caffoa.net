@@ -9,10 +9,12 @@ namespace Caffoa.Defaults;
 /// </summary>
 public class DefaultCaffoaJsonParser : ICaffoaJsonParser
 {
+    private readonly JsonSerializerSettings _settings;
     public ICaffoaParseErrorHandler ErrorHandler { get; }
 
-    public DefaultCaffoaJsonParser(ICaffoaParseErrorHandler errorHandler)
+    public DefaultCaffoaJsonParser(ICaffoaParseErrorHandler errorHandler, JsonSerializerSettings? settings = null)
     {
+        _settings = settings ?? new JsonSerializerSettings();
         ErrorHandler = errorHandler;
     }
 
@@ -36,7 +38,7 @@ public class DefaultCaffoaJsonParser : ICaffoaJsonParser
             if (streamReader.EndOfStream)
                 throw ErrorHandler.NoContent();
             using var jsonReader = new JsonTextReader(streamReader);
-            var serializer = new JsonSerializer();
+            var serializer = JsonSerializer.Create(_settings);
             return serializer.Deserialize<T>(jsonReader);
         }
         catch (CaffoaClientError)
@@ -49,7 +51,7 @@ public class DefaultCaffoaJsonParser : ICaffoaJsonParser
         }
     }
 
-    public T Parse<T>(string data) => JsonConvert.DeserializeObject<T>(data);
+    public T Parse<T>(string data) => JsonConvert.DeserializeObject<T>(data, _settings);
 
     public virtual T ToObject<T>(object token)
     {
