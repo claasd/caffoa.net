@@ -1,8 +1,8 @@
-# caffoa: Migration Guide from 1.x.x to 2.x.x
+# caffoa: Migration Guide from 1.x.x to 2.x.x/3.x.x
 
-There are a lot of breaking changes between 1.x and 2.x, see the [changelog](changelog.md) see them all.
+There are a lot of breaking changes between 1.x and 3.x, see the [changelog](changelog.md) see them all.
 
-If oyu migrate from v1.x to v2.x, follw the steps below to keep the 1.x behavior. 
+If you migrate from v1.x to v3.x, follow the steps below to keep the 1.x behavior. 
 
 Remove the following entries (if you have them):
 ```yaml
@@ -36,4 +36,4 @@ config:
   useDateTime: true
 ```
 
-Remove the package-reference to `CdIts.Caffoa` 1.x.x and add add a package-reference to `CdIts.Caffoa.Json.Net` 2.x.x
+Remove the package-reference to `CdIts.Caffoa` 1.x.x and add add a package-reference to `CdIts.Caffoa.Json.Net` 3.x.x

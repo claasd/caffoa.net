@@ -14,7 +14,7 @@ If something does not work that you feel should work, create a ticket with your 
 
 # Migrating from 1.x
 * The is a [Migration guide](migration_1_to_2.md) to goude you from migrtion from 1.x to 2.x.
-* In 2.x, there is [Experimental support for System.Text.Json](readme.system.text.json.md) 
+* Starting with 2.x, there is [Experimental support for System.Text.Json](readme.system.text.json.md) 
 
 # Required nuget packages
 
@@ -198,6 +198,8 @@ config:
   useConstants: false # When set to true, values with one single enum and a matching default value will be generated as constants for strings and integer types.
   passTags: false # When set to true, The interface function will have a parameter that contains all openapi tags of that function
   removeRequiredOnReadonly: false # when set to true, required attributes will not be generated on members that are required and readOnly
+  generateResolvedApiFile: false # will resolve all references (internal and external) and generate a single file named `originalName.generated.yml` besides the original file
+  simplifyResolvedApiFile: false # will remove all schema declarations from requestBodies and responses in the generated API file. This is useful for Azure APIM, to work around the bicep file size restrictions.
 services:
   - apiPath: userservice.openapi.yml
     config: null # optional, can be an config option. That option is then overriden for this api only
@@ -315,6 +317,27 @@ public virtual string CombinedName {
 public partial string GetCombinedName();
 partial void SetCombinedName(string value);
 ```
+
+# Client generation
+additionally to the functions, you can generate a client that will use the same model classes for your API.
+The client is generated as a partial class, so you can add your own methods to it.
+
+```yaml
+services:
+  - apiPath: my-service.openapi.yml
+    function:
+      name: MyClassName
+      namespace: MyNamespace
+      targetFolder: ./output
+    model:
+      namespace: MyNamespace.Model
+      targetFolder: ./output/Model
+    client:
+      name: MyClientName
+      targetFolder: ./output/Client
+```
+
+See the advanced configuration options for details. 
 
 # Changelog
 The changelog is [here](changelog.md)

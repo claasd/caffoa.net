@@ -1,12 +1,19 @@
 # caffoa changelog
 
 ## 3.0.0
+
+The CLI does not support dotnet core 3.1 anymore, thus the major version bump.
+
 * drop support of netcore 3.1 for CLI
 * experimental support for ASPCore controller generation, see [readme](readme.md#crated-aspnet-controller-template) for details
 * Support for serializing/deserializing nested oneOf data types using a copy of Subtypes library from (https://github.com/manuc66/JsonSubTypes)
 * new flag `removeRequiredOnReadonly` (default  `false`) when set to `true`, `Required` attributes will not be generated on members that are required and readOnly
 * Fix for client generation if `withCancellation` is set to `false`
 * Fix for client generation of Key/Value Pairs
+* add jsonSerializerSettings to DefaultCaffoaParser for Json.NET
+* added new parameters to generate fully resolved openapi files. This is useful if you want to use the generated files in other tools that do not support references to external files.
+  * `generateResolvedApiFile` (default `false`) will resolve external references and generate a single file named `originalName.generated.yml`
+  * `simplifyResolvedApiFile` (default `false`) will remove all schema declarations from requestBodies and responses. This is espaciallay usefulle for Azure APIM, to work around the bicep file size restrictions. 
 
 ## 2.12.0
 * new attribute: `x-caffoa-generate`. If set to false, the property will not be generated
