@@ -35,6 +35,7 @@ services:
   - apiPath: tests/openapi.yml
     config:
       generateResolvedApiFile: true
+      simplifyResolvedApiFile: true
       disposable: true
       deepCopyDefaultValue: false
       imports:

@@ -54,7 +54,7 @@ public class ApiBuilder
             _endpoints = _parser.GenerateEndpoints();
     }
 
-    public void Generate(Dictionary<string, OpenApiDocument> allDocuments, List<SchemaItem> otherKnownObjects)
+    public void Generate(List<SchemaItem> otherKnownObjects)
     {
         if (_service.Model != null && Models != null)
         {
@@ -88,6 +88,6 @@ public class ApiBuilder
         }
 
         if (Config.GenerateResolvedApiFile is true)
-            _parser.WriteGeneratedApiFile(allDocuments);
+            OpenApiFileGenerator.WriteGeneratedApiFile(_parser.Document, _service.ApiPath, Config.SimplifyResolvedApiFile is true);
     }
 }

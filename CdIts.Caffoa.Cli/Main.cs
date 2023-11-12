@@ -73,14 +73,13 @@ public class Main
     public void GenerateCode(List<ApiBuilder> builders)
     {
         var extensionGenerators = new List<ExtensionGenerator>();
-        var allDocuments = builders.GroupBy(b => b.ApiName, b => b.Document).ToDictionary(g => g.Key, g => g.First());
         foreach (var builder in builders)
         {
             var otherModels = builders.Where(b => b != builder && b.Models != null).SelectMany(b => b.Models!).ToList();
-            builder.Generate(allDocuments, otherModels);
+            builder.Generate(otherModels);
             if (builder.ExtensionData.Any())
             {
-                var generator = extensionGenerators.FirstOrDefault(g =>
+                var generator = extensionGenerators.Find(g =>
                     g.Folder == builder.ExtensionFolder && g.Namespace == builder.ExtensionNamespace);
                 if (generator is null)
                 {

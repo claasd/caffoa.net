@@ -69,23 +69,6 @@ public class ServiceParser
         }
     }
 
-    public void WriteGeneratedApiFile(Dictionary<string, OpenApiDocument> allDocuments)
-    {
-        var path = Path.ChangeExtension(_service.ApiPath, "generated.yml");
-        using var fileStream = File.OpenWrite(path);
-        var workspace = new OpenApiWorkspace();
-        foreach (var (name, doc) in allDocuments)
-        {
-            workspace.AddDocument(name, doc);
-        }
-        workspace.AddDocument("root", Document);
-        Document.Serialize(fileStream, OpenApiSpecVersion.OpenApi3_0, OpenApiFormat.Yaml, new OpenApiWriterSettings()
-        {
-            InlineExternalReferences = true,
-            InlineLocalReferences = true
-        });
-    }
-
     public List<SchemaItem> GenerateModel()
     {
         var schemas = Document!.Components.Schemas;

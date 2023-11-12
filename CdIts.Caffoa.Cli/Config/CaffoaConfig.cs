@@ -32,6 +32,7 @@ public class CaffoaConfig
     public string? FunctionNamePrefix { get; set; }
     public bool? Disposable { get; set; }
     public bool? GenerateResolvedApiFile { get; set; }
+    public bool? SimplifyResolvedApiFile { get; set; }
     public bool? Extensions { get; set; }
     public bool? UseInheritance { get; set; }
     public string? AuthorizationLevel { get; set; }
@@ -86,6 +87,7 @@ public class CaffoaConfig
             FunctionNamePrefix = FunctionNamePrefix ?? general.FunctionNamePrefix,
             Disposable = Disposable ?? general.Disposable,
             GenerateResolvedApiFile = GenerateResolvedApiFile ?? general.GenerateResolvedApiFile,
+            SimplifyResolvedApiFile = SimplifyResolvedApiFile ?? general.SimplifyResolvedApiFile,
             Extensions = Extensions ?? general.Extensions,
             UseInheritance = UseInheritance ?? general.UseInheritance,
             AuthorizationLevel = AuthorizationLevel ?? general.AuthorizationLevel,

@@ -3,8 +3,15 @@ info:
   title: Demo API
   version: "1.0"
 
+security:
+  - bearerAuth: [ ]
 
 components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
   schemas:
     fancyString:
       type: string
