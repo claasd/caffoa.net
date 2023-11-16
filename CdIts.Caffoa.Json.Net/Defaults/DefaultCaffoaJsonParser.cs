@@ -12,7 +12,11 @@ public class DefaultCaffoaJsonParser : ICaffoaJsonParser
     private readonly JsonSerializerSettings _settings;
     public ICaffoaParseErrorHandler ErrorHandler { get; }
 
-    public DefaultCaffoaJsonParser(ICaffoaParseErrorHandler errorHandler, JsonSerializerSettings? settings = null)
+    public DefaultCaffoaJsonParser(ICaffoaParseErrorHandler errorHandler) : this(errorHandler, null)
+    {
+    }
+    
+    public DefaultCaffoaJsonParser(ICaffoaParseErrorHandler errorHandler, JsonSerializerSettings? settings)
     {
         _settings = settings ?? new JsonSerializerSettings();
         ErrorHandler = errorHandler;
