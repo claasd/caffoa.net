@@ -1,5 +1,8 @@
 # caffoa changelog
 
+## 3.0.1
+* add constructor to DefaultCaffoaParser to maintain binary compatibility with 2.x versions
+
 ## 3.0.0
 
 The CLI does not support dotnet core 3.1 anymore, thus the major version bump.
