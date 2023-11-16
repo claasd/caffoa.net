@@ -70,6 +70,7 @@ public abstract class ObjectParser
         property.CustomAttributes = ParseCustomAttributes(schema.Extensions, name);
         property.Generate = ParseGenerateAttribute(schema.Extensions);
         property.Delegate = ParseDelegateAttribute(schema.Extensions);
+        property.Alias = ParseAliasAttribute(schema.Extensions);
         property.Converter = ParseCustomConverter(schema.Extensions, name);
 
         if (!schema.IsRealObject(_enumMode))
@@ -163,9 +164,15 @@ public abstract class ObjectParser
         if (!extensions.TryGetValue("x-caffoa-delegate", out var singleAnnotation)) return false;
         var item = singleAnnotation as OpenApiBoolean ?? new OpenApiBoolean(false);
         return item.Value;
-
     }
-    
+
+    private string? ParseAliasAttribute(IDictionary<string, IOpenApiExtension> extensions)
+    {
+        if (!extensions.TryGetValue("x-caffoa-alias", out var singleAnnotation)) return null;
+        var item = singleAnnotation as OpenApiString ?? null;
+        return item?.Value.ToObjectName();
+    }
+
     private List<string> ParseCustomAttributes(IDictionary<string, IOpenApiExtension> extensions, string name)
     {
         try

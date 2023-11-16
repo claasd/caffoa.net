@@ -193,7 +193,16 @@ public class ModelGenerator
             format["NAMEUPPER"] = property.Name.ToObjectName();
             format["NAMELOWER"] = property.Name;
 
-            if (property.Delegate)
+            if (property.Alias != null)
+            {
+                if (enumClasses.Find(c => c.ClassName == type)?.NullableEnum ?? false)
+                    format["TYPE"] = type + "?";
+                format["ALIAS"] = property.Alias;
+                var file = Templates.GetTemplate("ModelPropertyAliasTemplate.tpl");
+                var formatted = file.FormatDict(format);
+                properties.Add(formatted);
+            }
+            else if (property.Delegate)
             {
                 if (enumClasses.Find(c => c.ClassName == type)?.NullableEnum ?? false)
                     format["TYPE"] = type + "?";

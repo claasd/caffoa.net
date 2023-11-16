@@ -1,5 +1,8 @@
 # caffoa changelog
 
+## 3.1.0
+* new attribute: `x-caffoa-alias`. Will point the getter and setter to the alias property, useful for deprecated properties that are replaced with new ones. 
+
 ## 3.0.1
 * add constructor to DefaultCaffoaParser to maintain binary compatibility with 2.x versions
 
