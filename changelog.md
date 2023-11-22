@@ -1,5 +1,8 @@
 # caffoa changelog
 
+## 3.1.1
+* Fix stream already disposed error in caffoa client if the response is returned as stream
+
 ## 3.1.0
 * new attribute: `x-caffoa-alias`. Will point the getter and setter to the alias property, useful for deprecated properties that are replaced with new ones. 
 

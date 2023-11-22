@@ -178,7 +178,7 @@ public class ClientGenerator
             return "";
         if (responses[0].Unknown)
         {
-            return "\n             return await httpResult.Content.ReadAsStreamAsync();";
+            return "\n             var memoryStream = new MemoryStream();\n             await httpResult.Content.CopyToAsync(memoryStream);\n             memoryStream.Position = 0;\n             return memoryStream;";
         }
 
         var type = responses[0].TypeName;
