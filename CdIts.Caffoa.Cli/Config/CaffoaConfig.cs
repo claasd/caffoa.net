@@ -57,7 +57,7 @@ public class CaffoaConfig
     {
         [EnumMember(Value = "Json.NET")] JsonNet,
 
-        [EnumMember(Value = "System.Text.Json.Legacy")] SystemTextJsonPre7,
+        [EnumMember(Value = "System.Text.Json.Pre7")] SystemTextJsonPre7,
 
         [EnumMember(Value = "System.Text.Json")] SystemTextJson,
 

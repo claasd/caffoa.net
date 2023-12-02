@@ -59,7 +59,7 @@ services:
   - apiPath: tests/base.openapi.yml
     config:
       prefix: 'STJ'
-      flavor: SystemTextJson
+      flavor: SystemTextJsonPre7
     model:
       namespace: DemoV2.Text.Json.Model.Base
       targetFolder: ./demo/DemoV2.Text.Json/Model/Base
@@ -75,7 +75,7 @@ services:
   - apiPath: tests/openapi.yml
     config:
       prefix: 'ASP'
-      flavor: SystemTextJson70
+      flavor: SystemTextJson
       imports:
         - DemoV2.AspNet.Model.Base
       requestBodyType: # overwrite the JSON type that is passed to the method for some operations
@@ -124,7 +124,7 @@ services:
   - apiPath: tests/openapi.yml
     config:
       prefix: 'STJ'
-      flavor: SystemTextJson
+      flavor: SystemTextJsonPre7
       imports:
         - DemoV2.Text.Json.Model.Base
       durableClient:
