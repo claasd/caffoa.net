@@ -348,11 +348,8 @@ namespace DemoV2.Model {
         [EnumMember(Value = "deprecated_enum2")] Deprecated_enum2 = Enum2
     }
 }
-
-You mast make sure that the enum values that are referenced are defined before the enum that references them.
-
 ```
-
+You mast make sure that the enum values that are referenced are defined before the enum that references them.
 
 # Client generation
 additionally to the functions, you can generate a client that will use the same model classes for your API.
