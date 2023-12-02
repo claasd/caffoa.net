@@ -9,7 +9,8 @@ namespace DemoV2.Text.Json.Model {
         public enum RoleValue {
             [EnumMember(Value = "admin")] Admin,
             [EnumMember(Value = "reader")] Reader,
-            [EnumMember(Value = "contributor")] Contributor
+            [EnumMember(Value = "contributor")] Contributor,
+            [EnumMember(Value = "editor")] Editor = Contributor
         }
     }
 }

@@ -226,7 +226,11 @@ paths:
             - enum2
             - enum space
             - enum-sepcial_CHARS
+            - deprecated_enum
           type: string
+          x-caffoa-enum-aliases:
+            deprecated_enum: enum1
+            deprecated_enum2: enum2
       - name: include
         in: query
         schema:
@@ -237,7 +241,11 @@ paths:
               - enum2
               - enum space
               - enum-sepcial_CHARS
+              - deprecated_enum
             type: string
+            x-caffoa-enum-aliases:
+              deprecated_enum: enum1
+              deprecated_enum2: enum2
           nullable: true
       - name: flags
         in: query
@@ -256,7 +264,11 @@ paths:
               - enum2
               - enum space
               - enum-sepcial_CHARS
+              - deprecated_enum
             type: string
+            x-caffoa-enum-aliases:
+              deprecated_enum: enum1
+              deprecated_enum2: enum2
           nullable: true
   '/enums/list/filter/{filter}':
     get:
@@ -278,7 +290,11 @@ paths:
             - enum2
             - enum space
             - enum-sepcial_CHARS
+            - deprecated_enum
           type: string
+          x-caffoa-enum-aliases:
+            deprecated_enum: enum1
+            deprecated_enum2: enum2
   /echo/oneOfTest:
     get:
       tags:

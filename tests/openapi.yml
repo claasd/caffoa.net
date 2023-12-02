@@ -56,7 +56,9 @@ components:
           default: simple
         role:
           type: string
-          enum: [ admin, reader, contributor ]
+          enum: [ admin, reader, contributor, editor ]
+          x-caffoa-enum-aliases:
+            editor: contributor
           default: reader
         ageGroup:
           type: integer
@@ -196,6 +198,10 @@ components:
         - enum2
         - enum space
         - enum-sepcial_CHARS
+        - deprecated_enum
+      x-caffoa-enum-aliases:
+        deprecated_enum: enum1
+        deprecated_enum2: enum2
     
     myEnumTypeArray:
       type: array

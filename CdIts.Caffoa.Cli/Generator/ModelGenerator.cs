@@ -354,7 +354,7 @@ public class ModelGenerator
         }
 
         var type = property.TypeName.Trim('?');
-        IEnumerable<string> enumDefs;
+        var enumDefs = new List<string>();
         string enumbase = "";
         string jsonproperty = "";
         if (type == "string")
@@ -365,13 +365,19 @@ public class ModelGenerator
                 CaffoaConfig.GenerationFlavor.SystemTextJson70 => "JsonStringEnumConverter",
                 _ => "StringEnumConverter",
              };
-            enumDefs = enums.Select(item => $"[EnumMember(Value = {item.Value})] {item.Key}");
+            foreach (var @enum in enums)
+            {
+                var init = "";
+                if (property.EnumsAliases.TryGetValue(@enum.Value, out var alias))
+                    init = $" = " + EnumNameForValue(alias);
+                enumDefs.Add($"[EnumMember(Value = {@enum.Value})] {@enum.Key}{init}");
+            }
         }
         else
         {
             enumbase = $" : {type}";
             jsonproperty = $"CaffoaNumericEnumConverter<{propName}>";
-            enumDefs = enums.Select(item => $"{item.Key} = {item.Value}");
+            enumDefs = enums.Select(item => $"{item.Key} = {item.Value}").ToList();
         }
 
         var formatter = new PropertyFormatter(property, _config);
@@ -391,7 +397,6 @@ public class ModelGenerator
         var formatted = file.FormatDict(format);
         File.WriteAllText(Path.Combine(_service.Model!.TargetFolder, fileName), formatted.ToSystemNewLine());
     }
-
     private void WriteEnumClass(SchemaItem item)
     {
         var file = Templates.GetTemplate("ModelEnumClassTemplate.tpl");
@@ -404,19 +409,26 @@ public class ModelGenerator
             enums[cleaned] = value;
         }
 
-        IEnumerable<string> enumDefs;
+        List<string> enumDefs = new();
         string enumbase = "";
         string jsonproperty = "";
         if (item.Type == SchemaItem.ObjectType.StringEnum)
         {
             jsonproperty = "StringEnumConverter";
-            enumDefs = enums.Select(item => $"[EnumMember(Value = {item.Value})] {item.Key}");
+            foreach (var @enum in enums)
+            {
+                var init = "";
+                if (item.EnumsAliases.TryGetValue(@enum.Value, out var alias))
+                    init = $" = " + EnumNameForValue(alias);
+                enumDefs.Add($"[EnumMember(Value = {@enum.Value})] {@enum.Key}{init}");
+            }
+            
         }
         else
         {
             enumbase = $" : {item.Type}";
             jsonproperty = $"CaffoaNumericEnumConverter<{item.ClassName}>";
-            enumDefs = enums.Select(item => $"{item.Key} = {item.Value}");
+            enumDefs = enums.Select(item => $"{item.Key} = {item.Value}").ToList();
         }
 
         var format = new Dictionary<string, object>

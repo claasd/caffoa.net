@@ -22,6 +22,7 @@ public class PropertyData
     public string[] ArrayDefaults { get; set; } = Array.Empty<string>();
     public bool IsOtherSchema { get; set; }
     public List<string?> Enums { get; set; } = new();
+    public Dictionary<string, string> EnumsAliases { get; set; } = new();
     public List<string> CustomAttributes { get; set; } = new();
     public bool Deprecated { get; set; }
     public string? Converter { get; set; }
@@ -29,4 +30,5 @@ public class PropertyData
     public bool Generate { get; set; } = true;
     public bool Delegate { get; set; }
     public string? Alias { get; set; }
+    
 }

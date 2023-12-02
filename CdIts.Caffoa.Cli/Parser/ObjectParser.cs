@@ -47,7 +47,9 @@ public abstract class ObjectParser
                     Item.Type = SchemaItem.ObjectType.StringEnum;
                     Item.NullableEnum = schema.Nullable;
                 }
-                Item.Enums = schema.EnumsAsStrings();
+
+                Item.EnumsAliases = ParseCustomEnumAliases(schema.Extensions, Item.Name);
+                Item.Enums = schema.EnumsAsStrings().Concat(Item.EnumsAliases.Keys).Distinct().ToList();
                 Item.Default = schema.DefaultAsString();
             }
 
@@ -93,7 +95,7 @@ public abstract class ObjectParser
             property.InnerTypeIsOtherSchema = schema.Items.Reference != null && !schema.Items.IsPrimitiveType();
             if (schema.Items.IsPrimitiveType() && schema.Default is OpenApiArray defaultArray)
             {
-                property.ArrayDefaults = defaultArray.Select(item => item.AnyValue()).Where(v=>v != null).ToArray()!;
+                property.ArrayDefaults = defaultArray.Select(item => item.AnyValue()).Where(v => v != null).ToArray()!;
             }
         }
         else if (schema.AdditionalProperties != null)
@@ -109,7 +111,8 @@ public abstract class ObjectParser
         {
             property.TypeName = schema.TypeName();
             property.Default = schema.DefaultAsString();
-            property.Enums = schema.EnumsAsStrings();
+            property.EnumsAliases = ParseCustomEnumAliases(schema.Extensions, name);
+            property.Enums = schema.EnumsAsStrings().Concat(Item.EnumsAliases.Keys).Distinct().ToList();
         }
 
         return property;
@@ -158,7 +161,7 @@ public abstract class ObjectParser
         var item = singleAnnotation as OpenApiBoolean ?? new OpenApiBoolean(true);
         return item.Value;
     }
-    
+
     private bool ParseDelegateAttribute(IDictionary<string, IOpenApiExtension> extensions)
     {
         if (!extensions.TryGetValue("x-caffoa-delegate", out var singleAnnotation)) return false;
@@ -182,6 +185,7 @@ public abstract class ObjectParser
                 var strItem = singleAnnotation as OpenApiString ?? throw new CaffoaParserException("x-caffoa-attribute value must be a string");
                 return new List<string>() { strItem.Value };
             }
+
             if (!extensions.TryGetValue("x-caffoa-attributes", out var annotations))
                 return new List<string>();
             var annotationsArray = annotations as OpenApiArray;
@@ -197,6 +201,31 @@ public abstract class ObjectParser
         {
             _logger.LogWarning($"Could not parse custom attributes of {name}: {e.Message}");
             return new List<string>();
+        }
+    }
+
+    private Dictionary<string, string> ParseCustomEnumAliases(IDictionary<string, IOpenApiExtension> extensions, string name)
+    {
+        try
+        {
+            if (!extensions.TryGetValue("x-caffoa-enum-aliases", out var aliases))
+                return new();
+            var aliasObject = aliases as OpenApiObject;
+            if (aliasObject is null)
+                throw new CaffoaParserException("x-caffoa-enum-aliases is not key: value object");
+            var data = new Dictionary<string, string>();
+            foreach (var (key, value) in aliasObject)
+            {
+                if(value is not OpenApiString str)
+                    throw new CaffoaParserException($"x-caffoa-enum-aliases for {key}: is not a string value");
+                data[$"\"{key}\""] = $"\"{str.Value}\"";
+            }
+            return data;
+        }
+        catch (CaffoaParserException e)
+        {
+            _logger.LogWarning($"Could not parse enum aliases of {name}: {e.Message}");
+            return new Dictionary<string, string>();
         }
     }
 
@@ -219,6 +248,7 @@ public abstract class ObjectParser
             model.Mapping[mapName] = typeName;
             model.Children.Add(typeName);
         }
+
         return model;
     }
 
@@ -230,6 +260,7 @@ public abstract class ObjectParser
             if (result is OpenApiSchema schema)
                 return schema;
         }
+
         return subSchema;
     }
 

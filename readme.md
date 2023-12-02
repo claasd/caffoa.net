@@ -318,6 +318,42 @@ public partial string GetCombinedName();
 partial void SetCombinedName(string value);
 ```
 
+## advanced enum configuration
+You can use the `x-caffoa-enum-aliases` attribute on a string enum, to define value aliases. This is useful if you have different names for the same value in different APIs, such as "asc" and "ascending".
+
+Furthermore, you can also introduce server-only enums that point to existing enums. This is usefull if you remove an enum in favor or a new one, but backen system still use the old enum, or to do automatic mapping of backen system enums.
+
+openapi example:
+```yaml
+    myEnumType:
+      type: string
+      enum:
+        - enum1
+        - enum2
+        - deprecated_enum
+      x-caffoa-enum-aliases:
+        deprecated_enum: enum1
+        deprecated_enum2: enum2
+
+```
+
+will generate the following code:
+```csharp
+namespace DemoV2.Model {
+    [JsonConverter(typeof(StringEnumConverter))]
+    public enum MyEnumType {
+        [EnumMember(Value = "enum1")] Enum1,
+        [EnumMember(Value = "enum2")] Enum2,
+        [EnumMember(Value = "deprecated_enum")] Deprecated_enum = Enum1,
+        [EnumMember(Value = "deprecated_enum2")] Deprecated_enum2 = Enum2
+    }
+}
+
+You mast make sure that the enum values that are referenced are defined before the enum that references them.
+
+```
+
+
 # Client generation
 additionally to the functions, you can generate a client that will use the same model classes for your API.
 The client is generated as a partial class, so you can add your own methods to it.

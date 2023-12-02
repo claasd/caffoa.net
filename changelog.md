@@ -1,4 +1,6 @@
 # caffoa changelog
+## 3.2.0
+* allow to set an x-caffoa-enum-aliases attribute on string enums. see [readme](readme.md#advanced-enum-configuration) for details.
 
 ## 3.1.1
 * Fix stream already disposed error in caffoa client if the response is returned as stream
