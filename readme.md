@@ -12,16 +12,20 @@ If something does not work that you feel should work, create a ticket with your 
 * It uses [OpenAPI.NET](https://github.com/microsoft/OpenAPI.NET) for parsing the openapi spec.
 * It uses a copy of version 2.0.1 of [JsonSubtypes](https://github.com/manuc66/JsonSubTypes)
 
+# Json.NET vs. System.Text.Json
+Caffoa was developed with Json.NET as background framework.
+However, after experimental support for System.Text.Json in version 2.0, caffoa now supports both frameworks. 
+Starting with version 4.0, System.Text.Json will become a first class citizen as well, and both frameworks will live side by side.
+There is a page for System.Text.Json: [growing support for System.Text.Json](readme.system.text.json.md)
+
 # Migrating from 1.x
-* The is a [Migration guide](migration_1_to_2.md) to goude you from migrtion from 1.x to 2.x.
-* Starting with 2.x, there is [Experimental support for System.Text.Json](readme.system.text.json.md) 
+* The is a [Migration guide](migration_1_to_2.md) to goude you from migrtion from 1.x to a more modern version.
 
 # Required nuget packages
-
 You will need to install the following nuget packages:
 * `Microsoft.NET.Sdk.Functions` obviously
 * `Microsoft.Azure.Functions.Extensions` for function dependency injection
-* `CdIts.Caffoa.Json.Net` for caffoa interfaces and default implementations
+* `CdIts.Caffoa.Json.Net` or `CdIts.Caffoa.System.Text.Json` for caffoa interfaces and default implementations
 * Optional: `Microsoft.Azure.WebJobs.Extensions.DurableTask` if you want to inject `[DurableClient]` into your methods
 
 # Usage
@@ -139,7 +143,7 @@ app.MapControllers();
 await app.RunAsync();
 ```
 To use Newtonsofts Json.NET you have to install the `Microsoft.AspNetCore.Mvc.NewtonsoftJson` Package and call `AddNewtonsoftJson()` as in the example above.
-Support for System.Text.Json is still experimental in Caffoa. You can enable it with the config option `flavor: SystemTextJson70` to target .NET 7's System.Text.Json that is much more sophisticated. 
+Support for System.Text.Json is still experimental in Caffoa. You can enable it with the config option `flavor: SystemTextJson` to target .NET 7/8's System.Text.Json. 
 
 ## Created data objects from schemas
 

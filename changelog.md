@@ -1,4 +1,11 @@
 # caffoa changelog
+
+## 4.0.0
+* Support for NET8
+* Full deprecation of `CdIts.Caffoa`. There will be no new packages released. Use `CdIts.Caffoa.Json.Net` instead.
+* breaking changes:
+  * config option `flavor: SystemTextJson` will now use modern System.Text.Json features, and will not work with net6.0 and below. Use `flavor: SystemTextJsonPre7` for net6.0 and below.
+
 ## 3.2.0
 * allow to set an x-caffoa-enum-aliases attribute on string enums. see [readme](readme.md#advanced-enum-configuration) for details.
 

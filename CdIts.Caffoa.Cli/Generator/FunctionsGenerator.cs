@@ -210,8 +210,8 @@ public class FunctionsGenerator
         parameter["GENERIC_TYPE"] = _config.GetGenericType();
         parameter["DISC_READ"] = _config.Flavor switch
         {
+            CaffoaConfig.GenerationFlavor.SystemTextJsonPre7 => $"jsonToken?.GetProperty(\"{model.Disriminator}\").GetString()?.ToLower()",
             CaffoaConfig.GenerationFlavor.SystemTextJson => $"jsonToken?.GetProperty(\"{model.Disriminator}\").GetString()?.ToLower()",
-            CaffoaConfig.GenerationFlavor.SystemTextJson70 => $"jsonToken?.GetProperty(\"{model.Disriminator}\").GetString()?.ToLower()",
             _ => $"jsonToken[\"{model.Disriminator}\"]?.ToString()?.ToLower()"
         };
         return file.FormatDict(parameter);

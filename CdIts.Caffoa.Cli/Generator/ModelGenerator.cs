@@ -51,8 +51,8 @@ public class ModelGenerator
         parameters["DESCRIPTION"] = formatter.Description;
         parameters["ATTRIBUTES"] = _config.Flavor switch
         {
-            CaffoaConfig.GenerationFlavor.SystemTextJson => "",
-            CaffoaConfig.GenerationFlavor.SystemTextJson70 => string.Join("\n    ", item.Interface!.Mapping.Select(c => $"[JsonDerivedType(typeof({c.Value}), \"{c.Key}\")]")),
+            CaffoaConfig.GenerationFlavor.SystemTextJsonPre7 => "",
+            CaffoaConfig.GenerationFlavor.SystemTextJson => string.Join("\n    ", item.Interface!.Mapping.Select(c => $"[JsonDerivedType(typeof({c.Value}), \"{c.Key}\")]")),
             _ => JsonNetSubtypes(item.Interface!),
         }; //Needed to serialize interfaces. supported starting .NET 7. So only use when generating controllers.
         parameters["TYPE"] = item.Interface?.Discriminator?.ToObjectName() ?? "";
@@ -361,8 +361,8 @@ public class ModelGenerator
         {
             jsonproperty = _config.Flavor switch
             {
+                CaffoaConfig.GenerationFlavor.SystemTextJsonPre7 => "JsonStringEnumConverter",
                 CaffoaConfig.GenerationFlavor.SystemTextJson => "JsonStringEnumConverter",
-                CaffoaConfig.GenerationFlavor.SystemTextJson70 => "JsonStringEnumConverter",
                 _ => "StringEnumConverter",
              };
             foreach (var @enum in enums)

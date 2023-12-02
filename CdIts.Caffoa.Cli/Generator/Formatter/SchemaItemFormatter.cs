@@ -46,7 +46,7 @@ public class SchemaItemFormatter
     public string Imports(List<string>? modelImports, List<string>? configImports)
     {
         var imports = new List<string>();
-        if (_config.Flavor is CaffoaConfig.GenerationFlavor.SystemTextJson || _config.Flavor is CaffoaConfig.GenerationFlavor.SystemTextJson70)
+        if (_config.Flavor is CaffoaConfig.GenerationFlavor.SystemTextJsonPre7 || _config.Flavor is CaffoaConfig.GenerationFlavor.SystemTextJson)
         {
             imports.Add("System.Text.Json");
             imports.Add("System.Text.Json.Serialization");
@@ -85,7 +85,7 @@ public class SchemaItemFormatter
             if (otherItem?.Namespace != null)
                 imports.Add(otherItem.Namespace);
         }
-        return imports.Count > 0 ? string.Join("", imports.Distinct().Select(i => $"using {i};\n")) : "";
+        return string.Join("", imports.Distinct().Select(i => $"using {i};\n"));
     }
 
     public List<string> MatchingInterfaces(List<SchemaItem> schemas)
