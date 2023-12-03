@@ -53,7 +53,7 @@ services:
       targetFolder: ./output/Model
 ```
 
-You can generate a config file with sensitive config settings using the following command:
+You can generate a config file with default config settings using the following command:
 ```bash
 dotnet caffoa --initwithfile my-openapi.yml --initprojectname MyFunction
 ```
@@ -150,7 +150,7 @@ The file will contain a partial class, with all properties of the schema. You ca
 * The schema must be defined in the components section.
 * Furthermore, schemas may not be nested without reference.
 (You can easily overcome this restriction by defining more schemas in the components section and have them reference each other.)
-* when using inheritanceMode, allOf is implemented as inheritance, and therefore can only handle allOf with one reference and one direct configuration. When using useInheritance=false (default in caffoa 2.x), you can use multiple elements in allOf
+* when using object inheritance (`useInheritance: true` not recomended since caffoa 2.x), allOf is implemented as inheritance, and therefore can only handle allOf with one reference and one direct configuration. When using useInheritance=false (default since caffoa 2.x), you can use multiple elements in allOf
 
 ## Advanced configuration options
 There are multiple optional configuration options that you can use (shown values represent the default):
