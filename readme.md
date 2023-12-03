@@ -122,7 +122,9 @@ namespace MyNamespace {
 
 Now implement all the logic in your implementation of the interface. You can now change your API, and regenerate the generated files without overwriting your code.
 
-## Crated ASP.NET Controller template
+## Alternative: Create ASP.NET Controller template
+Since version 3.0, caffoa can also generate code for ASP.NET controller projects. Usually, this is done instead of generating function templatess.
+
 If you specified the `controller` part in the config file, the tool will create files in the specified target folder:
 * `MyClassNameController.generated.cs`
 * `IMyClassNameService.generated.cs`
