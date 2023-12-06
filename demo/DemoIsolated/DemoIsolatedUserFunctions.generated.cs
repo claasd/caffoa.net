@@ -8,24 +8,23 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Microsoft.Azure.WebJobs;
-using Microsoft.Azure.WebJobs.Extensions.Http;
+using Microsoft.Azure.Functions.Worker;
 using Newtonsoft.Json.Linq;
-using DemoV1b.Model.Base;
-using DemoV1b.Model;
+using DemoIsolated.Model.Base;
+using DemoIsolated.Model;
 
-namespace DemoV1b
+namespace DemoIsolated
 {
     /// AUTO GENERATED CLASS
-    public class DemoV1bUserFunctions
+    public class DemoIsolatedUserFunctions
     {
-        private readonly ILogger<DemoV1bUserFunctions> _logger;
-        private readonly ICaffoaFactory<IDemoV1bUserService> _factory;
+        private readonly ILogger<DemoIsolatedUserFunctions> _logger;
+        private readonly ICaffoaFactory<IDemoIsolatedUserService> _factory;
         private readonly ICaffoaErrorHandler _errorHandler;
         private readonly ICaffoaJsonParser _jsonParser;
         private readonly ICaffoaResultHandler _resultHandler;
         private readonly ICaffoaConverter _converter;
-        public DemoV1bUserFunctions(ILogger<DemoV1bUserFunctions> logger, ICaffoaFactory<IDemoV1bUserService> factory, ICaffoaErrorHandler errorHandler = null, ICaffoaJsonParser jsonParser = null, ICaffoaResultHandler resultHandler = null, ICaffoaConverter converter = null) {
+        public DemoIsolatedUserFunctions(ILogger<DemoIsolatedUserFunctions> logger, ICaffoaFactory<IDemoIsolatedUserService> factory, ICaffoaErrorHandler errorHandler = null, ICaffoaJsonParser jsonParser = null, ICaffoaResultHandler resultHandler = null, ICaffoaConverter converter = null) {
             _logger = logger;
             _factory = factory;
             _resultHandler = resultHandler ?? new DefaultCaffoaResultHandler();
@@ -36,7 +35,7 @@ namespace DemoV1b
         /// <summary>
         /// auto-generated function invocation.
         ///</summary>
-        [FunctionName("UsersGetAsync")]
+        [Function("UsersGetAsync")]
         public async Task<IActionResult> UsersGetAsync(
             [HttpTrigger(AuthorizationLevel.Function, "get", Route = "api/users")]
             HttpRequest request)
@@ -62,7 +61,7 @@ namespace DemoV1b
         /// <summary>
         /// auto-generated function invocation.
         ///</summary>
-        [FunctionName("UserPostAsync")]
+        [Function("UserPostAsync")]
         public async Task<IActionResult> UserPostAsync(
             [HttpTrigger(AuthorizationLevel.Function, "post", Route = "api/users")]
             HttpRequest request)
@@ -73,8 +72,8 @@ namespace DemoV1b
                 var discriminator = jsonToken["type"]?.ToString()?.ToLower();
                 var task = discriminator switch
                 {
-                    "simple" => instance.UserPostAsync(_jsonParser.ToObject<L2User>(jsonToken), request.HttpContext.RequestAborted),
-                    "guest" => instance.UserPostAsync(_jsonParser.ToObject<L2GuestUser>(jsonToken), request.HttpContext.RequestAborted),
+                    "simple" => instance.UserPostAsync(_jsonParser.ToObject<IsoUser>(jsonToken), request.HttpContext.RequestAborted),
+                    "guest" => instance.UserPostAsync(_jsonParser.ToObject<IsoGuestUser>(jsonToken), request.HttpContext.RequestAborted),
                     _ => throw _errorHandler.WrongContent("type", discriminator, new [] { "simple", "guest" })
                 };
                 var result = await task;
@@ -90,7 +89,7 @@ namespace DemoV1b
         /// <summary>
         /// auto-generated function invocation.
         ///</summary>
-        [FunctionName("UserPutAsync")]
+        [Function("UserPutAsync")]
         public async Task<IActionResult> UserPutAsync(
             [HttpTrigger(AuthorizationLevel.Function, "put", Route = "api/users/{userId}")]
             HttpRequest request, string userId)
@@ -101,8 +100,8 @@ namespace DemoV1b
                 var discriminator = jsonToken["type"]?.ToString()?.ToLower();
                 var task = discriminator switch
                 {
-                    "simple" => instance.UserPutAsync(userId, _jsonParser.ToObject<L2User>(jsonToken), request.HttpContext.RequestAborted),
-                    "guest" => instance.UserPutAsync(userId, _jsonParser.ToObject<L2GuestUser>(jsonToken), request.HttpContext.RequestAborted),
+                    "simple" => instance.UserPutAsync(userId, _jsonParser.ToObject<IsoUser>(jsonToken), request.HttpContext.RequestAborted),
+                    "guest" => instance.UserPutAsync(userId, _jsonParser.ToObject<IsoGuestUser>(jsonToken), request.HttpContext.RequestAborted),
                     _ => throw _errorHandler.WrongContent("type", discriminator, new [] { "simple", "guest" })
                 };
                 var (result, code) = await task;
@@ -118,7 +117,7 @@ namespace DemoV1b
         /// <summary>
         /// auto-generated function invocation.
         ///</summary>
-        [FunctionName("UserPatchAsync")]
+        [Function("UserPatchAsync")]
         public async Task<IActionResult> UserPatchAsync(
             [HttpTrigger(AuthorizationLevel.Function, "patch", Route = "api/users/{userId}")]
             HttpRequest request, string userId)
@@ -138,7 +137,7 @@ namespace DemoV1b
         /// <summary>
         /// auto-generated function invocation.
         ///</summary>
-        [FunctionName("UserGetAsync")]
+        [Function("UserGetAsync")]
         public async Task<IActionResult> UserGetAsync(
             [HttpTrigger(AuthorizationLevel.Function, "get", Route = "api/users/{userId}")]
             HttpRequest request, string userId)
@@ -158,7 +157,7 @@ namespace DemoV1b
         /// <summary>
         /// auto-generated function invocation.
         ///</summary>
-        [FunctionName("UploadImageAsync")]
+        [Function("UploadImageAsync")]
         public async Task<IActionResult> UploadImageAsync(
             [HttpTrigger(AuthorizationLevel.Function, "post", Route = "api/users/{userId}/uploadImage")]
             HttpRequest request, string userId)
@@ -178,7 +177,7 @@ namespace DemoV1b
         /// <summary>
         /// auto-generated function invocation.
         ///</summary>
-        [FunctionName("UsersGetByBirthdateAsync")]
+        [Function("UsersGetByBirthdateAsync")]
         public async Task<IActionResult> UsersGetByBirthdateAsync(
             [HttpTrigger(AuthorizationLevel.Function, "get", Route = "api/users/born-before/{date}")]
             HttpRequest request, string date)
@@ -198,7 +197,7 @@ namespace DemoV1b
         /// <summary>
         /// auto-generated function invocation.
         ///</summary>
-        [FunctionName("UsersSearchByDateAsync")]
+        [Function("UsersSearchByDateAsync")]
         public async Task<IActionResult> UsersSearchByDateAsync(
             [HttpTrigger(AuthorizationLevel.Function, "get", Route = "api/users/filter/byAge")]
             HttpRequest request)
@@ -231,7 +230,7 @@ namespace DemoV1b
         /// <summary>
         /// auto-generated function invocation.
         ///</summary>
-        [FunctionName("GetTagsAsync")]
+        [Function("GetTagsAsync")]
         public async Task<IActionResult> GetTagsAsync(
             [HttpTrigger(AuthorizationLevel.Function, "get", Route = "api/tags")]
             HttpRequest request)
@@ -251,7 +250,7 @@ namespace DemoV1b
         /// <summary>
         /// auto-generated function invocation.
         ///</summary>
-        [FunctionName("GetUserTagsAsync")]
+        [Function("GetUserTagsAsync")]
         public async Task<IActionResult> GetUserTagsAsync(
             [HttpTrigger(AuthorizationLevel.Function, "get", Route = "api/tags/users")]
             HttpRequest request)
@@ -271,24 +270,24 @@ namespace DemoV1b
         /// <summary>
         /// auto-generated function invocation.
         ///</summary>
-        [FunctionName("ListEnumsAsync")]
+        [Function("ListEnumsAsync")]
         public async Task<IActionResult> ListEnumsAsync(
             [HttpTrigger(AuthorizationLevel.Function, "get", Route = "api/enums/list")]
             HttpRequest request)
         {
             try {
-                string filterValue = null;
+                IsoMyEnumType? filterValue = null;
                 if(request.Query.TryGetValue("filter", out var filterQueryValue))
-                    filterValue = filterQueryValue;
-                ICollection<string> includeValue = null;
+                    filterValue = _converter.ParseEnum<IsoMyEnumType>(filterQueryValue, "filter");
+                ICollection<IsoMyEnumType> includeValue = null;
                 if(request.Query.TryGetValue("include", out var includeQueryValue))
-                    includeValue = includeQueryValue.ToArray();
+                    includeValue = _converter.ParseEnumArray<IsoMyEnumType>(_jsonParser, includeQueryValue, "include");
                 ICollection<string> flagsValue = null;
                 if(request.Query.TryGetValue("flags", out var flagsQueryValue))
                     flagsValue = flagsQueryValue.ToArray();
-                ICollection<string> excludeValue = null;
+                ICollection<IsoMyEnumType> excludeValue = null;
                 if(request.Query.TryGetValue("exclude", out var excludeQueryValue))
-                    excludeValue = excludeQueryValue.ToArray();
+                    excludeValue = _converter.ParseEnumArray<IsoMyEnumType>(_jsonParser, excludeQueryValue, "exclude");
                 var instance = _factory.Instance(request);
                 var result = await instance.ListEnumsAsync(filterValue, includeValue, flagsValue, excludeValue, request.HttpContext.RequestAborted);
                 return _resultHandler.Json(result, 200);
@@ -303,14 +302,14 @@ namespace DemoV1b
         /// <summary>
         /// auto-generated function invocation.
         ///</summary>
-        [FunctionName("ListEnums2Async")]
+        [Function("ListEnums2Async")]
         public async Task<IActionResult> ListEnums2Async(
             [HttpTrigger(AuthorizationLevel.Function, "get", Route = "api/enums/list/filter/{filter}")]
             HttpRequest request, string filter)
         {
             try {
                 var instance = _factory.Instance(request);
-                var result = await instance.ListEnums2Async(filter, request.HttpContext.RequestAborted);
+                var result = await instance.ListEnums2Async(_converter.ParseEnum<IsoMyEnumType>(filter, "filter"), request.HttpContext.RequestAborted);
                 return _resultHandler.Json(result, 200);
             } catch(CaffoaClientError err) {
                 return err.Result;
@@ -323,14 +322,14 @@ namespace DemoV1b
         /// <summary>
         /// auto-generated function invocation.
         ///</summary>
-        [FunctionName("EchoOneOfAsync")]
+        [Function("EchoOneOfAsync")]
         public async Task<IActionResult> EchoOneOfAsync(
             [HttpTrigger(AuthorizationLevel.Function, "get", Route = "api/echo/oneOfTest")]
             HttpRequest request)
         {
             try {
                 var instance = _factory.Instance(request);
-                var result = await instance.EchoOneOfAsync(await _jsonParser.Parse<L2GroupedOneOf>(request.Body), request.HttpContext.RequestAborted);
+                var result = await instance.EchoOneOfAsync(await _jsonParser.Parse<IsoGroupedOneOf>(request.Body), request.HttpContext.RequestAborted);
                 return _resultHandler.Json(result, 200);
             } catch(CaffoaClientError err) {
                 return err.Result;
@@ -343,14 +342,14 @@ namespace DemoV1b
         /// <summary>
         /// auto-generated function invocation.
         ///</summary>
-        [FunctionName("EchoOneOfArrayAsync")]
+        [Function("EchoOneOfArrayAsync")]
         public async Task<IActionResult> EchoOneOfArrayAsync(
             [HttpTrigger(AuthorizationLevel.Function, "get", Route = "api/echo/oneOfTestArray")]
             HttpRequest request)
         {
             try {
                 var instance = _factory.Instance(request);
-                var result = await instance.EchoOneOfArrayAsync(await _jsonParser.Parse<IEnumerable<L2AnyUser>>(request.Body), request.HttpContext.RequestAborted);
+                var result = await instance.EchoOneOfArrayAsync(await _jsonParser.Parse<IEnumerable<IsoAnyUser>>(request.Body), request.HttpContext.RequestAborted);
                 return _resultHandler.Json(result, 200);
             } catch(CaffoaClientError err) {
                 return err.Result;

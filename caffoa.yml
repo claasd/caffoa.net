@@ -201,4 +201,30 @@ services:
       namespace: DemoV1b
       name: DemoV1b
       
+  - apiPath: tests/base.openapi.yml
+    config:
+      useIsolatedWorkerModel: true
+      prefix: Iso
+    model:
+      namespace: DemoIsolated.Model.Base
+      targetFolder: ./demo/DemoIsolated/Model/Base
+
+  - apiPath: tests/openapi.yml
+    config:
+      useIsolatedWorkerModel: true
+      imports:
+        - DemoIsolated.Model.Base
+      durableClient:
+        operations:
+          - long-running-function
+      prefix: Iso
+    model:
+      namespace: DemoIsolated.Model
+      targetFolder: ./demo/DemoIsolated/Model
+    function:
+      targetFolder: demo/DemoIsolated
+      namespace: DemoIsolated
+      name: DemoIsolated
+      
+      
       

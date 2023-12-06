@@ -22,11 +22,20 @@ There is a page for System.Text.Json: [growing support for System.Text.Json](rea
 * The is a [Migration guide](migration_1_to_2.md) to goude you from migrtion from 1.x to a more modern version.
 
 # Required nuget packages
+
+## in process model (default)
 You will need to install the following nuget packages:
 * `Microsoft.NET.Sdk.Functions` obviously
 * `Microsoft.Azure.Functions.Extensions` for function dependency injection
 * `CdIts.Caffoa.Json.Net` or `CdIts.Caffoa.System.Text.Json` for caffoa interfaces and default implementations
 * Optional: `Microsoft.Azure.WebJobs.Extensions.DurableTask` if you want to inject `[DurableClient]` into your methods
+
+## isolated worker model:
+You will need to install the following nuget packages:
+* `Microsoft.Azure.Functions.Worker` and `Microsoft.Azure.Functions.Worker.Sdk`
+* `Microsoft.Azure.Functions.Worker.Extensions.Http.AspNetCore`, this allows the use of AspNetCore objects
+* `CdIts.Caffoa.Json.Net` or `CdIts.Caffoa.System.Text.Json` for caffoa interfaces and default implementations
+* Optional: `Microsoft.Azure.Functions.Worker.Extensions.DurableTask` if you want to inject `[DurableClient]` into your methods
 
 # Usage
 
@@ -83,6 +92,7 @@ the tool will create two files in the specified target folder:
 
 Your job now is to create an implementation for the `IMyClassNameService` interface 
 and implement a factory function, inheriting from `ICaffoaFactory<IMyClassNameService>`.
+
 Example:
 ```c#
 using Caffoa;
@@ -95,7 +105,9 @@ namespace MyNamespace {
 }
 ```
 
-For small APIs, you can use the same implementation class for the Implementation and the factory. Example:
+For small APIs, you can use the same implementation class for the Implementation and the factory. 
+
+Example:
 ```c#
 using Caffoa;
 namespace MyNamespace {
@@ -107,8 +119,13 @@ namespace MyNamespace {
     // implementation of your interface
 }
 ```
+Now implement all the logic in your implementation of the interface. You can now change your API, and regenerate the generated files without overwriting your code.
 
-Furthermore, you need [Dependency Injection](https://docs.microsoft.com/en-us/azure/azure-functions/functions-dotnet-dependency-injection) to pass your factory to the constructor of the generated function class.
+Furthermore, you need to pass your factory to the constructor of the generated function class via dependency injection.
+### in process worker model:
+
+Dependency injection works via the `FunctionsStartup` class (See [Microsoft documentation](https://docs.microsoft.com/en-us/azure/azure-functions/functions-dotnet-dependency-injection#register-services)).
+
 Example:
 ```c#
 using Microsoft.Azure.Functions.Extensions.DependencyInjection;
@@ -123,8 +140,24 @@ namespace MyNamespace {
     }
 }
 ```
+### isolated worker model:
 
-Now implement all the logic in your implementation of the interface. You can now change your API, and regenerate the generated files without overwriting your code.
+Is the isolated worker model, dependency injection is performed [during default startup](https://learn.microsoft.com/en-us/azure/azure-functions/dotnet-isolated-process-guide#start-up-and-configuration).
+
+Example:
+```c#
+using Caffoa;
+using Microsoft.Extensions.Hosting;
+
+var host = new HostBuilder()
+    .ConfigureFunctionsWebApplication() // <-- this is important
+    .ConfigureServices(s => { 
+        s.AddCaffoaFactory<IMyClassNameService, MyFactory>(); 
+    })
+    .Build();
+
+await host.RunAsync();
+```
 
 ## Crated ASP.NET Controller template
 If you specified the `controller` part in the config file, the tool will create files in the specified target folder:
@@ -163,6 +196,7 @@ Parameters of the legacy 1.x interface can be found in the [old readme](https://
 
 ```yaml
 config:
+  useIsolatedWorkerModel: false # set to true to use the isolated worker model. This flag will change imports, Attributes and types
   authorizationLevel: function #  function | anonymous | system | admin
   clearGeneratedFiles: true # default is true, removes all files below the working directory, that end in .generated.cs
   duplicates: override # "once" or "override". once will not generate the same class name twice, even if it occurs in different API Specs.

@@ -2,6 +2,7 @@
 
 ## 4.0.0
 * Support for NET8
+* Support for isolated worker model
 * Full deprecation of `CdIts.Caffoa`. There will be no new packages released. Use `CdIts.Caffoa.Json.Net` instead.
 * breaking changes:
   * config option `flavor: SystemTextJson` will now use modern System.Text.Json features, and will not work with net6.0 and below. Use `flavor: SystemTextJsonPre7` for net6.0 and below.

@@ -8,24 +8,23 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Microsoft.Azure.WebJobs;
-using Microsoft.Azure.WebJobs.Extensions.Http;
-using Microsoft.Azure.WebJobs.Extensions.DurableTask;
-using DemoV2.Model.Base;
-using DemoV2.Model;
+using Microsoft.Azure.Functions.Worker;
+using Microsoft.DurableTask.Client;
+using DemoIsolated.Model.Base;
+using DemoIsolated.Model;
 
-namespace DemoV2
+namespace DemoIsolated
 {
     /// AUTO GENERATED CLASS
-    public class DemoV2MaintainanceFunctions
+    public class DemoIsolatedMaintainanceFunctions
     {
-        private readonly ILogger<DemoV2MaintainanceFunctions> _logger;
-        private readonly ICaffoaFactory<IDemoV2MaintainanceService> _factory;
+        private readonly ILogger<DemoIsolatedMaintainanceFunctions> _logger;
+        private readonly ICaffoaFactory<IDemoIsolatedMaintainanceService> _factory;
         private readonly ICaffoaErrorHandler _errorHandler;
         private readonly ICaffoaJsonParser _jsonParser;
         private readonly ICaffoaResultHandler _resultHandler;
         private readonly ICaffoaConverter _converter;
-        public DemoV2MaintainanceFunctions(ILogger<DemoV2MaintainanceFunctions> logger, ICaffoaFactory<IDemoV2MaintainanceService> factory, ICaffoaErrorHandler errorHandler = null, ICaffoaJsonParser jsonParser = null, ICaffoaResultHandler resultHandler = null, ICaffoaConverter converter = null) {
+        public DemoIsolatedMaintainanceFunctions(ILogger<DemoIsolatedMaintainanceFunctions> logger, ICaffoaFactory<IDemoIsolatedMaintainanceService> factory, ICaffoaErrorHandler errorHandler = null, ICaffoaJsonParser jsonParser = null, ICaffoaResultHandler resultHandler = null, ICaffoaConverter converter = null) {
             _logger = logger;
             _factory = factory;
             _resultHandler = resultHandler ?? new DefaultCaffoaResultHandler();
@@ -36,13 +35,13 @@ namespace DemoV2
         /// <summary>
         /// auto-generated function invocation.
         ///</summary>
-        [FunctionName("LongRunningFunctionAsync")]
+        [Function("LongRunningFunctionAsync")]
         public async Task<IActionResult> LongRunningFunctionAsync(
             [HttpTrigger(AuthorizationLevel.Function, "post", Route = "api/startLongRunningFunction/{id}")]
-            HttpRequest request, string id, [DurableClient] IDurableOrchestrationClient durableClient)
+            HttpRequest request, string id, [DurableClient] DurableTaskClient durableClient)
         {
             try {
-                await using var instance = _factory.Instance(request);
+                var instance = _factory.Instance(request);
                 var result = await instance.LongRunningFunctionAsync(durableClient, _converter.ParseGuid(id, "id"), request.HttpContext.RequestAborted);
                 return _resultHandler.Json(result, 202);
             } catch(CaffoaClientError err) {
