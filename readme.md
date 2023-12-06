@@ -31,6 +31,8 @@ You will need to install the following nuget packages:
 * Optional: `Microsoft.Azure.WebJobs.Extensions.DurableTask` if you want to inject `[DurableClient]` into your methods
 
 ## isolated worker model:
+To use the isolated worker model, set the global configuration `useIsolatedWorkerModel` to `true`
+
 You will need to install the following nuget packages:
 * `Microsoft.Azure.Functions.Worker` and `Microsoft.Azure.Functions.Worker.Sdk`
 * `Microsoft.Azure.Functions.Worker.Extensions.Http.AspNetCore`, this allows the use of AspNetCore objects
