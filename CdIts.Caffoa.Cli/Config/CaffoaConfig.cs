@@ -21,8 +21,8 @@ public class CaffoaConfig
 
     public string GetGenericType() => Flavor switch
     {
+        GenerationFlavor.SystemTextJsonPre7 => "JsonElement?",
         GenerationFlavor.SystemTextJson => "JsonElement?",
-        GenerationFlavor.SystemTextJson70 => "JsonElement?",
         _ => "JToken"
     };
 
@@ -37,11 +37,12 @@ public class CaffoaConfig
     public bool? UseInheritance { get; set; }
     public string? AuthorizationLevel { get; set; }
     public bool? AsyncArrays { get; set; }
-    
+
     public bool? UseConstants { get; set; }
     public bool? PassTags { get; set; }
     public bool? DeepCopyDefaultValue { get; set; }
     public bool? RemoveRequiredOnReadonly { get; set; }
+    public bool? UseIsolatedWorkerModel { get; set; }
 
     public enum EnumCreationMode
     {
@@ -55,11 +56,17 @@ public class CaffoaConfig
 
     public enum GenerationFlavor
     {
-        [EnumMember(Value = "System.Text.Json")]
-        SystemTextJson,
         [EnumMember(Value = "Json.NET")] JsonNet,
-        [EnumMember(Value= "System.Text.Json_NET70")] SystemTextJson70,
+
+        [EnumMember(Value = "System.Text.Json.Pre7")] SystemTextJsonPre7,
+
+        [EnumMember(Value = "System.Text.Json")] SystemTextJson,
+
+        [EnumMember(Value = "System.Text.Json_NET70")] SystemTextJson70 = SystemTextJson,
+
+        [EnumMember(Value = "System.Text.Json_NET80")] SystemTextJson80 = SystemTextJson,
     }
+
     public bool? ConstructorOnRequiredObjects { get; set; }
     public GenerationFlavor? Flavor { get; set; }
 
@@ -98,7 +105,8 @@ public class CaffoaConfig
             UseConstants = UseConstants ?? general.UseConstants,
             PassTags = PassTags ?? general.PassTags,
             DeepCopyDefaultValue = DeepCopyDefaultValue ?? general.DeepCopyDefaultValue,
-            RemoveRequiredOnReadonly = RemoveRequiredOnReadonly ?? general.RemoveRequiredOnReadonly
+            RemoveRequiredOnReadonly = RemoveRequiredOnReadonly ?? general.RemoveRequiredOnReadonly,
+            UseIsolatedWorkerModel = UseIsolatedWorkerModel ?? general.UseIsolatedWorkerModel
         };
     }
 }

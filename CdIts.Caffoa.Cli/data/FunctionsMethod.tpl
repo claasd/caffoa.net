@@ -1,7 +1,7 @@
         /// <summary>
         /// auto-generated function invocation.
         ///</summary>
-        [FunctionName("{PREFIX}{NAME}Async")]
+        [{FUNCATTRIBUTE}("{PREFIX}{NAME}Async")]
         public async Task<IActionResult> {NAME}Async(
             [HttpTrigger(AuthorizationLevel.{AUTHORIZATION_LEVEL}, "{OPERATION}", Route = "{PATH}")]
             HttpRequest request{PARAM_NAMES})

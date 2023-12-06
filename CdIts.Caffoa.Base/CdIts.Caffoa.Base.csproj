@@ -13,7 +13,7 @@
             Instead of generating stubs, the goal is to be able to change the api and re-generate the files without overwriting your code.
 
             This is the library that contains Interfaces and abstract classes.</Description>
-        <TargetFrameworks>net7.0;net6.0;netcoreapp3.1</TargetFrameworks>
+        <TargetFrameworks>net8.0;net7.0;net6.0;netcoreapp3.1</TargetFrameworks>
     </PropertyGroup>
     <ItemGroup>
         <FrameworkReference Include="Microsoft.AspNetCore.App" Version="2.2.8" />

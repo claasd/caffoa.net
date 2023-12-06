@@ -64,9 +64,12 @@ public class ParameterBuilder
         return this;
     }
 
-    public ParameterBuilder AddDurableClient()
+    public ParameterBuilder AddDurableClient(bool isolated)
     {
-        _parameters.Insert(0, new Parameter("IDurableOrchestrationClient","orchestrationClient"));
+        if (isolated)
+            _parameters.Insert(0, new Parameter("DurableTaskClient","durableTaskClient"));
+        else
+            _parameters.Insert(0, new Parameter("IDurableOrchestrationClient","orchestrationClient"));
         return this;
     }
     public ParameterBuilder AddTags()

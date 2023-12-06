@@ -89,8 +89,8 @@ public class ControllerGenerator
                 var bodyIndex = signature.FindIndex(p => p.IsBody);
                 signature[bodyIndex] = new ParameterBuilder.Parameter(_config.Flavor switch
                 {
+                    CaffoaConfig.GenerationFlavor.SystemTextJsonPre7 => "JsonDocument",
                     CaffoaConfig.GenerationFlavor.SystemTextJson => "JsonDocument",
-                    CaffoaConfig.GenerationFlavor.SystemTextJson70 => "JsonDocument",
                     _ => "JToken"
                 }, "payload");
             }
@@ -123,8 +123,8 @@ public class ControllerGenerator
             var bodyIndex = callParams.IndexOf(bodyParameter.Name);
             callParams[bodyIndex] = _config.Flavor switch
             {
+                CaffoaConfig.GenerationFlavor.SystemTextJsonPre7 => $"{bodyParameter.Name}.RootElement.Deserialize<{bodyParameter.Type}>()",
                 CaffoaConfig.GenerationFlavor.SystemTextJson => $"{bodyParameter.Name}.RootElement.Deserialize<{bodyParameter.Type}>()",
-                CaffoaConfig.GenerationFlavor.SystemTextJson70 => $"{bodyParameter.Name}.RootElement.Deserialize<{bodyParameter.Type}>()",
                 _ => $"{bodyParameter.Name}.ToObject<{bodyParameter.Type}>()"
             };
             var call = string.Format(bodyFormatString, $"GetService().{endpoint.Name}Async({string.Join(", ", callParams)})");
@@ -134,8 +134,8 @@ public class ControllerGenerator
         {
             ["SWITCHON"] = _config.Flavor switch
             {
+                CaffoaConfig.GenerationFlavor.SystemTextJsonPre7 => $"payload.RootElement.GetProperty({selectionBodyModel.Disriminator.Quote()}).GetString()",
                 CaffoaConfig.GenerationFlavor.SystemTextJson => $"payload.RootElement.GetProperty({selectionBodyModel.Disriminator.Quote()}).GetString()",
-                CaffoaConfig.GenerationFlavor.SystemTextJson70 => $"payload.RootElement.GetProperty({selectionBodyModel.Disriminator.Quote()}).GetString()",
                 _ => $"payload.Value<string>({selectionBodyModel.Disriminator.Quote()})"
             },
             ["CASES"] = string.Join("\n        ", cases),

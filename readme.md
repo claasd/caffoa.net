@@ -12,17 +12,30 @@ If something does not work that you feel should work, create a ticket with your 
 * It uses [OpenAPI.NET](https://github.com/microsoft/OpenAPI.NET) for parsing the openapi spec.
 * It uses a copy of version 2.0.1 of [JsonSubtypes](https://github.com/manuc66/JsonSubTypes)
 
+# Json.NET vs. System.Text.Json
+Caffoa was developed with Json.NET as background framework.
+However, after experimental support for System.Text.Json in version 2.0, caffoa now supports both frameworks. 
+Starting with version 4.0, System.Text.Json will become a first class citizen as well, and both frameworks will live side by side.
+There is a page for System.Text.Json: [growing support for System.Text.Json](readme.system.text.json.md)
+
 # Migrating from 1.x
-* The is a [Migration guide](migration_1_to_2.md) to goude you from migrtion from 1.x to 2.x.
-* Starting with 2.x, there is [Experimental support for System.Text.Json](readme.system.text.json.md) 
+* The is a [Migration guide](migration_1_to_2.md) to goude you from migrtion from 1.x to a more modern version.
 
 # Required nuget packages
 
+## in process model (default)
 You will need to install the following nuget packages:
 * `Microsoft.NET.Sdk.Functions` obviously
 * `Microsoft.Azure.Functions.Extensions` for function dependency injection
-* `CdIts.Caffoa.Json.Net` for caffoa interfaces and default implementations
+* `CdIts.Caffoa.Json.Net` or `CdIts.Caffoa.System.Text.Json` for caffoa interfaces and default implementations
 * Optional: `Microsoft.Azure.WebJobs.Extensions.DurableTask` if you want to inject `[DurableClient]` into your methods
+
+## isolated worker model:
+You will need to install the following nuget packages:
+* `Microsoft.Azure.Functions.Worker` and `Microsoft.Azure.Functions.Worker.Sdk`
+* `Microsoft.Azure.Functions.Worker.Extensions.Http.AspNetCore`, this allows the use of AspNetCore objects
+* `CdIts.Caffoa.Json.Net` or `CdIts.Caffoa.System.Text.Json` for caffoa interfaces and default implementations
+* Optional: `Microsoft.Azure.Functions.Worker.Extensions.DurableTask` if you want to inject `[DurableClient]` into your methods
 
 # Usage
 
@@ -79,6 +92,7 @@ the tool will create two files in the specified target folder:
 
 Your job now is to create an implementation for the `IMyClassNameService` interface 
 and implement a factory function, inheriting from `ICaffoaFactory<IMyClassNameService>`.
+
 Example:
 ```c#
 using Caffoa;
@@ -91,7 +105,9 @@ namespace MyNamespace {
 }
 ```
 
-For small APIs, you can use the same implementation class for the Implementation and the factory. Example:
+For small APIs, you can use the same implementation class for the Implementation and the factory. 
+
+Example:
 ```c#
 using Caffoa;
 namespace MyNamespace {
@@ -103,8 +119,13 @@ namespace MyNamespace {
     // implementation of your interface
 }
 ```
+Now implement all the logic in your implementation of the interface. You can now change your API, and regenerate the generated files without overwriting your code.
 
-Furthermore, you need [Dependency Injection](https://docs.microsoft.com/en-us/azure/azure-functions/functions-dotnet-dependency-injection) to pass your factory to the constructor of the generated function class.
+Furthermore, you need to pass your factory to the constructor of the generated function class via dependency injection.
+### in process worker model:
+
+Dependency injection works via the `FunctionsStartup` class (See [Microsoft documentation](https://docs.microsoft.com/en-us/azure/azure-functions/functions-dotnet-dependency-injection#register-services)).
+
 Example:
 ```c#
 using Microsoft.Azure.Functions.Extensions.DependencyInjection;
@@ -119,8 +140,24 @@ namespace MyNamespace {
     }
 }
 ```
+### isolated worker model:
 
-Now implement all the logic in your implementation of the interface. You can now change your API, and regenerate the generated files without overwriting your code.
+Is the isolated worker model, dependency injection is performed [during default startup](https://learn.microsoft.com/en-us/azure/azure-functions/dotnet-isolated-process-guide#start-up-and-configuration).
+
+Example:
+```c#
+using Caffoa;
+using Microsoft.Extensions.Hosting;
+
+var host = new HostBuilder()
+    .ConfigureFunctionsWebApplication() // <-- this is important
+    .ConfigureServices(s => { 
+        s.AddCaffoaFactory<IMyClassNameService, MyFactory>(); 
+    })
+    .Build();
+
+await host.RunAsync();
+```
 
 ## Alternative: Create ASP.NET Controller template
 Since version 3.0, caffoa can also generate code for ASP.NET controller projects. Usually, this is done instead of generating function templatess.
@@ -141,7 +178,7 @@ app.MapControllers();
 await app.RunAsync();
 ```
 To use Newtonsofts Json.NET you have to install the `Microsoft.AspNetCore.Mvc.NewtonsoftJson` Package and call `AddNewtonsoftJson()` as in the example above.
-Support for System.Text.Json is still experimental in Caffoa. You can enable it with the config option `flavor: SystemTextJson70` to target .NET 7's System.Text.Json that is much more sophisticated. 
+Support for System.Text.Json is still experimental in Caffoa. You can enable it with the config option `flavor: SystemTextJson` to target .NET 7/8's System.Text.Json. 
 
 ## Created data objects from schemas
 
@@ -161,6 +198,7 @@ Parameters of the legacy 1.x interface can be found in the [old readme](https://
 
 ```yaml
 config:
+  useIsolatedWorkerModel: false # set to true to use the isolated worker model. This flag will change imports, Attributes and types
   authorizationLevel: function #  function | anonymous | system | admin
   clearGeneratedFiles: true # default is true, removes all files below the working directory, that end in .generated.cs
   duplicates: override # "once" or "override". once will not generate the same class name twice, even if it occurs in different API Specs.

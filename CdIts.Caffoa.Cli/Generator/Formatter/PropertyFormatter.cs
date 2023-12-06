@@ -28,8 +28,8 @@ public class PropertyFormatter
     {
         return _config.Flavor switch
         {
+            CaffoaConfig.GenerationFlavor.SystemTextJsonPre7 => "",
             CaffoaConfig.GenerationFlavor.SystemTextJson => "",
-            CaffoaConfig.GenerationFlavor.SystemTextJson70 => "",
             _ => ResolvedRequired switch
             {
                 true when _property.Nullable => ", Required = Required.AllowNull",
@@ -41,7 +41,7 @@ public class PropertyFormatter
 
     public string JsonExtraProperties()
     {
-        if (ResolvedRequired && _config.Flavor is CaffoaConfig.GenerationFlavor.SystemTextJson70)
+        if (ResolvedRequired && _config.Flavor is CaffoaConfig.GenerationFlavor.SystemTextJson)
             return "\n        [JsonRequired]";
         return "";
     }
@@ -133,8 +133,8 @@ public class PropertyFormatter
     public string JsonTagName() =>
         _config.Flavor switch
         {
+            CaffoaConfig.GenerationFlavor.SystemTextJsonPre7 => "JsonPropertyName",
             CaffoaConfig.GenerationFlavor.SystemTextJson => "JsonPropertyName",
-            CaffoaConfig.GenerationFlavor.SystemTextJson70 => "JsonPropertyName",
             _ => "JsonProperty"
         };
 
@@ -144,8 +144,8 @@ public class PropertyFormatter
     {
         return flavor switch
         {
+            CaffoaConfig.GenerationFlavor.SystemTextJsonPre7 => "using System.Text.Json.Serialization;\nusing Caffoa.JsonConverter;",
             CaffoaConfig.GenerationFlavor.SystemTextJson => "using System.Text.Json.Serialization;\nusing Caffoa.JsonConverter;",
-            CaffoaConfig.GenerationFlavor.SystemTextJson70 => "using System.Text.Json.Serialization;\nusing Caffoa.JsonConverter;",
             _ => "using Newtonsoft.Json;\nusing Newtonsoft.Json.Converters;" + (addSubtypes ? "\nusing Caffoa.JsonSubTypes;" : "")
         };
     }

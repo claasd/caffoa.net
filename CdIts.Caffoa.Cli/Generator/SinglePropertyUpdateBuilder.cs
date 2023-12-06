@@ -57,8 +57,8 @@ public class SinglePropertyUpdateBuilder
         if (_property.TypeName is not "object") return this;
         _sb.Append(flavor switch
         {
+            CaffoaConfig.GenerationFlavor.SystemTextJsonPre7 => "?.Clone()",
             CaffoaConfig.GenerationFlavor.SystemTextJson => "?.Clone()",
-            CaffoaConfig.GenerationFlavor.SystemTextJson70 => "?.Clone()",
             _ => "?.DeepClone()"
         });
         _hasCloning = true;
