@@ -11,7 +11,7 @@ using System.Collections.Immutable;
 
 namespace DemoV2.Model.Base {
 /// AUTOGENERED BY caffoa ///
-    public partial class Address {
+    public partial class Address : IEquatable<Address> {
         public const string AddressObjectName = "address";
         [JsonProperty("street", Required = Required.Always)]
         public virtual string Street { get; set; }
@@ -49,5 +49,24 @@ namespace DemoV2.Model.Base {
             AdditionalProperties = other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null;
         }
         public Address ToAddress() => new Address(this);
+        public bool Equals(Address other) {
+            if (ReferenceEquals(null, other)) return false;
+            if (ReferenceEquals(this, other)) return true;
+            return Street == other.Street && StreetExtra == other.StreetExtra && PostalCode == other.PostalCode && City == other.City && Country == other.Country && AddressType == other.AddressType && Flags.SequenceEqual(other.Flags);
+        }
+        public override bool Equals(object obj) => Equals(obj as Address);
+        public override int GetHashCode() {
+            var hashCode = new HashCode();
+            hashCode.Add(Street);
+            hashCode.Add(StreetExtra);
+            hashCode.Add(PostalCode);
+            hashCode.Add(City);
+            hashCode.Add(Country);
+            hashCode.Add((int) AddressType);
+            hashCode.Add(Flags);
+            return hashCode.ToHashCode();
+        }
+        public static bool operator==(Address a, Address b) => Equals(a, b);
+        public static bool operator!=(Address a, Address b) => !Equals(a, b);
     }
 }

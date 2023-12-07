@@ -12,7 +12,7 @@ using DemoV2.Model.Base;
 
 namespace DemoV2.Model {
 /// AUTOGENERED BY caffoa ///
-    public partial class LongRunningfunctionStatus {
+    public partial class LongRunningfunctionStatus : IEquatable<LongRunningfunctionStatus> {
         public const string LongRunningfunctionStatusObjectName = "longRunningfunctionStatus";
         [JsonProperty("status")]
         public virtual StatusValue Status { get; set; }
@@ -30,5 +30,17 @@ namespace DemoV2.Model {
             AdditionalProperties = other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null;
         }
         public LongRunningfunctionStatus ToLongRunningfunctionStatus() => new LongRunningfunctionStatus(this);
+        public bool Equals(LongRunningfunctionStatus other) {
+            if (ReferenceEquals(null, other)) return false;
+            if (ReferenceEquals(this, other)) return true;
+            return Status == other.Status && Result.Equals(other.Result);
+        }
+        public override bool Equals(object obj) => Equals(obj as LongRunningfunctionStatus);
+        public override int GetHashCode() {
+            var hashCode = new HashCode();
+            hashCode.Add((int) Status);
+            hashCode.Add(Result);
+            return hashCode.ToHashCode();
+        }
     }
 }

@@ -12,7 +12,7 @@ using DemoV2.Model.Base;
 
 namespace DemoV2.Model {
 /// AUTOGENERED BY caffoa ///
-    public partial class Pricing {
+    public partial class Pricing : IEquatable<Pricing> {
         public const string PricingObjectName = "pricing";
         [JsonProperty("price")]
         public virtual double? Price { get; set; }
@@ -30,5 +30,17 @@ namespace DemoV2.Model {
             AdditionalProperties = other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null;
         }
         public Pricing ToPricing() => new Pricing(this);
+        public bool Equals(Pricing other) {
+            if (ReferenceEquals(null, other)) return false;
+            if (ReferenceEquals(this, other)) return true;
+            return Price == other.Price && Taxes.SequenceEqual(other.Taxes);
+        }
+        public override bool Equals(object obj) => Equals(obj as Pricing);
+        public override int GetHashCode() {
+            var hashCode = new HashCode();
+            hashCode.Add(Price);
+            hashCode.Add(Taxes);
+            return hashCode.ToHashCode();
+        }
     }
 }

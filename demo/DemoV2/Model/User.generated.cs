@@ -13,7 +13,7 @@ using DemoV2.Model.Base;
 
 namespace DemoV2.Model {
 /// AUTOGENERED BY caffoa ///
-    public partial class User : AnyUser {
+    public partial class User : AnyUser, IEquatable<User> {
         public const string UserObjectName = "user";
         /// <summary>
         /// A fancy string with description
@@ -73,5 +73,25 @@ namespace DemoV2.Model {
         public User ToUser() => new User(this);
         public virtual AnyUser ToAnyUser() => ToUser();
         public virtual string TypeDiscriminator => Type.Value();
+        public bool Equals(User other) {
+            if (ReferenceEquals(null, other)) return false;
+            if (ReferenceEquals(this, other)) return true;
+            return Name == other.Name && Address.Equals(other.Address) && Birthdate.Equals(other.Birthdate) && Emails.SequenceEqual(other.Emails) && Descriptions.SequenceEqual(other.Descriptions) && Type == other.Type && Role == other.Role && AgeGroup == other.AgeGroup && PreferredContactTime.Equals(other.PreferredContactTime) && LastSessionLength.Equals(other.LastSessionLength);
+        }
+        public override bool Equals(object obj) => Equals(obj as User);
+        public override int GetHashCode() {
+            var hashCode = new HashCode();
+            hashCode.Add(Name);
+            hashCode.Add(Address);
+            hashCode.Add(Birthdate);
+            hashCode.Add(Emails);
+            hashCode.Add(Descriptions);
+            hashCode.Add((int) Type);
+            hashCode.Add((int) Role);
+            hashCode.Add(AgeGroup);
+            hashCode.Add(PreferredContactTime);
+            hashCode.Add(LastSessionLength);
+            return hashCode.ToHashCode();
+        }
     }
 }

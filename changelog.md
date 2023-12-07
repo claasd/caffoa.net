@@ -6,7 +6,9 @@
 * Full deprecation of `CdIts.Caffoa`. There will be no new packages released. Use `CdIts.Caffoa.Json.Net` instead.
 * breaking changes:
   * config option `flavor: SystemTextJson` will now use modern System.Text.Json features, and will not work with net6.0 and below. Use `flavor: SystemTextJsonPre7` for net6.0 and below.
-
+* new config options: 
+  * `generateEqualsMethods` (default `false`) will generate Equals and GetHashCode methods for all model classes
+  * `generateCompareOverloads` (default `false`) will generate `==` and `!=` operators for all model classes if `generateEqualsMethods` is set to true
 ## 3.2.0
 * allow to set an x-caffoa-enum-aliases attribute on string enums. see [readme](readme.md#advanced-enum-configuration) for details.
 

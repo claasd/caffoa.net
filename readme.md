@@ -240,6 +240,8 @@ config:
   useConstants: false # When set to true, values with one single enum and a matching default value will be generated as constants for strings and integer types.
   passTags: false # When set to true, The interface function will have a parameter that contains all openapi tags of that function
   removeRequiredOnReadonly: false # when set to true, required attributes will not be generated on members that are required and readOnly
+  generateEqualsMethods: false # will generate Equals and GetHashCode methods for all model classes
+  generateCompareOverloads: false # will generate `==` and `!=` operators for all model classes if generateEqualsMethods is set to true
   generateResolvedApiFile: false # will resolve all references (internal and external) and generate a single file named `originalName.generated.yml` besides the original file
   simplifyResolvedApiFile: false # will remove all schema declarations from requestBodies and responses in the generated API file. This is useful for Azure APIM, to work around the bicep file size restrictions.
 services:

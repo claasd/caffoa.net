@@ -12,5 +12,5 @@ namespace {NAMESPACE} {{
         public {NAME}(){{}}
         {CONSTRUCTORS}
         public {NAME} To{NAME}() => new {NAME}(this);
-{INTERFACE_METHODS}    }}
+{INTERFACE_METHODS}{EQUALS_METHODS}    }}
 }}

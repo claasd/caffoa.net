@@ -28,12 +28,15 @@ services:
       genericAdditionalProperties: true
 #      genericAdditionalPropertiesType: object
       deepCopyDefaultValue: false
+      generateEqualsMethods : true
+      generateCompareOverloads : true
     model:
       namespace: DemoV2.Model.Base
       targetFolder: ./demo/DemoV2/Model/Base
       
   - apiPath: tests/openapi.yml
     config:
+      generateEqualsMethods : true
       generateResolvedApiFile: true
       simplifyResolvedApiFile: true
       disposable: true

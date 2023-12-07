@@ -35,6 +35,8 @@ public class SchemaItemFormatter
         if(_item.Parent != null)
             parents.Add(_item.Parent);
         parents.AddRange(MatchingInterfaces(allObjects));
+        if(_config.GenerateEqualsMethods is true)
+            parents.Add("IEquatable<" + _item.ClassName + ">");
         if (parents.Count > 0)
             return " : " + string.Join(", ", parents);
         return "";

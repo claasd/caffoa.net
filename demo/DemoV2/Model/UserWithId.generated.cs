@@ -14,7 +14,7 @@ using DemoV2.Model;
 
 namespace DemoV2.Model {
 /// AUTOGENERED BY caffoa ///
-    public partial class UserWithId : AnyUser, AnyCompleteUser {
+    public partial class UserWithId : AnyUser, AnyCompleteUser, IEquatable<UserWithId> {
         public const string UserWithIdObjectName = "userWithId";
         /// <summary>
         /// A fancy string with description
@@ -100,5 +100,28 @@ namespace DemoV2.Model {
         public virtual AnyUser ToAnyUser() => ToUserWithId();
         public virtual AnyCompleteUser ToAnyCompleteUser() => ToUserWithId();
         public virtual string TypeDiscriminator => Type.Value();
+        public bool Equals(UserWithId other) {
+            if (ReferenceEquals(null, other)) return false;
+            if (ReferenceEquals(this, other)) return true;
+            return Name == other.Name && Address.Equals(other.Address) && Birthdate.Equals(other.Birthdate) && Emails.SequenceEqual(other.Emails) && Descriptions.SequenceEqual(other.Descriptions) && Type == other.Type && Role == other.Role && AgeGroup == other.AgeGroup && PreferredContactTime.Equals(other.PreferredContactTime) && LastSessionLength.Equals(other.LastSessionLength) && Id == other.Id && RegistrationDate.Equals(other.RegistrationDate) && Diffs.Equals(other.Diffs);
+        }
+        public override bool Equals(object obj) => Equals(obj as UserWithId);
+        public override int GetHashCode() {
+            var hashCode = new HashCode();
+            hashCode.Add(Name);
+            hashCode.Add(Address);
+            hashCode.Add(Birthdate);
+            hashCode.Add(Emails);
+            hashCode.Add(Descriptions);
+            hashCode.Add((int) Type);
+            hashCode.Add((int) Role);
+            hashCode.Add(AgeGroup);
+            hashCode.Add(PreferredContactTime);
+            hashCode.Add(LastSessionLength);
+            hashCode.Add(Id);
+            hashCode.Add(RegistrationDate);
+            hashCode.Add(Diffs);
+            return hashCode.ToHashCode();
+        }
     }
 }

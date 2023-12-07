@@ -12,7 +12,7 @@ using DemoV2.Model.Base;
 
 namespace DemoV2.Model {
 /// AUTOGENERED BY caffoa ///
-    public partial class GuestUser : AnyUser, AnyCompleteUser {
+    public partial class GuestUser : AnyUser, AnyCompleteUser, IEquatable<GuestUser> {
         public const string GuestUserObjectName = "guestUser";
         [JsonProperty("email", Required = Required.Always)]
         public virtual string Email { get; set; }
@@ -37,5 +37,18 @@ namespace DemoV2.Model {
         public virtual AnyUser ToAnyUser() => ToGuestUser();
         public virtual AnyCompleteUser ToAnyCompleteUser() => ToGuestUser();
         public virtual string TypeDiscriminator => Type.Value();
+        public bool Equals(GuestUser other) {
+            if (ReferenceEquals(null, other)) return false;
+            if (ReferenceEquals(this, other)) return true;
+            return Email == other.Email && Type == other.Type && ConstInt == other.ConstInt;
+        }
+        public override bool Equals(object obj) => Equals(obj as GuestUser);
+        public override int GetHashCode() {
+            var hashCode = new HashCode();
+            hashCode.Add(Email);
+            hashCode.Add((int) Type);
+            hashCode.Add(ConstInt);
+            return hashCode.ToHashCode();
+        }
     }
 }

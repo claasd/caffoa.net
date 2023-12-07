@@ -11,7 +11,7 @@ using DemoV2.Model.Base;
 
 namespace DemoV2.Model {
 /// AUTOGENERED BY caffoa ///
-    public partial class Error {
+    public partial class Error : IEquatable<Error> {
         public const string ErrorObjectName = "error";
         /// <summary>
         /// Single string based code describing the error.
@@ -35,5 +35,17 @@ namespace DemoV2.Model {
             AdditionalProperties = other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null;
         }
         public Error ToError() => new Error(this);
+        public bool Equals(Error other) {
+            if (ReferenceEquals(null, other)) return false;
+            if (ReferenceEquals(this, other)) return true;
+            return Status == other.Status && Message == other.Message;
+        }
+        public override bool Equals(object obj) => Equals(obj as Error);
+        public override int GetHashCode() {
+            var hashCode = new HashCode();
+            hashCode.Add(Status);
+            hashCode.Add(Message);
+            return hashCode.ToHashCode();
+        }
     }
 }

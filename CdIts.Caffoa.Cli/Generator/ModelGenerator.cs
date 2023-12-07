@@ -4,6 +4,7 @@ using CdIts.Caffoa.Cli.Config;
 using CdIts.Caffoa.Cli.Generator.Formatter;
 using CdIts.Caffoa.Cli.Model;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Primitives;
 
 namespace CdIts.Caffoa.Cli.Generator;
 
@@ -52,7 +53,8 @@ public class ModelGenerator
         parameters["ATTRIBUTES"] = _config.Flavor switch
         {
             CaffoaConfig.GenerationFlavor.SystemTextJsonPre7 => "",
-            CaffoaConfig.GenerationFlavor.SystemTextJson => string.Join("\n    ", item.Interface!.Mapping.Select(c => $"[JsonDerivedType(typeof({c.Value}), \"{c.Key}\")]")),
+            CaffoaConfig.GenerationFlavor.SystemTextJson => string.Join("\n    ",
+                item.Interface!.Mapping.Select(c => $"[JsonDerivedType(typeof({c.Value}), \"{c.Key}\")]")),
             _ => JsonNetSubtypes(item.Interface!),
         }; //Needed to serialize interfaces. supported starting .NET 7. So only use when generating controllers.
         parameters["TYPE"] = item.Interface?.Discriminator?.ToObjectName() ?? "";
@@ -64,7 +66,7 @@ public class ModelGenerator
     private static string JsonNetSubtypes(InterfaceModel item)
     {
         var attributes = new StringBuilder($"\n    [JsonConverter(typeof(JsonSubtypes), \"{item.Discriminator}\")]");
-        foreach (var (key,name) in item.Mapping)
+        foreach (var (key, name) in item.Mapping)
         {
             attributes.Append($"\n    [JsonSubtypes.KnownSubType(typeof({name}), \"{key}\")]");
         }
@@ -86,6 +88,7 @@ public class ModelGenerator
         parameters["INTERFACE_METHODS"] = formatter.InterfaceMethods(interfaces);
         parameters["RAWNAME"] = item.Name;
         parameters["CONSTRUCTORS"] = CreateConstructors(item, otherClasses);
+        parameters["EQUALS_METHODS"] = _config.GenerateEqualsMethods is true ? CreateEquals(item, enumClasses) : "";
         parameters["INHERIT_CONSTRUCTORS"] = _config.UseInheritance is true ? formatter.CreateConstructors(otherClasses) : "ARG";
         parameters["PROPERTIES"] = FormatProperties(item, enumClasses);
         parameters["ADDITIONAL_PROPS"] = formatter.GenericAdditionalProperties();
@@ -137,6 +140,45 @@ public class ModelGenerator
         return formatted.ToSystemNewLine();
     }
 
+    private string CreateEquals(SchemaItem item, List<SchemaItem> enumClasses)
+    {
+        var builder = new StringBuilder();
+        builder.Append($"        public bool Equals({item.ClassName} other) {{\n");
+        builder.Append(
+            "            if (ReferenceEquals(null, other)) return false;\n            if (ReferenceEquals(this, other)) return true;\n            ");
+        bool first = true;
+        var hashBuilder = new StringBuilder();
+        foreach (var itemProperty in item.Properties!)
+        {
+            var isEnum = itemProperty.CanBeEnum() || enumClasses.Exists(ec=>ec.ClassName == itemProperty.TypeName);
+            isEnum = isEnum && _config.GetEnumCreationMode() == CaffoaConfig.EnumCreationMode.Default;
+            builder.Append(first ? "return " : " && ");
+            
+            if (itemProperty.IsArray || itemProperty.IsMap)
+                builder.Append($"{itemProperty.Name.ToObjectName()}.SequenceEqual(other.{itemProperty.Name.ToObjectName()})");
+            else if(itemProperty.TypeName.TrimEnd('?') is "string" or "int" or "double" or "decimal" or "boolean" or "real" || isEnum)
+                builder.Append($"{itemProperty.Name.ToObjectName()} == other.{itemProperty.Name.ToObjectName()}");
+            else
+                builder.Append($"{itemProperty.Name.ToObjectName()}.Equals(other.{itemProperty.Name.ToObjectName()})");
+            
+            var cast = isEnum && !itemProperty.IsMap && !itemProperty.IsArray ? "(int) " : "";
+            hashBuilder.Append($"            hashCode.Add({cast}{itemProperty.Name.ToObjectName()});\n");      
+            first = false;
+        }
+
+        builder.Append(";\n        }\n");
+        builder.Append($"        public override bool Equals(object obj) => Equals(obj as {item.ClassName});\n");
+        builder.Append("        public override int GetHashCode() {\n            var hashCode = new HashCode();\n");
+        builder.Append(hashBuilder);
+        builder.Append("            return hashCode.ToHashCode();\n        }\n");
+        if (_config.GenerateCompareOverloads is true)
+        {
+            builder.Append($"        public static bool operator==({item.ClassName} a, {item.ClassName} b) => Equals(a, b);\n");
+            builder.Append($"        public static bool operator!=({item.ClassName} a, {item.ClassName} b) => !Equals(a, b);\n");
+        }
+    return builder.ToString();
+    }
+
     private string CreateConstructors(SchemaItem item, List<SchemaItem> otherClasses)
     {
         var builder = new StringBuilder();
@@ -147,7 +189,7 @@ public class ModelGenerator
         builder.Append(" {\n            ");
         builder.Append(PropertyUpdateBuilder.BuildConstructor(item, _config, item));
         builder.Append("\n        }");
-        
+
         if (item.Parent != null)
         {
             builder.Append($"\n        public {item.ClassName}({item.Parent} other) : base(other) {{}}");
@@ -364,7 +406,7 @@ public class ModelGenerator
                 CaffoaConfig.GenerationFlavor.SystemTextJsonPre7 => "JsonStringEnumConverter",
                 CaffoaConfig.GenerationFlavor.SystemTextJson => "JsonStringEnumConverter",
                 _ => "StringEnumConverter",
-             };
+            };
             foreach (var @enum in enums)
             {
                 var init = "";
@@ -397,6 +439,7 @@ public class ModelGenerator
         var formatted = file.FormatDict(format);
         File.WriteAllText(Path.Combine(_service.Model!.TargetFolder, fileName), formatted.ToSystemNewLine());
     }
+
     private void WriteEnumClass(SchemaItem item)
     {
         var file = Templates.GetTemplate("ModelEnumClassTemplate.tpl");
@@ -422,7 +465,6 @@ public class ModelGenerator
                     init = $" = " + EnumNameForValue(alias);
                 enumDefs.Add($"[EnumMember(Value = {@enum.Value})] {@enum.Key}{init}");
             }
-            
         }
         else
         {

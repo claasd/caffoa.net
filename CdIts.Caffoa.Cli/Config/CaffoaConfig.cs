@@ -43,6 +43,8 @@ public class CaffoaConfig
     public bool? DeepCopyDefaultValue { get; set; }
     public bool? RemoveRequiredOnReadonly { get; set; }
     public bool? UseIsolatedWorkerModel { get; set; }
+    public bool? GenerateEqualsMethods { get; set; }
+    public bool? GenerateCompareOverloads { get; set; }
 
     public enum EnumCreationMode
     {
@@ -106,7 +108,9 @@ public class CaffoaConfig
             PassTags = PassTags ?? general.PassTags,
             DeepCopyDefaultValue = DeepCopyDefaultValue ?? general.DeepCopyDefaultValue,
             RemoveRequiredOnReadonly = RemoveRequiredOnReadonly ?? general.RemoveRequiredOnReadonly,
-            UseIsolatedWorkerModel = UseIsolatedWorkerModel ?? general.UseIsolatedWorkerModel
+            UseIsolatedWorkerModel = UseIsolatedWorkerModel ?? general.UseIsolatedWorkerModel,
+            GenerateEqualsMethods = GenerateEqualsMethods ?? general.GenerateEqualsMethods,
+            GenerateCompareOverloads = GenerateCompareOverloads ?? general.GenerateCompareOverloads
         };
     }
 }
