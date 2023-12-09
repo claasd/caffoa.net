@@ -7,7 +7,7 @@
 * breaking changes:
   * config option `flavor: SystemTextJson` will now use modern System.Text.Json features, and will not work with net6.0 and below. Use `flavor: SystemTextJsonPre7` for net6.0 and below.
 * new config options: 
-  * `generateEqualsMethods` (default `false`) will generate Equals and GetHashCode methods for all model classes
+  * `generateEqualsMethods` (default `false`) will generate Equals and GetHashCode methods for all model classes. The classes will be sealed by default, you can opt out of sealing those classes by setting `sealClassesWithEqualsMethods` to `false`. This config option will not work together with `useInheritance`.
   * `generateCompareOverloads` (default `false`) will generate `==` and `!=` operators for all model classes if `generateEqualsMethods` is set to true
 ## 3.2.0
 * allow to set an x-caffoa-enum-aliases attribute on string enums. see [readme](readme.md#advanced-enum-configuration) for details.

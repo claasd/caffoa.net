@@ -242,6 +242,7 @@ config:
   removeRequiredOnReadonly: false # when set to true, required attributes will not be generated on members that are required and readOnly
   generateEqualsMethods: false # will generate Equals and GetHashCode methods for all model classes
   generateCompareOverloads: false # will generate `==` and `!=` operators for all model classes if generateEqualsMethods is set to true
+  sealClassesWithEqualsMethods: true # set this to false if you do not want to seal classes tih Equals implementation for some reason
   generateResolvedApiFile: false # will resolve all references (internal and external) and generate a single file named `originalName.generated.yml` besides the original file
   simplifyResolvedApiFile: false # will remove all schema declarations from requestBodies and responses in the generated API file. This is useful for Azure APIM, to work around the bicep file size restrictions.
 services:

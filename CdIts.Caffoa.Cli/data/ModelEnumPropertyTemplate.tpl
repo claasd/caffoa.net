@@ -2,7 +2,7 @@
         private {TYPE} _{NAMELOWER}{DEFAULT}
 
         {DESCRIPTION}{JSON_EXTRA}[{JSON_TAG_NAME}("{NAMELOWER}"{JSON_PROPERTY_EXTRA})]
-        public virtual {TYPE} {NAMEUPPER} {{
+        public{VIRTUAL} {TYPE} {NAMEUPPER} {{
             get => _{NAMELOWER};
             set {{
                 var _value = {TRANSFORM};
