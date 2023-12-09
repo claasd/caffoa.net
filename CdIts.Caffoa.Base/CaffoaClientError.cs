@@ -10,6 +10,9 @@ namespace Caffoa;
 [Serializable]
 public abstract class CaffoaClientError : Exception
 {
+#if NET8_0_OR_GREATER
+    [Obsolete(DiagnosticId = "SYSLIB0051")] // add this attribute to GetObjectData
+#endif
     protected CaffoaClientError(SerializationInfo info, StreamingContext context) : base(info, context){}
     protected CaffoaClientError() {}
     protected CaffoaClientError(string msg) : base(msg){}

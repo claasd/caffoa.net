@@ -60,7 +60,7 @@ namespace DemoV2.AspNetNewtonSoft.Services
             return Tags.ToDictionary(i => i.Key, i => i.Value.Select(v => v));
         }
 
-        public Task<IEnumerable<ASPNMyEnumType>> ListEnumsAsync(ASPNMyEnumType? filter = null, ICollection<ASPNMyEnumType> include = null, ICollection<string> flags = null, ICollection<ASPNMyEnumType> exclude = null,
+        public Task<IEnumerable<ASPNMyEnumType>> ListEnumsAsync(ASPNMyEnumType? filter = null, ICollection<ASPNMyEnumType>? include = null, ICollection<string>? flags = null, ICollection<ASPNMyEnumType>? exclude = null,
             CancellationToken cancellationToken = default)
         {
             return Task.FromResult<IEnumerable<ASPNMyEnumType>>(new List<ASPNMyEnumType>() { ASPNMyEnumType.Enum1 });

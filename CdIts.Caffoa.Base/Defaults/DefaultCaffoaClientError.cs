@@ -17,7 +17,9 @@ public class DefaultCaffoaClientError : CaffoaClientError
     public DefaultCaffoaClientError(string msg, Exception inner) : base(msg, inner)
     {
     }
-
+#if NET8_0_OR_GREATER
+    [Obsolete(DiagnosticId = "SYSLIB0051")] // add this attribute to GetObjectData
+#endif
     protected DefaultCaffoaClientError(SerializationInfo info, StreamingContext context) : base(info, context)
     {
     }

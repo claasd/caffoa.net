@@ -12,7 +12,9 @@ public class CaffoaValidationException : Exception
     {
         Diagnostic = diagnostic;
     }
-
+#if NET8_0_OR_GREATER
+    [Obsolete(DiagnosticId = "SYSLIB0051")] // add this attribute to GetObjectData
+#endif
     protected CaffoaValidationException(SerializationInfo info, StreamingContext context) : base(info, context)
     {
     }

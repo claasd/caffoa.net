@@ -14,13 +14,14 @@ using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 {IMPORTS}
+#nullable enable
 
 namespace {NAMESPACE}
 {{
     /// AUTO GENERATED CLASS
     public partial class {CLASSNAME}
     {{
-        private string _baseUri;
+        private string _baseUri = null!;
         {FIELD_VISIBILITY} string BaseUri {{
             get => _baseUri;
             set => _baseUri = value.EndsWith("/") ? value : $"{{value}}/";
@@ -30,7 +31,7 @@ namespace {NAMESPACE}
         {FIELD_VISIBILITY} ICaffoaParseErrorHandler ErrorHandler  {{ get; }}
         {FIELD_VISIBILITY} ICaffoaJsonParser JsonParser {{ get; }}
         {FIELD_VISIBILITY} ICaffoaJsonSerializer JsonSerializer {{ get; }}
-        {CONSTRUCTOR_VISIBILITY} {CLASSNAME}(string baseUri, HttpClient client = null, ILogger logger = null, ICaffoaParseErrorHandler errorHandler = null, ICaffoaJsonParser jsonParser = null, ICaffoaJsonSerializer jsonSerializer = null) {{
+        {CONSTRUCTOR_VISIBILITY} {CLASSNAME}(string baseUri, HttpClient? client = null, ILogger? logger = null, ICaffoaParseErrorHandler? errorHandler = null, ICaffoaJsonParser? jsonParser = null, ICaffoaJsonSerializer? jsonSerializer = null) {{
             BaseUri = baseUri;
             Client = client ?? new HttpClient();
             Logger = logger ?? NullLogger.Instance;

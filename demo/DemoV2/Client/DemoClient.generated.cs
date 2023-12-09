@@ -17,13 +17,14 @@ using Newtonsoft.Json.Linq;
 using DemoV2.Model.Base;
 using DemoV2.Model;
 
+#nullable enable
 
 namespace DemoV2.Client
 {
     /// AUTO GENERATED CLASS
     public partial class DemoClient
     {
-        private string _baseUri;
+        private string _baseUri = null!;
         internal string BaseUri {
             get => _baseUri;
             set => _baseUri = value.EndsWith("/") ? value : $"{value}/";
@@ -33,7 +34,7 @@ namespace DemoV2.Client
         internal ICaffoaParseErrorHandler ErrorHandler  { get; }
         internal ICaffoaJsonParser JsonParser { get; }
         internal ICaffoaJsonSerializer JsonSerializer { get; }
-        private DemoClient(string baseUri, HttpClient client = null, ILogger logger = null, ICaffoaParseErrorHandler errorHandler = null, ICaffoaJsonParser jsonParser = null, ICaffoaJsonSerializer jsonSerializer = null) {
+        private DemoClient(string baseUri, HttpClient? client = null, ILogger? logger = null, ICaffoaParseErrorHandler? errorHandler = null, ICaffoaJsonParser? jsonParser = null, ICaffoaJsonSerializer? jsonSerializer = null) {
             BaseUri = baseUri;
             Client = client ?? new HttpClient();
             Logger = logger ?? NullLogger.Instance;

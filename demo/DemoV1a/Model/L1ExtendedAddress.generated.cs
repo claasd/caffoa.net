@@ -16,9 +16,6 @@ namespace DemoV1a.Model {
         [JsonProperty("addressType2")]
         public virtual string AddressType2 { get; set; }
 
-        [JsonExtensionData]
-        public Dictionary<string, object> AdditionalProperties;
-
         public L1ExtendedAddress(){}
         public L1ExtendedAddress(L1ExtendedAddress other) : base(other) {
             AddressType2 = other.AddressType2;

@@ -134,7 +134,7 @@ public class SchemaItemFormatter
     
     public string GenericAdditionalProperties()
     {
-        if (_item.AdditionalPropertiesAllowed && _config.GenericAdditionalProperties is true)
+        if (_item.AdditionalPropertiesAllowed && _config.GenericAdditionalProperties is true && _item.Parent is null)
             return
                 $"\n        [JsonExtensionData]\n        public Dictionary<string, {_config.GetGenericAdditionalPropertiesType()}> AdditionalProperties;\n";
         return "";

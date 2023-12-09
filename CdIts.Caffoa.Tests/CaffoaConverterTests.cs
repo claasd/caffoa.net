@@ -16,8 +16,8 @@ namespace CdIts.Caffoa.Tests;
 public class CaffoaConverterTests
 {
     private ICaffoaConverter _converter = null!;
-    private ICaffoaErrorHandler _errorHandler;
-    private DefaultCaffoaJsonParser _parser;
+    private ICaffoaErrorHandler _errorHandler = null!;
+    private DefaultCaffoaJsonParser _parser = null!;
 
     [SetUp]
     public void Setup()

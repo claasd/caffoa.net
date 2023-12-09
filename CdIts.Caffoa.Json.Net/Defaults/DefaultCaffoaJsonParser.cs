@@ -16,7 +16,7 @@ public class DefaultCaffoaJsonParser : ICaffoaJsonParser
     {
     }
     
-    public DefaultCaffoaJsonParser(ICaffoaParseErrorHandler errorHandler, JsonSerializerSettings? settings)
+    public DefaultCaffoaJsonParser(ICaffoaParseErrorHandler errorHandler, JsonSerializerSettings settings)
     {
         _settings = settings ?? new JsonSerializerSettings();
         ErrorHandler = errorHandler;

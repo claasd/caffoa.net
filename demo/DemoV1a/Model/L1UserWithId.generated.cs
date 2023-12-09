@@ -22,9 +22,6 @@ namespace DemoV1a.Model {
         [JsonProperty("diffs")]
         public virtual JToken Diffs { get; set; }
 
-        [JsonExtensionData]
-        public Dictionary<string, object> AdditionalProperties;
-
         public L1UserWithId(){}
         public L1UserWithId(L1UserWithId other) : base(other) {
             Id = other.Id;
