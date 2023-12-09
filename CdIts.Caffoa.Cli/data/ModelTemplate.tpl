@@ -5,7 +5,7 @@ using System;
 using Caffoa;
 {IMPORTS}
 namespace {NAMESPACE} {{
-{DESCRIPTION}public partial class {NAME}{PARENTS} {{
+{DESCRIPTION}public{SEALED} partial class {NAME}{PARENTS} {{
         public const string {NAME}ObjectName = "{RAWNAME}";
 {PROPERTIES}
 {ADDITIONAL_PROPS}

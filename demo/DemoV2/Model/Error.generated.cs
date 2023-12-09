@@ -11,19 +11,19 @@ using DemoV2.Model.Base;
 
 namespace DemoV2.Model {
 /// AUTOGENERED BY caffoa ///
-    public partial class Error : IEquatable<Error> {
+    public sealed  partial class Error : IEquatable<Error> {
         public const string ErrorObjectName = "error";
         /// <summary>
         /// Single string based code describing the error.
         /// </summary>
         [JsonProperty("status", Required = Required.Always)]
-        public virtual string Status { get; set; }
+        public string Status { get; set; }
 
         /// <summary>
         /// Human readable error message.
         /// </summary>
         [JsonProperty("message", Required = Required.Always)]
-        public virtual string Message { get; set; }
+        public string Message { get; set; }
 
         [JsonExtensionData]
         public Dictionary<string, object> AdditionalProperties;
@@ -38,14 +38,19 @@ namespace DemoV2.Model {
         public bool Equals(Error other) {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
-            return Status == other.Status && Message == other.Message;
+            var result = Status == other.Status && Message == other.Message;
+            if(result) _PartialEquals(other, ref result);
+            return result;
         }
+        partial void _PartialEquals(Error other, ref bool result);
         public override bool Equals(object obj) => Equals(obj as Error);
         public override int GetHashCode() {
             var hashCode = new HashCode();
             hashCode.Add(Status);
             hashCode.Add(Message);
+            _PartialHashCode(ref hashCode);
             return hashCode.ToHashCode();
         }
+        partial void _PartialHashCode(ref HashCode hashCode);
     }
 }

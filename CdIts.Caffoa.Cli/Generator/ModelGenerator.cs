@@ -85,6 +85,7 @@ public class ModelGenerator
         parameters["IMPORTS"] = formatter.Imports(_service.Model.Imports, _config.Imports);
         parameters["NAME"] = item.ClassName;
         parameters["PARENTS"] = formatter.Parents(interfaces);
+        parameters["SEALED"] = _config.SealClasses() ? " sealed " : "";
         parameters["INTERFACE_METHODS"] = formatter.InterfaceMethods(interfaces);
         parameters["RAWNAME"] = item.Name;
         parameters["CONSTRUCTORS"] = CreateConstructors(item, otherClasses);
@@ -152,8 +153,7 @@ public class ModelGenerator
         {
             var isEnum = itemProperty.CanBeEnum() || enumClasses.Exists(ec=>ec.ClassName == itemProperty.TypeName);
             isEnum = isEnum && _config.GetEnumCreationMode() == CaffoaConfig.EnumCreationMode.Default;
-            builder.Append(first ? "return " : " && ");
-            
+            builder.Append(first ? "var result = " : " && ");
             if (itemProperty.IsArray || itemProperty.IsMap)
                 builder.Append($"{itemProperty.Name.ToObjectName()}.SequenceEqual(other.{itemProperty.Name.ToObjectName()})");
             else if(itemProperty.TypeName.TrimEnd('?') is "string" or "int" or "double" or "decimal" or "boolean" or "real" || isEnum)
@@ -162,15 +162,19 @@ public class ModelGenerator
                 builder.Append($"{itemProperty.Name.ToObjectName()}.Equals(other.{itemProperty.Name.ToObjectName()})");
             
             var cast = isEnum && !itemProperty.IsMap && !itemProperty.IsArray ? "(int) " : "";
-            hashBuilder.Append($"            hashCode.Add({cast}{itemProperty.Name.ToObjectName()});\n");      
+            hashBuilder.Append($"            hashCode.Add({cast}{itemProperty.Name.ToObjectName()});\n");
             first = false;
         }
 
-        builder.Append(";\n        }\n");
+        builder.Append(";\n            if(result) _PartialEquals(other, ref result);\n");
+        builder.Append("            return result;\n        }\n");
+        builder.Append($"        partial void _PartialEquals({item.ClassName} other, ref bool result);\n");
         builder.Append($"        public override bool Equals(object obj) => Equals(obj as {item.ClassName});\n");
         builder.Append("        public override int GetHashCode() {\n            var hashCode = new HashCode();\n");
         builder.Append(hashBuilder);
+        builder.Append("            _PartialHashCode(ref hashCode);\n");
         builder.Append("            return hashCode.ToHashCode();\n        }\n");
+        builder.Append($"        partial void _PartialHashCode(ref HashCode hashCode);\n");
         if (_config.GenerateCompareOverloads is true)
         {
             builder.Append($"        public static bool operator==({item.ClassName} a, {item.ClassName} b) => Equals(a, b);\n");
@@ -232,6 +236,7 @@ public class ModelGenerator
             format["JSON_PROPERTY_EXTRA"] = formatter.JsonProperty();
             format["JSON_EXTRA_PROPERTIES"] = formatter.JsonExtraProperties();
             format["TYPE"] = type;
+            format["VIRTUAL"] = _config.SealClasses() ? "" : " virtual";
             format["NAMEUPPER"] = property.Name.ToObjectName();
             format["NAMELOWER"] = property.Name;
 

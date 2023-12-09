@@ -45,7 +45,8 @@ public class CaffoaConfig
     public bool? UseIsolatedWorkerModel { get; set; }
     public bool? GenerateEqualsMethods { get; set; }
     public bool? GenerateCompareOverloads { get; set; }
-
+    public bool? SealClassesWithEqualsMethods { get; set; }
+    public bool SealClasses() => SealClassesWithEqualsMethods ?? GenerateEqualsMethods ?? false;
     public enum EnumCreationMode
     {
         Default,
@@ -110,7 +111,8 @@ public class CaffoaConfig
             RemoveRequiredOnReadonly = RemoveRequiredOnReadonly ?? general.RemoveRequiredOnReadonly,
             UseIsolatedWorkerModel = UseIsolatedWorkerModel ?? general.UseIsolatedWorkerModel,
             GenerateEqualsMethods = GenerateEqualsMethods ?? general.GenerateEqualsMethods,
-            GenerateCompareOverloads = GenerateCompareOverloads ?? general.GenerateCompareOverloads
+            GenerateCompareOverloads = GenerateCompareOverloads ?? general.GenerateCompareOverloads,
+            SealClassesWithEqualsMethods = SealClassesWithEqualsMethods ?? general.SealClassesWithEqualsMethods
         };
     }
 }

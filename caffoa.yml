@@ -29,6 +29,7 @@ services:
 #      genericAdditionalPropertiesType: object
       deepCopyDefaultValue: false
       generateEqualsMethods : true
+#      sealClassesWithEqualsMethods: false
       generateCompareOverloads : true
     model:
       namespace: DemoV2.Model.Base
@@ -37,6 +38,7 @@ services:
   - apiPath: tests/openapi.yml
     config:
       generateEqualsMethods : true
+#      sealClassesWithEqualsMethods: false
       generateResolvedApiFile: true
       simplifyResolvedApiFile: true
       disposable: true

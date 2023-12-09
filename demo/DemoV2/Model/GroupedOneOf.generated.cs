@@ -11,10 +11,10 @@ using DemoV2.Model.Base;
 
 namespace DemoV2.Model {
 /// AUTOGENERED BY caffoa ///
-    public partial class GroupedOneOf : IEquatable<GroupedOneOf> {
+    public sealed  partial class GroupedOneOf : IEquatable<GroupedOneOf> {
         public const string GroupedOneOfObjectName = "groupedOneOf";
         [JsonProperty("element")]
-        public virtual AnyUser Element { get; set; }
+        public AnyUser Element { get; set; }
 
         [JsonExtensionData]
         public Dictionary<string, object> AdditionalProperties;
@@ -28,13 +28,18 @@ namespace DemoV2.Model {
         public bool Equals(GroupedOneOf other) {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
-            return Element.Equals(other.Element);
+            var result = Element.Equals(other.Element);
+            if(result) _PartialEquals(other, ref result);
+            return result;
         }
+        partial void _PartialEquals(GroupedOneOf other, ref bool result);
         public override bool Equals(object obj) => Equals(obj as GroupedOneOf);
         public override int GetHashCode() {
             var hashCode = new HashCode();
             hashCode.Add(Element);
+            _PartialHashCode(ref hashCode);
             return hashCode.ToHashCode();
         }
+        partial void _PartialHashCode(ref HashCode hashCode);
     }
 }

@@ -12,13 +12,13 @@ using DemoV2.Model.Base;
 
 namespace DemoV2.Model {
 /// AUTOGENERED BY caffoa ///
-    public partial class LongRunningfunctionStatus : IEquatable<LongRunningfunctionStatus> {
+    public sealed  partial class LongRunningfunctionStatus : IEquatable<LongRunningfunctionStatus> {
         public const string LongRunningfunctionStatusObjectName = "longRunningfunctionStatus";
         [JsonProperty("status")]
-        public virtual StatusValue Status { get; set; }
+        public StatusValue Status { get; set; }
 
         [JsonProperty("result")]
-        public virtual AnyUser Result { get; set; }
+        public AnyUser Result { get; set; }
 
         [JsonExtensionData]
         public Dictionary<string, object> AdditionalProperties;
@@ -33,14 +33,19 @@ namespace DemoV2.Model {
         public bool Equals(LongRunningfunctionStatus other) {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
-            return Status == other.Status && Result.Equals(other.Result);
+            var result = Status == other.Status && Result.Equals(other.Result);
+            if(result) _PartialEquals(other, ref result);
+            return result;
         }
+        partial void _PartialEquals(LongRunningfunctionStatus other, ref bool result);
         public override bool Equals(object obj) => Equals(obj as LongRunningfunctionStatus);
         public override int GetHashCode() {
             var hashCode = new HashCode();
             hashCode.Add((int) Status);
             hashCode.Add(Result);
+            _PartialHashCode(ref hashCode);
             return hashCode.ToHashCode();
         }
+        partial void _PartialHashCode(ref HashCode hashCode);
     }
 }

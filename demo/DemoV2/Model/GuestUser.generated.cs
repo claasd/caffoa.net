@@ -12,16 +12,16 @@ using DemoV2.Model.Base;
 
 namespace DemoV2.Model {
 /// AUTOGENERED BY caffoa ///
-    public partial class GuestUser : AnyUser, AnyCompleteUser, IEquatable<GuestUser> {
+    public sealed  partial class GuestUser : AnyUser, AnyCompleteUser, IEquatable<GuestUser> {
         public const string GuestUserObjectName = "guestUser";
         [JsonProperty("email", Required = Required.Always)]
-        public virtual string Email { get; set; }
+        public string Email { get; set; }
 
         [JsonProperty("type", Required = Required.Always)]
-        public virtual TypeValue Type { get; set; } = TypeValue.Guest;
+        public TypeValue Type { get; set; } = TypeValue.Guest;
 
         [JsonProperty("constInt")]
-        public virtual int ConstInt { get; set; } = 1;
+        public int ConstInt { get; set; } = 1;
 
         [JsonExtensionData]
         public Dictionary<string, object> AdditionalProperties;
@@ -34,21 +34,26 @@ namespace DemoV2.Model {
             AdditionalProperties = other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null;
         }
         public GuestUser ToGuestUser() => new GuestUser(this);
-        public virtual AnyUser ToAnyUser() => ToGuestUser();
-        public virtual AnyCompleteUser ToAnyCompleteUser() => ToGuestUser();
-        public virtual string TypeDiscriminator => Type.Value();
+        public AnyUser ToAnyUser() => ToGuestUser();
+        public AnyCompleteUser ToAnyCompleteUser() => ToGuestUser();
+        public string TypeDiscriminator => Type.Value();
         public bool Equals(GuestUser other) {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
-            return Email == other.Email && Type == other.Type && ConstInt == other.ConstInt;
+            var result = Email == other.Email && Type == other.Type && ConstInt == other.ConstInt;
+            if(result) _PartialEquals(other, ref result);
+            return result;
         }
+        partial void _PartialEquals(GuestUser other, ref bool result);
         public override bool Equals(object obj) => Equals(obj as GuestUser);
         public override int GetHashCode() {
             var hashCode = new HashCode();
             hashCode.Add(Email);
             hashCode.Add((int) Type);
             hashCode.Add(ConstInt);
+            _PartialHashCode(ref hashCode);
             return hashCode.ToHashCode();
         }
+        partial void _PartialHashCode(ref HashCode hashCode);
     }
 }

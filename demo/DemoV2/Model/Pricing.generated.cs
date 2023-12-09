@@ -12,13 +12,13 @@ using DemoV2.Model.Base;
 
 namespace DemoV2.Model {
 /// AUTOGENERED BY caffoa ///
-    public partial class Pricing : IEquatable<Pricing> {
+    public sealed  partial class Pricing : IEquatable<Pricing> {
         public const string PricingObjectName = "pricing";
         [JsonProperty("price")]
-        public virtual double? Price { get; set; }
+        public double? Price { get; set; }
 
         [JsonProperty("taxes")]
-        public virtual Dictionary<string, double> Taxes { get; set; } = new Dictionary<string, double>();
+        public Dictionary<string, double> Taxes { get; set; } = new Dictionary<string, double>();
 
         [JsonExtensionData]
         public Dictionary<string, object> AdditionalProperties;
@@ -33,14 +33,19 @@ namespace DemoV2.Model {
         public bool Equals(Pricing other) {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
-            return Price == other.Price && Taxes.SequenceEqual(other.Taxes);
+            var result = Price == other.Price && Taxes.SequenceEqual(other.Taxes);
+            if(result) _PartialEquals(other, ref result);
+            return result;
         }
+        partial void _PartialEquals(Pricing other, ref bool result);
         public override bool Equals(object obj) => Equals(obj as Pricing);
         public override int GetHashCode() {
             var hashCode = new HashCode();
             hashCode.Add(Price);
             hashCode.Add(Taxes);
+            _PartialHashCode(ref hashCode);
             return hashCode.ToHashCode();
         }
+        partial void _PartialHashCode(ref HashCode hashCode);
     }
 }

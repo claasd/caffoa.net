@@ -107,15 +107,16 @@ public class SchemaItemFormatter
 
     public string InterfaceMethods(List<SchemaItem> interfaces)
     {
+        var virtualStr = _config.SealClasses() ? "" : " virtual";
         var implementations = MatchingInterfaces(interfaces)
-            .Select(i => $"        public virtual {i} To{i}() => To{_item.ClassName}();\n");
+            .Select(i => $"        public{virtualStr} {i} To{i}() => To{_item.ClassName}();\n");
         var discriminators = MatchingDiscriminators(interfaces)
             .Select(d=>
             {
                 var prop = _item.Properties?.Find(p => p.Name.ToObjectName() == d);
                 if (prop is null)
                     return ""; // this is inheritance
-                var result = $"        public virtual string {d}Discriminator => {d}";
+                var result = $"        public{virtualStr} string {d}Discriminator => {d}";
                 if ((_config.UseConstants is not true || !prop.CanBeConstant()) && _config.GetEnumCreationMode() == CaffoaConfig.EnumCreationMode.Default && (prop.CanBeEnum()))
                     result += ".Value();\n";
                 else if(prop!.TypeName.StartsWith("string"))
@@ -130,18 +131,7 @@ public class SchemaItemFormatter
         return string.Join("", implementations.Concat(discriminators));
     }
     
-    public string SubItemMethods()
-    {
-        var implementations = new List<string>();
-        foreach (var subItem in _item.SubItems)
-        {
-            var otherItem = _otherClasses.Find(c => c.ClassName == subItem);
-            if (otherItem != null)
-                implementations.Add($"        public virtual {subItem} To{subItem}() => new {subItem}(this);\n");
-        }
-        return string.Join("", implementations);
-    }
-
+    
     public string GenericAdditionalProperties()
     {
         if (_item.AdditionalPropertiesAllowed && _config.GenericAdditionalProperties is true)

@@ -14,54 +14,54 @@ using DemoV2.Model;
 
 namespace DemoV2.Model {
 /// AUTOGENERED BY caffoa ///
-    public partial class UserWithId : AnyUser, AnyCompleteUser, IEquatable<UserWithId> {
+    public sealed  partial class UserWithId : AnyUser, AnyCompleteUser, IEquatable<UserWithId> {
         public const string UserWithIdObjectName = "userWithId";
         /// <summary>
         /// A fancy string with description
         /// </summary>
         [JsonProperty("name", Required = Required.Always)]
-        public virtual string Name { get; set; }
+        public string Name { get; set; }
 
         [JsonProperty("address")]
-        public virtual Address Address { get; set; }
+        public Address Address { get; set; }
 
         [Obsolete]
         [JsonConverter(typeof(CaffoaDateOnlyConverter))]
         [JsonProperty("birthdate")]
-        public virtual DateOnly? Birthdate { get; set; }
+        public DateOnly? Birthdate { get; set; }
 
         [JsonProperty("emails")]
-        public virtual ICollection<string> Emails { get; set; } = new List<string>();
+        public ICollection<string> Emails { get; set; } = new List<string>();
 
         [JsonProperty("descriptions")]
-        public virtual Dictionary<string, string> Descriptions { get; set; } = new Dictionary<string, string>();
+        public Dictionary<string, string> Descriptions { get; set; } = new Dictionary<string, string>();
 
         [JsonProperty("type", Required = Required.Always)]
-        public virtual TypeValue Type { get; set; } = TypeValue.Simple;
+        public TypeValue Type { get; set; } = TypeValue.Simple;
 
         [JsonProperty("role")]
-        public virtual RoleValue Role { get; set; } = RoleValue.Reader;
+        public RoleValue Role { get; set; } = RoleValue.Reader;
 
         [Obsolete("do not use this")]
         [JsonProperty("ageGroup")]
-        public virtual int? AgeGroup { get; set; } = 40;
+        public int? AgeGroup { get; set; } = 40;
 
         [Obsolete("do not use this")]
         [JsonConverter(typeof(CustomTimeConverter))]
         [JsonProperty("preferredContactTime")]
-        public virtual TimeOnly PreferredContactTime { get; set; } = TimeOnly.Parse("12:00");
+        public TimeOnly PreferredContactTime { get; set; } = TimeOnly.Parse("12:00");
 
         [JsonProperty("lastSessionLength")]
-        public virtual TimeSpan LastSessionLength { get; set; }
+        public TimeSpan LastSessionLength { get; set; }
 
         [JsonProperty("id")]
-        public virtual string Id { get; set; }
+        public string Id { get; set; }
 
         [JsonProperty("registrationDate")]
-        public virtual DateTimeOffset RegistrationDate { get; set; }
+        public DateTimeOffset RegistrationDate { get; set; }
 
         [JsonProperty("diffs")]
-        public virtual JToken Diffs { get; set; }
+        public JToken Diffs { get; set; }
 
         [JsonExtensionData]
         public Dictionary<string, object> AdditionalProperties;
@@ -97,14 +97,17 @@ namespace DemoV2.Model {
             AdditionalProperties = deepClone ? (other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null) : other.AdditionalProperties;
         }
         public UserWithId ToUserWithId() => new UserWithId(this);
-        public virtual AnyUser ToAnyUser() => ToUserWithId();
-        public virtual AnyCompleteUser ToAnyCompleteUser() => ToUserWithId();
-        public virtual string TypeDiscriminator => Type.Value();
+        public AnyUser ToAnyUser() => ToUserWithId();
+        public AnyCompleteUser ToAnyCompleteUser() => ToUserWithId();
+        public string TypeDiscriminator => Type.Value();
         public bool Equals(UserWithId other) {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
-            return Name == other.Name && Address.Equals(other.Address) && Birthdate.Equals(other.Birthdate) && Emails.SequenceEqual(other.Emails) && Descriptions.SequenceEqual(other.Descriptions) && Type == other.Type && Role == other.Role && AgeGroup == other.AgeGroup && PreferredContactTime.Equals(other.PreferredContactTime) && LastSessionLength.Equals(other.LastSessionLength) && Id == other.Id && RegistrationDate.Equals(other.RegistrationDate) && Diffs.Equals(other.Diffs);
+            var result = Name == other.Name && Address.Equals(other.Address) && Birthdate.Equals(other.Birthdate) && Emails.SequenceEqual(other.Emails) && Descriptions.SequenceEqual(other.Descriptions) && Type == other.Type && Role == other.Role && AgeGroup == other.AgeGroup && PreferredContactTime.Equals(other.PreferredContactTime) && LastSessionLength.Equals(other.LastSessionLength) && Id == other.Id && RegistrationDate.Equals(other.RegistrationDate) && Diffs.Equals(other.Diffs);
+            if(result) _PartialEquals(other, ref result);
+            return result;
         }
+        partial void _PartialEquals(UserWithId other, ref bool result);
         public override bool Equals(object obj) => Equals(obj as UserWithId);
         public override int GetHashCode() {
             var hashCode = new HashCode();
@@ -121,7 +124,9 @@ namespace DemoV2.Model {
             hashCode.Add(Id);
             hashCode.Add(RegistrationDate);
             hashCode.Add(Diffs);
+            _PartialHashCode(ref hashCode);
             return hashCode.ToHashCode();
         }
+        partial void _PartialHashCode(ref HashCode hashCode);
     }
 }

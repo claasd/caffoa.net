@@ -11,28 +11,28 @@ using System.Collections.Immutable;
 
 namespace DemoV2.Model.Base {
 /// AUTOGENERED BY caffoa ///
-    public partial class Address : IEquatable<Address> {
+    public sealed  partial class Address : IEquatable<Address> {
         public const string AddressObjectName = "address";
         [JsonProperty("street", Required = Required.Always)]
-        public virtual string Street { get; set; }
+        public string Street { get; set; }
 
         [JsonProperty("street.extra")]
-        public virtual string StreetExtra { get; set; }
+        public string StreetExtra { get; set; }
 
         [JsonProperty("postalCode", Required = Required.Always)]
-        public virtual string PostalCode { get; set; }
+        public string PostalCode { get; set; }
 
         [JsonProperty("city", Required = Required.Always)]
-        public virtual string City { get; set; }
+        public string City { get; set; }
 
         [JsonProperty("country", Required = Required.Always)]
-        public virtual string Country { get; set; }
+        public string Country { get; set; }
 
         [JsonProperty("addressType")]
-        public virtual AddressTypeValue AddressType { get; set; }
+        public AddressTypeValue AddressType { get; set; }
 
         [JsonProperty("flags")]
-        public virtual Dictionary<string, Flags> Flags { get; set; } = new Dictionary<string, Flags>();
+        public Dictionary<string, Flags> Flags { get; set; } = new Dictionary<string, Flags>();
 
         [JsonExtensionData]
         public Dictionary<string, object> AdditionalProperties;
@@ -52,8 +52,11 @@ namespace DemoV2.Model.Base {
         public bool Equals(Address other) {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
-            return Street == other.Street && StreetExtra == other.StreetExtra && PostalCode == other.PostalCode && City == other.City && Country == other.Country && AddressType == other.AddressType && Flags.SequenceEqual(other.Flags);
+            var result = Street == other.Street && StreetExtra == other.StreetExtra && PostalCode == other.PostalCode && City == other.City && Country == other.Country && AddressType == other.AddressType && Flags.SequenceEqual(other.Flags);
+            if(result) _PartialEquals(other, ref result);
+            return result;
         }
+        partial void _PartialEquals(Address other, ref bool result);
         public override bool Equals(object obj) => Equals(obj as Address);
         public override int GetHashCode() {
             var hashCode = new HashCode();
@@ -64,8 +67,10 @@ namespace DemoV2.Model.Base {
             hashCode.Add(Country);
             hashCode.Add((int) AddressType);
             hashCode.Add(Flags);
+            _PartialHashCode(ref hashCode);
             return hashCode.ToHashCode();
         }
+        partial void _PartialHashCode(ref HashCode hashCode);
         public static bool operator==(Address a, Address b) => Equals(a, b);
         public static bool operator!=(Address a, Address b) => !Equals(a, b);
     }

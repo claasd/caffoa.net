@@ -8,13 +8,13 @@ using Newtonsoft.Json.Linq;
 
 namespace DemoV2.Model.Base {
 /// AUTOGENERED BY caffoa ///
-    public partial class Flags : IEquatable<Flags> {
+    public sealed  partial class Flags : IEquatable<Flags> {
         public const string FlagsObjectName = "flags";
         [JsonProperty("id")]
-        public virtual string Id { get; set; }
+        public string Id { get; set; }
 
         [JsonProperty("desc")]
-        public virtual string Desc { get; set; }
+        public string Desc { get; set; }
 
         public Flags(){}
         public Flags(Flags other) {
@@ -25,15 +25,20 @@ namespace DemoV2.Model.Base {
         public bool Equals(Flags other) {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
-            return Id == other.Id && Desc == other.Desc;
+            var result = Id == other.Id && Desc == other.Desc;
+            if(result) _PartialEquals(other, ref result);
+            return result;
         }
+        partial void _PartialEquals(Flags other, ref bool result);
         public override bool Equals(object obj) => Equals(obj as Flags);
         public override int GetHashCode() {
             var hashCode = new HashCode();
             hashCode.Add(Id);
             hashCode.Add(Desc);
+            _PartialHashCode(ref hashCode);
             return hashCode.ToHashCode();
         }
+        partial void _PartialHashCode(ref HashCode hashCode);
         public static bool operator==(Flags a, Flags b) => Equals(a, b);
         public static bool operator!=(Flags a, Flags b) => !Equals(a, b);
     }

@@ -1,5 +1,5 @@
         {DESCRIPTION}{JSON_EXTRA}[{JSON_TAG_NAME}("{NAMELOWER}"{JSON_PROPERTY_EXTRA})]{JSON_EXTRA_PROPERTIES}
-        public virtual {TYPE} {NAMEUPPER} {{ 
+        public{VIRTUAL} {TYPE} {NAMEUPPER} {{ 
             get => Get{NAMEUPPER}(); 
             set => Set{NAMEUPPER}(value);
         }}

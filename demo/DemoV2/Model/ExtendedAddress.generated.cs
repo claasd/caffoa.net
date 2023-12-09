@@ -12,31 +12,31 @@ using DemoV2.Model.Base;
 
 namespace DemoV2.Model {
 /// AUTOGENERED BY caffoa ///
-    public partial class ExtendedAddress : IEquatable<ExtendedAddress> {
+    public sealed  partial class ExtendedAddress : IEquatable<ExtendedAddress> {
         public const string ExtendedAddressObjectName = "extendedAddress";
         [JsonProperty("street", Required = Required.Always)]
-        public virtual string Street { get; set; }
+        public string Street { get; set; }
 
         [JsonProperty("street.extra")]
-        public virtual string StreetExtra { get; set; }
+        public string StreetExtra { get; set; }
 
         [JsonProperty("postalCode", Required = Required.Always)]
-        public virtual string PostalCode { get; set; }
+        public string PostalCode { get; set; }
 
         [JsonProperty("city", Required = Required.Always)]
-        public virtual string City { get; set; }
+        public string City { get; set; }
 
         [JsonProperty("country", Required = Required.Always)]
-        public virtual string Country { get; set; }
+        public string Country { get; set; }
 
         [JsonProperty("addressType")]
-        public virtual AddressTypeValue AddressType { get; set; }
+        public AddressTypeValue AddressType { get; set; }
 
         [JsonProperty("flags")]
-        public virtual Dictionary<string, Flags> Flags { get; set; } = new Dictionary<string, Flags>();
+        public Dictionary<string, Flags> Flags { get; set; } = new Dictionary<string, Flags>();
 
         [JsonProperty("addressType2")]
-        public virtual string AddressType2 { get; set; }
+        public string AddressType2 { get; set; }
 
         public ExtendedAddress(){}
         public ExtendedAddress(ExtendedAddress other) {
@@ -62,8 +62,11 @@ namespace DemoV2.Model {
         public bool Equals(ExtendedAddress other) {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
-            return Street == other.Street && StreetExtra == other.StreetExtra && PostalCode == other.PostalCode && City == other.City && Country == other.Country && AddressType == other.AddressType && Flags.SequenceEqual(other.Flags) && AddressType2 == other.AddressType2;
+            var result = Street == other.Street && StreetExtra == other.StreetExtra && PostalCode == other.PostalCode && City == other.City && Country == other.Country && AddressType == other.AddressType && Flags.SequenceEqual(other.Flags) && AddressType2 == other.AddressType2;
+            if(result) _PartialEquals(other, ref result);
+            return result;
         }
+        partial void _PartialEquals(ExtendedAddress other, ref bool result);
         public override bool Equals(object obj) => Equals(obj as ExtendedAddress);
         public override int GetHashCode() {
             var hashCode = new HashCode();
@@ -75,7 +78,9 @@ namespace DemoV2.Model {
             hashCode.Add((int) AddressType);
             hashCode.Add(Flags);
             hashCode.Add(AddressType2);
+            _PartialHashCode(ref hashCode);
             return hashCode.ToHashCode();
         }
+        partial void _PartialHashCode(ref HashCode hashCode);
     }
 }
