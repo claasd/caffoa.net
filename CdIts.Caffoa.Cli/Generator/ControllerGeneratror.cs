@@ -78,11 +78,11 @@ public class ControllerGenerator
             var (responseType, bodyFormatString) = GetResponseType(endpoint, _config.AsyncArrays is true);
             var body = endpoint.RequestBodyType switch
             {
-                SimpleBodyModel or NullBodyModel => GenerateSimpleBody(interfaceSignatures.First(), endpoint, bodyFormatString),
+                SimpleBodyModel or NullBodyModel => GenerateSimpleBody(interfaceSignatures[0], endpoint, bodyFormatString),
                 SelectionBodyModel selectionBodyModel => GenerateSelectionBody(selectionBodyModel, interfaceSignatures, endpoint, bodyFormatString),
                 _ => throw new InvalidOperationException("Unknown body type")
             };
-            var signature = interfaceSignatures.First().ParametersIncludingBody.ToList();
+            var signature = interfaceSignatures[0].ParametersIncludingBody.ToList();
             signature.RemoveAll(p => p.Name == ParameterBuilder.OpenapiTagsParameterName);
             if (endpoint.RequestBodyType is SelectionBodyModel)
             {
@@ -101,6 +101,7 @@ public class ControllerGenerator
             format["OPERATION"] = endpoint.Operation.ToObjectName();
             format["PARAMS"] = new ParameterBuilder.Overload(signature).Declaration;
             format["BODY"] = body;
+            format["ASYNC"] = noAwait ? string.Empty : " async";
             format["PATH"] = endpoint.Route;
             format["DOC"] = string.Join("\n    /// ", endpoint.DocumentationLines);
             var formatted = methodTemplate.FormatDict(format);
@@ -180,11 +181,11 @@ public class ControllerGenerator
         if (codes.Count == 0 || typeName == "IActionResult")
             return "return await {0};";
         if (codes.Count == 1 && typeName is null)
-            return $"await {{0}}; return StatusCode({codes.First()});";
+            return $"await {{0}}; return StatusCode({codes[0]});";
         if (codes.Count == 1 && asyncArrays && typeName!.StartsWith("IEnumerable<"))
-            return $"return StatusCode({codes.First()}, {{0}})";
+            return $"return StatusCode({codes[0]}, {{0}});";
         if (codes.Count == 1)
-            return $"return StatusCode({codes.First()}, await {{0}});";
+            return $"return StatusCode({codes[0]}, await {{0}});";
         if (typeName is null)
             return "return StatusCode(await {0});";
         if (asyncArrays && typeName!.StartsWith("IEnumerable<"))
@@ -198,14 +199,12 @@ public class ControllerGenerator
             return "Task<IActionResult>";
         if (codes.Count == 1 && typeName is null)
             return "Task<IActionResult>";
-        if (codes.Count == 1 && asyncArrays && typeName!.StartsWith("IEnumerable<"))
-            return $"IActionResult<IAsyncEnumerable{typeName[11..]}>";
+        if (asyncArrays && typeName!.StartsWith("IEnumerable<"))
+            return $"ActionResult<IAsyncEnumerable{typeName[11..]}>";
         if (codes.Count == 1)
             return $"Task<ActionResult<{typeName}>>";
         if (typeName is null)
             return "Task<IActionResult>";
-        //if (asyncArrays && typeName!.StartsWith("IEnumerable<"))
-        //    return $"(IAsyncEnumerable{typeName[11..]}, int)";
         return $"Task<ActionResult<{typeName}>>";
     }
 

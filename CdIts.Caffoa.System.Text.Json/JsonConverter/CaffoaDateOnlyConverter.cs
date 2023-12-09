@@ -18,7 +18,7 @@ public class CaffoaDateOnlyConverter : JsonConverter<object>
         {
             var value = reader.GetString();
             if (reader.TokenType is not JsonTokenType.Null && value is not null)
-                return DateOnly.ParseExact(value ?? "", DateFormat, CultureInfo.InvariantCulture);
+                return DateOnly.ParseExact(value, DateFormat, CultureInfo.InvariantCulture);
             if (Nullable.GetUnderlyingType(typeToConvert) is not null) // this is a nullable type
                 return null;
             throw new ArgumentException("Cannot convert null value to DateOnly.");

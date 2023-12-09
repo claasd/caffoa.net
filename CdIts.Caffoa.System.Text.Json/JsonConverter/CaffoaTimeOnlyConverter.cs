@@ -22,9 +22,9 @@ public class CaffoaTimeOnlyConverter : JsonConverter<object>
             var value = reader.GetString();
             if (reader.TokenType is not JsonTokenType.Null && value is not null)
             {
-                if (TimeOnly.TryParseExact(value, ParseFormat, out var time))
+                if (TimeOnly.TryParseExact(value, ParseFormat, CultureInfo.InvariantCulture,DateTimeStyles.None, out var time))
                     return time;
-                if (TimeOnly.TryParseExact(value, FallbackParseFormat, out time))
+                if (TimeOnly.TryParseExact(value, FallbackParseFormat, CultureInfo.InvariantCulture,DateTimeStyles.None, out time))
                     return time;
                 throw new ArgumentException($"Cannot convert '{value}' value to TimeOnly.");
             }

@@ -14,6 +14,6 @@ public static class ParameterFormatter
 
     public static bool HasArrayResult(this EndPointModel endpoint)
     {
-        return endpoint.Responses.Any(r => r.TypeName != null && r.TypeName.StartsWith("IEnumerable<"));
+        return endpoint.Responses.Exists(r => r.TypeName != null && r.TypeName.StartsWith("IEnumerable<"));
     }
 }

@@ -70,7 +70,7 @@ public class DefaultCaffoaConverter : ICaffoaConverter
     {
         try
         {
-            return DateTimeOffset.Parse(parameter).ToUniversalTime();
+            return DateTimeOffset.Parse(parameter, CultureInfo.InvariantCulture, DateTimeStyles.None).ToUniversalTime();
         }
         catch (Exception e)
         {
@@ -101,7 +101,7 @@ public class DefaultCaffoaConverter : ICaffoaConverter
             throw _errorHandler.ParameterConvertError(parameterName, typeof(T).Name, e);
         }
     }
-    
+
     public ICollection<T> ParseEnumArray<T>(ICaffoaJsonParser parser, string parameter, string parameterName, bool ignoreCase = true) where T : Enum
     {
         try

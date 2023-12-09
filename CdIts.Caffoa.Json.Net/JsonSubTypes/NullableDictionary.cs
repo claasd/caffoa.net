@@ -29,7 +29,7 @@
             {
                 if (_hasNullKey)
                 {
-                    throw new ArgumentException();
+                    throw new ArgumentException("An element with the nullKey key already exists in the dictionary.");
                 }
 
                 _hasNullKey = true;
