@@ -46,7 +46,7 @@ public class CaffoaConfig
     public bool? GenerateEqualsMethods { get; set; }
     public bool? GenerateCompareOverloads { get; set; }
     public bool? SealClassesWithEqualsMethods { get; set; }
-    public bool SealClasses() => SealClassesWithEqualsMethods ?? GenerateEqualsMethods ?? false;
+    public bool SealClasses() => !(SealClassesWithEqualsMethods ?? UseInheritance is true) && (GenerateEqualsMethods ?? false);
     public enum EnumCreationMode
     {
         Default,

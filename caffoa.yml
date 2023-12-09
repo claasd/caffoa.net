@@ -1,4 +1,5 @@
 config:
+#  generateEqualsMethods : true
   clearGeneratedFiles: true
   duplicates: once # once, overwrite (default)
   routePrefix: api/
