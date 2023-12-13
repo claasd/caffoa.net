@@ -25,6 +25,6 @@ public class StringEnumConverter: JsonConverter<object>
 
     public override void Write(Utf8JsonWriter writer, object value, JsonSerializerOptions options)
     {
-        writer.WriteStringValue(EnumConverter.EnumValue(value));
+        writer.WriteStringValue(EnumConverter.EnumValue(value as Enum));
     }
 }

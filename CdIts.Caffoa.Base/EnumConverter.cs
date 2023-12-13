@@ -18,17 +18,20 @@ public static class EnumConverter
     {
         return string.Join(",", values.Select(v => v.Value()));
     }
-
-    public static string EnumValue(object value)
+    public static string EnumValue<T>(T value) where T : Enum
     {
-        var name = Enum.GetName(value.GetType(), value);
-        if (name == null) return Convert.ToString(value) ?? "";
-        var field = value.GetType().GetTypeInfo().GetDeclaredField(name);
-        if (field != null && field.GetCustomAttribute(typeof(EnumMemberAttribute)) is EnumMemberAttribute attribute)
-            return attribute.Value ?? name;
-        return name;
+        var type = typeof(T);
+        var dataType = Convert.ChangeType(value, value.GetTypeCode()); 
+        foreach (var field in type.GetFields(BindingFlags.Static | BindingFlags.Public))
+        {
+            var obj = (T)field.GetValue(null)!;
+            var dataType2 = Convert.ChangeType(obj, obj.GetTypeCode());
+            if (dataType.Equals(dataType2))
+                return field.GetCustomAttribute(typeof(EnumMemberAttribute)) is EnumMemberAttribute customAttribute ? customAttribute.Value ?? field.Name : field.Name;
+        }
+        return value.ToString();
     }
-
+    
     public static T FromString<T>(string value, StringComparison comparer = StringComparison.OrdinalIgnoreCase)
         where T : Enum => (T)FromString(typeof(T), value, comparer);
 
