@@ -1,7 +1,8 @@
 # caffoa: Create Azure Function From Open Api
 
-[![License](https://img.shields.io/pypi/l/caffoa)](https://github.com/claasd/caffoa.net/blob/main/LICENSE)
-[![Nuget](https://img.shields.io/nuget/vpre/CdIts.Caffoa)](https://www.nuget.org/packages/CdIts.Caffoa/)
+[![License](https://img.shields.io/badge/license-MIT-blue)](https://github.com/claasd/caffoa.net/blob/main/LICENSE)
+[![Nuget](https://img.shields.io/nuget/v/CdIts.Caffoa.Json.Net)](https://www.nuget.org/packages/CdIts.Caffoa.Json.Net/)
+[![Nuget](https://img.shields.io/nuget/vpre/CdIts.Caffoa.Json.Net)](https://www.nuget.org/packages/CdIts.Caffoa.Json.Net/)
 [![CI](https://github.com/claasd/caffoa.net/actions/workflows/build.yml/badge.svg)](https://github.com/claasd/caffoa.net/actions/workflows/build.yml)
 
 Tool to autogenerate azure function templates for .NET from openapi declaration.
