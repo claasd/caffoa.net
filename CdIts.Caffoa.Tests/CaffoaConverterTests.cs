@@ -103,7 +103,8 @@ public class CaffoaConverterTests
         [EnumMember(Value = "enum space")] EnumSpace,
 
         [EnumMember(Value = "enum-special_CHARS")]
-        EnumSpecialChars
+        EnumSpecialChars,
+        [EnumMember(Value = "TargetEnum")] TargetEnum = Enum1,
     }
 
     [TestCase("enum1", TestEnumType.Enum1)]
@@ -135,6 +136,7 @@ public class CaffoaConverterTests
     [TestCase(TestEnumType.EnumSpace, "enum space")]
     [TestCase(TestEnumType.EnumSpecialChars, "enum-special_CHARS")]
     [TestCase((TestEnumType)99, "99")]
+    [TestCase(TestEnumType.TargetEnum, "enum1")]
     public void EnumToString(TestEnumType input, string result)
     {
         input.Value().Should().Be(result);

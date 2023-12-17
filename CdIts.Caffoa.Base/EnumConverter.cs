@@ -20,7 +20,7 @@ public static class EnumConverter
     }
     public static string EnumValue<T>(T value) where T : Enum
     {
-        var type = typeof(T);
+        var type = value.GetType();
         var dataType = Convert.ChangeType(value, value.GetTypeCode()); 
         foreach (var field in type.GetFields(BindingFlags.Static | BindingFlags.Public))
         {
