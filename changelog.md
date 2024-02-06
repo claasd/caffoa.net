@@ -1,5 +1,8 @@
 # caffoa changelog
-
+## 4.0.1
+* use Invariant() when creating client parameters in Clients
+* cleanup generated openapi files
+* 
 ## 4.0.0
 * Support for NET8
 * Support for isolated worker model

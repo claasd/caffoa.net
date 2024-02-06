@@ -165,7 +165,7 @@ public class ClientGenerator
         else if (baseTypeName == "DateOnly")
             queryAdd = $"queryBuilder.Add(\"{arg.Name}\", {arg.Name}.ToString(\"yyyy-MM-dd\"));";
         else
-            queryAdd = $"queryBuilder.Add(\"{arg.Name}\", $\"{{{arg.Name}}}\");";
+            queryAdd = $"queryBuilder.Add(\"{arg.Name}\", Invariant($\"{{{arg.Name}}}\"));";
         if (!arg.Required)
             return $"\n            if({arg.Name} != null)\n                {queryAdd}";
         return $"\n            {queryAdd}";

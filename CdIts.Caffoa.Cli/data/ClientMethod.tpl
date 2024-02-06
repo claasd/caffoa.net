@@ -3,7 +3,7 @@
         /// {DOC}
         /// </summary>
         public async {RESULT} {NAME}Async({PARAMS}) {{
-            var uriBuilder = new UriBuilder($"{{BaseUri}}{ROUTE}");{QUERYPARAMS}
+            var uriBuilder = new UriBuilder(Invariant($"{{BaseUri}}{ROUTE}"));{QUERYPARAMS}
             using var httpRequest = new HttpRequestMessage(HttpMethod.{METHOD}, uriBuilder.ToString());{PAYLOAD}
             PrepareRequest(httpRequest);
             using var httpResult = await Client.SendAsync(httpRequest, cancellationToken);

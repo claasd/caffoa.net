@@ -43,7 +43,8 @@ try
 
     if (settings.Config.ClearGeneratedFiles)
     {
-        var files = Directory.GetFiles(".", "*.generated.cs", SearchOption.AllDirectories);
+        var files = Directory.GetFiles(".", "*.generated.cs", SearchOption.AllDirectories).ToList();
+        files.AddRange(Directory.GetFiles(".", "*.generated.yml", SearchOption.AllDirectories));
         foreach (var file in files)
         {
             File.Delete(file);
