@@ -81,15 +81,16 @@ public class ModelGenerator
         var formatter = new SchemaItemFormatter(item, _config, otherClasses);
         var fileName = $"{item.ClassName}.generated.cs";
         var parameters = new Dictionary<string, object>();
+        var seal = _config.SealClasses(item.GenerateEqualsOverload);
         parameters["NAMESPACE"] = _service.Model!.Namespace;
         parameters["IMPORTS"] = formatter.Imports(_service.Model.Imports, _config.Imports);
         parameters["NAME"] = item.ClassName;
         parameters["PARENTS"] = formatter.Parents(interfaces);
-        parameters["SEALED"] = _config.SealClasses() ? " sealed " : "";
-        parameters["INTERFACE_METHODS"] = formatter.InterfaceMethods(interfaces);
+        parameters["SEALED"] = seal ? " sealed " : "";
+        parameters["INTERFACE_METHODS"] = formatter.InterfaceMethods(interfaces, seal);
         parameters["RAWNAME"] = item.Name;
         parameters["CONSTRUCTORS"] = CreateConstructors(item, otherClasses);
-        parameters["EQUALS_METHODS"] = _config.GenerateEqualsMethods is true ? CreateEquals(item, enumClasses) : "";
+        parameters["EQUALS_METHODS"] = (item.GenerateEqualsOverload ?? _config.GenerateEqualsMethods) is true ? CreateEquals(item, enumClasses) : "";
         parameters["INHERIT_CONSTRUCTORS"] = _config.UseInheritance is true ? formatter.CreateConstructors(otherClasses) : "ARG";
         parameters["PROPERTIES"] = FormatProperties(item, enumClasses);
         parameters["ADDITIONAL_PROPS"] = formatter.GenericAdditionalProperties();
@@ -175,7 +176,7 @@ public class ModelGenerator
         builder.Append("            _PartialHashCode(ref hashCode);\n");
         builder.Append("            return hashCode.ToHashCode();\n        }\n");
         builder.Append($"        partial void _PartialHashCode(ref HashCode hashCode);\n");
-        if (_config.GenerateCompareOverloads is true)
+        if ((item.GenerateComparerOverload ?? _config.GenerateCompareOverloads) is true)
         {
             builder.Append($"        public static bool operator==({item.ClassName} a, {item.ClassName} b) => Equals(a, b);\n");
             builder.Append($"        public static bool operator!=({item.ClassName} a, {item.ClassName} b) => !Equals(a, b);\n");
@@ -236,7 +237,7 @@ public class ModelGenerator
             format["JSON_PROPERTY_EXTRA"] = formatter.JsonProperty();
             format["JSON_EXTRA_PROPERTIES"] = formatter.JsonExtraProperties();
             format["TYPE"] = type;
-            format["VIRTUAL"] = _config.SealClasses() ? "" : " virtual";
+            format["VIRTUAL"] = _config.SealClasses(item.GenerateEqualsOverload) ? "" : " virtual";
             format["NAMEUPPER"] = property.Name.ToObjectName();
             format["NAMELOWER"] = property.Name;
 

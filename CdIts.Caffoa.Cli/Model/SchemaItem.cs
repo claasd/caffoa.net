@@ -28,4 +28,6 @@ public class SchemaItem
     public Dictionary<string,string> EnumsAliases { get; set; } = new();
     public string? Default { get; set; }
     public bool NullableEnum { get; set; }
+    public bool? GenerateEqualsOverload { get; set; }
+    public bool? GenerateComparerOverload { get; set; }
 }

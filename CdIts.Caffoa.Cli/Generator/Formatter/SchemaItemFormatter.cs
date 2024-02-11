@@ -105,9 +105,9 @@ public class SchemaItemFormatter
         )).Select(item => item.Interface!.Discriminator!.ToObjectName()).Distinct().ToList();
     }
 
-    public string InterfaceMethods(List<SchemaItem> interfaces)
+    public string InterfaceMethods(List<SchemaItem> interfaces, bool seal)
     {
-        var virtualStr = _config.SealClasses() ? "" : " virtual";
+        var virtualStr = seal ? "" : " virtual";
         var implementations = MatchingInterfaces(interfaces)
             .Select(i => $"        public{virtualStr} {i} To{i}() => To{_item.ClassName}();\n");
         var discriminators = MatchingDiscriminators(interfaces)

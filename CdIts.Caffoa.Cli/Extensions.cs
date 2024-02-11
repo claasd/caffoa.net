@@ -4,6 +4,7 @@ using System.Text.RegularExpressions;
 using CdIts.Caffoa.Cli.Config;
 using CdIts.Caffoa.Cli.Model;
 using Microsoft.OpenApi.Any;
+using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 
 namespace CdIts.Caffoa.Cli;
@@ -164,4 +165,10 @@ public static class Extensions
         return schema.Enum.Count > 0 && schema.Type.StartsWith("string");
     }
 
+    public static bool? ParseCaffoaOption(this IDictionary<string, IOpenApiExtension> extensions, string flag)
+    {
+        if (!extensions.TryGetValue(flag, out var singleAnnotation)) return null;
+        var item = singleAnnotation as OpenApiBoolean ?? new OpenApiBoolean(false);
+        return item.Value;
+    }
 }

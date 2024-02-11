@@ -29,6 +29,8 @@ public abstract class ObjectParser
         try
         {
             schema = ResolveExternal(schema);
+            Item.GenerateEqualsOverload = schema.Extensions.ParseCaffoaOption("x-caffoa-generate-equals");
+            Item.GenerateComparerOverload = schema.Extensions.ParseCaffoaOption("x-caffoa-generate-comparer");
             if (schema.AllOf.Count > 0)
                 schema = UpdateSchemaForAllOff(schema);
             if (schema.OneOf.Count > 0)
@@ -70,8 +72,8 @@ public abstract class ObjectParser
         var property = new PropertyData(name, required, schema.ReadOnly);
         property.Deprecated = schema.Deprecated;
         property.CustomAttributes = ParseCustomAttributes(schema.Extensions, name);
-        property.Generate = ParseGenerateAttribute(schema.Extensions);
-        property.Delegate = ParseDelegateAttribute(schema.Extensions);
+        property.Generate = schema.Extensions.ParseCaffoaOption("x-caffoa-generate") ?? true;
+        property.Delegate = schema.Extensions.ParseCaffoaOption("x-caffoa-delegate") ?? false;
         property.Alias = ParseAliasAttribute(schema.Extensions);
         property.Converter = ParseCustomConverter(schema.Extensions, name);
 
@@ -153,20 +155,6 @@ public abstract class ObjectParser
         }
 
         return null;
-    }
-
-    private bool ParseGenerateAttribute(IDictionary<string, IOpenApiExtension> extensions)
-    {
-        if (!extensions.TryGetValue("x-caffoa-generate", out var singleAnnotation)) return true;
-        var item = singleAnnotation as OpenApiBoolean ?? new OpenApiBoolean(true);
-        return item.Value;
-    }
-
-    private bool ParseDelegateAttribute(IDictionary<string, IOpenApiExtension> extensions)
-    {
-        if (!extensions.TryGetValue("x-caffoa-delegate", out var singleAnnotation)) return false;
-        var item = singleAnnotation as OpenApiBoolean ?? new OpenApiBoolean(false);
-        return item.Value;
     }
 
     private string? ParseAliasAttribute(IDictionary<string, IOpenApiExtension> extensions)

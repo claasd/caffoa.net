@@ -1,4 +1,5 @@
 using System.Runtime.Serialization;
+using CdIts.Caffoa.Cli.Model;
 
 namespace CdIts.Caffoa.Cli.Config;
 
@@ -46,7 +47,7 @@ public class CaffoaConfig
     public bool? GenerateEqualsMethods { get; set; }
     public bool? GenerateCompareOverloads { get; set; }
     public bool? SealClassesWithEqualsMethods { get; set; }
-    public bool SealClasses() => !(SealClassesWithEqualsMethods ?? UseInheritance is true) && (GenerateEqualsMethods ?? false);
+    public bool SealClasses(bool? localEqualsOverride) => !(SealClassesWithEqualsMethods ?? UseInheritance is true) && (localEqualsOverride ?? GenerateEqualsMethods ?? false);
     public enum EnumCreationMode
     {
         Default,

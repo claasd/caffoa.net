@@ -8,6 +8,7 @@ components:
 
   schemas:
     flags:
+      x-caffoa-generate-equals: true
       type: object
       properties: 
         id:

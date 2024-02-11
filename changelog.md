@@ -1,4 +1,9 @@
 # caffoa changelog
+
+## 4.1.0
+* allow to selectively generate equals and comparer overlaods, by adding
+  `x-caffoa-generate-equals: true|false` and `x-caffoa-generate-comparer: true|false` to the schema item. This can also be used to opt-out of global equals/comparator generation
+
 ## 4.0.1
 * use Invariant() when creating client parameters in Clients
 * cleanup generated openapi files

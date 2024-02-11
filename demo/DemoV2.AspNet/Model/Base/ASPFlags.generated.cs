@@ -8,13 +8,13 @@ using System.Text.Json.Serialization;
 
 namespace DemoV2.AspNet.Model.Base {
 /// AUTOGENERED BY caffoa ///
-    public partial class ASPFlags {
+    public sealed  partial class ASPFlags {
         public const string ASPFlagsObjectName = "flags";
         [JsonPropertyName("id")]
-        public virtual string Id { get; set; }
+        public string Id { get; set; }
 
         [JsonPropertyName("desc")]
-        public virtual string Desc { get; set; }
+        public string Desc { get; set; }
 
         public ASPFlags(){}
         public ASPFlags(ASPFlags other) {
@@ -22,5 +22,22 @@ namespace DemoV2.AspNet.Model.Base {
             Desc = other.Desc;
         }
         public ASPFlags ToASPFlags() => new ASPFlags(this);
+        public bool Equals(ASPFlags other) {
+            if (ReferenceEquals(null, other)) return false;
+            if (ReferenceEquals(this, other)) return true;
+            var result = Id == other.Id && Desc == other.Desc;
+            if(result) _PartialEquals(other, ref result);
+            return result;
+        }
+        partial void _PartialEquals(ASPFlags other, ref bool result);
+        public override bool Equals(object obj) => Equals(obj as ASPFlags);
+        public override int GetHashCode() {
+            var hashCode = new HashCode();
+            hashCode.Add(Id);
+            hashCode.Add(Desc);
+            _PartialHashCode(ref hashCode);
+            return hashCode.ToHashCode();
+        }
+        partial void _PartialHashCode(ref HashCode hashCode);
     }
 }
