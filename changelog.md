@@ -1,5 +1,8 @@
 # caffoa changelog
 
+## 4.2.0
+* make constants that are generated for single enum elements public
+
 ## 4.1.0
 * allow to selectively generate equals and comparer overlaods, by adding
   `x-caffoa-generate-equals: true|false` and `x-caffoa-generate-comparer: true|false` to the schema item. This can also be used to opt-out of global equals/comparator generation
