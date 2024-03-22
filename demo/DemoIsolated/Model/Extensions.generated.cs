@@ -317,7 +317,7 @@ namespace DemoIsolated.Model {
         /// Replaces all fields with the data of the passed object
         /// </summary>
         public static void UpdateWithIsoLongRunningfunctionStatus(this IsoLongRunningfunctionStatus item, IsoLongRunningfunctionStatus other, bool deepClone = true) {
-            item.Status = (IsoLongRunningfunctionStatus.StatusValue)other.Status;
+            item.Status = other.Status == null ? null : (IsoLongRunningfunctionStatus.StatusValue)other.Status;
             item.Result = deepClone ? other.Result?.ToIsoAnyUser() : other.Result;
             item.AdditionalProperties = deepClone ? (other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null) : other.AdditionalProperties;
         }
@@ -327,7 +327,7 @@ namespace DemoIsolated.Model {
         /// if deepClone is set to false, a shallow copy will be created.
         /// </summary>
         public static IsoLongRunningfunctionStatus ToIsoLongRunningfunctionStatus(this IsoLongRunningfunctionStatus other, bool deepClone = true) => new IsoLongRunningfunctionStatus() { 
-            Status = (IsoLongRunningfunctionStatus.StatusValue)other.Status,
+            Status = other.Status == null ? null : (IsoLongRunningfunctionStatus.StatusValue)other.Status,
             Result = deepClone ? other.Result?.ToIsoAnyUser() : other.Result,
             AdditionalProperties = deepClone ? (other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null) : other.AdditionalProperties
         };
@@ -336,7 +336,7 @@ namespace DemoIsolated.Model {
         /// Selects the type IsoLongRunningfunctionStatus from a IQueryable<IsoLongRunningfunctionStatus>
         /// </summary>
         public static IQueryable<IsoLongRunningfunctionStatus> SelectAsIsoLongRunningfunctionStatus(this IQueryable<IsoLongRunningfunctionStatus> query) => query.Select(other => new IsoLongRunningfunctionStatus() { 
-            Status = (IsoLongRunningfunctionStatus.StatusValue)other.Status,
+            Status = other.Status == null ? null : (IsoLongRunningfunctionStatus.StatusValue)other.Status,
             Result = other.Result,
             AdditionalProperties = other.AdditionalProperties
         });

@@ -317,7 +317,7 @@ namespace DemoV2.AspNet.Model {
         /// Replaces all fields with the data of the passed object
         /// </summary>
         public static void UpdateWithASPLongRunningfunctionStatus(this ASPLongRunningfunctionStatus item, ASPLongRunningfunctionStatus other, bool deepClone = true) {
-            item.Status = (ASPLongRunningfunctionStatus.StatusValue)other.Status;
+            item.Status = other.Status == null ? null : (ASPLongRunningfunctionStatus.StatusValue)other.Status;
             item.Result = deepClone ? other.Result?.ToASPAnyUser() : other.Result;
             item.AdditionalProperties = deepClone ? (other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null) : other.AdditionalProperties;
         }
@@ -327,7 +327,7 @@ namespace DemoV2.AspNet.Model {
         /// if deepClone is set to false, a shallow copy will be created.
         /// </summary>
         public static ASPLongRunningfunctionStatus ToASPLongRunningfunctionStatus(this ASPLongRunningfunctionStatus other, bool deepClone = true) => new ASPLongRunningfunctionStatus() { 
-            Status = (ASPLongRunningfunctionStatus.StatusValue)other.Status,
+            Status = other.Status == null ? null : (ASPLongRunningfunctionStatus.StatusValue)other.Status,
             Result = deepClone ? other.Result?.ToASPAnyUser() : other.Result,
             AdditionalProperties = deepClone ? (other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null) : other.AdditionalProperties
         };
@@ -336,7 +336,7 @@ namespace DemoV2.AspNet.Model {
         /// Selects the type ASPLongRunningfunctionStatus from a IQueryable<ASPLongRunningfunctionStatus>
         /// </summary>
         public static IQueryable<ASPLongRunningfunctionStatus> SelectAsASPLongRunningfunctionStatus(this IQueryable<ASPLongRunningfunctionStatus> query) => query.Select(other => new ASPLongRunningfunctionStatus() { 
-            Status = (ASPLongRunningfunctionStatus.StatusValue)other.Status,
+            Status = other.Status == null ? null : (ASPLongRunningfunctionStatus.StatusValue)other.Status,
             Result = other.Result,
             AdditionalProperties = other.AdditionalProperties
         });

@@ -41,6 +41,7 @@ public class CaffoaConfig
 
     public bool? UseConstants { get; set; }
     public bool? PassTags { get; set; }
+    public bool? NullableIsDefault { get; set; }
     public bool? DeepCopyDefaultValue { get; set; }
     public bool? RemoveRequiredOnReadonly { get; set; }
     public bool? UseIsolatedWorkerModel { get; set; }
@@ -113,7 +114,8 @@ public class CaffoaConfig
             UseIsolatedWorkerModel = UseIsolatedWorkerModel ?? general.UseIsolatedWorkerModel,
             GenerateEqualsMethods = GenerateEqualsMethods ?? general.GenerateEqualsMethods,
             GenerateCompareOverloads = GenerateCompareOverloads ?? general.GenerateCompareOverloads,
-            SealClassesWithEqualsMethods = SealClassesWithEqualsMethods ?? general.SealClassesWithEqualsMethods
+            SealClassesWithEqualsMethods = SealClassesWithEqualsMethods ?? general.SealClassesWithEqualsMethods,
+            NullableIsDefault = NullableIsDefault ?? general.NullableIsDefault
         };
     }
 }

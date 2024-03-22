@@ -317,7 +317,7 @@ namespace DemoV2.Text.Json.Model {
         /// Replaces all fields with the data of the passed object
         /// </summary>
         public static void UpdateWithSTJLongRunningfunctionStatus(this STJLongRunningfunctionStatus item, STJLongRunningfunctionStatus other, bool deepClone = true) {
-            item.Status = (STJLongRunningfunctionStatus.StatusValue)other.Status;
+            item.Status = other.Status == null ? null : (STJLongRunningfunctionStatus.StatusValue)other.Status;
             item.Result = deepClone ? other.Result?.ToSTJAnyUser() : other.Result;
             item.AdditionalProperties = deepClone ? (other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null) : other.AdditionalProperties;
         }
@@ -327,7 +327,7 @@ namespace DemoV2.Text.Json.Model {
         /// if deepClone is set to false, a shallow copy will be created.
         /// </summary>
         public static STJLongRunningfunctionStatus ToSTJLongRunningfunctionStatus(this STJLongRunningfunctionStatus other, bool deepClone = true) => new STJLongRunningfunctionStatus() { 
-            Status = (STJLongRunningfunctionStatus.StatusValue)other.Status,
+            Status = other.Status == null ? null : (STJLongRunningfunctionStatus.StatusValue)other.Status,
             Result = deepClone ? other.Result?.ToSTJAnyUser() : other.Result,
             AdditionalProperties = deepClone ? (other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null) : other.AdditionalProperties
         };
@@ -336,7 +336,7 @@ namespace DemoV2.Text.Json.Model {
         /// Selects the type STJLongRunningfunctionStatus from a IQueryable<STJLongRunningfunctionStatus>
         /// </summary>
         public static IQueryable<STJLongRunningfunctionStatus> SelectAsSTJLongRunningfunctionStatus(this IQueryable<STJLongRunningfunctionStatus> query) => query.Select(other => new STJLongRunningfunctionStatus() { 
-            Status = (STJLongRunningfunctionStatus.StatusValue)other.Status,
+            Status = other.Status == null ? null : (STJLongRunningfunctionStatus.StatusValue)other.Status,
             Result = other.Result,
             AdditionalProperties = other.AdditionalProperties
         });

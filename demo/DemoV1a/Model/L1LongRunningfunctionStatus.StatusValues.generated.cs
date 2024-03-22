@@ -10,7 +10,7 @@ namespace DemoV1a.Model {
             public const string Failure = "failure";
     
             /// immutable array containing all allowed values for "status"
-            public static readonly ImmutableArray<string> AllowedValues = ImmutableArray.Create<string>(Running, Success, Failure);
+            public static readonly ImmutableArray<string> AllowedValues = ImmutableArray.Create<string>(Running, Success, Failure, null);
         }
     }
 }

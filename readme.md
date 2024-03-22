@@ -244,11 +244,12 @@ config:
   generateEqualsMethods: false # will generate Equals and GetHashCode methods for all model classes
   generateCompareOverloads: false # will generate `==` and `!=` operators for all model classes if generateEqualsMethods is set to true
   sealClassesWithEqualsMethods: true # set this to false if you do not want to seal classes tih Equals implementation for some reason
+  nullableIsDefault: false # If set to true, all non-required properties with no will be treated as nullable, and the default value will be null if no default is defined. the option can be overriden either way by setting `x-caffoa-nullable` to true or false on an schema item.
   generateResolvedApiFile: false # will resolve all references (internal and external) and generate a single file named `originalName.generated.yml` besides the original file
   simplifyResolvedApiFile: false # will remove all schema declarations from requestBodies and responses in the generated API file. This is useful for Azure APIM, to work around the bicep file size restrictions.
 services:
   - apiPath: userservice.openapi.yml
-    config: null # optional, can be an config option. That option is then overriden for this api only
+    config: null # optional, can be any config option. That option is then overriden for this api only
     function: # Generate Azure Functions for the API
       name: MyClassName
       namespace: MyNamespace

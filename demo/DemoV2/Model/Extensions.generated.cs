@@ -317,7 +317,7 @@ namespace DemoV2.Model {
         /// Replaces all fields with the data of the passed object
         /// </summary>
         public static void UpdateWithLongRunningfunctionStatus(this LongRunningfunctionStatus item, LongRunningfunctionStatus other, bool deepClone = false) {
-            item.Status = (LongRunningfunctionStatus.StatusValue)other.Status;
+            item.Status = other.Status == null ? null : (LongRunningfunctionStatus.StatusValue)other.Status;
             item.Result = deepClone ? other.Result?.ToAnyUser() : other.Result;
             item.AdditionalProperties = deepClone ? (other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null) : other.AdditionalProperties;
         }
@@ -327,7 +327,7 @@ namespace DemoV2.Model {
         /// if deepClone is set to false, a shallow copy will be created.
         /// </summary>
         public static LongRunningfunctionStatus ToLongRunningfunctionStatus(this LongRunningfunctionStatus other, bool deepClone = false) => new LongRunningfunctionStatus() { 
-            Status = (LongRunningfunctionStatus.StatusValue)other.Status,
+            Status = other.Status == null ? null : (LongRunningfunctionStatus.StatusValue)other.Status,
             Result = deepClone ? other.Result?.ToAnyUser() : other.Result,
             AdditionalProperties = deepClone ? (other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null) : other.AdditionalProperties
         };
@@ -336,7 +336,7 @@ namespace DemoV2.Model {
         /// Selects the type LongRunningfunctionStatus from a IQueryable<LongRunningfunctionStatus>
         /// </summary>
         public static IQueryable<LongRunningfunctionStatus> SelectAsLongRunningfunctionStatus(this IQueryable<LongRunningfunctionStatus> query) => query.Select(other => new LongRunningfunctionStatus() { 
-            Status = (LongRunningfunctionStatus.StatusValue)other.Status,
+            Status = other.Status == null ? null : (LongRunningfunctionStatus.StatusValue)other.Status,
             Result = other.Result,
             AdditionalProperties = other.AdditionalProperties
         });

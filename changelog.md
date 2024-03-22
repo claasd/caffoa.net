@@ -1,5 +1,8 @@
 # caffoa changelog
 
+## 4.3.0
+* new configuration option: `nullableIsDefault`. If set to true, all non-required properties with no will be treated as nullable, and the default value will be null if no default is defined. the option can be overriden either way by setting `x-caffoa-nullable` to true or false on an schema item.
+
 ## 4.2.0
 * make constants that are generated for single enum elements public
 

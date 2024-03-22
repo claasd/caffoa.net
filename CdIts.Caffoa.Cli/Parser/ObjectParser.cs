@@ -12,16 +12,18 @@ public abstract class ObjectParser
 {
     protected readonly Func<string, string> ClassNameFunc;
     private readonly ILogger _logger;
+    private readonly bool _nullableIsDefault;
     protected readonly SchemaItem Item;
     private readonly CaffoaConfig.EnumCreationMode _enumMode;
 
     protected ObjectParser(SchemaItem item, CaffoaConfig.EnumCreationMode enumMode,
-        Func<string, string> classNameGenerator, ILogger logger)
+        Func<string, string> classNameGenerator, ILogger logger, bool nullableIsDefault)
     {
         Item = item;
         _enumMode = enumMode;
         ClassNameFunc = classNameGenerator;
         _logger = logger;
+        _nullableIsDefault = nullableIsDefault;
     }
 
     public SchemaItem Parse(OpenApiSchema schema)
@@ -31,6 +33,7 @@ public abstract class ObjectParser
             schema = ResolveExternal(schema);
             Item.GenerateEqualsOverload = schema.Extensions.ParseCaffoaOption("x-caffoa-generate-equals");
             Item.GenerateComparerOverload = schema.Extensions.ParseCaffoaOption("x-caffoa-generate-comparer");
+            var nullableIsDefault = schema.Extensions.ParseCaffoaOption("x-caffoa-default-nullable") ?? _nullableIsDefault;
             if (schema.AllOf.Count > 0)
                 schema = UpdateSchemaForAllOff(schema);
             if (schema.OneOf.Count > 0)
@@ -39,7 +42,7 @@ public abstract class ObjectParser
             else if (schema.Properties.Count > 0)
             {
                 Item.Properties = schema.Properties
-                    .Select(item => ParseProperty(item.Key, item.Value, schema.Required.Contains(item.Key))).ToList();
+                    .Select(item => ParseProperty(item.Key, item.Value, schema.Required.Contains(item.Key), nullableIsDefault)).ToList();
                 Item.AdditionalPropertiesAllowed = schema.AdditionalPropertiesAllowed;
             }
             else if (schema.IsPrimitiveType() && schema.CanBeEnum())
@@ -64,7 +67,7 @@ public abstract class ObjectParser
         }
     }
 
-    private PropertyData ParseProperty(string name, OpenApiSchema schema, bool required)
+    private PropertyData ParseProperty(string name, OpenApiSchema schema, bool required, bool nullableIsDefault)
     {
         schema = ResolveExternal(schema);
         if (schema.AnyOf.Any())
@@ -83,7 +86,7 @@ public abstract class ObjectParser
         }
 
         property.Description = schema.Description;
-        property.Nullable = schema.Nullable;
+        property.Nullable = schema.Nullable || (nullableIsDefault && !required);
         if (schema.Reference != null)
         {
             property.TypeName = ClassNameFunc(schema.Reference.Name());

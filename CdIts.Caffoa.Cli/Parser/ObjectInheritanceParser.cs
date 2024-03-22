@@ -9,7 +9,7 @@ namespace CdIts.Caffoa.Cli.Parser;
 public class ObjectInheritanceParser : ObjectParser
 {
     public ObjectInheritanceParser(SchemaItem item, CaffoaConfig.EnumCreationMode enumMode,
-        Func<string, string> classNameGenerator, ILogger logger) : base(item, enumMode, classNameGenerator, logger)
+        Func<string, string> classNameGenerator, ILogger logger, bool nullableIsDefault) : base(item, enumMode, classNameGenerator, logger, nullableIsDefault)
     {
     }
 

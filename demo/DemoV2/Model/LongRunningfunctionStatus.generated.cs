@@ -15,7 +15,7 @@ namespace DemoV2.Model {
     public sealed  partial class LongRunningfunctionStatus : IEquatable<LongRunningfunctionStatus> {
         public const string LongRunningfunctionStatusObjectName = "longRunningfunctionStatus";
         [JsonProperty("status")]
-        public StatusValue Status { get; set; }
+        public StatusValue? Status { get; set; }
 
         [JsonProperty("result")]
         public AnyUser Result { get; set; }
@@ -25,7 +25,7 @@ namespace DemoV2.Model {
 
         public LongRunningfunctionStatus(){}
         public LongRunningfunctionStatus(LongRunningfunctionStatus other) {
-            Status = (LongRunningfunctionStatus.StatusValue)other.Status;
+            Status = other.Status == null ? null : (LongRunningfunctionStatus.StatusValue)other.Status;
             Result = other.Result?.ToAnyUser();
             AdditionalProperties = other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null;
         }

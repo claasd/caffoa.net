@@ -15,7 +15,7 @@ namespace DemoIsolated.Model {
     public partial class IsoLongRunningfunctionStatus {
         public const string IsoLongRunningfunctionStatusObjectName = "longRunningfunctionStatus";
         [JsonProperty("status")]
-        public virtual StatusValue Status { get; set; }
+        public virtual StatusValue? Status { get; set; }
 
         [JsonProperty("result")]
         public virtual IsoAnyUser Result { get; set; }
@@ -25,7 +25,7 @@ namespace DemoIsolated.Model {
 
         public IsoLongRunningfunctionStatus(){}
         public IsoLongRunningfunctionStatus(IsoLongRunningfunctionStatus other) {
-            Status = (IsoLongRunningfunctionStatus.StatusValue)other.Status;
+            Status = other.Status == null ? null : (IsoLongRunningfunctionStatus.StatusValue)other.Status;
             Result = other.Result?.ToIsoAnyUser();
             AdditionalProperties = other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null;
         }

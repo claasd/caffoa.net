@@ -98,6 +98,7 @@ public class ServiceParser
     private List<SchemaItem> ParseObjects(IDictionary<string, OpenApiSchema> schemas)
     {
         var objects = new List<SchemaItem>();
+        bool nullableIsDefault = _config.NullableIsDefault ?? false;
         foreach (var (name, apiSchema) in schemas)
         {
             var className = ClassName(name);
@@ -106,8 +107,8 @@ public class ServiceParser
             if(!apiSchema.IsRealObject(_config.GetEnumCreationMode()))
                 continue;
             ObjectParser parser = _config.UseInheritance is true
-                ? new ObjectInheritanceParser(new SchemaItem(name, className), _config.GetEnumCreationMode(), ClassName, _logger)
-                : new ObjectStandaloneParser(new SchemaItem(name, className), _config.GetEnumCreationMode(), ClassName, _logger);
+                ? new ObjectInheritanceParser(new SchemaItem(name, className), _config.GetEnumCreationMode(), ClassName, _logger, nullableIsDefault)
+                : new ObjectStandaloneParser(new SchemaItem(name, className), _config.GetEnumCreationMode(), ClassName, _logger, nullableIsDefault);
             objects.Add(parser.Parse(apiSchema));
             Duplicates.Add(className);
         }

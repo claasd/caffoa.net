@@ -15,7 +15,7 @@ namespace DemoV2.AspNet.Model {
     public partial class ASPLongRunningfunctionStatus {
         public const string ASPLongRunningfunctionStatusObjectName = "longRunningfunctionStatus";
         [JsonPropertyName("status")]
-        public virtual StatusValue Status { get; set; }
+        public virtual StatusValue? Status { get; set; }
 
         [JsonPropertyName("result")]
         public virtual ASPAnyUser Result { get; set; }
@@ -25,7 +25,7 @@ namespace DemoV2.AspNet.Model {
 
         public ASPLongRunningfunctionStatus(){}
         public ASPLongRunningfunctionStatus(ASPLongRunningfunctionStatus other) {
-            Status = (ASPLongRunningfunctionStatus.StatusValue)other.Status;
+            Status = other.Status == null ? null : (ASPLongRunningfunctionStatus.StatusValue)other.Status;
             Result = other.Result?.ToASPAnyUser();
             AdditionalProperties = other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null;
         }

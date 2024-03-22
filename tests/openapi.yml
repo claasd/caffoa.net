@@ -155,6 +155,7 @@ components:
             "DE": 19.0
             "AT": 19.0
     longRunningfunctionStatus:
+      x-caffoa-default-nullable: true
       type: object
       properties: 
         status:

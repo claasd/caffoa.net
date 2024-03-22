@@ -15,7 +15,7 @@ namespace DemoV2.Text.Json.Model {
     public partial class STJLongRunningfunctionStatus {
         public const string STJLongRunningfunctionStatusObjectName = "longRunningfunctionStatus";
         [JsonPropertyName("status")]
-        public virtual StatusValue Status { get; set; }
+        public virtual StatusValue? Status { get; set; }
 
         [JsonPropertyName("result")]
         public virtual STJAnyUser Result { get; set; }
@@ -25,7 +25,7 @@ namespace DemoV2.Text.Json.Model {
 
         public STJLongRunningfunctionStatus(){}
         public STJLongRunningfunctionStatus(STJLongRunningfunctionStatus other) {
-            Status = (STJLongRunningfunctionStatus.StatusValue)other.Status;
+            Status = other.Status == null ? null : (STJLongRunningfunctionStatus.StatusValue)other.Status;
             Result = other.Result?.ToSTJAnyUser();
             AdditionalProperties = other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null;
         }
