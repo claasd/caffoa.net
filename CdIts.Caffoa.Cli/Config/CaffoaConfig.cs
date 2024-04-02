@@ -48,6 +48,7 @@ public class CaffoaConfig
     public bool? GenerateEqualsMethods { get; set; }
     public bool? GenerateCompareOverloads { get; set; }
     public bool? SealClassesWithEqualsMethods { get; set; }
+    public bool? UseValueObjects { get; set; }
     public bool SealClasses(bool? localEqualsOverride) => !(SealClassesWithEqualsMethods ?? UseInheritance is true) && (localEqualsOverride ?? GenerateEqualsMethods ?? false);
     public enum EnumCreationMode
     {
@@ -115,7 +116,8 @@ public class CaffoaConfig
             GenerateEqualsMethods = GenerateEqualsMethods ?? general.GenerateEqualsMethods,
             GenerateCompareOverloads = GenerateCompareOverloads ?? general.GenerateCompareOverloads,
             SealClassesWithEqualsMethods = SealClassesWithEqualsMethods ?? general.SealClassesWithEqualsMethods,
-            NullableIsDefault = NullableIsDefault ?? general.NullableIsDefault
+            NullableIsDefault = NullableIsDefault ?? general.NullableIsDefault,
+            UseValueObjects = UseValueObjects ?? general.UseValueObjects
         };
     }
 }

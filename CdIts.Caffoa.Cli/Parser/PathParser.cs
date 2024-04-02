@@ -132,7 +132,7 @@ public class PathParser
     private string ParseType(OpenApiSchema schema)
     {
         if (schema.IsArray())
-            return $"IEnumerable<{schema.GetArrayType(_classNameFunc, _config.GetEnumCreationMode())}>";
+            return $"IEnumerable<{schema.GetArrayType(_classNameFunc, _config.GetEnumCreationMode(), _config.UseValueObjects is true)}>";
         if (schema.Reference != null)
             return _classNameFunc(schema.Reference.Name());
         if (schema.IsPrimitiveType())

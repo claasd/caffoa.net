@@ -17,7 +17,7 @@ namespace DemoV2.Services
     {
         private static readonly UserRepository<UserWithId> Users = new UserRepository<UserWithId>();
         private static readonly UserRepository<GuestUser> Guests = new UserRepository<GuestUser>();
-        private static readonly Dictionary<string, List<Guid>> Tags = new();
+        private static readonly Dictionary<string, List<TagId>> Tags = new();
 
 
         public async Task<IEnumerable<AnyCompleteUser>> UsersGetAsync(int offset = 0, int limit = 1000,
@@ -60,11 +60,11 @@ namespace DemoV2.Services
             };
         }
 
-        public async Task<IEnumerable<KeyValuePair<string, IEnumerable<Guid>>>> GetUserTagsAsync(
+        public async Task<IEnumerable<KeyValuePair<string, IEnumerable<TagId>>>> GetUserTagsAsync(
             CancellationToken cancellationToken = default)
         {
             await Task.Yield();
-            return Tags.ToDictionary(i => i.Key, i => i.Value.Select(v => v));
+            return Tags.ToDictionary(i => i.Key, i => i.Value.Select(v => new TagId(v)));
         }
 
         public Task<IEnumerable<MyEnumType>> ListEnumsAsync(MyEnumType? filter = null, ICollection<MyEnumType> include = null, ICollection<string> flags = null, ICollection<MyEnumType> exclude = null,

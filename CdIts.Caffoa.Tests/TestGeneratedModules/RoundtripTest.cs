@@ -22,7 +22,7 @@ public class RoundtripTest
         await functions.UserPostAsync(new RequestBuilder().Content(user).Build()).Check();
         var users = await functions.UsersGetAsync(RequestBuilder.Default).Json<List<User>>();
         users.Should().HaveCount(1);
-        users[0].Name.Should().Be("Claas");
+        users[0].Name.Value.Should().Be("Claas");
     }
 
     [Test]

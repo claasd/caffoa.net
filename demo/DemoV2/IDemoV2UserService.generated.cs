@@ -89,7 +89,7 @@ namespace DemoV2
         /// <summary>
         /// 200 -> tags for the user
         /// </summary>
-        Task<IEnumerable<KeyValuePair<string, IEnumerable<Guid>>>> GetUserTagsAsync(CancellationToken cancellationToken = default);
+        Task<IEnumerable<KeyValuePair<string, IEnumerable<TagId>>>> GetUserTagsAsync(CancellationToken cancellationToken = default);
 
         /// <summary>
         /// 200 -> a list of neum

@@ -98,19 +98,34 @@ public class ServiceParser
     private List<SchemaItem> ParseObjects(IDictionary<string, OpenApiSchema> schemas)
     {
         var objects = new List<SchemaItem>();
-        bool nullableIsDefault = _config.NullableIsDefault ?? false;
+        bool nullableIsDefault = _config.NullableIsDefault is true;
         foreach (var (name, apiSchema) in schemas)
         {
             var className = ClassName(name);
             if (_config.Duplicates == "once" && Duplicates.Contains(className))
                 continue;
-            if(!apiSchema.IsRealObject(_config.GetEnumCreationMode()))
+            if(!apiSchema.IsRealObject(_config.GetEnumCreationMode(), _config.UseValueObjects is true))
                 continue;
-            ObjectParser parser = _config.UseInheritance is true
-                ? new ObjectInheritanceParser(new SchemaItem(name, className), _config.GetEnumCreationMode(), ClassName, _logger, nullableIsDefault)
-                : new ObjectStandaloneParser(new SchemaItem(name, className), _config.GetEnumCreationMode(), ClassName, _logger, nullableIsDefault);
-            objects.Add(parser.Parse(apiSchema));
-            Duplicates.Add(className);
+            if (!apiSchema.IsRealObject(_config.GetEnumCreationMode(), false))
+            {
+                var item = new SchemaItem(name, className)
+                {
+                    ValueObjectType = apiSchema.TypeName(),
+                    Type = SchemaItem.ObjectType.ValueObject
+                };
+                objects.Add(item);
+                Duplicates.Add(className);   
+            }
+            else
+            {
+                ObjectParser parser = _config.UseInheritance is true
+                    ? new ObjectInheritanceParser(new SchemaItem(name, className), _config.GetEnumCreationMode(), ClassName, _logger,
+                        nullableIsDefault, _config.UseValueObjects is true)
+                    : new ObjectStandaloneParser(new SchemaItem(name, className), _config.GetEnumCreationMode(), ClassName, _logger,
+                        nullableIsDefault, _config.UseValueObjects is true);
+                objects.Add(parser.Parse(apiSchema));
+                Duplicates.Add(className);
+            }
         }
 
         return objects;

@@ -325,7 +325,7 @@ namespace DemoV2.Client
         /// <summary>
         /// 200 -> tags for the user
         /// </summary>
-        public async Task<IReadOnlyDictionary<string,  IEnumerable<Guid>>> GetUserTagsAsync(CancellationToken cancellationToken = default) {
+        public async Task<IReadOnlyDictionary<string,  IEnumerable<TagId>>> GetUserTagsAsync(CancellationToken cancellationToken = default) {
             var uriBuilder = new UriBuilder(Invariant($"{BaseUri}tags/users"));
             using var httpRequest = new HttpRequestMessage(HttpMethod.Get, uriBuilder.ToString());
             PrepareRequest(httpRequest);
@@ -336,7 +336,7 @@ namespace DemoV2.Client
                 throw new CaffoaWebClientException((int)httpResult.StatusCode, errorData);
             }
             await using var resultStream = await httpResult.Content.ReadAsStreamAsync(cancellationToken);
-            var resultObject = await JsonParser.Parse<Dictionary<string,  IEnumerable<Guid>>>(resultStream);
+            var resultObject = await JsonParser.Parse<Dictionary<string,  IEnumerable<TagId>>>(resultStream);
             return resultObject;
         }
 

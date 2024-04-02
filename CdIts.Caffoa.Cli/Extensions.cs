@@ -49,26 +49,30 @@ public static class Extensions
         return schema.Type is "array";
     }
 
-    public static bool IsRealObject(this OpenApiSchema apiSchema, CaffoaConfig.EnumCreationMode mode)
+    public static bool IsRealObject(this OpenApiSchema apiSchema, CaffoaConfig.EnumCreationMode mode, bool useValueObjects)
     {
         if (!apiSchema.IsPrimitiveType() && !apiSchema.HasOnlyAdditionalProperties() && !apiSchema.IsArray())
             return true;
         if(apiSchema.CanBeEnum() && mode == CaffoaConfig.EnumCreationMode.Default)
             return true;
-        return false;
+        if (apiSchema.HasOnlyAdditionalProperties())
+            return false;
+        if (apiSchema.IsArray())
+            return false;
+        return useValueObjects;
     }
 
     public static string GetArrayType(this OpenApiSchema schema, Func<string, string> classNameFunc,
-        CaffoaConfig.EnumCreationMode enumMode)
+        CaffoaConfig.EnumCreationMode enumMode, bool useValueObjects)
     {
         var item = schema.Items;
-        if (!item.IsRealObject(enumMode))
+        if (!item.IsRealObject(enumMode, useValueObjects))
             item.Reference = null;
         if (item.Reference != null)
             return classNameFunc(item.Reference.Name());
         if (item.IsPrimitiveType())
             return item.TypeName();
-        var innerName = item.GetArrayType(classNameFunc, enumMode);
+        var innerName = item.GetArrayType(classNameFunc, enumMode, useValueObjects);
         return $"List<{innerName}>";
     }
 

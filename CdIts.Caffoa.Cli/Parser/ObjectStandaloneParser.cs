@@ -8,7 +8,7 @@ namespace CdIts.Caffoa.Cli.Parser;
 public class ObjectStandaloneParser : ObjectParser
 {
     public ObjectStandaloneParser(SchemaItem item, CaffoaConfig.EnumCreationMode enumMode,
-        Func<string, string> classNameGenerator, ILogger logger, bool nullableIsDefault) : base(item, enumMode, classNameGenerator, logger, nullableIsDefault)
+        Func<string, string> classNameGenerator, ILogger logger, bool nullableIsDefault, bool useValueObjects) : base(item, enumMode, classNameGenerator, logger, nullableIsDefault, useValueObjects)
     {
     }
 

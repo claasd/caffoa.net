@@ -16,18 +16,17 @@ public class SchemaItemFormatter
         _otherClasses = otherClasses;
     }
 
-    public object Description
+    public static string FormatDescription(string? desc)
     {
-        get
-        {
-            var description = "/// AUTOGENERED BY caffoa ///\n    ";
-            if (_item.Description is null)
-                return description;
-            var itemDesc = _item.Description.Trim().Replace("\n", "\n    /// ");
-            description += $"/// <summary>\n    /// {itemDesc}\n    /// </summary>\n    ";
+        var description = "/// AUTOGENERED BY caffoa ///\n    ";
+        if (desc is null)
             return description;
-        }
+        var itemDesc = desc.Trim().Replace("\n", "\n    /// ");
+        description += $"/// <summary>\n    /// {itemDesc}\n    /// </summary>\n    ";
+        return description;
     }
+
+    public string Description => FormatDescription(_item.Description);
 
     public string Parents(List<SchemaItem> allObjects)
     {

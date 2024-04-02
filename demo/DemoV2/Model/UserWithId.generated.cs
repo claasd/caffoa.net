@@ -20,7 +20,7 @@ namespace DemoV2.Model {
         /// A fancy string with description
         /// </summary>
         [JsonProperty("name", Required = Required.Always)]
-        public string Name { get; set; }
+        public FancyString Name { get; set; }
 
         [JsonProperty("address")]
         public Address Address { get; set; }
@@ -34,7 +34,7 @@ namespace DemoV2.Model {
         public ICollection<string> Emails { get; set; } = new List<string>();
 
         [JsonProperty("descriptions")]
-        public Dictionary<string, string> Descriptions { get; set; } = new Dictionary<string, string>();
+        public Dictionary<string, FancyString> Descriptions { get; set; } = new Dictionary<string, FancyString>();
 
         [JsonProperty("type", Required = Required.Always)]
         public TypeValue Type { get; set; } = TypeValue.Simple;
@@ -72,7 +72,7 @@ namespace DemoV2.Model {
             Address = other.Address?.ToAddress();
             Birthdate = other.Birthdate;
             Emails = other.Emails?.ToList();
-            Descriptions = other.Descriptions?.ToDictionary(entry => entry.Key, entry => entry.Value);
+            Descriptions = other.Descriptions?.ToDictionary(entry => entry.Key, entry => entry.Value?.ToFancyString());
             Type = (UserWithId.TypeValue)other.Type;
             Role = (UserWithId.RoleValue)other.Role;
             AgeGroup = other.AgeGroup;
@@ -88,7 +88,7 @@ namespace DemoV2.Model {
             Address = deepClone ? other.Address?.ToAddress() : other.Address;
             Birthdate = other.Birthdate;
             Emails = deepClone ? other.Emails?.ToList() : other.Emails;
-            Descriptions = deepClone ? other.Descriptions?.ToDictionary(entry => entry.Key, entry => entry.Value) : other.Descriptions;
+            Descriptions = deepClone ? other.Descriptions?.ToDictionary(entry => entry.Key, entry => entry.Value?.ToFancyString()) : other.Descriptions;
             Type = (UserWithId.TypeValue)other.Type;
             Role = (UserWithId.RoleValue)other.Role;
             AgeGroup = other.AgeGroup;
@@ -103,7 +103,7 @@ namespace DemoV2.Model {
         public bool Equals(UserWithId other) {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
-            var result = Name == other.Name && Address.Equals(other.Address) && Birthdate.Equals(other.Birthdate) && Emails.SequenceEqual(other.Emails) && Descriptions.SequenceEqual(other.Descriptions) && Type == other.Type && Role == other.Role && AgeGroup == other.AgeGroup && PreferredContactTime.Equals(other.PreferredContactTime) && LastSessionLength.Equals(other.LastSessionLength) && Id == other.Id && RegistrationDate.Equals(other.RegistrationDate) && Diffs.Equals(other.Diffs);
+            var result = Name.Equals(other.Name) && Address.Equals(other.Address) && Birthdate.Equals(other.Birthdate) && Emails.SequenceEqual(other.Emails) && Descriptions.SequenceEqual(other.Descriptions) && Type == other.Type && Role == other.Role && AgeGroup == other.AgeGroup && PreferredContactTime.Equals(other.PreferredContactTime) && LastSessionLength.Equals(other.LastSessionLength) && Id == other.Id && RegistrationDate.Equals(other.RegistrationDate) && Diffs.Equals(other.Diffs);
             if(result) _PartialEquals(other, ref result);
             return result;
         }

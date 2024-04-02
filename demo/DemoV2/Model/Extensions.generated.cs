@@ -45,7 +45,7 @@ namespace DemoV2.Model {
             item.Address = deepClone ? other.Address?.ToAddress() : other.Address;
             item.Birthdate = other.Birthdate;
             item.Emails = deepClone ? other.Emails?.ToList() : other.Emails;
-            item.Descriptions = deepClone ? other.Descriptions?.ToDictionary(entry => entry.Key, entry => entry.Value) : other.Descriptions;
+            item.Descriptions = deepClone ? other.Descriptions?.ToDictionary(entry => entry.Key, entry => entry.Value?.ToFancyString()) : other.Descriptions;
             item.Type = (User.TypeValue)other.Type;
             item.Role = (User.RoleValue)other.Role;
             item.AgeGroup = other.AgeGroup;
@@ -63,7 +63,7 @@ namespace DemoV2.Model {
             Address = deepClone ? other.Address?.ToAddress() : other.Address,
             Birthdate = other.Birthdate,
             Emails = deepClone ? other.Emails?.ToList() : other.Emails,
-            Descriptions = deepClone ? other.Descriptions?.ToDictionary(entry => entry.Key, entry => entry.Value) : other.Descriptions,
+            Descriptions = deepClone ? other.Descriptions?.ToDictionary(entry => entry.Key, entry => entry.Value?.ToFancyString()) : other.Descriptions,
             Type = (User.TypeValue)other.Type,
             Role = (User.RoleValue)other.Role,
             AgeGroup = other.AgeGroup,
@@ -128,7 +128,7 @@ namespace DemoV2.Model {
             item.Address = deepClone ? other.Address?.ToAddress() : other.Address;
             item.Birthdate = other.Birthdate;
             item.Emails = deepClone ? other.Emails?.ToList() : other.Emails;
-            item.Descriptions = deepClone ? other.Descriptions?.ToDictionary(entry => entry.Key, entry => entry.Value) : other.Descriptions;
+            item.Descriptions = deepClone ? other.Descriptions?.ToDictionary(entry => entry.Key, entry => entry.Value?.ToFancyString()) : other.Descriptions;
             item.Type = (UserWithId.TypeValue)other.Type;
             item.Role = (UserWithId.RoleValue)other.Role;
             item.AgeGroup = other.AgeGroup;
@@ -149,7 +149,7 @@ namespace DemoV2.Model {
             Address = deepClone ? other.Address?.ToAddress() : other.Address,
             Birthdate = other.Birthdate,
             Emails = deepClone ? other.Emails?.ToList() : other.Emails,
-            Descriptions = deepClone ? other.Descriptions?.ToDictionary(entry => entry.Key, entry => entry.Value) : other.Descriptions,
+            Descriptions = deepClone ? other.Descriptions?.ToDictionary(entry => entry.Key, entry => entry.Value?.ToFancyString()) : other.Descriptions,
             Type = (UserWithId.TypeValue)other.Type,
             Role = (UserWithId.RoleValue)other.Role,
             AgeGroup = other.AgeGroup,
@@ -189,7 +189,7 @@ namespace DemoV2.Model {
             item.Address = deepClone ? other.Address?.ToAddress() : other.Address;
             item.Birthdate = other.Birthdate;
             item.Emails = deepClone ? other.Emails?.ToList() : other.Emails;
-            item.Descriptions = deepClone ? other.Descriptions?.ToDictionary(entry => entry.Key, entry => entry.Value) : other.Descriptions;
+            item.Descriptions = deepClone ? other.Descriptions?.ToDictionary(entry => entry.Key, entry => entry.Value?.ToFancyString()) : other.Descriptions;
             item.Type = (User.TypeValue)other.Type;
             item.Role = (User.RoleValue)other.Role;
             item.AgeGroup = other.AgeGroup;
@@ -207,7 +207,7 @@ namespace DemoV2.Model {
             Address = deepClone ? other.Address?.ToAddress() : other.Address,
             Birthdate = other.Birthdate,
             Emails = deepClone ? other.Emails?.ToList() : other.Emails,
-            Descriptions = deepClone ? other.Descriptions?.ToDictionary(entry => entry.Key, entry => entry.Value) : other.Descriptions,
+            Descriptions = deepClone ? other.Descriptions?.ToDictionary(entry => entry.Key, entry => entry.Value?.ToFancyString()) : other.Descriptions,
             Type = (UserWithId.TypeValue)other.Type,
             Role = (UserWithId.RoleValue)other.Role,
             AgeGroup = other.AgeGroup,
@@ -241,7 +241,7 @@ namespace DemoV2.Model {
             item.Address = deepClone ? other.Address?.ToAddress() : other.Address;
             item.Birthdate = other.Birthdate;
             item.Emails = deepClone ? other.Emails?.ToList() : other.Emails;
-            item.Descriptions = deepClone ? other.Descriptions?.ToDictionary(entry => entry.Key, entry => entry.Value) : other.Descriptions;
+            item.Descriptions = deepClone ? other.Descriptions?.ToDictionary(entry => entry.Key, entry => entry.Value?.ToFancyString()) : other.Descriptions;
             item.Type = (UserWithId.TypeValue)other.Type;
             item.Role = (UserWithId.RoleValue)other.Role;
             item.AgeGroup = other.AgeGroup;
@@ -259,7 +259,7 @@ namespace DemoV2.Model {
             Address = deepClone ? other.Address?.ToAddress() : other.Address,
             Birthdate = other.Birthdate,
             Emails = deepClone ? other.Emails?.ToList() : other.Emails,
-            Descriptions = deepClone ? other.Descriptions?.ToDictionary(entry => entry.Key, entry => entry.Value) : other.Descriptions,
+            Descriptions = deepClone ? other.Descriptions?.ToDictionary(entry => entry.Key, entry => entry.Value?.ToFancyString()) : other.Descriptions,
             Type = (User.TypeValue)other.Type,
             Role = (User.RoleValue)other.Role,
             AgeGroup = other.AgeGroup,

@@ -26,12 +26,14 @@ public class ModelGenerator
         Directory.CreateDirectory(_service.Model!.TargetFolder);
         var interfaces = objects.Where(o => o.Interface != null).ToList();
         var classes = objects.Where(o => o.Interface == null && o.Type == SchemaItem.ObjectType.Regular).ToList();
+        var valueObjects = objects.Where(o=> o.Type == SchemaItem.ObjectType.ValueObject).ToList();
         var enumClasses = objects
             .Where(o => o.Type is SchemaItem.ObjectType.StringEnum).ToList();
         var enumProperties = objects.Where(o => o.Properties != null && o.Properties.Exists(p => p.Enums.Any())).ToList();
         enumProperties.ForEach(WriteEnumClasses);
         enumClasses.ForEach(WriteEnumClass);
         interfaces.ForEach(WriteModelInterface);
+        valueObjects.ForEach(WriteValueModelClass);
 
         var allKnownClasses = otherKnownObjects.Concat(classes).ToList();
         var allKnownEnumClasses = enumClasses.Concat(otherKnownObjects.Where(o => o.Type == SchemaItem.ObjectType.StringEnum)).ToList();
@@ -95,6 +97,20 @@ public class ModelGenerator
         parameters["PROPERTIES"] = FormatProperties(item, enumClasses);
         parameters["ADDITIONAL_PROPS"] = formatter.GenericAdditionalProperties();
         parameters["DESCRIPTION"] = formatter.Description;
+        var formatted = file.FormatDict(parameters);
+        File.WriteAllText(Path.Combine(_service.Model.TargetFolder, fileName), formatted.ToSystemNewLine());
+    }
+
+    private void WriteValueModelClass(SchemaItem item)
+    {
+        var file = Templates.GetTemplate("ValueModelTemplate.tpl");
+        var fileName = $"{item.ClassName}.generated.cs";
+        var parameters = new Dictionary<string, object>();
+        parameters["NAMESPACE"] = _service.Model!.Namespace;
+        parameters["NAME"] = item.ClassName;
+        parameters["RAWNAME"] = item.Name;
+        parameters["TYPE"] = item.ValueObjectType!;
+        parameters["DESCRIPTION"] = SchemaItemFormatter.FormatDescription(item.Description);
         var formatted = file.FormatDict(parameters);
         File.WriteAllText(Path.Combine(_service.Model.TargetFolder, fileName), formatted.ToSystemNewLine());
     }

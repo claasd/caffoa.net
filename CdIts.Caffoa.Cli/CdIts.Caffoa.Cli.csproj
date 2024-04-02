@@ -51,6 +51,7 @@
         <EmbeddedResource Include="data\ModelPropertyTemplate.tpl" />
         <EmbeddedResource Include="data\ModelTemplate.tpl" />
         <EmbeddedResource Include="data\ModelExtensionTemplate.tpl" />
+        <EmbeddedResource Include="data\ValueModelTemplate.tpl" />
     </ItemGroup>
 
 </Project>

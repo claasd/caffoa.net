@@ -14,7 +14,7 @@ namespace DemoV2.Model {
     public sealed  partial class TagInfos : IEquatable<TagInfos> {
         public const string TagInfosObjectName = "tagInfos";
         [JsonProperty("user")]
-        public Dictionary<string, List<Guid>> User { get; set; } = new Dictionary<string, List<Guid>>();
+        public Dictionary<string, List<TagId>> User { get; set; } = new Dictionary<string, List<TagId>>();
 
         [JsonExtensionData]
         public Dictionary<string, object> AdditionalProperties;

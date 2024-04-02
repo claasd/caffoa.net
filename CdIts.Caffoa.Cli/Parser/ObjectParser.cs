@@ -15,15 +15,17 @@ public abstract class ObjectParser
     private readonly bool _nullableIsDefault;
     protected readonly SchemaItem Item;
     private readonly CaffoaConfig.EnumCreationMode _enumMode;
+    private readonly bool _useValueObjects;
 
     protected ObjectParser(SchemaItem item, CaffoaConfig.EnumCreationMode enumMode,
-        Func<string, string> classNameGenerator, ILogger logger, bool nullableIsDefault)
+        Func<string, string> classNameGenerator, ILogger logger, bool nullableIsDefault, bool useValueObjects)
     {
         Item = item;
         _enumMode = enumMode;
         ClassNameFunc = classNameGenerator;
         _logger = logger;
         _nullableIsDefault = nullableIsDefault;
+        _useValueObjects = useValueObjects;
     }
 
     public SchemaItem Parse(OpenApiSchema schema)
@@ -80,7 +82,7 @@ public abstract class ObjectParser
         property.Alias = ParseAliasAttribute(schema.Extensions);
         property.Converter = ParseCustomConverter(schema.Extensions, name);
 
-        if (!schema.IsRealObject(_enumMode))
+        if (!schema.IsRealObject(_enumMode, _useValueObjects))
         {
             schema.Reference = null;
         }
@@ -96,7 +98,7 @@ public abstract class ObjectParser
         else if (schema.IsArray())
         {
             property.IsArray = true;
-            property.TypeName = schema.GetArrayType(ClassNameFunc, _enumMode);
+            property.TypeName = schema.GetArrayType(ClassNameFunc, _enumMode, _useValueObjects);
             property.InnerTypeIsOtherSchema = schema.Items.Reference != null && !schema.Items.IsPrimitiveType();
             if (schema.Items.IsPrimitiveType() && schema.Default is OpenApiArray defaultArray)
             {
@@ -135,7 +137,7 @@ public abstract class ObjectParser
         }
         else if (schema.AdditionalProperties.IsArray())
         {
-            var arrayType = schema.AdditionalProperties.GetArrayType(ClassNameFunc, _enumMode);
+            var arrayType = schema.AdditionalProperties.GetArrayType(ClassNameFunc, _enumMode, _useValueObjects);
             property.TypeName = $"List<{arrayType}>";
             property.InnerTypeIsOtherSchema = false;
         }

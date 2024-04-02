@@ -5,7 +5,8 @@ public class SchemaItem
     public enum ObjectType
     {
         Regular,
-        StringEnum
+        StringEnum,
+        ValueObject
     };
     public SchemaItem(string name, string className)
     {
@@ -19,7 +20,7 @@ public class SchemaItem
     public string Name { get; }
     public string ClassName { get; }
     public InterfaceModel? Interface { get; set; }
-    public List<PropertyData>? Properties { get; set; }
+    public List<PropertyData>? Properties { get; set; } = new();
     public string? Parent { get; set; }
     public string? Description { get; set; }
     public bool AdditionalPropertiesAllowed { get; set; }
@@ -30,4 +31,5 @@ public class SchemaItem
     public bool NullableEnum { get; set; }
     public bool? GenerateEqualsOverload { get; set; }
     public bool? GenerateComparerOverload { get; set; }
+    public string? ValueObjectType { get; set; }
 }

@@ -19,7 +19,7 @@ namespace DemoV2.Model {
         /// A fancy string with description
         /// </summary>
         [JsonProperty("name", Required = Required.Always)]
-        public string Name { get; set; }
+        public FancyString Name { get; set; }
 
         [JsonProperty("address")]
         public Address Address { get; set; }
@@ -33,7 +33,7 @@ namespace DemoV2.Model {
         public ICollection<string> Emails { get; set; } = new List<string>();
 
         [JsonProperty("descriptions")]
-        public Dictionary<string, string> Descriptions { get; set; } = new Dictionary<string, string>();
+        public Dictionary<string, FancyString> Descriptions { get; set; } = new Dictionary<string, FancyString>();
 
         [JsonProperty("type", Required = Required.Always)]
         public TypeValue Type { get; set; } = TypeValue.Simple;
@@ -62,7 +62,7 @@ namespace DemoV2.Model {
             Address = other.Address?.ToAddress();
             Birthdate = other.Birthdate;
             Emails = other.Emails?.ToList();
-            Descriptions = other.Descriptions?.ToDictionary(entry => entry.Key, entry => entry.Value);
+            Descriptions = other.Descriptions?.ToDictionary(entry => entry.Key, entry => entry.Value?.ToFancyString());
             Type = (User.TypeValue)other.Type;
             Role = (User.RoleValue)other.Role;
             AgeGroup = other.AgeGroup;
@@ -76,7 +76,7 @@ namespace DemoV2.Model {
         public bool Equals(User other) {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
-            var result = Name == other.Name && Address.Equals(other.Address) && Birthdate.Equals(other.Birthdate) && Emails.SequenceEqual(other.Emails) && Descriptions.SequenceEqual(other.Descriptions) && Type == other.Type && Role == other.Role && AgeGroup == other.AgeGroup && PreferredContactTime.Equals(other.PreferredContactTime) && LastSessionLength.Equals(other.LastSessionLength);
+            var result = Name.Equals(other.Name) && Address.Equals(other.Address) && Birthdate.Equals(other.Birthdate) && Emails.SequenceEqual(other.Emails) && Descriptions.SequenceEqual(other.Descriptions) && Type == other.Type && Role == other.Role && AgeGroup == other.AgeGroup && PreferredContactTime.Equals(other.PreferredContactTime) && LastSessionLength.Equals(other.LastSessionLength);
             if(result) _PartialEquals(other, ref result);
             return result;
         }
