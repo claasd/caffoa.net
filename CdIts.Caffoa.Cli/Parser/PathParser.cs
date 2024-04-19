@@ -96,6 +96,13 @@ public class PathParser
         }
 
         var (type, content) = body.Content.First();
+        if (type == "*/*")
+        {
+            _logger.LogWarning(
+                $"Found requestBody type {type}. Assuming application/json type");
+            type = "application/json";
+        }
+
         if (type.ToLower() != "application/json")
         {
             _logger.LogWarning(
@@ -154,6 +161,7 @@ public class PathParser
             if (result is OpenApiResponse r)
                 return r;
         }
+
         return response;
     }
 
@@ -171,6 +179,13 @@ public class PathParser
         if (responseItem.Content.Count == 0)
             return response;
         var (type, content) = responseItem.Content.First();
+        if (type == "*/*")
+        {
+            _logger.LogWarning(
+                $"Found requestBody type {type}. Assuming application/json type");
+            type = "application/json";
+        }
+
         if (type.ToLower() != "application/json")
         {
             _logger.LogWarning(
@@ -220,7 +235,6 @@ public class PathParser
                 }
                 else if (schema.IsArray())
                 {
-                    
                     var items = ObjectParser.ResolveExternal(schema.Items);
                     if (items.Reference != null && items.CanBeEnum() &&
                         _config.GetEnumCreationMode() == CaffoaConfig.EnumCreationMode.Default)
@@ -228,7 +242,8 @@ public class PathParser
                         innerType = _classNameFunc(items.Reference.Name());
                         type = $"ICollection<{innerType}>";
                         arrayType = ParameterArrayType.EnumArray;
-                    } else if (items.Reference is null && items.Type == "string")
+                    }
+                    else if (items.Reference is null && items.Type == "string")
                     {
                         arrayType = ParameterArrayType.StringArray;
                         innerType = "string";
@@ -239,6 +254,7 @@ public class PathParser
                         type = "string";
                     }
                 }
+
                 var result = new ParameterObject(p.Name, type, p.Description,
                     p.In == ParameterLocation.Query)
                 {
