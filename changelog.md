@@ -1,5 +1,10 @@
 # caffoa changelog
 
+## 4.4.0
+* splitByTag now works for clients
+* fix a rare case where a `.DeepClone()` was appended to a dictionary of additional properties.
+* default is nullable now sets add `?` at the end of value objects if `nullableIsDefault` is set to true.
+
 ## 4.3.0
 * new configuration option: `nullableIsDefault`. If set to true, all non-required properties with no will be treated as nullable, and the default value will be null if no default is defined. the option can be overriden either way by setting `x-caffoa-nullable` to true or false on an schema item.
 

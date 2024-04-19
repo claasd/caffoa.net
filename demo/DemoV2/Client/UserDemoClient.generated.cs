@@ -23,7 +23,7 @@ using DemoV2.Model;
 namespace DemoV2.Client
 {
     /// AUTO GENERATED CLASS
-    public partial class DemoClient
+    public partial class UserDemoClient
     {
         private string _baseUri = null!;
         internal string BaseUri {
@@ -35,7 +35,7 @@ namespace DemoV2.Client
         internal ICaffoaParseErrorHandler ErrorHandler  { get; }
         internal ICaffoaJsonParser JsonParser { get; }
         internal ICaffoaJsonSerializer JsonSerializer { get; }
-        private DemoClient(string baseUri, HttpClient? client = null, ILogger? logger = null, ICaffoaParseErrorHandler? errorHandler = null, ICaffoaJsonParser? jsonParser = null, ICaffoaJsonSerializer? jsonSerializer = null) {
+        private UserDemoClient(string baseUri, HttpClient? client = null, ILogger? logger = null, ICaffoaParseErrorHandler? errorHandler = null, ICaffoaJsonParser? jsonParser = null, ICaffoaJsonSerializer? jsonSerializer = null) {
             BaseUri = baseUri;
             Client = client ?? new HttpClient();
             Logger = logger ?? NullLogger.Instance;
@@ -282,25 +282,6 @@ namespace DemoV2.Client
             }
             await using var resultStream = await httpResult.Content.ReadAsStreamAsync(cancellationToken);
             var resultObject = await JsonParser.Parse<List<User>>(resultStream);
-            return resultObject;
-        }
-
-        /// <summary>
-        /// start a long running function via durable functions
-        /// 202 -> started long running function
-        /// </summary>
-        public async Task<LongRunningfunctionStatus> LongRunningFunctionAsync(Guid id, CancellationToken cancellationToken = default) {
-            var uriBuilder = new UriBuilder(Invariant($"{BaseUri}startLongRunningFunction/{id}"));
-            using var httpRequest = new HttpRequestMessage(HttpMethod.Post, uriBuilder.ToString());
-            PrepareRequest(httpRequest);
-            using var httpResult = await Client.SendAsync(httpRequest, cancellationToken);
-            ProcessResponse(httpResult);
-            if(!httpResult.IsSuccessStatusCode) {
-                var errorData = await httpResult.Content.ReadAsStringAsync(cancellationToken);
-                throw new CaffoaWebClientException((int)httpResult.StatusCode, errorData);
-            }
-            await using var resultStream = await httpResult.Content.ReadAsStreamAsync(cancellationToken);
-            var resultObject = await JsonParser.Parse<LongRunningfunctionStatus>(resultStream);
             return resultObject;
         }
 

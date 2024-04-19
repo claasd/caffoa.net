@@ -14,7 +14,7 @@ public class ClientConfig
         get => _name ?? throw new ConfigurationMissingException("Missing 'name' of configuration 'function'");
         set => _name = value;
     }
-    
+
     public string Namespace
     {
         get => _ns ?? Regex.Replace(TargetFolder.Trim('/', '.', ' '), @"\W+", ".");
@@ -27,7 +27,17 @@ public class ClientConfig
                throw new ConfigurationMissingException("Missing 'targetFolder' of configuration 'function'");
         set => _targetFolder = value;
     }
-
+    public string[]? IncludeTags { get; set; }
     public string ConstructorVisibility { get; set; } = "public";
     public string FieldVisibility { get; set; } = "public";
+
+    public string GetName(string prefix)
+    {
+        var name = Name;
+        if (name.Contains("{Tag}"))
+            name = name.Replace("{Tag}", prefix);
+        else
+            name = $"{prefix}{name}";
+        return name;
+    }
 }

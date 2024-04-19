@@ -280,8 +280,14 @@ public class ModelGenerator
             else
             {
                 format["DEFAULT"] = formatter.Default(false, enumClasses, _config.ConstructorOnRequiredObjects is not false);
-                if (enumClasses.Find(c => c.ClassName == type)?.NullableEnum ?? false)
-                    format["TYPE"] = type + "?";
+                var enumType = enumClasses.Find(c => c.ClassName == type);
+                if (enumType != null)
+                {
+                    if(enumType.NullableEnum)
+                        format["TYPE"] = type + "?";
+                }
+                else if(property is { Nullable: true, IsOtherSchema: false, IsArray: false, IsMap: false } && property.TypeName != "string")
+                    format["TYPE"] = type.TrimEnd('?') + "?";
                 var file = Templates.GetTemplate("ModelPropertyTemplate.tpl");
                 var formatted = file.FormatDict(format);
                 properties.Add(formatted);

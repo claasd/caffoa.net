@@ -23,6 +23,22 @@ public class ClientGenerator
 
     public void GenerateClient(List<EndPointModel> endpoints)
     {
+        if (_config.SplitByTag is true)
+        {
+            var tags = endpoints.Select(e => e.Tag).Distinct();
+            foreach (var tag in tags)
+            {
+                if(_clientConfig.IncludeTags is null || _clientConfig.IncludeTags.Contains(tag))
+                    GenerateClient(endpoints.Where(e => e.Tag == tag).ToList(), tag.ToObjectName());
+            }
+        }
+        else
+        {
+            GenerateClient(endpoints, "");
+        }
+    }
+    public void GenerateClient(List<EndPointModel> endpoints, string namePrefix)
+    {
         var imports = new List<string>();
         endpoints.ForEach(e => imports.AddRange(e.Imports));
         if (_config.Imports != null)
@@ -32,17 +48,18 @@ public class ClientGenerator
         if (endpoints.Find(e => e.RequestBodyType is SelectionBodyModel) != null &&
             (_config.Flavor ?? CaffoaConfig.GenerationFlavor.JsonNet) is CaffoaConfig.GenerationFlavor.JsonNet)
             imports.Add("Newtonsoft.Json.Linq");
+        var name = _clientConfig.GetName(namePrefix);
         Directory.CreateDirectory(_clientConfig.TargetFolder);
         var format = new Dictionary<string, object>();
         format["NAMESPACE"] = _clientConfig.Namespace;
-        format["CLASSNAME"] = _clientConfig.Name;
+        format["CLASSNAME"] = name;
         format["CONSTRUCTOR_VISIBILITY"] = _clientConfig.ConstructorVisibility;
         format["FIELD_VISIBILITY"] = _clientConfig.FieldVisibility;
         format["IMPORTS"] = string.Join("", imports.Distinct().Select(i => $"using {i};\n"));
         format["METHODS"] = GenerateMethods(endpoints);
         var file = Templates.GetTemplate("ClientTemplate.tpl");
         var formatted = file.FormatDict(format);
-        File.WriteAllText(Path.Combine(_clientConfig.TargetFolder, $"{_clientConfig.Name}.generated.cs"),
+        File.WriteAllText(Path.Combine(_clientConfig.TargetFolder, $"{name}.generated.cs"),
             formatted.ToSystemNewLine());
     }
 

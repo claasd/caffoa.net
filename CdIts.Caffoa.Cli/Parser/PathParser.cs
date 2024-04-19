@@ -186,7 +186,16 @@ public class PathParser
             return response;
         }
 
-        response.TypeName = ParseType(schema);
+        try
+        {
+            response.TypeName = ParseType(schema);
+        }
+        catch (CaffoaParserException e)
+        {
+            _logger.LogWarning(e.Message);
+            response.Unknown = true;
+        }
+
         return response;
     }
 
