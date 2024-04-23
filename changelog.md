@@ -4,7 +4,10 @@
 * splitByTag now works for clients
 * fix a rare case where a `.DeepClone()` was appended to a dictionary of additional properties.
 * default is nullable now sets add `?` at the end of value objects if `nullableIsDefault` is set to true.
-* if content type */* is found, application/json is assumed
+* allow to specify an array of content types that should be assumed to handle Json content
+* fixes to Equals methods for nullable references, arrays and maps
+* Clients now use the content tyoe that was defined in the openApi instead of always using `application/json`
+
 ## 4.3.0
 * new configuration option: `nullableIsDefault`. If set to true, all non-required properties with no will be treated as nullable, and the default value will be null if no default is defined. the option can be overriden either way by setting `x-caffoa-nullable` to true or false on an schema item.
 

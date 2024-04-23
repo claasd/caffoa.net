@@ -12,12 +12,16 @@ public class PathParser
     private readonly CaffoaConfig _config;
     private readonly Func<string, string> _classNameFunc;
     private readonly ILogger _logger;
+    private readonly List<string> _contentTypes;
 
     public PathParser(CaffoaConfig config, Func<string, string> classNameFunc, ILogger logger)
     {
         _config = config;
         _classNameFunc = classNameFunc;
         _logger = logger;
+        _contentTypes = new List<string> {"application/json"};
+        if(config.JsonContentTypes != null)
+            _contentTypes.AddRange(config.JsonContentTypes);
     }
 
     public List<EndPointModel> Parse(string path, OpenApiPathItem item)
@@ -55,7 +59,7 @@ public class PathParser
                         requestConfig.Filter.Contains(operation, operationItem));
                     if (typeOverride != null)
                     {
-                        result.RequestBodyType = new SimpleBodyModel(typeOverride.Type);
+                        result.RequestBodyType = new SimpleBodyModel(typeOverride.Type, typeOverride.ContentType);
                         if (typeOverride.Import != null)
                             result.Imports.Add(typeOverride.Import);
                     }
@@ -96,29 +100,22 @@ public class PathParser
         }
 
         var (type, content) = body.Content.First();
-        if (type == "*/*")
+        if (!_contentTypes.Contains(type, StringComparer.OrdinalIgnoreCase))
         {
             _logger.LogWarning(
-                $"Found requestBody type {type}. Assuming application/json type");
-            type = "application/json";
-        }
-
-        if (type.ToLower() != "application/json")
-        {
-            _logger.LogWarning(
-                $"Found requestBody type {type}. Only application/json is currently supported for content, found {type.ToLower()}. Stream is used for body");
+                $"Found requestBody type {type}. Only application/json and additionally configured content types are currently supported for content, found {type.ToLower()}. Stream is used for body");
             return new NullBodyModel();
         }
-
+        
         if (content.Schema is null)
-            return new NullBodyModel();
+            return new NullBodyModel(type);
         if (content.Schema.OneOf.Count > 0)
         {
             var discriminator = content.Schema.Discriminator;
             if (discriminator is null)
                 throw new CaffoaParserException("Need discriminator in oneOf");
             var mapping = discriminator.Mapping.ToDictionary(i => i.Value, i => i.Key);
-            var result = new SelectionBodyModel(discriminator.PropertyName);
+            var result = new SelectionBodyModel(discriminator.PropertyName, type);
             if (content.Schema.OneOf.Any(s => s.Reference is null))
                 throw new CaffoaParserException("Cannot have oneOf without ref types");
 
@@ -133,7 +130,7 @@ public class PathParser
             return result;
         }
 
-        return new SimpleBodyModel(ParseType(content.Schema));
+        return new SimpleBodyModel(ParseType(content.Schema), type);
     }
 
     private string ParseType(OpenApiSchema schema)
@@ -179,17 +176,10 @@ public class PathParser
         if (responseItem.Content.Count == 0)
             return response;
         var (type, content) = responseItem.Content.First();
-        if (type == "*/*")
+        if (!_contentTypes.Contains(type, StringComparer.OrdinalIgnoreCase))
         {
             _logger.LogWarning(
-                $"Found requestBody type {type}. Assuming application/json type");
-            type = "application/json";
-        }
-
-        if (type.ToLower() != "application/json")
-        {
-            _logger.LogWarning(
-                $"found content type {type} for response. Only application/json is currently supported for objects. Using IActionResult as return value");
+                $"found content type {type} for response. Only application/json and additionally configured content types are currently supported for objects. Using IActionResult as return value");
             response.Unknown = true;
             return response;
         }

@@ -154,16 +154,19 @@ public class ModelGenerator
         {
             var isEnum = itemProperty.CanBeEnum() || enumClasses.Exists(ec=>ec.ClassName == itemProperty.TypeName);
             isEnum = isEnum && _config.GetEnumCreationMode() == CaffoaConfig.EnumCreationMode.Default;
-            builder.Append(first ? "var result = " : " && ");
+            builder.Append(first ? "var result = " : "\n                && ");
+            var name = itemProperty.Name.ToObjectName();
             if (itemProperty.IsArray || itemProperty.IsMap)
-                builder.Append($"{itemProperty.Name.ToObjectName()}.SequenceEqual(other.{itemProperty.Name.ToObjectName()})");
-            else if(itemProperty.TypeName.TrimEnd('?') is "string" or "int" or "double" or "decimal" or "boolean" or "real" || isEnum)
-                builder.Append($"{itemProperty.Name.ToObjectName()} == other.{itemProperty.Name.ToObjectName()}");
+            {
+                builder.Append($"({name}?.SequenceEqual(other.{name}) ?? other.{name} is null)");
+            }
+            else if(itemProperty.TypeName.TrimEnd('?') is "string" or "int" or "double" or "decimal" or "boolean" or "real" or "long" or "bool" || isEnum)
+                builder.Append($"{name} == other.{name}");
             else
-                builder.Append($"{itemProperty.Name.ToObjectName()}.Equals(other.{itemProperty.Name.ToObjectName()})");
-            
+                builder.Append($"({name}?.Equals(other.{name}) ?? other.{name} is null)");
+
             var cast = isEnum && !itemProperty.IsMap && !itemProperty.IsArray ? "(int) " : "";
-            hashBuilder.Append($"            hashCode.Add({cast}{itemProperty.Name.ToObjectName()});\n");
+            hashBuilder.Append($"            hashCode.Add({cast}{name});\n");
             first = false;
         }
 

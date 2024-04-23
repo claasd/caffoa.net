@@ -224,7 +224,8 @@ public class ClientGenerator
             return "";
         if (endpoint.RequestBodyType is NullBodyModel)
             return "\n            httpRequest.Content = new StreamContent(stream);";
+        var contentType = endpoint.RequestBodyType.ContentType ?? "application/json";
         return
-            "\n            httpRequest.Content = new StringContent(JsonSerializer.JsonString(payload), Encoding.UTF8, MediaTypeNames.Application.Json);";
+            $"\n            httpRequest.Content = new StringContent(JsonSerializer.JsonString(payload), Encoding.UTF8, \"{contentType}\");";
     }
 }

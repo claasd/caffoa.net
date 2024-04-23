@@ -11,6 +11,7 @@ public class RequestBodyTypeConfig
         get => _type ?? throw new ConfigurationMissingException("'type' is required when specifying 'requestBodyType'");
         set => _type = value;
     }
+    public string ContentType { get; set; } = "application/json";
 
     public string? Import { get; set; }
     public FilterConfig Filter { get; set; } = new();

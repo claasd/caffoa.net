@@ -75,6 +75,8 @@ public class CaffoaConfig
     public bool? ConstructorOnRequiredObjects { get; set; }
     public GenerationFlavor? Flavor { get; set; }
 
+    public string[]? JsonContentTypes { get; set; }
+    
     public CaffoaGlobalConfig MergedWith(CaffoaGlobalConfig general)
     {
         return new CaffoaGlobalConfig()
@@ -115,7 +117,8 @@ public class CaffoaConfig
             GenerateEqualsMethods = GenerateEqualsMethods ?? general.GenerateEqualsMethods,
             GenerateCompareOverloads = GenerateCompareOverloads ?? general.GenerateCompareOverloads,
             SealClassesWithEqualsMethods = SealClassesWithEqualsMethods ?? general.SealClassesWithEqualsMethods,
-            NullableIsDefault = NullableIsDefault ?? general.NullableIsDefault
+            NullableIsDefault = NullableIsDefault ?? general.NullableIsDefault,
+            JsonContentTypes = JsonContentTypes ?? general.JsonContentTypes
         };
     }
 }
