@@ -28,6 +28,7 @@ public class ClientConfig
         set => _targetFolder = value;
     }
     public string[]? IncludeTags { get; set; }
+    public bool? SplitByTag { get; set; }
     public string ConstructorVisibility { get; set; } = "public";
     public string FieldVisibility { get; set; } = "public";
 

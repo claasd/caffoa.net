@@ -109,6 +109,9 @@ public class PathParser
         
         if (content.Schema is null)
             return new NullBodyModel(type);
+        var schemaType = ParseType(content.Schema);
+        if(schemaType =="byte[]")
+            return new NullBodyModel(type);
         if (content.Schema.OneOf.Count > 0)
         {
             var discriminator = content.Schema.Discriminator;
@@ -130,7 +133,7 @@ public class PathParser
             return result;
         }
 
-        return new SimpleBodyModel(ParseType(content.Schema), type);
+        return new SimpleBodyModel(schemaType, type);
     }
 
     private string ParseType(OpenApiSchema schema)
@@ -200,7 +203,8 @@ public class PathParser
             _logger.LogWarning(e.Message);
             response.Unknown = true;
         }
-
+        if(response.TypeName == "byte[]")
+            response.Unknown = true;
         return response;
     }
 

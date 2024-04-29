@@ -83,6 +83,7 @@ public static class Extensions
             "string" when format is "date-time" => $"DateTimeOffset{suffix}",
             "string" when format is "date" => $"DateOnly{suffix}",
             "string" when format is "time" => $"TimeOnly{suffix}",
+            "string" when format is "byte" => $"byte[]",
             "string" when format is "duration" => $"TimeSpan{suffix}",
             "integer" when format == "int64" => $"long{suffix}",
             "integer" when format == "uint64" => $"ulong{suffix}",

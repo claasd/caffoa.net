@@ -162,6 +162,8 @@ public class ModelGenerator
             }
             else if(itemProperty.TypeName.TrimEnd('?') is "string" or "int" or "double" or "decimal" or "boolean" or "real" or "long" or "bool" || isEnum)
                 builder.Append($"{name} == other.{name}");
+            else if(itemProperty.TypeName is "DateOnly" or "TimeOnly" or "DateTimeOffset" or "Guid" or "TimeSpan")
+                builder.Append($"{name} == other.{name}");
             else
                 builder.Append($"({name}?.Equals(other.{name}) ?? other.{name} is null)");
 

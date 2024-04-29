@@ -1,7 +1,12 @@
 # caffoa changelog
 
+## 4.4.1
+* splitByTag can now be defined in the client config, to have different values for server and client
+* Fix equals methods for nun-nullable Value types (Guid, DateOnly, TimeOnly, DateTimeOffset, TimeSpan)
+
 ## 4.4.0
 * splitByTag now works for clients
+* for clients, the tags to include can be specified
 * fix a rare case where a `.DeepClone()` was appended to a dictionary of additional properties.
 * default is nullable now sets add `?` at the end of value objects if `nullableIsDefault` is set to true.
 * allow to specify an array of content types that should be assumed to handle Json content

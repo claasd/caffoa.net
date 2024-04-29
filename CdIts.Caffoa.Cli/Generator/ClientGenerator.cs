@@ -23,12 +23,12 @@ public class ClientGenerator
 
     public void GenerateClient(List<EndPointModel> endpoints)
     {
-        if (_config.SplitByTag is true)
+        if (_clientConfig.SplitByTag ?? _config.SplitByTag is true)
         {
             var tags = endpoints.Select(e => e.Tag).Distinct();
             foreach (var tag in tags)
             {
-                if(_clientConfig.IncludeTags is null || _clientConfig.IncludeTags.Contains(tag))
+                if(_clientConfig.IncludeTags is null || _clientConfig.IncludeTags.Length == 0 || _clientConfig.IncludeTags.Contains(tag))
                     GenerateClient(endpoints.Where(e => e.Tag == tag).ToList(), tag.ToObjectName());
             }
         }

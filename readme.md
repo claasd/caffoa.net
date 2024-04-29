@@ -284,6 +284,8 @@ services:
       targetFolder: ./output/Client
       constructorVisibility: public
       fieldVisibility: public
+      splitByTag: null # if set to true of false, this will override the global setting when generating clients
+      IncludeTags: [] # if set, only paths with these tags will be included in the client
 ```
 
 # Typed parameters and returns
