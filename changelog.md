@@ -1,6 +1,6 @@
 # caffoa changelog
 
-## 4.4.1
+## 4.4.2
 * fix regression from 4.4.0 for oneOf body models wrongly reported as unsupported complex types
 
 ## 4.4.1
