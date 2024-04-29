@@ -76,7 +76,16 @@ namespace DemoV2.Model {
         public bool Equals(User other) {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
-            var result = Name == other.Name && Address.Equals(other.Address) && Birthdate.Equals(other.Birthdate) && Emails.SequenceEqual(other.Emails) && Descriptions.SequenceEqual(other.Descriptions) && Type == other.Type && Role == other.Role && AgeGroup == other.AgeGroup && PreferredContactTime.Equals(other.PreferredContactTime) && LastSessionLength.Equals(other.LastSessionLength);
+            var result = Name == other.Name
+                && (Address?.Equals(other.Address) ?? other.Address is null)
+                && (Birthdate?.Equals(other.Birthdate) ?? other.Birthdate is null)
+                && (Emails?.SequenceEqual(other.Emails) ?? other.Emails is null)
+                && (Descriptions?.SequenceEqual(other.Descriptions) ?? other.Descriptions is null)
+                && Type == other.Type
+                && Role == other.Role
+                && AgeGroup == other.AgeGroup
+                && PreferredContactTime == other.PreferredContactTime
+                && LastSessionLength == other.LastSessionLength;
             if(result) _PartialEquals(other, ref result);
             return result;
         }

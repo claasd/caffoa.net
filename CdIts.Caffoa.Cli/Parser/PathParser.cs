@@ -109,9 +109,6 @@ public class PathParser
         
         if (content.Schema is null)
             return new NullBodyModel(type);
-        var schemaType = ParseType(content.Schema);
-        if(schemaType =="byte[]")
-            return new NullBodyModel(type);
         if (content.Schema.OneOf.Count > 0)
         {
             var discriminator = content.Schema.Discriminator;
@@ -132,7 +129,9 @@ public class PathParser
 
             return result;
         }
-
+        var schemaType = ParseType(content.Schema);
+        if(schemaType =="byte[]")
+            return new NullBodyModel(type);
         return new SimpleBodyModel(schemaType, type);
     }
 

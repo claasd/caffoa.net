@@ -25,7 +25,8 @@ namespace DemoIsolated.Model.Base {
         public bool Equals(IsoFlags other) {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
-            var result = Id == other.Id && Desc == other.Desc;
+            var result = Id == other.Id
+                && Desc == other.Desc;
             if(result) _PartialEquals(other, ref result);
             return result;
         }

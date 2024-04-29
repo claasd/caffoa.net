@@ -62,7 +62,14 @@ namespace DemoV2.Model {
         public bool Equals(ExtendedAddress other) {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
-            var result = Street == other.Street && StreetExtra == other.StreetExtra && PostalCode == other.PostalCode && City == other.City && Country == other.Country && AddressType == other.AddressType && Flags.SequenceEqual(other.Flags) && AddressType2 == other.AddressType2;
+            var result = Street == other.Street
+                && StreetExtra == other.StreetExtra
+                && PostalCode == other.PostalCode
+                && City == other.City
+                && Country == other.Country
+                && AddressType == other.AddressType
+                && (Flags?.SequenceEqual(other.Flags) ?? other.Flags is null)
+                && AddressType2 == other.AddressType2;
             if(result) _PartialEquals(other, ref result);
             return result;
         }

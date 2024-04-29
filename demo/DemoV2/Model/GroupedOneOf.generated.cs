@@ -28,7 +28,7 @@ namespace DemoV2.Model {
         public bool Equals(GroupedOneOf other) {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
-            var result = Element.Equals(other.Element);
+            var result = (Element?.Equals(other.Element) ?? other.Element is null);
             if(result) _PartialEquals(other, ref result);
             return result;
         }

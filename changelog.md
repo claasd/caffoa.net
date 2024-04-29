@@ -1,6 +1,9 @@
 # caffoa changelog
 
 ## 4.4.1
+* fix regression from 4.4.0 for oneOf body models wrongly reported as unsupported complex types
+
+## 4.4.1
 * splitByTag can now be defined in the client config, to have different values for server and client
 * Fix equals methods for nun-nullable Value types (Guid, DateOnly, TimeOnly, DateTimeOffset, TimeSpan)
 

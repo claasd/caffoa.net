@@ -44,7 +44,11 @@ namespace DemoV2.Model {
         public bool Equals(EnumObject other) {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
-            var result = Single == other.Single && WithDefault == other.WithDefault && Array.SequenceEqual(other.Array) && Nullable == other.Nullable && NullableReferenced == other.NullableReferenced;
+            var result = Single == other.Single
+                && WithDefault == other.WithDefault
+                && (Array?.SequenceEqual(other.Array) ?? other.Array is null)
+                && Nullable == other.Nullable
+                && NullableReferenced == other.NullableReferenced;
             if(result) _PartialEquals(other, ref result);
             return result;
         }

@@ -38,7 +38,8 @@ namespace DemoV2.Model {
         public bool Equals(Error other) {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
-            var result = Status == other.Status && Message == other.Message;
+            var result = Status == other.Status
+                && Message == other.Message;
             if(result) _PartialEquals(other, ref result);
             return result;
         }

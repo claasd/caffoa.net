@@ -28,7 +28,7 @@ namespace DemoV2.Model {
         public bool Equals(TagInfos other) {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
-            var result = User.SequenceEqual(other.User);
+            var result = (User?.SequenceEqual(other.User) ?? other.User is null);
             if(result) _PartialEquals(other, ref result);
             return result;
         }

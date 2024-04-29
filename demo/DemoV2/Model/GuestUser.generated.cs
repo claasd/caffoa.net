@@ -40,7 +40,9 @@ namespace DemoV2.Model {
         public bool Equals(GuestUser other) {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
-            var result = Email == other.Email && Type == other.Type && ConstInt == other.ConstInt;
+            var result = Email == other.Email
+                && Type == other.Type
+                && ConstInt == other.ConstInt;
             if(result) _PartialEquals(other, ref result);
             return result;
         }

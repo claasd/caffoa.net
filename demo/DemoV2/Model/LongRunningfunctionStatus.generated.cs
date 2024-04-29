@@ -33,7 +33,8 @@ namespace DemoV2.Model {
         public bool Equals(LongRunningfunctionStatus other) {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
-            var result = Status == other.Status && Result.Equals(other.Result);
+            var result = Status == other.Status
+                && (Result?.Equals(other.Result) ?? other.Result is null);
             if(result) _PartialEquals(other, ref result);
             return result;
         }

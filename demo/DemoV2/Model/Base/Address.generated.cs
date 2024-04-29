@@ -52,7 +52,13 @@ namespace DemoV2.Model.Base {
         public bool Equals(Address other) {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
-            var result = Street == other.Street && StreetExtra == other.StreetExtra && PostalCode == other.PostalCode && City == other.City && Country == other.Country && AddressType == other.AddressType && Flags.SequenceEqual(other.Flags);
+            var result = Street == other.Street
+                && StreetExtra == other.StreetExtra
+                && PostalCode == other.PostalCode
+                && City == other.City
+                && Country == other.Country
+                && AddressType == other.AddressType
+                && (Flags?.SequenceEqual(other.Flags) ?? other.Flags is null);
             if(result) _PartialEquals(other, ref result);
             return result;
         }

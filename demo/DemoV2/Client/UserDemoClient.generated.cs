@@ -89,7 +89,7 @@ namespace DemoV2.Client
         public async Task<IReadOnlyList<AnyCompleteUser>> UserPostAsync(User payload, CancellationToken cancellationToken = default) {
             var uriBuilder = new UriBuilder(Invariant($"{BaseUri}users"));
             using var httpRequest = new HttpRequestMessage(HttpMethod.Post, uriBuilder.ToString());
-            httpRequest.Content = new StringContent(JsonSerializer.JsonString(payload), Encoding.UTF8, MediaTypeNames.Application.Json);
+            httpRequest.Content = new StringContent(JsonSerializer.JsonString(payload), Encoding.UTF8, "application/json");
             PrepareRequest(httpRequest);
             using var httpResult = await Client.SendAsync(httpRequest, cancellationToken);
             ProcessResponse(httpResult);
@@ -109,7 +109,7 @@ namespace DemoV2.Client
         public async Task<IReadOnlyList<AnyCompleteUser>> UserPostAsync(GuestUser payload, CancellationToken cancellationToken = default) {
             var uriBuilder = new UriBuilder(Invariant($"{BaseUri}users"));
             using var httpRequest = new HttpRequestMessage(HttpMethod.Post, uriBuilder.ToString());
-            httpRequest.Content = new StringContent(JsonSerializer.JsonString(payload), Encoding.UTF8, MediaTypeNames.Application.Json);
+            httpRequest.Content = new StringContent(JsonSerializer.JsonString(payload), Encoding.UTF8, "application/json");
             PrepareRequest(httpRequest);
             using var httpResult = await Client.SendAsync(httpRequest, cancellationToken);
             ProcessResponse(httpResult);
@@ -130,7 +130,7 @@ namespace DemoV2.Client
         public async Task<(AnyCompleteUser, int)> UserPutAsync(string userId, User payload, CancellationToken cancellationToken = default) {
             var uriBuilder = new UriBuilder(Invariant($"{BaseUri}users/{userId}"));
             using var httpRequest = new HttpRequestMessage(HttpMethod.Put, uriBuilder.ToString());
-            httpRequest.Content = new StringContent(JsonSerializer.JsonString(payload), Encoding.UTF8, MediaTypeNames.Application.Json);
+            httpRequest.Content = new StringContent(JsonSerializer.JsonString(payload), Encoding.UTF8, "application/json");
             PrepareRequest(httpRequest);
             using var httpResult = await Client.SendAsync(httpRequest, cancellationToken);
             ProcessResponse(httpResult);
@@ -151,7 +151,7 @@ namespace DemoV2.Client
         public async Task<(AnyCompleteUser, int)> UserPutAsync(string userId, GuestUser payload, CancellationToken cancellationToken = default) {
             var uriBuilder = new UriBuilder(Invariant($"{BaseUri}users/{userId}"));
             using var httpRequest = new HttpRequestMessage(HttpMethod.Put, uriBuilder.ToString());
-            httpRequest.Content = new StringContent(JsonSerializer.JsonString(payload), Encoding.UTF8, MediaTypeNames.Application.Json);
+            httpRequest.Content = new StringContent(JsonSerializer.JsonString(payload), Encoding.UTF8, "application/json");
             PrepareRequest(httpRequest);
             using var httpResult = await Client.SendAsync(httpRequest, cancellationToken);
             ProcessResponse(httpResult);
@@ -171,7 +171,7 @@ namespace DemoV2.Client
         public async Task<UserWithId> UserPatchAsync(string userId, JObject payload, CancellationToken cancellationToken = default) {
             var uriBuilder = new UriBuilder(Invariant($"{BaseUri}users/{userId}"));
             using var httpRequest = new HttpRequestMessage(HttpMethod.Patch, uriBuilder.ToString());
-            httpRequest.Content = new StringContent(JsonSerializer.JsonString(payload), Encoding.UTF8, MediaTypeNames.Application.Json);
+            httpRequest.Content = new StringContent(JsonSerializer.JsonString(payload), Encoding.UTF8, "application/json");
             PrepareRequest(httpRequest);
             using var httpResult = await Client.SendAsync(httpRequest, cancellationToken);
             ProcessResponse(httpResult);
@@ -373,7 +373,7 @@ namespace DemoV2.Client
         public async Task<GroupedOneOf> EchoOneOfAsync(GroupedOneOf payload, CancellationToken cancellationToken = default) {
             var uriBuilder = new UriBuilder(Invariant($"{BaseUri}echo/oneOfTest"));
             using var httpRequest = new HttpRequestMessage(HttpMethod.Get, uriBuilder.ToString());
-            httpRequest.Content = new StringContent(JsonSerializer.JsonString(payload), Encoding.UTF8, MediaTypeNames.Application.Json);
+            httpRequest.Content = new StringContent(JsonSerializer.JsonString(payload), Encoding.UTF8, "application/json");
             PrepareRequest(httpRequest);
             using var httpResult = await Client.SendAsync(httpRequest, cancellationToken);
             ProcessResponse(httpResult);
@@ -392,7 +392,7 @@ namespace DemoV2.Client
         public async Task<IReadOnlyList<AnyUser>> EchoOneOfArrayAsync(IEnumerable<AnyUser> payload, CancellationToken cancellationToken = default) {
             var uriBuilder = new UriBuilder(Invariant($"{BaseUri}echo/oneOfTestArray"));
             using var httpRequest = new HttpRequestMessage(HttpMethod.Get, uriBuilder.ToString());
-            httpRequest.Content = new StringContent(JsonSerializer.JsonString(payload), Encoding.UTF8, MediaTypeNames.Application.Json);
+            httpRequest.Content = new StringContent(JsonSerializer.JsonString(payload), Encoding.UTF8, "application/json");
             PrepareRequest(httpRequest);
             using var httpResult = await Client.SendAsync(httpRequest, cancellationToken);
             ProcessResponse(httpResult);
