@@ -16,6 +16,18 @@ components:
         desc: 
           type: string
       additionalProperties: false
+    flagRef:
+      x-caffoa-delegates:
+        - flag
+      x-caffoa-aliases:
+        flag2: flag
+      allOf:
+      - type: object
+        properties: 
+          flag:
+            $ref: "#/components/schemas/flags"
+          flag2:
+            $ref: "#/components/schemas/flags"
     nullableEnum:
       type: string
       enum:

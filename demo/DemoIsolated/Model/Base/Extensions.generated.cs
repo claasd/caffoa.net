@@ -36,6 +36,34 @@ namespace DemoIsolated.Model.Base {
         /// <summary>
         /// Replaces all fields with the data of the passed object
         /// </summary>
+        public static void UpdateWithIsoFlagRef(this IsoFlagRef item, IsoFlagRef other, bool deepClone = true) {
+            item.Flag = deepClone ? other.Flag?.ToIsoFlags() : other.Flag;
+            item.Flag2 = deepClone ? other.Flag2?.ToIsoFlags() : other.Flag2;
+            item.AdditionalProperties = deepClone ? (other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null) : other.AdditionalProperties;
+        }
+        
+        /// <summary>
+        /// Returns a new object of IsoFlagRef with fileds filled from IsoFlagRef. 
+        /// if deepClone is set to false, a shallow copy will be created.
+        /// </summary>
+        public static IsoFlagRef ToIsoFlagRef(this IsoFlagRef other, bool deepClone = true) => new IsoFlagRef() { 
+            Flag = deepClone ? other.Flag?.ToIsoFlags() : other.Flag,
+            Flag2 = deepClone ? other.Flag2?.ToIsoFlags() : other.Flag2,
+            AdditionalProperties = deepClone ? (other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null) : other.AdditionalProperties
+        };
+        
+        /// <summary>
+        /// Selects the type IsoFlagRef from a IQueryable<IsoFlagRef>
+        /// </summary>
+        public static IQueryable<IsoFlagRef> SelectAsIsoFlagRef(this IQueryable<IsoFlagRef> query) => query.Select(other => new IsoFlagRef() { 
+            Flag = other.Flag,
+            Flag2 = other.Flag2,
+            AdditionalProperties = other.AdditionalProperties
+        });
+
+        /// <summary>
+        /// Replaces all fields with the data of the passed object
+        /// </summary>
         public static void UpdateWithIsoAddress(this IsoAddress item, IsoAddress other, bool deepClone = true) {
             item.Street = other.Street;
             item.StreetExtra = other.StreetExtra;

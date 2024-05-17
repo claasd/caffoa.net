@@ -36,6 +36,34 @@ namespace DemoV2.Model.Base {
         /// <summary>
         /// Replaces all fields with the data of the passed object
         /// </summary>
+        public static void UpdateWithFlagRef(this FlagRef item, FlagRef other, bool deepClone = false) {
+            item.Flag = deepClone ? other.Flag?.ToFlags() : other.Flag;
+            item.Flag2 = deepClone ? other.Flag2?.ToFlags() : other.Flag2;
+            item.AdditionalProperties = deepClone ? (other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null) : other.AdditionalProperties;
+        }
+        
+        /// <summary>
+        /// Returns a new object of FlagRef with fileds filled from FlagRef. 
+        /// if deepClone is set to false, a shallow copy will be created.
+        /// </summary>
+        public static FlagRef ToFlagRef(this FlagRef other, bool deepClone = false) => new FlagRef() { 
+            Flag = deepClone ? other.Flag?.ToFlags() : other.Flag,
+            Flag2 = deepClone ? other.Flag2?.ToFlags() : other.Flag2,
+            AdditionalProperties = deepClone ? (other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null) : other.AdditionalProperties
+        };
+        
+        /// <summary>
+        /// Selects the type FlagRef from a IQueryable<FlagRef>
+        /// </summary>
+        public static IQueryable<FlagRef> SelectAsFlagRef(this IQueryable<FlagRef> query) => query.Select(other => new FlagRef() { 
+            Flag = other.Flag,
+            Flag2 = other.Flag2,
+            AdditionalProperties = other.AdditionalProperties
+        });
+
+        /// <summary>
+        /// Replaces all fields with the data of the passed object
+        /// </summary>
         public static void UpdateWithAddress(this Address item, Address other, bool deepClone = false) {
             item.Street = other.Street;
             item.StreetExtra = other.StreetExtra;

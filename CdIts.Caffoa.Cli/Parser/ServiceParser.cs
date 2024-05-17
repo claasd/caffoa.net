@@ -107,8 +107,8 @@ public class ServiceParser
             if(!apiSchema.IsRealObject(_config.GetEnumCreationMode()))
                 continue;
             ObjectParser parser = _config.UseInheritance is true
-                ? new ObjectInheritanceParser(new SchemaItem(name, className), _config.GetEnumCreationMode(), ClassName, _logger, nullableIsDefault)
-                : new ObjectStandaloneParser(new SchemaItem(name, className), _config.GetEnumCreationMode(), ClassName, _logger, nullableIsDefault);
+                ? new ObjectInheritanceParser(new SchemaItem(name, className), _config.GetEnumCreationMode(), ClassName, nullableIsDefault)
+                : new ObjectStandaloneParser(new SchemaItem(name, className), _config.GetEnumCreationMode(), ClassName, nullableIsDefault);
             objects.Add(parser.Parse(apiSchema));
             Duplicates.Add(className);
         }

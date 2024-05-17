@@ -5,24 +5,23 @@ using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
+using YamlDotNet.Core.Tokens;
 
 namespace CdIts.Caffoa.Cli.Parser;
 
 public abstract class ObjectParser
 {
     protected readonly Func<string, string> ClassNameFunc;
-    private readonly ILogger _logger;
     private readonly bool _nullableIsDefault;
     protected readonly SchemaItem Item;
     private readonly CaffoaConfig.EnumCreationMode _enumMode;
 
     protected ObjectParser(SchemaItem item, CaffoaConfig.EnumCreationMode enumMode,
-        Func<string, string> classNameGenerator, ILogger logger, bool nullableIsDefault)
+        Func<string, string> classNameGenerator, bool nullableIsDefault)
     {
         Item = item;
         _enumMode = enumMode;
         ClassNameFunc = classNameGenerator;
-        _logger = logger;
         _nullableIsDefault = nullableIsDefault;
     }
 
@@ -38,11 +37,14 @@ public abstract class ObjectParser
                 schema = UpdateSchemaForAllOff(schema);
             if (schema.OneOf.Count > 0)
                 Item.Interface = ExtractInterface(schema.OneOf, schema.Discriminator);
-
             else if (schema.Properties.Count > 0)
             {
+                var objectDelegates = schema.Extensions.ParseCaffoaList("x-caffoa-delegates", Item.Name);
+                var aliases = schema.Extensions.ParseCaffoaMap("x-caffoa-aliases", Item.Name);
                 Item.Properties = schema.Properties
-                    .Select(item => ParseProperty(item.Key, item.Value, schema.Required.Contains(item.Key), nullableIsDefault)).ToList();
+                    .Select(item =>
+                        ParseProperty(item.Key, item.Value, schema.Required.Contains(item.Key), nullableIsDefault, objectDelegates.Contains(item.Key),
+                            aliases.GetValueOrDefault(item.Key))).ToList();
                 Item.AdditionalPropertiesAllowed = schema.AdditionalPropertiesAllowed;
             }
             else if (schema.IsPrimitiveType() && schema.CanBeEnum())
@@ -67,7 +69,8 @@ public abstract class ObjectParser
         }
     }
 
-    private PropertyData ParseProperty(string name, OpenApiSchema schema, bool required, bool nullableIsDefault)
+    private PropertyData ParseProperty(string name, OpenApiSchema schema, bool required, bool nullableIsDefault, bool doDelegate,
+        string? alias)
     {
         schema = ResolveExternal(schema);
         if (schema.AnyOf.Any())
@@ -76,8 +79,8 @@ public abstract class ObjectParser
         property.Deprecated = schema.Deprecated;
         property.CustomAttributes = ParseCustomAttributes(schema.Extensions, name);
         property.Generate = schema.Extensions.ParseCaffoaOption("x-caffoa-generate") ?? true;
-        property.Delegate = schema.Extensions.ParseCaffoaOption("x-caffoa-delegate") ?? false;
-        property.Alias = ParseAliasAttribute(schema.Extensions);
+        property.Delegate = schema.Extensions.ParseCaffoaOption("x-caffoa-delegate") ?? doDelegate;
+        property.Alias = ParseAliasAttribute(schema.Extensions, name, alias);
         property.Converter = ParseCustomConverter(schema.Extensions, name);
 
         if (!schema.IsRealObject(_enumMode))
@@ -148,76 +151,23 @@ public abstract class ObjectParser
         property.IsMap = true;
     }
 
-    private string? ParseCustomConverter(IDictionary<string, IOpenApiExtension> schemaExtensions, string name)
+    private string? ParseCustomConverter(IDictionary<string, IOpenApiExtension> schemaExtensions, string name) =>
+        schemaExtensions.ParseCaffoaValue("x-caffoa-converter", name);
+
+    private string? ParseAliasAttribute(IDictionary<string, IOpenApiExtension> extensions, string name, string? externAliasDef) =>
+        (extensions.ParseCaffoaValue("x-caffoa-alias", name) ?? externAliasDef)?.ToObjectName();
+
+    private IList<string> ParseCustomAttributes(IDictionary<string, IOpenApiExtension> extensions, string name)
     {
-        if (schemaExtensions.TryGetValue("x-caffoa-converter", out var converter))
-        {
-            if (converter is OpenApiString converterStr)
-                return converterStr.Value;
-            _logger.LogWarning($"Could not parse custom converter of {name}: value is not a string");
-        }
-
-        return null;
-    }
-
-    private string? ParseAliasAttribute(IDictionary<string, IOpenApiExtension> extensions)
-    {
-        if (!extensions.TryGetValue("x-caffoa-alias", out var singleAnnotation)) return null;
-        var item = singleAnnotation as OpenApiString ?? null;
-        return item?.Value.ToObjectName();
-    }
-
-    private List<string> ParseCustomAttributes(IDictionary<string, IOpenApiExtension> extensions, string name)
-    {
-        try
-        {
-            if (extensions.TryGetValue("x-caffoa-attribute", out var singleAnnotation))
-            {
-                var strItem = singleAnnotation as OpenApiString ?? throw new CaffoaParserException("x-caffoa-attribute value must be a string");
-                return new List<string>() { strItem.Value };
-            }
-
-            if (!extensions.TryGetValue("x-caffoa-attributes", out var annotations))
-                return new List<string>();
-            var annotationsArray = annotations as OpenApiArray;
-            if (annotationsArray is null)
-                throw new CaffoaParserException("x-caffoa-attributes is not an array");
-            return annotationsArray.Select(item =>
-            {
-                var strItem = item as OpenApiString ?? throw new CaffoaParserException("one item of x-caffoa-attributes is not a string");
-                return strItem.Value;
-            }).ToList();
-        }
-        catch (CaffoaParserException e)
-        {
-            _logger.LogWarning($"Could not parse custom attributes of {name}: {e.Message}");
-            return new List<string>();
-        }
+        var attribute = extensions.ParseCaffoaValue("x-caffoa-attribute", name);
+        if (attribute != null)
+            return new List<string>() { attribute };
+        return extensions.ParseCaffoaList("x-caffoa-attributes", name);
     }
 
     private Dictionary<string, string> ParseCustomEnumAliases(IDictionary<string, IOpenApiExtension> extensions, string name)
     {
-        try
-        {
-            if (!extensions.TryGetValue("x-caffoa-enum-aliases", out var aliases))
-                return new();
-            var aliasObject = aliases as OpenApiObject;
-            if (aliasObject is null)
-                throw new CaffoaParserException("x-caffoa-enum-aliases is not key: value object");
-            var data = new Dictionary<string, string>();
-            foreach (var (key, value) in aliasObject)
-            {
-                if(value is not OpenApiString str)
-                    throw new CaffoaParserException($"x-caffoa-enum-aliases for {key}: is not a string value");
-                data[$"\"{key}\""] = $"\"{str.Value}\"";
-            }
-            return data;
-        }
-        catch (CaffoaParserException e)
-        {
-            _logger.LogWarning($"Could not parse enum aliases of {name}: {e.Message}");
-            return new Dictionary<string, string>();
-        }
+        return extensions.ParseCaffoaMap("x-caffoa-enum-aliases", name).ToDictionary(item => item.Key.Escaped(), item => item.Value.Escaped());
     }
 
     private InterfaceModel ExtractInterface(IList<OpenApiSchema> schemaOneOf, OpenApiDiscriminator openApiDiscriminator)

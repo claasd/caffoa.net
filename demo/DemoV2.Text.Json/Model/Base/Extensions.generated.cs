@@ -36,6 +36,34 @@ namespace DemoV2.Text.Json.Model.Base {
         /// <summary>
         /// Replaces all fields with the data of the passed object
         /// </summary>
+        public static void UpdateWithSTJFlagRef(this STJFlagRef item, STJFlagRef other, bool deepClone = true) {
+            item.Flag = deepClone ? other.Flag?.ToSTJFlags() : other.Flag;
+            item.Flag2 = deepClone ? other.Flag2?.ToSTJFlags() : other.Flag2;
+            item.AdditionalProperties = deepClone ? (other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null) : other.AdditionalProperties;
+        }
+        
+        /// <summary>
+        /// Returns a new object of STJFlagRef with fileds filled from STJFlagRef. 
+        /// if deepClone is set to false, a shallow copy will be created.
+        /// </summary>
+        public static STJFlagRef ToSTJFlagRef(this STJFlagRef other, bool deepClone = true) => new STJFlagRef() { 
+            Flag = deepClone ? other.Flag?.ToSTJFlags() : other.Flag,
+            Flag2 = deepClone ? other.Flag2?.ToSTJFlags() : other.Flag2,
+            AdditionalProperties = deepClone ? (other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null) : other.AdditionalProperties
+        };
+        
+        /// <summary>
+        /// Selects the type STJFlagRef from a IQueryable<STJFlagRef>
+        /// </summary>
+        public static IQueryable<STJFlagRef> SelectAsSTJFlagRef(this IQueryable<STJFlagRef> query) => query.Select(other => new STJFlagRef() { 
+            Flag = other.Flag,
+            Flag2 = other.Flag2,
+            AdditionalProperties = other.AdditionalProperties
+        });
+
+        /// <summary>
+        /// Replaces all fields with the data of the passed object
+        /// </summary>
         public static void UpdateWithSTJAddress(this STJAddress item, STJAddress other, bool deepClone = true) {
             item.Street = other.Street;
             item.StreetExtra = other.StreetExtra;

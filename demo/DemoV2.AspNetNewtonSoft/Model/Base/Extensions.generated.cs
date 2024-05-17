@@ -36,6 +36,34 @@ namespace DemoV2.AspNetNewtonSoft.Model.Base {
         /// <summary>
         /// Replaces all fields with the data of the passed object
         /// </summary>
+        public static void UpdateWithASPNFlagRef(this ASPNFlagRef item, ASPNFlagRef other, bool deepClone = true) {
+            item.Flag = deepClone ? other.Flag?.ToASPNFlags() : other.Flag;
+            item.Flag2 = deepClone ? other.Flag2?.ToASPNFlags() : other.Flag2;
+            item.AdditionalProperties = deepClone ? (other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null) : other.AdditionalProperties;
+        }
+        
+        /// <summary>
+        /// Returns a new object of ASPNFlagRef with fileds filled from ASPNFlagRef. 
+        /// if deepClone is set to false, a shallow copy will be created.
+        /// </summary>
+        public static ASPNFlagRef ToASPNFlagRef(this ASPNFlagRef other, bool deepClone = true) => new ASPNFlagRef() { 
+            Flag = deepClone ? other.Flag?.ToASPNFlags() : other.Flag,
+            Flag2 = deepClone ? other.Flag2?.ToASPNFlags() : other.Flag2,
+            AdditionalProperties = deepClone ? (other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null) : other.AdditionalProperties
+        };
+        
+        /// <summary>
+        /// Selects the type ASPNFlagRef from a IQueryable<ASPNFlagRef>
+        /// </summary>
+        public static IQueryable<ASPNFlagRef> SelectAsASPNFlagRef(this IQueryable<ASPNFlagRef> query) => query.Select(other => new ASPNFlagRef() { 
+            Flag = other.Flag,
+            Flag2 = other.Flag2,
+            AdditionalProperties = other.AdditionalProperties
+        });
+
+        /// <summary>
+        /// Replaces all fields with the data of the passed object
+        /// </summary>
         public static void UpdateWithASPNAddress(this ASPNAddress item, ASPNAddress other, bool deepClone = true) {
             item.Street = other.Street;
             item.StreetExtra = other.StreetExtra;

@@ -36,6 +36,34 @@ namespace DemoV2.AspNet.Model.Base {
         /// <summary>
         /// Replaces all fields with the data of the passed object
         /// </summary>
+        public static void UpdateWithASPFlagRef(this ASPFlagRef item, ASPFlagRef other, bool deepClone = true) {
+            item.Flag = deepClone ? other.Flag?.ToASPFlags() : other.Flag;
+            item.Flag2 = deepClone ? other.Flag2?.ToASPFlags() : other.Flag2;
+            item.AdditionalProperties = deepClone ? (other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null) : other.AdditionalProperties;
+        }
+        
+        /// <summary>
+        /// Returns a new object of ASPFlagRef with fileds filled from ASPFlagRef. 
+        /// if deepClone is set to false, a shallow copy will be created.
+        /// </summary>
+        public static ASPFlagRef ToASPFlagRef(this ASPFlagRef other, bool deepClone = true) => new ASPFlagRef() { 
+            Flag = deepClone ? other.Flag?.ToASPFlags() : other.Flag,
+            Flag2 = deepClone ? other.Flag2?.ToASPFlags() : other.Flag2,
+            AdditionalProperties = deepClone ? (other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null) : other.AdditionalProperties
+        };
+        
+        /// <summary>
+        /// Selects the type ASPFlagRef from a IQueryable<ASPFlagRef>
+        /// </summary>
+        public static IQueryable<ASPFlagRef> SelectAsASPFlagRef(this IQueryable<ASPFlagRef> query) => query.Select(other => new ASPFlagRef() { 
+            Flag = other.Flag,
+            Flag2 = other.Flag2,
+            AdditionalProperties = other.AdditionalProperties
+        });
+
+        /// <summary>
+        /// Replaces all fields with the data of the passed object
+        /// </summary>
         public static void UpdateWithASPAddress(this ASPAddress item, ASPAddress other, bool deepClone = true) {
             item.Street = other.Street;
             item.StreetExtra = other.StreetExtra;

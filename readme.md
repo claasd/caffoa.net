@@ -357,6 +357,18 @@ it is possible to add a `x-caffoa-generate: false` annotation to a schema proper
 
 ## Delegegation implementation of properties to manually written methods
 it is possible to add a `x-caffoa-delegate: true` annotation to a schema property. This will then generate partial methods to get/set this property. At least the getter must be implementeed in a shared class, the setter can be omited if the attribute is a read-only attribute.
+
+```yaml
+components:
+  schemas:
+    dataContainer:
+      type: object
+      properties:
+        combinedName:
+          type: string
+          x-caffoa-delegate: true
+```
+
 For example, if a property 'CombinedName' has a delegate attribute, the property will be generated as follows:
 ```dotnet
 public virtual string CombinedName {
@@ -366,6 +378,76 @@ public virtual string CombinedName {
 public partial string GetCombinedName();
 partial void SetCombinedName(string value);
 ```
+
+you can also set the delegate on the object instead of the property. This is useful if the property is a reference:
+```yaml
+components:
+  schemas:
+    data:
+      type: string
+      enum:
+        - a
+        - b
+    dataContainer:
+      type: object
+      properties:
+        data:
+          $ref: "#/components/schemas/data"
+      x-caffoa-delegates:
+        - data
+```
+
+This annotation must be set at the root level of an object, it cannot be parsed through allOf/oneOf references
+
+## Property aliases
+
+it is possible to add a `x-caffoa-alias: otherField` annotation to a schema property. This will then generate the getter and setter for this property to get/set the property that was referenced.
+Example:
+```yaml
+components:
+  schemas:
+    dataContainer:
+      type: object
+      properties:
+        name:
+          type: string
+        title:
+          type: string
+          description: use name instead
+          x-caffoa-alias: name
+```
+
+This will generate the getter and setter for `Title` to get/set name:
+```dotnet
+[JsonProperty("title")]
+public virtual string Title {
+    get => Name;
+    set => Name = value;
+}
+```
+
+you can also set the alias on the object instead of the property. This is useful if the property is a reference:
+```yaml
+components:
+  schemas:
+    data:
+      type: string
+      enum:
+        - a
+        - b
+    dataContainer:
+      type: object
+      properties:
+        data:
+          $ref: "#/components/schemas/data"
+        dataList:
+          $ref: "#/components/schemas/data"
+      x-caffoa-delegates:
+        - dataList: data
+```
+
+This annotation must be set at the root level of an object, it cannot be parsed through allOf/oneOf references 
+
 
 ## advanced enum configuration
 You can use the `x-caffoa-enum-aliases` attribute on a string enum, to define value aliases. This is useful if you have different names for the same value in different APIs, such as "asc" and "ascending".

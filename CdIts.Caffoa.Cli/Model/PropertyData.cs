@@ -23,7 +23,7 @@ public class PropertyData
     public bool IsOtherSchema { get; set; }
     public List<string?> Enums { get; set; } = new();
     public Dictionary<string, string> EnumsAliases { get; set; } = new();
-    public List<string> CustomAttributes { get; set; } = new();
+    public IList<string> CustomAttributes { get; set; } = new List<string>();
     public bool Deprecated { get; set; }
     public string? Converter { get; set; }
     public bool InnerTypeIsOtherSchema { get; set; }

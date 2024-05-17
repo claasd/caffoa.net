@@ -1,5 +1,9 @@
 # caffoa changelog
 
+## 4.5.0
+* Allow to set `x-caffoa-delegates` and `x-caffoa-aliases` on object level, to allow delegates and aliases on references
+* wrong configurations of `x-caffoa-*` now raise error instead of just logging warnings
+
 ## 4.4.2
 * fix regression from 4.4.0 for oneOf body models wrongly reported as unsupported complex types
 

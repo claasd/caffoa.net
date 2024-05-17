@@ -36,6 +36,34 @@ namespace DemoV1b.Model.Base {
         /// <summary>
         /// Replaces all fields with the data of the passed object
         /// </summary>
+        public static void UpdateWithL2FlagRef(this L2FlagRef item, L2FlagRef other, bool deepClone = true) {
+            item.Flag = deepClone ? other.Flag?.ToL2Flags() : other.Flag;
+            item.Flag2 = deepClone ? other.Flag2?.ToL2Flags() : other.Flag2;
+            item.AdditionalProperties = deepClone ? (other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null) : other.AdditionalProperties;
+        }
+        
+        /// <summary>
+        /// Returns a new object of L2FlagRef with fileds filled from L2FlagRef. 
+        /// if deepClone is set to false, a shallow copy will be created.
+        /// </summary>
+        public static L2FlagRef ToL2FlagRef(this L2FlagRef other, bool deepClone = true) => new L2FlagRef() { 
+            Flag = deepClone ? other.Flag?.ToL2Flags() : other.Flag,
+            Flag2 = deepClone ? other.Flag2?.ToL2Flags() : other.Flag2,
+            AdditionalProperties = deepClone ? (other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null) : other.AdditionalProperties
+        };
+        
+        /// <summary>
+        /// Selects the type L2FlagRef from a IQueryable<L2FlagRef>
+        /// </summary>
+        public static IQueryable<L2FlagRef> SelectAsL2FlagRef(this IQueryable<L2FlagRef> query) => query.Select(other => new L2FlagRef() { 
+            Flag = other.Flag,
+            Flag2 = other.Flag2,
+            AdditionalProperties = other.AdditionalProperties
+        });
+
+        /// <summary>
+        /// Replaces all fields with the data of the passed object
+        /// </summary>
         public static void UpdateWithL2Address(this L2Address item, L2Address other, bool deepClone = true) {
             item.Street = other.Street;
             item.StreetExtra = other.StreetExtra;
