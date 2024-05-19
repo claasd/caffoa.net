@@ -51,7 +51,7 @@ namespace DemoV2.Client
         /// 200 -> return user object
         /// 400 -> Error
         /// </summary>
-        public async Task<IReadOnlyList<AnyCompleteUser>> UsersGetAsync(int? offset = 0, int? limit = 1000, CancellationToken cancellationToken = default) {
+        public virtual async Task<IReadOnlyList<AnyCompleteUser>> UsersGetAsync(int? offset = 0, int? limit = 1000, CancellationToken cancellationToken = default) {
             var uriBuilder = new UriBuilder(Invariant($"{BaseUri}users"));
             var queryBuilder = new QueryBuilder();
             if(offset != null)
@@ -86,7 +86,7 @@ namespace DemoV2.Client
         /// create or update a user without return test
         /// 201 -> User was created
         /// </summary>
-        public async Task<IReadOnlyList<AnyCompleteUser>> UserPostAsync(User payload, CancellationToken cancellationToken = default) {
+        public virtual async Task<IReadOnlyList<AnyCompleteUser>> UserPostAsync(User payload, CancellationToken cancellationToken = default) {
             var uriBuilder = new UriBuilder(Invariant($"{BaseUri}users"));
             using var httpRequest = new HttpRequestMessage(HttpMethod.Post, uriBuilder.ToString());
             httpRequest.Content = new StringContent(JsonSerializer.JsonString(payload), Encoding.UTF8, "application/json");
@@ -106,7 +106,7 @@ namespace DemoV2.Client
         /// create or update a user without return test
         /// 201 -> User was created
         /// </summary>
-        public async Task<IReadOnlyList<AnyCompleteUser>> UserPostAsync(GuestUser payload, CancellationToken cancellationToken = default) {
+        public virtual async Task<IReadOnlyList<AnyCompleteUser>> UserPostAsync(GuestUser payload, CancellationToken cancellationToken = default) {
             var uriBuilder = new UriBuilder(Invariant($"{BaseUri}users"));
             using var httpRequest = new HttpRequestMessage(HttpMethod.Post, uriBuilder.ToString());
             httpRequest.Content = new StringContent(JsonSerializer.JsonString(payload), Encoding.UTF8, "application/json");
@@ -127,7 +127,7 @@ namespace DemoV2.Client
         /// 200 -> User was updated
         /// 201 -> User was created
         /// </summary>
-        public async Task<(AnyCompleteUser, int)> UserPutAsync(string userId, User payload, CancellationToken cancellationToken = default) {
+        public virtual async Task<(AnyCompleteUser, int)> UserPutAsync(string userId, User payload, CancellationToken cancellationToken = default) {
             var uriBuilder = new UriBuilder(Invariant($"{BaseUri}users/{userId}"));
             using var httpRequest = new HttpRequestMessage(HttpMethod.Put, uriBuilder.ToString());
             httpRequest.Content = new StringContent(JsonSerializer.JsonString(payload), Encoding.UTF8, "application/json");
@@ -148,7 +148,7 @@ namespace DemoV2.Client
         /// 200 -> User was updated
         /// 201 -> User was created
         /// </summary>
-        public async Task<(AnyCompleteUser, int)> UserPutAsync(string userId, GuestUser payload, CancellationToken cancellationToken = default) {
+        public virtual async Task<(AnyCompleteUser, int)> UserPutAsync(string userId, GuestUser payload, CancellationToken cancellationToken = default) {
             var uriBuilder = new UriBuilder(Invariant($"{BaseUri}users/{userId}"));
             using var httpRequest = new HttpRequestMessage(HttpMethod.Put, uriBuilder.ToString());
             httpRequest.Content = new StringContent(JsonSerializer.JsonString(payload), Encoding.UTF8, "application/json");
@@ -168,7 +168,7 @@ namespace DemoV2.Client
         /// update a user
         /// 200 -> User was updated
         /// </summary>
-        public async Task<UserWithId> UserPatchAsync(string userId, JObject payload, CancellationToken cancellationToken = default) {
+        public virtual async Task<UserWithId> UserPatchAsync(string userId, JObject payload, CancellationToken cancellationToken = default) {
             var uriBuilder = new UriBuilder(Invariant($"{BaseUri}users/{userId}"));
             using var httpRequest = new HttpRequestMessage(HttpMethod.Patch, uriBuilder.ToString());
             httpRequest.Content = new StringContent(JsonSerializer.JsonString(payload), Encoding.UTF8, "application/json");
@@ -188,7 +188,7 @@ namespace DemoV2.Client
         /// get information about the users
         /// 200 -> return user object
         /// </summary>
-        public async Task<UserWithId> UserGetAsync(string userId, CancellationToken cancellationToken = default) {
+        public virtual async Task<UserWithId> UserGetAsync(string userId, CancellationToken cancellationToken = default) {
             var uriBuilder = new UriBuilder(Invariant($"{BaseUri}users/{userId}"));
             using var httpRequest = new HttpRequestMessage(HttpMethod.Get, uriBuilder.ToString());
             PrepareRequest(httpRequest);
@@ -206,7 +206,7 @@ namespace DemoV2.Client
         /// <summary>
         /// 201 -> Image was created
         /// </summary>
-        public async Task UploadImageAsync(string userId, Stream stream, CancellationToken cancellationToken = default) {
+        public virtual async Task UploadImageAsync(string userId, Stream stream, CancellationToken cancellationToken = default) {
             var uriBuilder = new UriBuilder(Invariant($"{BaseUri}users/{userId}/uploadImage"));
             using var httpRequest = new HttpRequestMessage(HttpMethod.Post, uriBuilder.ToString());
             httpRequest.Content = new StreamContent(stream);
@@ -224,7 +224,7 @@ namespace DemoV2.Client
         /// 200 -> return user object
         /// 400 -> Error
         /// </summary>
-        public async Task<IReadOnlyList<User>> UsersGetByBirthdateAsync(DateOnly date, CancellationToken cancellationToken = default) {
+        public virtual async Task<IReadOnlyList<User>> UsersGetByBirthdateAsync(DateOnly date, CancellationToken cancellationToken = default) {
             var uriBuilder = new UriBuilder(Invariant($"{BaseUri}users/born-before/{date:yyyy-MM-dd}"));
             using var httpRequest = new HttpRequestMessage(HttpMethod.Get, uriBuilder.ToString());
             PrepareRequest(httpRequest);
@@ -254,7 +254,7 @@ namespace DemoV2.Client
         /// 200 -> return user object
         /// 400 -> Error
         /// </summary>
-        public async Task<IReadOnlyList<User>> UsersSearchByDateAsync(DateOnly before, DateOnly after, int? maxResults = null, CancellationToken cancellationToken = default) {
+        public virtual async Task<IReadOnlyList<User>> UsersSearchByDateAsync(DateOnly before, DateOnly after, int? maxResults = null, CancellationToken cancellationToken = default) {
             var uriBuilder = new UriBuilder(Invariant($"{BaseUri}users/filter/byAge"));
             var queryBuilder = new QueryBuilder();
             queryBuilder.Add("before", before.ToString("yyyy-MM-dd"));
@@ -288,7 +288,7 @@ namespace DemoV2.Client
         /// <summary>
         /// 200 -> list of elements that have the requested tag
         /// </summary>
-        public async Task<TagInfos> GetTagsAsync(CancellationToken cancellationToken = default) {
+        public virtual async Task<TagInfos> GetTagsAsync(CancellationToken cancellationToken = default) {
             var uriBuilder = new UriBuilder(Invariant($"{BaseUri}tags"));
             using var httpRequest = new HttpRequestMessage(HttpMethod.Get, uriBuilder.ToString());
             PrepareRequest(httpRequest);
@@ -306,7 +306,7 @@ namespace DemoV2.Client
         /// <summary>
         /// 200 -> tags for the user
         /// </summary>
-        public async Task<IReadOnlyDictionary<string,  IEnumerable<Guid>>> GetUserTagsAsync(CancellationToken cancellationToken = default) {
+        public virtual async Task<IReadOnlyDictionary<string,  IEnumerable<Guid>>> GetUserTagsAsync(CancellationToken cancellationToken = default) {
             var uriBuilder = new UriBuilder(Invariant($"{BaseUri}tags/users"));
             using var httpRequest = new HttpRequestMessage(HttpMethod.Get, uriBuilder.ToString());
             PrepareRequest(httpRequest);
@@ -324,7 +324,7 @@ namespace DemoV2.Client
         /// <summary>
         /// 200 -> a list of neum
         /// </summary>
-        public async Task<IReadOnlyList<MyEnumType>> ListEnumsAsync(MyEnumType? filter = null, ICollection<MyEnumType>? include = null, ICollection<string>? flags = null, ICollection<MyEnumType>? exclude = null, CancellationToken cancellationToken = default) {
+        public virtual async Task<IReadOnlyList<MyEnumType>> ListEnumsAsync(MyEnumType? filter = null, ICollection<MyEnumType>? include = null, ICollection<string>? flags = null, ICollection<MyEnumType>? exclude = null, CancellationToken cancellationToken = default) {
             var uriBuilder = new UriBuilder(Invariant($"{BaseUri}enums/list"));
             var queryBuilder = new QueryBuilder();
             if(filter != null)
@@ -352,7 +352,7 @@ namespace DemoV2.Client
         /// <summary>
         /// 200 -> a list of neum
         /// </summary>
-        public async Task<IReadOnlyList<MyEnumType>> ListEnums2Async(MyEnumType filter, CancellationToken cancellationToken = default) {
+        public virtual async Task<IReadOnlyList<MyEnumType>> ListEnums2Async(MyEnumType filter, CancellationToken cancellationToken = default) {
             var uriBuilder = new UriBuilder(Invariant($"{BaseUri}enums/list/filter/{filter.Value()}"));
             using var httpRequest = new HttpRequestMessage(HttpMethod.Get, uriBuilder.ToString());
             PrepareRequest(httpRequest);
@@ -370,7 +370,7 @@ namespace DemoV2.Client
         /// <summary>
         /// 200 -> a list of neum
         /// </summary>
-        public async Task<GroupedOneOf> EchoOneOfAsync(GroupedOneOf payload, CancellationToken cancellationToken = default) {
+        public virtual async Task<GroupedOneOf> EchoOneOfAsync(GroupedOneOf payload, CancellationToken cancellationToken = default) {
             var uriBuilder = new UriBuilder(Invariant($"{BaseUri}echo/oneOfTest"));
             using var httpRequest = new HttpRequestMessage(HttpMethod.Get, uriBuilder.ToString());
             httpRequest.Content = new StringContent(JsonSerializer.JsonString(payload), Encoding.UTF8, "application/json");
@@ -389,7 +389,7 @@ namespace DemoV2.Client
         /// <summary>
         /// 200 -> a list of neum
         /// </summary>
-        public async Task<IReadOnlyList<AnyUser>> EchoOneOfArrayAsync(IEnumerable<AnyUser> payload, CancellationToken cancellationToken = default) {
+        public virtual async Task<IReadOnlyList<AnyUser>> EchoOneOfArrayAsync(IEnumerable<AnyUser> payload, CancellationToken cancellationToken = default) {
             var uriBuilder = new UriBuilder(Invariant($"{BaseUri}echo/oneOfTestArray"));
             using var httpRequest = new HttpRequestMessage(HttpMethod.Get, uriBuilder.ToString());
             httpRequest.Content = new StringContent(JsonSerializer.JsonString(payload), Encoding.UTF8, "application/json");

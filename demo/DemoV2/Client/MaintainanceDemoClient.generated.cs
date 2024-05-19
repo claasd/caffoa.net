@@ -49,7 +49,7 @@ namespace DemoV2.Client
         /// start a long running function via durable functions
         /// 202 -> started long running function
         /// </summary>
-        public async Task<LongRunningfunctionStatus> LongRunningFunctionAsync(Guid id, CancellationToken cancellationToken = default) {
+        public virtual async Task<LongRunningfunctionStatus> LongRunningFunctionAsync(Guid id, CancellationToken cancellationToken = default) {
             var uriBuilder = new UriBuilder(Invariant($"{BaseUri}startLongRunningFunction/{id}"));
             using var httpRequest = new HttpRequestMessage(HttpMethod.Post, uriBuilder.ToString());
             PrepareRequest(httpRequest);

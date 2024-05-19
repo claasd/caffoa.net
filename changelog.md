@@ -1,4 +1,6 @@
 # caffoa changelog
+## 4.6.0
+* make all client methods virtual, to allow for easier mocking and overwriting
 
 ## 4.5.0
 * Allow to set `x-caffoa-delegates` and `x-caffoa-aliases` on object level, to allow delegates and aliases on references
