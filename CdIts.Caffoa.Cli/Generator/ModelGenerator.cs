@@ -246,11 +246,15 @@ public class ModelGenerator
             format["NAMEUPPER"] = property.Name.ToObjectName();
             format["NAMELOWER"] = property.Name;
 
-            if (property.Alias != null)
+            if (property.Alias != null || property.AliasGet != null)
             {
                 if (enumClasses.Find(c => c.ClassName == type)?.NullableEnum ?? false)
                     format["TYPE"] = type + "?";
-                format["ALIAS"] = property.Alias;
+                format["GETALIAS"] = property.AliasGet ?? property.Alias;
+                if (property.AliasSet != null || property.Alias != null)
+                    format["SETALIAS"] = "=> " + (property.AliasSet ?? $"{property.Alias} = value") + ";";
+                else
+                    format["SETALIAS"] ="{}";
                 var file = Templates.GetTemplate("ModelPropertyAliasTemplate.tpl");
                 var formatted = file.FormatDict(format);
                 properties.Add(formatted);

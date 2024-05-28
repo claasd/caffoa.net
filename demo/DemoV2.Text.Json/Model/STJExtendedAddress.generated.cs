@@ -20,6 +20,12 @@ namespace DemoV2.Text.Json.Model {
         [JsonPropertyName("street.extra")]
         public virtual string StreetExtra { get; set; }
 
+        [JsonPropertyName("numericPostalCode")]
+        public virtual int NumericPostalCode { 
+            get => int.Parse(PostalCode); 
+            set => PostalCode = $"{value:D5}";
+        }
+
         [JsonPropertyName("postalCode")]
         public virtual string PostalCode { get; set; }
 
@@ -42,6 +48,7 @@ namespace DemoV2.Text.Json.Model {
         public STJExtendedAddress(STJExtendedAddress other) {
             Street = other.Street;
             StreetExtra = other.StreetExtra;
+            NumericPostalCode = other.NumericPostalCode;
             PostalCode = other.PostalCode;
             City = other.City;
             Country = other.Country;
@@ -52,6 +59,7 @@ namespace DemoV2.Text.Json.Model {
         public STJExtendedAddress(STJAddress other, bool deepClone = true) {
             Street = other.Street;
             StreetExtra = other.StreetExtra;
+            NumericPostalCode = other.NumericPostalCode;
             PostalCode = other.PostalCode;
             City = other.City;
             Country = other.Country;

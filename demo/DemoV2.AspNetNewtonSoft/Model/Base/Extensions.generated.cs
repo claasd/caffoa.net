@@ -67,6 +67,7 @@ namespace DemoV2.AspNetNewtonSoft.Model.Base {
         public static void UpdateWithASPNAddress(this ASPNAddress item, ASPNAddress other, bool deepClone = true) {
             item.Street = other.Street;
             item.StreetExtra = other.StreetExtra;
+            item.NumericPostalCode = other.NumericPostalCode;
             item.PostalCode = other.PostalCode;
             item.City = other.City;
             item.Country = other.Country;
@@ -82,6 +83,7 @@ namespace DemoV2.AspNetNewtonSoft.Model.Base {
         public static ASPNAddress ToASPNAddress(this ASPNAddress other, bool deepClone = true) => new ASPNAddress() { 
             Street = other.Street,
             StreetExtra = other.StreetExtra,
+            NumericPostalCode = other.NumericPostalCode,
             PostalCode = other.PostalCode,
             City = other.City,
             Country = other.Country,
@@ -96,6 +98,7 @@ namespace DemoV2.AspNetNewtonSoft.Model.Base {
         public static IQueryable<ASPNAddress> SelectAsASPNAddress(this IQueryable<ASPNAddress> query) => query.Select(other => new ASPNAddress() { 
             Street = other.Street,
             StreetExtra = other.StreetExtra,
+            NumericPostalCode = other.NumericPostalCode,
             PostalCode = other.PostalCode,
             City = other.City,
             Country = other.Country,

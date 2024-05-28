@@ -81,6 +81,8 @@ public abstract class ObjectParser
         property.Generate = schema.Extensions.ParseCaffoaOption("x-caffoa-generate") ?? true;
         property.Delegate = schema.Extensions.ParseCaffoaOption("x-caffoa-delegate") ?? doDelegate;
         property.Alias = ParseAliasAttribute(schema.Extensions, name, alias);
+        property.AliasGet = schema.Extensions.ParseCaffoaValue("x-caffoa-alias-get", name);
+        property.AliasSet = schema.Extensions.ParseCaffoaValue("x-caffoa-alias-set", name);
         property.Converter = ParseCustomConverter(schema.Extensions, name);
 
         if (!schema.IsRealObject(_enumMode))

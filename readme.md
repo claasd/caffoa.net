@@ -370,7 +370,7 @@ components:
 ```
 
 For example, if a property 'CombinedName' has a delegate attribute, the property will be generated as follows:
-```dotnet
+```csharp
 public virtual string CombinedName {
     get => GetCombinedName();
     set => SetCombinedName();
@@ -418,7 +418,7 @@ components:
 ```
 
 This will generate the getter and setter for `Title` to get/set name:
-```dotnet
+```csharp
 [JsonProperty("title")]
 public virtual string Title {
     get => Name;
@@ -426,6 +426,57 @@ public virtual string Title {
 }
 ```
 
+### custom alias getter/setter
+instead of just an alias, you can also specify a custom getter and setter, for example to convert a legacy int field to string
+```yaml
+components:
+  schemas:
+    dataContainer:
+      type: object
+      properties:
+        postalCode:
+          type: string
+        postalCodeInt:    
+          type: integer
+          x-caffoa-alias-get: 'int.Parse(PostalCode)'
+          x-caffoa-alias-set: 'PostalCode = $"{value:D5}'
+```
+This will generate the getter and setter for `postalCodeInt` to get/set postalCode:
+```csharp
+[JsonProperty("postalCodeInt")]
+public virtual string PostalCodeInt {
+    get => int.Parse(PostalCode);
+    set => PostalCode = $"{value:D5}";
+}
+```
+
+if you do not specify x-caffoa-alias-set, an empty setter will be generated:
+
+```yaml
+components:
+  schemas:
+    dataContainer:
+      type: object
+      properties:
+        street:
+          type: string
+        number:    
+          type: string
+        address:
+          readonly: true
+          type: string
+          x-caffoa-alias-get: '$"{Street} {Number}"' 
+```
+will result in;
+```csharp
+[JsonProperty("address")]
+public virtual string Address {
+    get => $"{Street} {Number}";
+    set {};
+}
+```
+
+### specify alias at object level
 you can also set the alias on the object instead of the property. This is useful if the property is a reference:
 ```yaml
 components:

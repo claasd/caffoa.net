@@ -409,6 +409,7 @@ namespace DemoIsolated.Model {
         public static void UpdateWithIsoExtendedAddress(this IsoExtendedAddress item, IsoExtendedAddress other, bool deepClone = true) {
             item.Street = other.Street;
             item.StreetExtra = other.StreetExtra;
+            item.NumericPostalCode = other.NumericPostalCode;
             item.PostalCode = other.PostalCode;
             item.City = other.City;
             item.Country = other.Country;
@@ -424,6 +425,7 @@ namespace DemoIsolated.Model {
         public static IsoExtendedAddress ToIsoExtendedAddress(this IsoExtendedAddress other, bool deepClone = true) => new IsoExtendedAddress() { 
             Street = other.Street,
             StreetExtra = other.StreetExtra,
+            NumericPostalCode = other.NumericPostalCode,
             PostalCode = other.PostalCode,
             City = other.City,
             Country = other.Country,
@@ -438,6 +440,7 @@ namespace DemoIsolated.Model {
         public static IQueryable<IsoExtendedAddress> SelectAsIsoExtendedAddress(this IQueryable<IsoExtendedAddress> query) => query.Select(other => new IsoExtendedAddress() { 
             Street = other.Street,
             StreetExtra = other.StreetExtra,
+            NumericPostalCode = other.NumericPostalCode,
             PostalCode = other.PostalCode,
             City = other.City,
             Country = other.Country,
@@ -452,6 +455,7 @@ namespace DemoIsolated.Model {
         public static void UpdateWithIsoExtendedAddress(this IsoAddress item, IsoExtendedAddress other, bool deepClone = true) {
             item.Street = other.Street;
             item.StreetExtra = other.StreetExtra;
+            item.NumericPostalCode = other.NumericPostalCode;
             item.PostalCode = other.PostalCode;
             item.City = other.City;
             item.Country = other.Country;
@@ -466,6 +470,7 @@ namespace DemoIsolated.Model {
         public static IsoExtendedAddress ToIsoExtendedAddress(this IsoAddress other, bool deepClone = true) => new IsoExtendedAddress() { 
             Street = other.Street,
             StreetExtra = other.StreetExtra,
+            NumericPostalCode = other.NumericPostalCode,
             PostalCode = other.PostalCode,
             City = other.City,
             Country = other.Country,
@@ -479,6 +484,7 @@ namespace DemoIsolated.Model {
         public static IQueryable<IsoExtendedAddress> SelectAsIsoExtendedAddress(this IQueryable<IsoAddress> query) => query.Select(other => new IsoExtendedAddress() { 
             Street = other.Street,
             StreetExtra = other.StreetExtra,
+            NumericPostalCode = other.NumericPostalCode,
             PostalCode = other.PostalCode,
             City = other.City,
             Country = other.Country,
@@ -492,6 +498,7 @@ namespace DemoIsolated.Model {
         public static void UpdateWithIsoAddress(this IsoExtendedAddress item, IsoAddress other, bool deepClone = true) {
             item.Street = other.Street;
             item.StreetExtra = other.StreetExtra;
+            item.NumericPostalCode = other.NumericPostalCode;
             item.PostalCode = other.PostalCode;
             item.City = other.City;
             item.Country = other.Country;
@@ -506,6 +513,7 @@ namespace DemoIsolated.Model {
         public static IsoAddress ToIsoAddress(this IsoExtendedAddress other, bool deepClone = true) => new IsoAddress() { 
             Street = other.Street,
             StreetExtra = other.StreetExtra,
+            NumericPostalCode = other.NumericPostalCode,
             PostalCode = other.PostalCode,
             City = other.City,
             Country = other.Country,
@@ -519,6 +527,7 @@ namespace DemoIsolated.Model {
         public static IQueryable<IsoAddress> SelectAsIsoAddress(this IQueryable<IsoExtendedAddress> query) => query.Select(other => new IsoAddress() { 
             Street = other.Street,
             StreetExtra = other.StreetExtra,
+            NumericPostalCode = other.NumericPostalCode,
             PostalCode = other.PostalCode,
             City = other.City,
             Country = other.Country,

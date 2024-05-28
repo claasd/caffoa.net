@@ -26,7 +26,6 @@ namespace DemoV2.Text.Json.Model.Base {
             set => Flag = value;
         }
 
-
         [JsonExtensionData]
         public Dictionary<string, object> AdditionalProperties;
 

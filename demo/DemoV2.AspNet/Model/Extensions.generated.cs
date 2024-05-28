@@ -409,6 +409,7 @@ namespace DemoV2.AspNet.Model {
         public static void UpdateWithASPExtendedAddress(this ASPExtendedAddress item, ASPExtendedAddress other, bool deepClone = true) {
             item.Street = other.Street;
             item.StreetExtra = other.StreetExtra;
+            item.NumericPostalCode = other.NumericPostalCode;
             item.PostalCode = other.PostalCode;
             item.City = other.City;
             item.Country = other.Country;
@@ -424,6 +425,7 @@ namespace DemoV2.AspNet.Model {
         public static ASPExtendedAddress ToASPExtendedAddress(this ASPExtendedAddress other, bool deepClone = true) => new ASPExtendedAddress() { 
             Street = other.Street,
             StreetExtra = other.StreetExtra,
+            NumericPostalCode = other.NumericPostalCode,
             PostalCode = other.PostalCode,
             City = other.City,
             Country = other.Country,
@@ -438,6 +440,7 @@ namespace DemoV2.AspNet.Model {
         public static IQueryable<ASPExtendedAddress> SelectAsASPExtendedAddress(this IQueryable<ASPExtendedAddress> query) => query.Select(other => new ASPExtendedAddress() { 
             Street = other.Street,
             StreetExtra = other.StreetExtra,
+            NumericPostalCode = other.NumericPostalCode,
             PostalCode = other.PostalCode,
             City = other.City,
             Country = other.Country,
@@ -452,6 +455,7 @@ namespace DemoV2.AspNet.Model {
         public static void UpdateWithASPExtendedAddress(this ASPAddress item, ASPExtendedAddress other, bool deepClone = true) {
             item.Street = other.Street;
             item.StreetExtra = other.StreetExtra;
+            item.NumericPostalCode = other.NumericPostalCode;
             item.PostalCode = other.PostalCode;
             item.City = other.City;
             item.Country = other.Country;
@@ -466,6 +470,7 @@ namespace DemoV2.AspNet.Model {
         public static ASPExtendedAddress ToASPExtendedAddress(this ASPAddress other, bool deepClone = true) => new ASPExtendedAddress() { 
             Street = other.Street,
             StreetExtra = other.StreetExtra,
+            NumericPostalCode = other.NumericPostalCode,
             PostalCode = other.PostalCode,
             City = other.City,
             Country = other.Country,
@@ -479,6 +484,7 @@ namespace DemoV2.AspNet.Model {
         public static IQueryable<ASPExtendedAddress> SelectAsASPExtendedAddress(this IQueryable<ASPAddress> query) => query.Select(other => new ASPExtendedAddress() { 
             Street = other.Street,
             StreetExtra = other.StreetExtra,
+            NumericPostalCode = other.NumericPostalCode,
             PostalCode = other.PostalCode,
             City = other.City,
             Country = other.Country,
@@ -492,6 +498,7 @@ namespace DemoV2.AspNet.Model {
         public static void UpdateWithASPAddress(this ASPExtendedAddress item, ASPAddress other, bool deepClone = true) {
             item.Street = other.Street;
             item.StreetExtra = other.StreetExtra;
+            item.NumericPostalCode = other.NumericPostalCode;
             item.PostalCode = other.PostalCode;
             item.City = other.City;
             item.Country = other.Country;
@@ -506,6 +513,7 @@ namespace DemoV2.AspNet.Model {
         public static ASPAddress ToASPAddress(this ASPExtendedAddress other, bool deepClone = true) => new ASPAddress() { 
             Street = other.Street,
             StreetExtra = other.StreetExtra,
+            NumericPostalCode = other.NumericPostalCode,
             PostalCode = other.PostalCode,
             City = other.City,
             Country = other.Country,
@@ -519,6 +527,7 @@ namespace DemoV2.AspNet.Model {
         public static IQueryable<ASPAddress> SelectAsASPAddress(this IQueryable<ASPExtendedAddress> query) => query.Select(other => new ASPAddress() { 
             Street = other.Street,
             StreetExtra = other.StreetExtra,
+            NumericPostalCode = other.NumericPostalCode,
             PostalCode = other.PostalCode,
             City = other.City,
             Country = other.Country,

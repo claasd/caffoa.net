@@ -409,6 +409,7 @@ namespace DemoV2.Model {
         public static void UpdateWithExtendedAddress(this ExtendedAddress item, ExtendedAddress other, bool deepClone = false) {
             item.Street = other.Street;
             item.StreetExtra = other.StreetExtra;
+            item.NumericPostalCode = other.NumericPostalCode;
             item.PostalCode = other.PostalCode;
             item.City = other.City;
             item.Country = other.Country;
@@ -424,6 +425,7 @@ namespace DemoV2.Model {
         public static ExtendedAddress ToExtendedAddress(this ExtendedAddress other, bool deepClone = false) => new ExtendedAddress() { 
             Street = other.Street,
             StreetExtra = other.StreetExtra,
+            NumericPostalCode = other.NumericPostalCode,
             PostalCode = other.PostalCode,
             City = other.City,
             Country = other.Country,
@@ -438,6 +440,7 @@ namespace DemoV2.Model {
         public static IQueryable<ExtendedAddress> SelectAsExtendedAddress(this IQueryable<ExtendedAddress> query) => query.Select(other => new ExtendedAddress() { 
             Street = other.Street,
             StreetExtra = other.StreetExtra,
+            NumericPostalCode = other.NumericPostalCode,
             PostalCode = other.PostalCode,
             City = other.City,
             Country = other.Country,
@@ -452,6 +455,7 @@ namespace DemoV2.Model {
         public static void UpdateWithExtendedAddress(this Address item, ExtendedAddress other, bool deepClone = false) {
             item.Street = other.Street;
             item.StreetExtra = other.StreetExtra;
+            item.NumericPostalCode = other.NumericPostalCode;
             item.PostalCode = other.PostalCode;
             item.City = other.City;
             item.Country = other.Country;
@@ -466,6 +470,7 @@ namespace DemoV2.Model {
         public static ExtendedAddress ToExtendedAddress(this Address other, bool deepClone = false) => new ExtendedAddress() { 
             Street = other.Street,
             StreetExtra = other.StreetExtra,
+            NumericPostalCode = other.NumericPostalCode,
             PostalCode = other.PostalCode,
             City = other.City,
             Country = other.Country,
@@ -479,6 +484,7 @@ namespace DemoV2.Model {
         public static IQueryable<ExtendedAddress> SelectAsExtendedAddress(this IQueryable<Address> query) => query.Select(other => new ExtendedAddress() { 
             Street = other.Street,
             StreetExtra = other.StreetExtra,
+            NumericPostalCode = other.NumericPostalCode,
             PostalCode = other.PostalCode,
             City = other.City,
             Country = other.Country,
@@ -492,6 +498,7 @@ namespace DemoV2.Model {
         public static void UpdateWithAddress(this ExtendedAddress item, Address other, bool deepClone = false) {
             item.Street = other.Street;
             item.StreetExtra = other.StreetExtra;
+            item.NumericPostalCode = other.NumericPostalCode;
             item.PostalCode = other.PostalCode;
             item.City = other.City;
             item.Country = other.Country;
@@ -506,6 +513,7 @@ namespace DemoV2.Model {
         public static Address ToAddress(this ExtendedAddress other, bool deepClone = false) => new Address() { 
             Street = other.Street,
             StreetExtra = other.StreetExtra,
+            NumericPostalCode = other.NumericPostalCode,
             PostalCode = other.PostalCode,
             City = other.City,
             Country = other.Country,
@@ -519,6 +527,7 @@ namespace DemoV2.Model {
         public static IQueryable<Address> SelectAsAddress(this IQueryable<ExtendedAddress> query) => query.Select(other => new Address() { 
             Street = other.Street,
             StreetExtra = other.StreetExtra,
+            NumericPostalCode = other.NumericPostalCode,
             PostalCode = other.PostalCode,
             City = other.City,
             Country = other.Country,

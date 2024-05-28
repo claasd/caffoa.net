@@ -43,6 +43,10 @@ components:
         street.extra:
           type: string
           nullable: true
+        numericPostalCode:
+          type: integer
+          x-caffoa-alias-get: "int.Parse(PostalCode)"
+          x-caffoa-alias-set: 'PostalCode = $"{value:D5}"' 
         postalCode:
           type: string
         city:

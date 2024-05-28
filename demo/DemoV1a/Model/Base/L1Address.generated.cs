@@ -19,6 +19,12 @@ namespace DemoV1a.Model.Base {
         [JsonProperty("street.extra")]
         public virtual string StreetExtra { get; set; }
 
+        [JsonProperty("numericPostalCode")]
+        public virtual int NumericPostalCode { 
+            get => int.Parse(PostalCode); 
+            set => PostalCode = $"{value:D5}";
+        }
+
         [JsonProperty("postalCode", Required = Required.Always)]
         public virtual string PostalCode { get; set; }
 
@@ -56,6 +62,7 @@ namespace DemoV1a.Model.Base {
         public L1Address(L1Address other) {
             Street = other.Street;
             StreetExtra = other.StreetExtra;
+            NumericPostalCode = other.NumericPostalCode;
             PostalCode = other.PostalCode;
             City = other.City;
             Country = other.Country;

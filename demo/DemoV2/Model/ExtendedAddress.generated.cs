@@ -20,6 +20,12 @@ namespace DemoV2.Model {
         [JsonProperty("street.extra")]
         public string StreetExtra { get; set; }
 
+        [JsonProperty("numericPostalCode")]
+        public int NumericPostalCode { 
+            get => int.Parse(PostalCode); 
+            set => PostalCode = $"{value:D5}";
+        }
+
         [JsonProperty("postalCode", Required = Required.Always)]
         public string PostalCode { get; set; }
 
@@ -42,6 +48,7 @@ namespace DemoV2.Model {
         public ExtendedAddress(ExtendedAddress other) {
             Street = other.Street;
             StreetExtra = other.StreetExtra;
+            NumericPostalCode = other.NumericPostalCode;
             PostalCode = other.PostalCode;
             City = other.City;
             Country = other.Country;
@@ -52,6 +59,7 @@ namespace DemoV2.Model {
         public ExtendedAddress(Address other, bool deepClone = false) {
             Street = other.Street;
             StreetExtra = other.StreetExtra;
+            NumericPostalCode = other.NumericPostalCode;
             PostalCode = other.PostalCode;
             City = other.City;
             Country = other.Country;
@@ -64,6 +72,7 @@ namespace DemoV2.Model {
             if (ReferenceEquals(this, other)) return true;
             var result = Street == other.Street
                 && StreetExtra == other.StreetExtra
+                && NumericPostalCode == other.NumericPostalCode
                 && PostalCode == other.PostalCode
                 && City == other.City
                 && Country == other.Country
@@ -79,6 +88,7 @@ namespace DemoV2.Model {
             var hashCode = new HashCode();
             hashCode.Add(Street);
             hashCode.Add(StreetExtra);
+            hashCode.Add(NumericPostalCode);
             hashCode.Add(PostalCode);
             hashCode.Add(City);
             hashCode.Add(Country);

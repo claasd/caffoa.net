@@ -1,4 +1,7 @@
 # caffoa changelog
+## 4.7.0
+* allow to specify getter and optional setter for aliases.
+
 ## 4.6.0
 * make all client methods virtual, to allow for easier mocking and overwriting
 

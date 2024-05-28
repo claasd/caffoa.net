@@ -30,5 +30,6 @@ public class PropertyData
     public bool Generate { get; set; } = true;
     public bool Delegate { get; set; }
     public string? Alias { get; set; }
-    
+    public string? AliasGet { get; set; }
+    public string? AliasSet { get; set; }
 }

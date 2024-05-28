@@ -20,6 +20,12 @@ namespace DemoIsolated.Model {
         [JsonProperty("street.extra")]
         public virtual string StreetExtra { get; set; }
 
+        [JsonProperty("numericPostalCode")]
+        public virtual int NumericPostalCode { 
+            get => int.Parse(PostalCode); 
+            set => PostalCode = $"{value:D5}";
+        }
+
         [JsonProperty("postalCode", Required = Required.Always)]
         public virtual string PostalCode { get; set; }
 
@@ -42,6 +48,7 @@ namespace DemoIsolated.Model {
         public IsoExtendedAddress(IsoExtendedAddress other) {
             Street = other.Street;
             StreetExtra = other.StreetExtra;
+            NumericPostalCode = other.NumericPostalCode;
             PostalCode = other.PostalCode;
             City = other.City;
             Country = other.Country;
@@ -52,6 +59,7 @@ namespace DemoIsolated.Model {
         public IsoExtendedAddress(IsoAddress other, bool deepClone = true) {
             Street = other.Street;
             StreetExtra = other.StreetExtra;
+            NumericPostalCode = other.NumericPostalCode;
             PostalCode = other.PostalCode;
             City = other.City;
             Country = other.Country;

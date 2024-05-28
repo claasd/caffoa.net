@@ -67,6 +67,7 @@ namespace DemoV1a.Model.Base {
         public static void UpdateWithL1Address(this L1Address item, L1Address other, bool deepClone = true) {
             item.Street = other.Street;
             item.StreetExtra = other.StreetExtra;
+            item.NumericPostalCode = other.NumericPostalCode;
             item.PostalCode = other.PostalCode;
             item.City = other.City;
             item.Country = other.Country;
@@ -82,6 +83,7 @@ namespace DemoV1a.Model.Base {
         public static L1Address ToL1Address(this L1Address other, bool deepClone = true) => new L1Address() { 
             Street = other.Street,
             StreetExtra = other.StreetExtra,
+            NumericPostalCode = other.NumericPostalCode,
             PostalCode = other.PostalCode,
             City = other.City,
             Country = other.Country,
@@ -96,6 +98,7 @@ namespace DemoV1a.Model.Base {
         public static IQueryable<L1Address> SelectAsL1Address(this IQueryable<L1Address> query) => query.Select(other => new L1Address() { 
             Street = other.Street,
             StreetExtra = other.StreetExtra,
+            NumericPostalCode = other.NumericPostalCode,
             PostalCode = other.PostalCode,
             City = other.City,
             Country = other.Country,

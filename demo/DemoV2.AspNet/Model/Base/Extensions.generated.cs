@@ -67,6 +67,7 @@ namespace DemoV2.AspNet.Model.Base {
         public static void UpdateWithASPAddress(this ASPAddress item, ASPAddress other, bool deepClone = true) {
             item.Street = other.Street;
             item.StreetExtra = other.StreetExtra;
+            item.NumericPostalCode = other.NumericPostalCode;
             item.PostalCode = other.PostalCode;
             item.City = other.City;
             item.Country = other.Country;
@@ -82,6 +83,7 @@ namespace DemoV2.AspNet.Model.Base {
         public static ASPAddress ToASPAddress(this ASPAddress other, bool deepClone = true) => new ASPAddress() { 
             Street = other.Street,
             StreetExtra = other.StreetExtra,
+            NumericPostalCode = other.NumericPostalCode,
             PostalCode = other.PostalCode,
             City = other.City,
             Country = other.Country,
@@ -96,6 +98,7 @@ namespace DemoV2.AspNet.Model.Base {
         public static IQueryable<ASPAddress> SelectAsASPAddress(this IQueryable<ASPAddress> query) => query.Select(other => new ASPAddress() { 
             Street = other.Street,
             StreetExtra = other.StreetExtra,
+            NumericPostalCode = other.NumericPostalCode,
             PostalCode = other.PostalCode,
             City = other.City,
             Country = other.Country,

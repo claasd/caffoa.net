@@ -409,6 +409,7 @@ namespace DemoV2.AspNetNewtonSoft.Model {
         public static void UpdateWithASPNExtendedAddress(this ASPNExtendedAddress item, ASPNExtendedAddress other, bool deepClone = true) {
             item.Street = other.Street;
             item.StreetExtra = other.StreetExtra;
+            item.NumericPostalCode = other.NumericPostalCode;
             item.PostalCode = other.PostalCode;
             item.City = other.City;
             item.Country = other.Country;
@@ -424,6 +425,7 @@ namespace DemoV2.AspNetNewtonSoft.Model {
         public static ASPNExtendedAddress ToASPNExtendedAddress(this ASPNExtendedAddress other, bool deepClone = true) => new ASPNExtendedAddress() { 
             Street = other.Street,
             StreetExtra = other.StreetExtra,
+            NumericPostalCode = other.NumericPostalCode,
             PostalCode = other.PostalCode,
             City = other.City,
             Country = other.Country,
@@ -438,6 +440,7 @@ namespace DemoV2.AspNetNewtonSoft.Model {
         public static IQueryable<ASPNExtendedAddress> SelectAsASPNExtendedAddress(this IQueryable<ASPNExtendedAddress> query) => query.Select(other => new ASPNExtendedAddress() { 
             Street = other.Street,
             StreetExtra = other.StreetExtra,
+            NumericPostalCode = other.NumericPostalCode,
             PostalCode = other.PostalCode,
             City = other.City,
             Country = other.Country,
@@ -452,6 +455,7 @@ namespace DemoV2.AspNetNewtonSoft.Model {
         public static void UpdateWithASPNExtendedAddress(this ASPNAddress item, ASPNExtendedAddress other, bool deepClone = true) {
             item.Street = other.Street;
             item.StreetExtra = other.StreetExtra;
+            item.NumericPostalCode = other.NumericPostalCode;
             item.PostalCode = other.PostalCode;
             item.City = other.City;
             item.Country = other.Country;
@@ -466,6 +470,7 @@ namespace DemoV2.AspNetNewtonSoft.Model {
         public static ASPNExtendedAddress ToASPNExtendedAddress(this ASPNAddress other, bool deepClone = true) => new ASPNExtendedAddress() { 
             Street = other.Street,
             StreetExtra = other.StreetExtra,
+            NumericPostalCode = other.NumericPostalCode,
             PostalCode = other.PostalCode,
             City = other.City,
             Country = other.Country,
@@ -479,6 +484,7 @@ namespace DemoV2.AspNetNewtonSoft.Model {
         public static IQueryable<ASPNExtendedAddress> SelectAsASPNExtendedAddress(this IQueryable<ASPNAddress> query) => query.Select(other => new ASPNExtendedAddress() { 
             Street = other.Street,
             StreetExtra = other.StreetExtra,
+            NumericPostalCode = other.NumericPostalCode,
             PostalCode = other.PostalCode,
             City = other.City,
             Country = other.Country,
@@ -492,6 +498,7 @@ namespace DemoV2.AspNetNewtonSoft.Model {
         public static void UpdateWithASPNAddress(this ASPNExtendedAddress item, ASPNAddress other, bool deepClone = true) {
             item.Street = other.Street;
             item.StreetExtra = other.StreetExtra;
+            item.NumericPostalCode = other.NumericPostalCode;
             item.PostalCode = other.PostalCode;
             item.City = other.City;
             item.Country = other.Country;
@@ -506,6 +513,7 @@ namespace DemoV2.AspNetNewtonSoft.Model {
         public static ASPNAddress ToASPNAddress(this ASPNExtendedAddress other, bool deepClone = true) => new ASPNAddress() { 
             Street = other.Street,
             StreetExtra = other.StreetExtra,
+            NumericPostalCode = other.NumericPostalCode,
             PostalCode = other.PostalCode,
             City = other.City,
             Country = other.Country,
@@ -519,6 +527,7 @@ namespace DemoV2.AspNetNewtonSoft.Model {
         public static IQueryable<ASPNAddress> SelectAsASPNAddress(this IQueryable<ASPNExtendedAddress> query) => query.Select(other => new ASPNAddress() { 
             Street = other.Street,
             StreetExtra = other.StreetExtra,
+            NumericPostalCode = other.NumericPostalCode,
             PostalCode = other.PostalCode,
             City = other.City,
             Country = other.Country,

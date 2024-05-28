@@ -409,6 +409,7 @@ namespace DemoV2.Text.Json.Model {
         public static void UpdateWithSTJExtendedAddress(this STJExtendedAddress item, STJExtendedAddress other, bool deepClone = true) {
             item.Street = other.Street;
             item.StreetExtra = other.StreetExtra;
+            item.NumericPostalCode = other.NumericPostalCode;
             item.PostalCode = other.PostalCode;
             item.City = other.City;
             item.Country = other.Country;
@@ -424,6 +425,7 @@ namespace DemoV2.Text.Json.Model {
         public static STJExtendedAddress ToSTJExtendedAddress(this STJExtendedAddress other, bool deepClone = true) => new STJExtendedAddress() { 
             Street = other.Street,
             StreetExtra = other.StreetExtra,
+            NumericPostalCode = other.NumericPostalCode,
             PostalCode = other.PostalCode,
             City = other.City,
             Country = other.Country,
@@ -438,6 +440,7 @@ namespace DemoV2.Text.Json.Model {
         public static IQueryable<STJExtendedAddress> SelectAsSTJExtendedAddress(this IQueryable<STJExtendedAddress> query) => query.Select(other => new STJExtendedAddress() { 
             Street = other.Street,
             StreetExtra = other.StreetExtra,
+            NumericPostalCode = other.NumericPostalCode,
             PostalCode = other.PostalCode,
             City = other.City,
             Country = other.Country,
@@ -452,6 +455,7 @@ namespace DemoV2.Text.Json.Model {
         public static void UpdateWithSTJExtendedAddress(this STJAddress item, STJExtendedAddress other, bool deepClone = true) {
             item.Street = other.Street;
             item.StreetExtra = other.StreetExtra;
+            item.NumericPostalCode = other.NumericPostalCode;
             item.PostalCode = other.PostalCode;
             item.City = other.City;
             item.Country = other.Country;
@@ -466,6 +470,7 @@ namespace DemoV2.Text.Json.Model {
         public static STJExtendedAddress ToSTJExtendedAddress(this STJAddress other, bool deepClone = true) => new STJExtendedAddress() { 
             Street = other.Street,
             StreetExtra = other.StreetExtra,
+            NumericPostalCode = other.NumericPostalCode,
             PostalCode = other.PostalCode,
             City = other.City,
             Country = other.Country,
@@ -479,6 +484,7 @@ namespace DemoV2.Text.Json.Model {
         public static IQueryable<STJExtendedAddress> SelectAsSTJExtendedAddress(this IQueryable<STJAddress> query) => query.Select(other => new STJExtendedAddress() { 
             Street = other.Street,
             StreetExtra = other.StreetExtra,
+            NumericPostalCode = other.NumericPostalCode,
             PostalCode = other.PostalCode,
             City = other.City,
             Country = other.Country,
@@ -492,6 +498,7 @@ namespace DemoV2.Text.Json.Model {
         public static void UpdateWithSTJAddress(this STJExtendedAddress item, STJAddress other, bool deepClone = true) {
             item.Street = other.Street;
             item.StreetExtra = other.StreetExtra;
+            item.NumericPostalCode = other.NumericPostalCode;
             item.PostalCode = other.PostalCode;
             item.City = other.City;
             item.Country = other.Country;
@@ -506,6 +513,7 @@ namespace DemoV2.Text.Json.Model {
         public static STJAddress ToSTJAddress(this STJExtendedAddress other, bool deepClone = true) => new STJAddress() { 
             Street = other.Street,
             StreetExtra = other.StreetExtra,
+            NumericPostalCode = other.NumericPostalCode,
             PostalCode = other.PostalCode,
             City = other.City,
             Country = other.Country,
@@ -519,6 +527,7 @@ namespace DemoV2.Text.Json.Model {
         public static IQueryable<STJAddress> SelectAsSTJAddress(this IQueryable<STJExtendedAddress> query) => query.Select(other => new STJAddress() { 
             Street = other.Street,
             StreetExtra = other.StreetExtra,
+            NumericPostalCode = other.NumericPostalCode,
             PostalCode = other.PostalCode,
             City = other.City,
             Country = other.Country,

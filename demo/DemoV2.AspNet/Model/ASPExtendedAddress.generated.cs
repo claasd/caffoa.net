@@ -21,6 +21,12 @@ namespace DemoV2.AspNet.Model {
         [JsonPropertyName("street.extra")]
         public virtual string StreetExtra { get; set; }
 
+        [JsonPropertyName("numericPostalCode")]
+        public virtual int NumericPostalCode { 
+            get => int.Parse(PostalCode); 
+            set => PostalCode = $"{value:D5}";
+        }
+
         [JsonPropertyName("postalCode")]
         [JsonRequired]
         public virtual string PostalCode { get; set; }
@@ -46,6 +52,7 @@ namespace DemoV2.AspNet.Model {
         public ASPExtendedAddress(ASPExtendedAddress other) {
             Street = other.Street;
             StreetExtra = other.StreetExtra;
+            NumericPostalCode = other.NumericPostalCode;
             PostalCode = other.PostalCode;
             City = other.City;
             Country = other.Country;
@@ -56,6 +63,7 @@ namespace DemoV2.AspNet.Model {
         public ASPExtendedAddress(ASPAddress other, bool deepClone = true) {
             Street = other.Street;
             StreetExtra = other.StreetExtra;
+            NumericPostalCode = other.NumericPostalCode;
             PostalCode = other.PostalCode;
             City = other.City;
             Country = other.Country;

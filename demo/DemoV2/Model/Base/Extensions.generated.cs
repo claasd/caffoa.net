@@ -67,6 +67,7 @@ namespace DemoV2.Model.Base {
         public static void UpdateWithAddress(this Address item, Address other, bool deepClone = false) {
             item.Street = other.Street;
             item.StreetExtra = other.StreetExtra;
+            item.NumericPostalCode = other.NumericPostalCode;
             item.PostalCode = other.PostalCode;
             item.City = other.City;
             item.Country = other.Country;
@@ -82,6 +83,7 @@ namespace DemoV2.Model.Base {
         public static Address ToAddress(this Address other, bool deepClone = false) => new Address() { 
             Street = other.Street,
             StreetExtra = other.StreetExtra,
+            NumericPostalCode = other.NumericPostalCode,
             PostalCode = other.PostalCode,
             City = other.City,
             Country = other.Country,
@@ -96,6 +98,7 @@ namespace DemoV2.Model.Base {
         public static IQueryable<Address> SelectAsAddress(this IQueryable<Address> query) => query.Select(other => new Address() { 
             Street = other.Street,
             StreetExtra = other.StreetExtra,
+            NumericPostalCode = other.NumericPostalCode,
             PostalCode = other.PostalCode,
             City = other.City,
             Country = other.Country,
