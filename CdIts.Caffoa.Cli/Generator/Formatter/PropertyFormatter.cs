@@ -112,14 +112,15 @@ public class PropertyFormatter
             tags.Add("[Obsolete]\n        ");
         if (!string.IsNullOrEmpty(_property.Converter))
             tags.Add($"[JsonConverter(typeof({_property.Converter}))]\n        ");
-        else if (_property.TypeName.StartsWith("DateOnly"))
+        
+        else if (_property.TypeName.StartsWith("DateOnly") && !_property.IsMap)
         {
             if (_config.UseDateOnly is true)
                 tags.Add("[JsonConverter(typeof(CaffoaDateOnlyConverter))]\n        ");
             else
                 tags.Add("[JsonConverter(typeof(CaffoaDateConverter))]\n        ");
         }
-        else if (_property.TypeName.StartsWith("TimeOnly"))
+        else if (_property.TypeName.StartsWith("TimeOnly") && !_property.IsMap)
         {
             if (_config.UseDateOnly is true)
                 tags.Add("[JsonConverter(typeof(CaffoaTimeOnlyConverter))]\n        ");

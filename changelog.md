@@ -1,4 +1,7 @@
 # caffoa changelog
+## 4.7.1
+* do not generate JsonConverter for dictionaries of dates and times
+
 ## 4.7.0
 * allow to specify getter and optional setter for aliases.
 
