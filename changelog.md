@@ -1,4 +1,7 @@
 # caffoa changelog
+## 4.8.0
+* write servers from openapi definition into client
+
 ## 4.7.1
 * do not generate JsonConverter for dictionaries of dates and times
 

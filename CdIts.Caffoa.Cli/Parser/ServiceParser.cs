@@ -26,9 +26,9 @@ public class ServiceParser
         _config = config;
         _logger = logger;
     }
-    
-    public async Task ReadAsync() {
 
+    public async Task ReadAsync()
+    {
         Uri baseUri;
         Stream? input = null;
         try
@@ -56,17 +56,28 @@ public class ServiceParser
                 BaseUrl = baseUri
             });
             var readResult = await reader.ReadAsync(input);
-            
+
             if (readResult.OpenApiDiagnostic.Errors.Count > 0)
             {
                 throw new CaffoaValidationException($"Error parsing {_service.ApiPath}", readResult.OpenApiDiagnostic);
             }
+
             Document = readResult.OpenApiDocument;
         }
         finally
         {
             input?.Close();
         }
+    }
+
+
+    public List<Server> GenerateServers()
+    {
+        var servers = new List<Server>();
+        if (Document!.Servers is null)
+            return servers;
+        servers.AddRange(Document!.Servers.Select(openapi => new Server(openapi.Url)));
+        return servers;
     }
 
     public List<SchemaItem> GenerateModel()
@@ -79,7 +90,7 @@ public class ServiceParser
             schemas = schemas.Where(p => !_service.Model.Excludes.Contains(p.Key))
                 .ToDictionary(p => p.Key, p => p.Value);
         var objects = ParseObjects(schemas);
-        objects.ForEach(o=>o.Namespace = _service.Model.Namespace);
+        objects.ForEach(o => o.Namespace = _service.Model.Namespace);
         return objects;
     }
 
@@ -91,6 +102,7 @@ public class ServiceParser
         {
             endpoints.AddRange(parser.Parse(path, pathItem));
         }
+
         return endpoints;
     }
 
@@ -104,7 +116,7 @@ public class ServiceParser
             var className = ClassName(name);
             if (_config.Duplicates == "once" && Duplicates.Contains(className))
                 continue;
-            if(!apiSchema.IsRealObject(_config.GetEnumCreationMode()))
+            if (!apiSchema.IsRealObject(_config.GetEnumCreationMode()))
                 continue;
             ObjectParser parser = _config.UseInheritance is true
                 ? new ObjectInheritanceParser(new SchemaItem(name, className), _config.GetEnumCreationMode(), ClassName, nullableIsDefault)

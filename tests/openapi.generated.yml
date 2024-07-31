@@ -2,6 +2,21 @@ openapi: 3.0.1
 info:
   title: Demo API
   version: '1.0'
+servers:
+  - url: https://api.demoserver.cloud
+  - url: 'https://{prefix}.testserver.cloud/{version}'
+    variables:
+      version:
+        default: v1
+        enum:
+          - v1
+          - v2
+      prefix:
+        default: dev.api
+        enum:
+          - api
+          - dev.api
+          - failover.api
 paths:
   /users:
     get:

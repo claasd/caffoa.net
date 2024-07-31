@@ -14,6 +14,7 @@ public class ApiBuilder
     public CaffoaGlobalConfig Config { get; }
     private List<EndPointModel>? _endpoints;
     private readonly ServiceParser _parser;
+    private List<Server> _servers;
     public IEnumerable<string> ExtensionData { get; private set; } = Array.Empty<string>();
     public string ExtensionNamespace => _service.Model!.Namespace;
     public string ExtensionFolder => _service.Model!.TargetFolder;
@@ -52,6 +53,7 @@ public class ApiBuilder
             Models = _parser.GenerateModel();
         if (_service.Function != null || _service.Client != null || _service.Controller != null)
             _endpoints = _parser.GenerateEndpoints();
+        _servers = _parser.GenerateServers();
     }
 
     public void Generate(List<SchemaItem> otherKnownObjects)
@@ -75,7 +77,7 @@ public class ApiBuilder
         if (_service.Client != null && _endpoints != null)
         {
             var clientGenerator = new ClientGenerator(_service.Client, Config, _service.Model?.Namespace, _logger);
-            clientGenerator.GenerateClient(_endpoints);
+            clientGenerator.GenerateClient(_endpoints, _servers);
         }
 
         if (_service.Controller != null && _endpoints != null)

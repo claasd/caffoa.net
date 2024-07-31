@@ -22,6 +22,11 @@ namespace {NAMESPACE}
     /// AUTO GENERATED CLASS
     public partial class {CLASSNAME}
     {{
+        /// <summary>
+        /// all servers from the openapi definition  
+        /// </summary>
+        public static string[] Servers => new string[] {{ {SERVERS} }};
+        
         private string _baseUri = null!;
         {FIELD_VISIBILITY} string BaseUri {{
             get => _baseUri;

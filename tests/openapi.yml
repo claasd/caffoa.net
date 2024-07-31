@@ -5,7 +5,21 @@ info:
 
 security:
   - bearerAuth: [ ]
-
+servers:
+  - url: https://api.demoserver.cloud
+  - url: https://{prefix}.testserver.cloud/{version}
+    variables:
+      version:
+        default: v1
+        enum:
+          - v1
+          - v2
+      prefix:
+        default: dev.api
+        enum:
+          - api
+          - dev.api
+          - failover.api
 components:
   securitySchemes:
     bearerAuth:

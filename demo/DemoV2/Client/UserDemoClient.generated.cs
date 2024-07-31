@@ -25,6 +25,11 @@ namespace DemoV2.Client
     /// AUTO GENERATED CLASS
     public partial class UserDemoClient
     {
+        /// <summary>
+        /// all servers from the openapi definition  
+        /// </summary>
+        public static string[] Servers => new string[] { "https://api.demoserver.cloud", "https://{prefix}.testserver.cloud/{version}" };
+        
         private string _baseUri = null!;
         internal string BaseUri {
             get => _baseUri;

@@ -21,7 +21,7 @@ public class ClientGenerator
         _logger = logger;
     }
 
-    public void GenerateClient(List<EndPointModel> endpoints)
+    public void GenerateClient(List<EndPointModel> endpoints, List<Server> servers)
     {
         if (_clientConfig.SplitByTag ?? _config.SplitByTag is true)
         {
@@ -29,15 +29,15 @@ public class ClientGenerator
             foreach (var tag in tags)
             {
                 if(_clientConfig.IncludeTags is null || _clientConfig.IncludeTags.Length == 0 || _clientConfig.IncludeTags.Contains(tag))
-                    GenerateClient(endpoints.Where(e => e.Tag == tag).ToList(), tag.ToObjectName());
+                    GenerateClient(servers, endpoints.Where(e => e.Tag == tag).ToList(), tag.ToObjectName());
             }
         }
         else
         {
-            GenerateClient(endpoints, "");
+            GenerateClient(servers, endpoints, "");
         }
     }
-    public void GenerateClient(List<EndPointModel> endpoints, string namePrefix)
+    public void GenerateClient(List<Server> servers, List<EndPointModel> endpoints, string namePrefix)
     {
         var imports = new List<string>();
         endpoints.ForEach(e => imports.AddRange(e.Imports));
@@ -51,6 +51,7 @@ public class ClientGenerator
         var name = _clientConfig.GetName(namePrefix);
         Directory.CreateDirectory(_clientConfig.TargetFolder);
         var format = new Dictionary<string, object>();
+        format["SERVERS"] = string.Join(", ", servers.Select(s=>s.Uri.Escaped()));
         format["NAMESPACE"] = _clientConfig.Namespace;
         format["CLASSNAME"] = name;
         format["CONSTRUCTOR_VISIBILITY"] = _clientConfig.ConstructorVisibility;
