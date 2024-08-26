@@ -102,7 +102,8 @@ public abstract class ObjectParser
         {
             property.IsArray = true;
             property.TypeName = schema.GetArrayType(ClassNameFunc, _enumMode);
-            property.InnerTypeIsOtherSchema = schema.Items.Reference != null && !schema.Items.IsPrimitiveType();
+            property.InnerTypeIsOtherSchema = schema.Items.Reference != null && !schema.Items.IsRealObject(_enumMode);
+
             if (schema.Items.IsPrimitiveType() && schema.Default is OpenApiArray defaultArray)
             {
                 property.ArrayDefaults = defaultArray.Select(item => item.AnyValue()).Where(v => v != null).ToArray()!;

@@ -1,4 +1,7 @@
 # caffoa changelog
+## 4.8.1
+* fix an error with enum lists that references enums from another yaml file
+
 ## 4.8.0
 * write servers from openapi definition into client
 
