@@ -1,6 +1,7 @@
 ﻿using System.Globalization;
 using System.Text;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Primitives;
 using Moq;
 using Newtonsoft.Json;
 using JsonSerializer = System.Text.Json.JsonSerializer;
@@ -37,10 +38,14 @@ public class RequestBuilder
         return this;
     }
 
-    public RequestBuilder Header(string name, string? value)
+    public RequestBuilder Header(string name, string? value) => HeaderInt(name, value);
+    public RequestBuilder Header(string name, IEnumerable<string>? value) => HeaderInt(name, value?.ToArray());
+    public RequestBuilder Header(string name, StringValues? value) => HeaderInt(name, value);
+    
+    private RequestBuilder HeaderInt(string name, StringValues? value)
     {
-        if (value != null)
-            _header.Add(name, value);
+        if (value is not null)
+            _header.Add(name, value.Value);
         return this;
     }
 
