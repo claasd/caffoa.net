@@ -36,8 +36,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DemoV1a", "demo\DemoV1a\Dem
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DemoV1b", "demo\DemoV1b\DemoV1b.csproj", "{DD69DC15-D120-4A89-813A-4798ECBBF61D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CdIts.AzFuncTestHelper", "CdIts.AzFuncTestHelper\CdIts.AzFuncTestHelper.csproj", "{86B1BDD8-F591-41DA-B2C8-68FC9ED23D42}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DemoV2.Text.Json", "demo\DemoV2.Text.Json\DemoV2.Text.Json.csproj", "{274853EE-288F-4DAA-9369-8E1109D7DC79}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CdIts.Caffoa.System.Text.Json", "CdIts.Caffoa.System.Text.Json\CdIts.Caffoa.System.Text.Json.csproj", "{E45FB71D-A177-48BD-BDB5-C5D010D1F352}"
@@ -88,10 +86,6 @@ Global
 		{DD69DC15-D120-4A89-813A-4798ECBBF61D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DD69DC15-D120-4A89-813A-4798ECBBF61D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DD69DC15-D120-4A89-813A-4798ECBBF61D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{86B1BDD8-F591-41DA-B2C8-68FC9ED23D42}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{86B1BDD8-F591-41DA-B2C8-68FC9ED23D42}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{86B1BDD8-F591-41DA-B2C8-68FC9ED23D42}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{86B1BDD8-F591-41DA-B2C8-68FC9ED23D42}.Release|Any CPU.Build.0 = Release|Any CPU
 		{274853EE-288F-4DAA-9369-8E1109D7DC79}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{274853EE-288F-4DAA-9369-8E1109D7DC79}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{274853EE-288F-4DAA-9369-8E1109D7DC79}.Release|Any CPU.ActiveCfg = Release|Any CPU

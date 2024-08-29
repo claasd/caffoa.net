@@ -8,6 +8,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="CdIts.AzFuncTestHelper" Version="4.9.0" />
         <PackageReference Include="FluentAssertions" Version="6.12.0" />
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />
         <PackageReference Include="NUnit" Version="4.0.1" />
@@ -15,7 +16,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\CdIts.AzFuncTestHelper\CdIts.AzFuncTestHelper.csproj" />
       <ProjectReference Include="..\CdIts.Caffoa.Extensions\CdIts.Caffoa.Extensions.csproj" />
       <ProjectReference Include="..\CdIts.Caffoa.Json.Net\CdIts.Caffoa.Json.Net.csproj" />
       <ProjectReference Include="..\demo\DemoV2\DemoV2.csproj" />
