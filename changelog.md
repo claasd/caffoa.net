@@ -1,6 +1,7 @@
 # caffoa changelog
 ## 4.9.0
 * extracted AzFuncTestHelper to a separate repository
+* Add CaffoaClientStringException and CAffoaClientJsonException\<T> for easier error error handling in servers
 
 ## 4.8.1
 * fix an error with enum lists that references enums from another yaml file
