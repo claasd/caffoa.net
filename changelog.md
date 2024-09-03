@@ -1,5 +1,6 @@
 # caffoa changelog
 ## 4.9.0
+* Fix regression from 4.8.1 that would generate wrong copy methods for object arrays
 * extracted AzFuncTestHelper to a separate repository
 * Add CaffoaClientStringException and CAffoaClientJsonException\<T> for easier error error handling in servers
 * allow to create objects with anyOf

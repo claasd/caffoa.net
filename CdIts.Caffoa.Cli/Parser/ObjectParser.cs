@@ -116,12 +116,12 @@ public abstract class ObjectParser
         }
         else if (schema.IsArray())
         {
-            Console.WriteLine(name);
             property.IsArray = true;
             property.TypeName = schema.GetArrayType(ClassNameFunc, _enumMode);
-            property.InnerTypeIsOtherSchema = schema.Items.Reference != null && !schema.Items.IsRealObject(_enumMode);
+            var items = ResolveExternal(schema.Items);
+            property.InnerTypeIsOtherSchema = items.Reference != null && !items.IsPrimitiveType() && !items.CanBeEnum();
 
-            if (schema.Items.IsPrimitiveType() && schema.Default is OpenApiArray defaultArray)
+            if (items.IsPrimitiveType() && schema.Default is OpenApiArray defaultArray)
             {
                 property.ArrayDefaults = defaultArray.Select(item => item.AnyValue()).Where(v => v != null).ToArray()!;
             }

@@ -201,7 +201,6 @@ public class CaffoaConverterTests
         {
             Duration = TimeSpan.FromMinutes(920)
         });
-        Console.WriteLine(duration);
         var obj2 = JsonConvert.DeserializeObject<DurationTestClass>(duration);
         obj2!.Duration.TotalMinutes.Should().Be(920);
     }

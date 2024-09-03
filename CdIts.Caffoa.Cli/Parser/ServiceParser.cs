@@ -116,10 +116,11 @@ public class ServiceParser
             var className = ClassName(name);
             if (_config.Duplicates == "once" && Duplicates.Contains(className))
                 continue;
-            if (!apiSchema.IsRealObject(_config.GetEnumCreationMode()))
-                continue;
             if(apiSchema.IsArray() && _config.ParseArrayTypes is not true)
                 continue;
+            if (!apiSchema.IsArray() && !apiSchema.IsRealObject(_config.GetEnumCreationMode()))
+                continue;
+            
             ObjectParser parser = _config.UseInheritance is true
                 ? new ObjectInheritanceParser(new SchemaItem(name, className), _config.GetEnumCreationMode(), ClassName, nullableIsDefault)
                 : new ObjectStandaloneParser(new SchemaItem(name, className), _config.GetEnumCreationMode(), ClassName, nullableIsDefault);
