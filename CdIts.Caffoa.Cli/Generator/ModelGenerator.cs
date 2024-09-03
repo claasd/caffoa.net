@@ -26,19 +26,21 @@ public class ModelGenerator
         Directory.CreateDirectory(_service.Model!.TargetFolder);
         var interfaces = objects.Where(o => o.Interface != null).ToList();
         var classes = objects.Where(o => o.Interface == null && o.Type == SchemaItem.ObjectType.Regular).ToList();
+        var arrayClasses = objects.Where(o=>o.Type == SchemaItem.ObjectType.Array).ToList();
         var enumClasses = objects
             .Where(o => o.Type is SchemaItem.ObjectType.StringEnum).ToList();
         var enumProperties = objects.Where(o => o.Properties != null && o.Properties.Exists(p => p.Enums.Any())).ToList();
         enumProperties.ForEach(WriteEnumClasses);
         enumClasses.ForEach(WriteEnumClass);
         interfaces.ForEach(WriteModelInterface);
+        arrayClasses.ForEach(c=>WriteArrayClass(c, interfaces));
 
         var allKnownClasses = otherKnownObjects.Concat(classes).ToList();
         var allKnownEnumClasses = enumClasses.Concat(otherKnownObjects.Where(o => o.Type == SchemaItem.ObjectType.StringEnum)).ToList();
         classes.ForEach(c => WriteModelClass(c, interfaces, allKnownClasses, allKnownEnumClasses));
         if (_config.Extensions is false)
             return Array.Empty<string>();
-        return classes.Select(c => CreateModelExtensions(c, allKnownClasses)).Where(d => !string.IsNullOrEmpty(d));
+        return classes.Select(c => CreateModelExtensions(c, allKnownClasses)).Where(d => !string.IsNullOrEmpty(d)).Distinct();
     }
 
     private void WriteModelInterface(SchemaItem item)
@@ -100,6 +102,30 @@ public class ModelGenerator
         var formatted = file.FormatDict(parameters);
         File.WriteAllText(Path.Combine(_service.Model.TargetFolder, fileName), formatted.ToSystemNewLine());
     }
+    
+    private void WriteArrayClass(SchemaItem item, List<SchemaItem> interfaces)
+    {
+        var file = Templates.GetTemplate("ModelTemplate.tpl");
+        var formatter = new SchemaItemFormatter(item, _config);
+        var fileName = $"{item.ClassName}.generated.cs";
+        var parameters = new Dictionary<string, object>();
+        var seal = _config.SealClasses(item.GenerateEqualsOverload);
+        parameters["NAMESPACE"] = _service.Model!.Namespace;
+        parameters["IMPORTS"] = formatter.Imports(_service.Model.Imports, _config.Imports);
+        parameters["NAME"] = item.ClassName;
+        parameters["PARENTS"] = formatter.Parents(interfaces);
+        parameters["SEALED"] = seal ? " sealed " : "";
+        parameters["INTERFACE_METHODS"] = formatter.InterfaceMethods(interfaces, seal);
+        parameters["RAWNAME"] = item.Name;
+        parameters["CONSTRUCTORS"] = CreateConstructors(item, null);
+        parameters["EQUALS_METHODS"] = (item.GenerateEqualsOverload ?? _config.GenerateEqualsMethods) is true ? CreateEquals(item, null) : "";
+        parameters["INHERIT_CONSTRUCTORS"] = "";
+        parameters["PROPERTIES"] = "";
+        parameters["ADDITIONAL_PROPS"] = "";
+        parameters["DESCRIPTION"] = formatter.Description;
+        var formatted = file.FormatDict(parameters);
+        File.WriteAllText(Path.Combine(_service.Model.TargetFolder, fileName), formatted.ToSystemNewLine());
+    }
 
     private string CreateModelExtensions(SchemaItem item, List<SchemaItem> otherSchemas)
     {
@@ -144,21 +170,29 @@ public class ModelGenerator
         return formatted.ToSystemNewLine();
     }
 
-    private string CreateEquals(SchemaItem item, List<SchemaItem> enumClasses)
+    private string CreateEquals(SchemaItem item, List<SchemaItem>? enumClasses)
     {
+        enumClasses ??= new List<SchemaItem>();
         var builder = new StringBuilder();
         builder.Append($"        public bool Equals({item.ClassName} other) {{\n");
         builder.Append(
             "            if (ReferenceEquals(null, other)) return false;\n            if (ReferenceEquals(this, other)) return true;\n            ");
         bool first = true;
         var hashBuilder = new StringBuilder();
+        
         foreach (var itemProperty in item.Properties!)
         {
             var isEnum = itemProperty.CanBeEnum() || enumClasses.Exists(ec=>ec.ClassName == itemProperty.TypeName);
             isEnum = isEnum && _config.GetEnumCreationMode() == CaffoaConfig.EnumCreationMode.Default;
             builder.Append(first ? "var result = " : "\n                && ");
             var name = itemProperty.FieldName;
-            if (itemProperty.IsArray || itemProperty.IsMap)
+            if (item.Type == SchemaItem.ObjectType.Array)
+            {
+                builder.Append($"this.SequenceEqual(other)");
+                hashBuilder.Append($"            hashCode.Add(base.GetHashCode());\n");
+                continue;
+            }
+            else if (itemProperty.IsArray || itemProperty.IsMap)
             {
                 builder.Append($"({name}?.SequenceEqual(other.{name}) ?? other.{name} is null)");
             }
@@ -170,6 +204,7 @@ public class ModelGenerator
                 builder.Append($"({name}?.Equals(other.{name}) ?? other.{name} is null)");
 
             var cast = isEnum && !itemProperty.IsMap && !itemProperty.IsArray ? "(int) " : "";
+            
             hashBuilder.Append($"            hashCode.Add({cast}{name});\n");
             first = false;
         }
@@ -191,16 +226,17 @@ public class ModelGenerator
     return builder.ToString();
     }
 
-    private string CreateConstructors(SchemaItem item, List<SchemaItem> otherClasses)
+    private string CreateConstructors(SchemaItem item, List<SchemaItem>? otherClasses)
     {
         var builder = new StringBuilder();
         var deepCloneDefault = _config.DeepCopyDefaultValue is false ? "false" : "true";
         builder.Append($"public {item.ClassName}({item.ClassName} other)");
         if (item.Parent != null)
             builder.Append($" : base(other)");
-        builder.Append(" {\n            ");
-        builder.Append(PropertyUpdateBuilder.BuildConstructor(item, _config, item));
-        builder.Append("\n        }");
+        if(item.Type == SchemaItem.ObjectType.Regular)
+            builder.Append(" {\n            ").Append(PropertyUpdateBuilder.BuildConstructor(item, _config, item)).Append("\n        }");
+        else
+            builder.Append("{}");
 
         if (item.Parent != null)
         {
@@ -209,7 +245,7 @@ public class ModelGenerator
 
         foreach (var subItem in item.SubItems)
         {
-            var otherItem = otherClasses.Find(c => c.ClassName == subItem);
+            var otherItem = otherClasses?.Find(c => c.ClassName == subItem);
             if (otherItem != null)
             {
                 builder.Append($"\n        public {item.ClassName}({subItem} other, bool deepClone = {deepCloneDefault}) {{\n            ");

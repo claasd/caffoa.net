@@ -118,6 +118,8 @@ public class ServiceParser
                 continue;
             if (!apiSchema.IsRealObject(_config.GetEnumCreationMode()))
                 continue;
+            if(apiSchema.IsArray() && _config.ParseArrayTypes is not true)
+                continue;
             ObjectParser parser = _config.UseInheritance is true
                 ? new ObjectInheritanceParser(new SchemaItem(name, className), _config.GetEnumCreationMode(), ClassName, nullableIsDefault)
                 : new ObjectStandaloneParser(new SchemaItem(name, className), _config.GetEnumCreationMode(), ClassName, nullableIsDefault);

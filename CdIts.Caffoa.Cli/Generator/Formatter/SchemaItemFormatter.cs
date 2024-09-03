@@ -9,11 +9,11 @@ public class SchemaItemFormatter
     private readonly CaffoaConfig _config;
     private readonly List<SchemaItem> _otherClasses;
 
-    public SchemaItemFormatter(SchemaItem item, CaffoaConfig config, List<SchemaItem> otherClasses)
+    public SchemaItemFormatter(SchemaItem item, CaffoaConfig config, List<SchemaItem>? otherClasses = null)
     {
         _item = item;
         _config = config;
-        _otherClasses = otherClasses;
+        _otherClasses = otherClasses ?? new List<SchemaItem>();
     }
 
     public object Description

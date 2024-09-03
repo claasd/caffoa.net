@@ -77,6 +77,8 @@ public class CaffoaConfig
 
     public string[]? JsonContentTypes { get; set; }
     
+    public bool? ParseArrayTypes { get; set; }
+    
     public CaffoaGlobalConfig MergedWith(CaffoaGlobalConfig general)
     {
         return new CaffoaGlobalConfig()
@@ -118,7 +120,8 @@ public class CaffoaConfig
             GenerateCompareOverloads = GenerateCompareOverloads ?? general.GenerateCompareOverloads,
             SealClassesWithEqualsMethods = SealClassesWithEqualsMethods ?? general.SealClassesWithEqualsMethods,
             NullableIsDefault = NullableIsDefault ?? general.NullableIsDefault,
-            JsonContentTypes = JsonContentTypes ?? general.JsonContentTypes
+            JsonContentTypes = JsonContentTypes ?? general.JsonContentTypes,
+            ParseArrayTypes = ParseArrayTypes ?? general.ParseArrayTypes
         };
     }
 }

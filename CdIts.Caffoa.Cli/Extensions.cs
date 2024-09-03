@@ -56,7 +56,7 @@ public static class Extensions
 
     public static bool IsRealObject(this OpenApiSchema apiSchema, CaffoaConfig.EnumCreationMode mode)
     {
-        if (!apiSchema.IsPrimitiveType() && !apiSchema.HasOnlyAdditionalProperties() && !apiSchema.IsArray())
+        if (!apiSchema.IsPrimitiveType() && !apiSchema.HasOnlyAdditionalProperties())// && !apiSchema.IsArray())
             return true;
         if (apiSchema.CanBeEnum() && mode == CaffoaConfig.EnumCreationMode.Default)
             return true;

@@ -35,6 +35,18 @@ public abstract class ObjectParser
             Item.GenerateEqualsOverload = schema.Extensions.ParseCaffoaOption("x-caffoa-generate-equals");
             Item.GenerateComparerOverload = schema.Extensions.ParseCaffoaOption("x-caffoa-generate-comparer");
             var nullableIsDefault = schema.Extensions.ParseCaffoaOption("x-caffoa-default-nullable") ?? _nullableIsDefault;
+            if (schema.IsArray())
+            {
+                Item.Type = SchemaItem.ObjectType.Array;
+                var prop = ParseProperty("data", schema.Items);
+                Item.Properties = new List<PropertyData>() { prop };
+                var arrayType = prop.TypeName;
+                if (prop.CanBeEnum() && !prop.CanBeConstant())
+                    arrayType = Item.ClassName + ".DataValue";
+                Item.Parent = $"List<{arrayType}>";
+                return Item;
+            }
+
             if (schema.AllOf.Count > 0)
                 schema = UpdateSchemaForAllOff(schema, schema.AllOf);
             if (schema.AnyOf.Count > 0)
@@ -73,8 +85,8 @@ public abstract class ObjectParser
         }
     }
 
-    private PropertyData ParseProperty(string name, OpenApiSchema schema, bool required, bool nullableIsDefault, bool doDelegate,
-        string? alias)
+    private PropertyData ParseProperty(string name, OpenApiSchema schema, bool required = false, bool nullableIsDefault = false, bool doDelegate = false,
+        string? alias = null)
     {
         schema = ResolveExternal(schema);
         if (schema.AnyOf.Any())
@@ -181,7 +193,7 @@ public abstract class ObjectParser
     private InterfaceModel ExtractInterface(IList<OpenApiSchema> schemaOneOf, OpenApiDiscriminator openApiDiscriminator)
     {
         if (openApiDiscriminator?.PropertyName is null)
-            _logger?.LogWarning("discriminator is null, createing the correct subtype might not be possible for server implementations");
+            _logger?.LogWarning("discriminator is null, creating the correct subtype might not be possible for server implementations");
         var mapping = openApiDiscriminator?.Mapping.ToDictionary(m => m.Value, m => m.Key);
         var model = new InterfaceModel
         {
@@ -191,7 +203,7 @@ public abstract class ObjectParser
         {
             if (!schema.IsPrimitiveType() && schema.Reference is null)
                 throw new CaffoaParserException("oneOf interface can only contain references or primitive types");
-            
+
             if (mapping is null || schema.Reference is null || !mapping.TryGetValue(schema.Reference.ReferenceV3, out var mapName))
                 mapName = schema.Reference?.Name() ?? schema.TypeName();
             var typeName = schema.Reference != null ? ClassNameFunc(schema.Reference.Name()) : schema.TypeName();
