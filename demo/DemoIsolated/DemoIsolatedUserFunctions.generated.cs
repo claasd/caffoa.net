@@ -280,10 +280,10 @@ namespace DemoIsolated
                 if(request.Query.TryGetValue("filter", out var filterQueryValue))
                     filterValue = _converter.ParseEnum<IsoMyEnumType>(filterQueryValue, "filter");
                 ICollection<IsoMyEnumType> includeValue = null;
-                if(request.Query.TryGetValue("include", out var includeQueryValue))
+                if(request.Query.TryGetValue("include[]", out var includeQueryValue))
                     includeValue = _converter.ParseEnumArray<IsoMyEnumType>(_jsonParser, includeQueryValue, "include");
                 ICollection<string> flagsValue = null;
-                if(request.Query.TryGetValue("flags", out var flagsQueryValue))
+                if(request.Query.TryGetValue("flags[]", out var flagsQueryValue))
                     flagsValue = flagsQueryValue.ToArray();
                 ICollection<IsoMyEnumType> excludeValue = null;
                 if(request.Query.TryGetValue("exclude", out var excludeQueryValue))

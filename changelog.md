@@ -5,6 +5,7 @@
 * Add CaffoaClientStringException and CAffoaClientJsonException\<T> for easier error error handling in servers
 * allow to create objects with anyOf
 * allow to create array objects
+* handle query parameters that have characters that are not allowed in C# identifiers (e.g. types[])
 
 ## 4.8.1
 * fix an error with enum lists that references enums from another yaml file

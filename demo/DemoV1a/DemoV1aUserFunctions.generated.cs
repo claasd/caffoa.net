@@ -281,10 +281,10 @@ namespace DemoV1a
                 if(request.Query.TryGetValue("filter", out var filterQueryValue))
                     filterValue = filterQueryValue;
                 ICollection<string> includeValue = null;
-                if(request.Query.TryGetValue("include", out var includeQueryValue))
+                if(request.Query.TryGetValue("include[]", out var includeQueryValue))
                     includeValue = includeQueryValue.ToArray();
                 ICollection<string> flagsValue = null;
-                if(request.Query.TryGetValue("flags", out var flagsQueryValue))
+                if(request.Query.TryGetValue("flags[]", out var flagsQueryValue))
                     flagsValue = flagsQueryValue.ToArray();
                 ICollection<string> excludeValue = null;
                 if(request.Query.TryGetValue("exclude", out var excludeQueryValue))

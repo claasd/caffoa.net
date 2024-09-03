@@ -246,7 +246,7 @@ paths:
           x-caffoa-enum-aliases:
             deprecated_enum: enum1
             deprecated_enum2: enum2
-      - name: include
+      - name: 'include[]'
         in: query
         schema:
           type: array
@@ -262,7 +262,7 @@ paths:
               deprecated_enum: enum1
               deprecated_enum2: enum2
           nullable: true
-      - name: flags
+      - name: 'flags[]'
         in: query
         schema:
           type: array

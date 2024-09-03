@@ -113,15 +113,15 @@ public class PathParser
         {
             var discriminator = content.Schema.Discriminator;
             if (discriminator is null)
-                throw new CaffoaParserException("Need discriminator in oneOf");
-            var mapping = discriminator.Mapping.ToDictionary(i => i.Value, i => i.Key);
-            var result = new SelectionBodyModel(discriminator.PropertyName, type);
+                _logger.LogWarning("No discriminator in oneOf, function generation might fail");
+            var mapping = discriminator?.Mapping?.ToDictionary(i => i.Value, i => i.Key);
+            var result = new SelectionBodyModel(discriminator?.PropertyName ?? "type", type);
             if (content.Schema.OneOf.Any(s => s.Reference is null))
                 throw new CaffoaParserException("Cannot have oneOf without ref types");
 
             foreach (var reference in content.Schema.OneOf.Select(s => s.Reference))
             {
-                if (!mapping.TryGetValue(reference.ReferenceV3, out var mapName))
+                if (mapping is null || !mapping.TryGetValue(reference.ReferenceV3, out var mapName))
                     mapName = reference.Name();
                 var typeName = _classNameFunc(reference.Name());
                 result.Mapping[mapName] = typeName;
@@ -257,6 +257,9 @@ public class PathParser
                     ArrayType = arrayType,
                     InnerType = innerType
                 };
+                if (p.Name.Contains("["))
+                    ;
+                
                 return result;
             })
             .ToList();

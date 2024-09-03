@@ -281,10 +281,10 @@ namespace DemoV2
                 if(request.Query.TryGetValue("filter", out var filterQueryValue))
                     filterValue = _converter.ParseEnum<MyEnumType>(filterQueryValue, "filter");
                 ICollection<MyEnumType> includeValue = null;
-                if(request.Query.TryGetValue("include", out var includeQueryValue))
+                if(request.Query.TryGetValue("include[]", out var includeQueryValue))
                     includeValue = _converter.ParseEnumArray<MyEnumType>(_jsonParser, includeQueryValue, "include");
                 ICollection<string> flagsValue = null;
-                if(request.Query.TryGetValue("flags", out var flagsQueryValue))
+                if(request.Query.TryGetValue("flags[]", out var flagsQueryValue))
                     flagsValue = flagsQueryValue.ToArray();
                 ICollection<MyEnumType> excludeValue = null;
                 if(request.Query.TryGetValue("exclude", out var excludeQueryValue))

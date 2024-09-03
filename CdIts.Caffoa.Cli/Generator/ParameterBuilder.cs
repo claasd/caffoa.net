@@ -83,7 +83,7 @@ public class ParameterBuilder
         {
             var typeName = p.GetTypeName(_useDateOnly, _useDateTime);
             var nullableAddition = nullableDefaults && !p.Required && typeName != "string" && !typeName.EndsWith('?')? "?" : "";
-            var result = new Parameter($"{typeName}{nullableAddition}", p.Name);
+            var result = new Parameter($"{typeName}{nullableAddition}", p.VarName);
             if (_addAspNetAttributes) result.Attributes.Add("[FromQuery]");
             if (p.IsEnum && p.DefaultValue != null)
                 result.DefaultValue = $"{typeName}.{ModelGenerator.EnumNameForValue(p.DefaultValue)}";

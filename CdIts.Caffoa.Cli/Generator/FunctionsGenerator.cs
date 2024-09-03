@@ -157,7 +157,7 @@ public class FunctionsGenerator
         {
             var sb = new StringBuilder();
             var typeName = parameter.GetTypeName(_config);
-            sb.Append($"{typeName} {parameter.Name}Value");
+            sb.Append($"{typeName} {parameter.VarName}Value");
             if(parameter.IsEnum && parameter.DefaultValue != null)
                 sb.Append($" = {typeName}.{ModelGenerator.EnumNameForValue(parameter.DefaultValue)};");
             else if (parameter.DefaultValue != null) 
@@ -165,11 +165,11 @@ public class FunctionsGenerator
             else if (!parameter.Required)
                 sb.Append($" = null");
             sb.Append(";\n                ");
-            sb.Append($"if(request.Query.TryGetValue(\"{parameter.Name}\", out var {parameter.Name}QueryValue))");
+            sb.Append($"if(request.Query.TryGetValue(\"{parameter.Name}\", out var {parameter.VarName}QueryValue))");
             sb.Append("\n                    ");
-            sb.Append($"{parameter.Name}Value = ");
-            sb.Append(FormatConversion(parameter.GetTypeName(_config).Trim('?'), $"{parameter.Name}QueryValue",
-                parameter.Name, parameter.IsEnum, parameter.ArrayType, parameter.InnerType));
+            sb.Append($"{parameter.VarName}Value = ");
+            sb.Append(FormatConversion(parameter.GetTypeName(_config).Trim('?'), $"{parameter.VarName}QueryValue",
+                parameter.VarName, parameter.IsEnum, parameter.ArrayType, parameter.InnerType));
             sb.Append(";\n                ");
             if (parameter.Required && parameter.DefaultValue is null)
             {
@@ -204,7 +204,7 @@ public class FunctionsGenerator
             caseParams.Add($"_jsonParser.ToObject<{type}>(jsonToken)");
             if (_config.ParseQueryParameters is not false)
             {
-                caseParams.AddRange(endpoint.QueryParameters().Select(p => $"{p.Name}Value"));
+                caseParams.AddRange(endpoint.QueryParameters().Select(p => $"{p.VarName}Value"));
             }
 
             if (_config.WithCancellation is not false)
@@ -240,7 +240,7 @@ public class FunctionsGenerator
             callParams.Add($"request.Body");
         if (_config.ParseQueryParameters is not false)
         {
-            callParams.AddRange(endpoint.QueryParameters().Select(p => $"{p.Name}Value"));
+            callParams.AddRange(endpoint.QueryParameters().Select(p => $"{p.VarName}Value"));
         }
 
         if (_config.WithCancellation is not false)

@@ -545,14 +545,14 @@ paths:
         required: false
         schema: 
           $ref: "#/components/schemas/myEnumType"
-      - name: include
+      - name: include[]
         in: query
         required: false
         schema:
           type: array
           items:
             $ref: "#/components/schemas/myEnumType"
-      - name: flags
+      - name: flags[]
         in: query
         required: false
         schema:

@@ -1,3 +1,4 @@
+using System.Text.RegularExpressions;
 using CdIts.Caffoa.Cli.Config;
 
 namespace CdIts.Caffoa.Cli.Model;
@@ -11,6 +12,7 @@ public enum ParameterArrayType
 
 public class ParameterObject
 {
+    public string VarName => Regex.Replace(Name, @"\W", "");
     public string Name { get; }
     private string TypeName { get; set; }
     public string Description { get; }

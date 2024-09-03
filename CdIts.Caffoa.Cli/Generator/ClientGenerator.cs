@@ -173,19 +173,19 @@ public class ClientGenerator
         string queryAdd;
         string baseTypeName = arg.GetTypeName(true, false);
         if (arg.IsEnum)
-            queryAdd = $"queryBuilder.Add(\"{arg.Name}\", {arg.Name}.Value());";
+            queryAdd = $"queryBuilder.Add(\"{arg.Name}\", {arg.VarName}.Value());";
         else if (arg.ArrayType == ParameterArrayType.EnumArray)
-            queryAdd = $"queryBuilder.Add(\"{arg.Name}\", {arg.Name}.AsStringList());";
+            queryAdd = $"queryBuilder.Add(\"{arg.Name}\", {arg.VarName}.AsStringList());";
         else if (baseTypeName == "string")
-            queryAdd = $"queryBuilder.Add(\"{arg.Name}\", {arg.Name});";
+            queryAdd = $"queryBuilder.Add(\"{arg.Name}\", {arg.VarName});";
         else if (baseTypeName == "DateTimeOffset")
-            queryAdd = $"queryBuilder.Add(\"{arg.Name}\", {arg.Name}.ToString(\"O\"));";
+            queryAdd = $"queryBuilder.Add(\"{arg.Name}\", {arg.VarName}.ToString(\"O\"));";
         else if (baseTypeName == "DateOnly")
-            queryAdd = $"queryBuilder.Add(\"{arg.Name}\", {arg.Name}.ToString(\"yyyy-MM-dd\"));";
+            queryAdd = $"queryBuilder.Add(\"{arg.Name}\", {arg.VarName}.ToString(\"yyyy-MM-dd\"));";
         else
-            queryAdd = $"queryBuilder.Add(\"{arg.Name}\", Invariant($\"{{{arg.Name}}}\"));";
+            queryAdd = $"queryBuilder.Add(\"{arg.Name}\", Invariant($\"{{{arg.VarName}}}\"));";
         if (!arg.Required)
-            return $"\n            if({arg.Name} != null)\n                {queryAdd}";
+            return $"\n            if({arg.VarName} != null)\n                {queryAdd}";
         return $"\n            {queryAdd}";
     }
 
