@@ -17,7 +17,7 @@ public class SinglePropertyUpdateBuilder
         bool useOther = true)
     {
         _property = property;
-        _name = $"{prefix}{_property.Name.ToObjectName()}";
+        _name = $"{prefix}{_property.FieldName}";
         _targetClassName = targetClassName is null ? "" : $"{targetClassName}.";
         if (useEnums && property.CanBeEnum())
             EnumCopy(useOther);
@@ -28,7 +28,7 @@ public class SinglePropertyUpdateBuilder
 
     private void EnumCopy(bool useOther)
     {
-        var name = _property.Name.ToObjectName();
+        var name = _property.FieldName;
         var other = useOther ? "other." : "";
         if (_property.Nullable)
             _sb.Append($"{other}{name} == null ? null : ({_targetClassName}{name}Value){other}{name}");
@@ -39,7 +39,7 @@ public class SinglePropertyUpdateBuilder
     private void DefaultCopy(bool useOther)
     {
         var other = useOther ? "other." : "";
-        var name = _property.Name.ToObjectName();
+        var name = _property.FieldName;
         _sb.Append($"{other}{name}");
     }
 

@@ -67,7 +67,7 @@ public class PropertyFormatter
         return name;
     }
 
-    public string Default(bool addSemicolonEnEmpty, List<SchemaItem>? enumClasses = null, bool constructorOnRequired = true)
+    public string Default(bool addSemicolonEnEmpty, List<SchemaItem>? enumClasses = null, List<SchemaItem>? interfaces = null, bool constructorOnRequired = true)
     {
         var name = HandleDateTypes(_property.TypeName);
         if (_property.IsArray && _property.ArrayDefaults.Any())
@@ -79,7 +79,7 @@ public class PropertyFormatter
         if (_property.Default != null)
             return DefaultFor(name, _property.Default);
 
-        if (!_property.Nullable && _property.IsOtherSchema && constructorOnRequired)
+        if (_property is { Nullable: false, IsOtherSchema: true } && constructorOnRequired && (interfaces == null || interfaces.All(c => c.ClassName != name)))
             return $" = new {name}();";
         var enumClass = enumClasses?.Find(c => c.ClassName == name);
         if (enumClass?.Default != null)

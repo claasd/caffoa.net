@@ -67,6 +67,8 @@ public static class Extensions
         CaffoaConfig.EnumCreationMode enumMode)
     {
         var item = schema.Items;
+        if (item is null)
+            return "object";
         if (!item.IsRealObject(enumMode))
             item.Reference = null;
         if (item.Reference != null)

@@ -15,6 +15,7 @@ public abstract class ObjectParser
     private readonly bool _nullableIsDefault;
     protected readonly SchemaItem Item;
     private readonly CaffoaConfig.EnumCreationMode _enumMode;
+    private ILogger? _logger;
 
     protected ObjectParser(SchemaItem item, CaffoaConfig.EnumCreationMode enumMode,
         Func<string, string> classNameGenerator, bool nullableIsDefault)
@@ -25,8 +26,9 @@ public abstract class ObjectParser
         _nullableIsDefault = nullableIsDefault;
     }
 
-    public SchemaItem Parse(OpenApiSchema schema)
+    public SchemaItem Parse(OpenApiSchema schema, ILogger logger)
     {
+        _logger = logger;
         try
         {
             schema = ResolveExternal(schema);
@@ -34,7 +36,9 @@ public abstract class ObjectParser
             Item.GenerateComparerOverload = schema.Extensions.ParseCaffoaOption("x-caffoa-generate-comparer");
             var nullableIsDefault = schema.Extensions.ParseCaffoaOption("x-caffoa-default-nullable") ?? _nullableIsDefault;
             if (schema.AllOf.Count > 0)
-                schema = UpdateSchemaForAllOff(schema);
+                schema = UpdateSchemaForAllOff(schema, schema.AllOf);
+            if (schema.AnyOf.Count > 0)
+                schema = UpdateSchemaForAllOff(schema, schema.AnyOf);
             if (schema.OneOf.Count > 0)
                 Item.Interface = ExtractInterface(schema.OneOf, schema.Discriminator);
             else if (schema.Properties.Count > 0)
@@ -100,6 +104,7 @@ public abstract class ObjectParser
         }
         else if (schema.IsArray())
         {
+            Console.WriteLine(name);
             property.IsArray = true;
             property.TypeName = schema.GetArrayType(ClassNameFunc, _enumMode);
             property.InnerTypeIsOtherSchema = schema.Items.Reference != null && !schema.Items.IsRealObject(_enumMode);
@@ -175,20 +180,21 @@ public abstract class ObjectParser
 
     private InterfaceModel ExtractInterface(IList<OpenApiSchema> schemaOneOf, OpenApiDiscriminator openApiDiscriminator)
     {
-        if (openApiDiscriminator.PropertyName is null)
-            throw new CaffoaParserException("cannot create oneOf interface without discriminator property");
-        var mapping = openApiDiscriminator.Mapping.ToDictionary(m => m.Value, m => m.Key);
+        if (openApiDiscriminator?.PropertyName is null)
+            _logger?.LogWarning("discriminator is null, createing the correct subtype might not be possible for server implementations");
+        var mapping = openApiDiscriminator?.Mapping.ToDictionary(m => m.Value, m => m.Key);
         var model = new InterfaceModel
         {
-            Discriminator = openApiDiscriminator.PropertyName,
+            Discriminator = openApiDiscriminator?.PropertyName,
         };
-        foreach (var reference in schemaOneOf.Select(s => s.Reference))
+        foreach (var schema in schemaOneOf)
         {
-            if (reference is null)
-                throw new CaffoaParserException("did not find $ref as child of oneOf");
-            if (!mapping.TryGetValue(reference.ReferenceV3, out var mapName))
-                mapName = reference.Name();
-            var typeName = ClassNameFunc(reference.Name());
+            if (!schema.IsPrimitiveType() && schema.Reference is null)
+                throw new CaffoaParserException("oneOf interface can only contain references or primitive types");
+            
+            if (mapping is null || schema.Reference is null || !mapping.TryGetValue(schema.Reference.ReferenceV3, out var mapName))
+                mapName = schema.Reference?.Name() ?? schema.TypeName();
+            var typeName = schema.Reference != null ? ClassNameFunc(schema.Reference.Name()) : schema.TypeName();
             model.Mapping[mapName] = typeName;
             model.Children.Add(typeName);
         }
@@ -208,5 +214,5 @@ public abstract class ObjectParser
         return subSchema;
     }
 
-    protected abstract OpenApiSchema UpdateSchemaForAllOff(OpenApiSchema schema);
+    protected abstract OpenApiSchema UpdateSchemaForAllOff(OpenApiSchema schema, IList<OpenApiSchema> list);
 }

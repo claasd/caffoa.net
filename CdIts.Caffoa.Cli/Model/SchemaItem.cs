@@ -17,7 +17,7 @@ public class SchemaItem
 
     public  ObjectType Type { get; set; } = ObjectType.Regular;
     public string Name { get; }
-    public string ClassName { get; }
+    public string ClassName { get; set; }
     public InterfaceModel? Interface { get; set; }
     public List<PropertyData>? Properties { get; set; }
     public string? Parent { get; set; }

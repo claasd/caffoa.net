@@ -5,10 +5,13 @@ public class PropertyData
     public PropertyData(string name, bool required, bool readOnly)
     {
         Name = name;
+        FieldName = name.ToObjectName();
         TypeName = name.ToObjectName();
         Required = required;
         ReadOnly = readOnly;
     }
+
+    public string FieldName { get; set; }
 
     public string Name { get; }
     public bool Required { get; }

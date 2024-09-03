@@ -12,10 +12,10 @@ public class ObjectStandaloneParser : ObjectParser
     {
     }
 
-    protected override OpenApiSchema UpdateSchemaForAllOff(OpenApiSchema schema)
+    protected override OpenApiSchema UpdateSchemaForAllOff(OpenApiSchema schema, IList<OpenApiSchema> list)
     {
-        AddSubProperties(schema.AllOf, schema.Properties, schema.Required);
-        Item.SubItems = SubItems(schema.AllOf);
+        AddSubProperties(list, schema.Properties, schema.Required);
+        Item.SubItems = SubItems(list);
         return schema;
     }
 
@@ -51,6 +51,7 @@ public class ObjectStandaloneParser : ObjectParser
             if (resolved.Reference != null)
                 result.Add(ClassNameFunc(resolved.Reference.Name()));
             result.AddRange(SubItems(resolved.AllOf));
+            result.AddRange(SubItems(resolved.AnyOf));
             result.AddRange(SubItems(resolved.OneOf));
         }
 

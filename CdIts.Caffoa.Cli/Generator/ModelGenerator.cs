@@ -57,8 +57,10 @@ public class ModelGenerator
                 item.Interface!.Mapping.Select(c => $"[JsonDerivedType(typeof({c.Value}), \"{c.Key}\")]")),
             _ => JsonNetSubtypes(item.Interface!),
         }; //Needed to serialize interfaces. supported starting .NET 7. So only use when generating controllers.
-        parameters["TYPE"] = item.Interface?.Discriminator?.ToObjectName() ?? "";
+        
+        parameters["TYPE"] = 
         parameters["IMPORTS"] = PropertyFormatter.Imports(_config.Flavor, true);
+        parameters["DISCRIMINATOR"] = item.Interface?.Discriminator != null ? $"[JsonIgnore]\n        string {item.Interface.Discriminator.ToObjectName()}Discriminator {{ get; }}\n        " : "";
         var formatted = file.FormatDict(parameters);
         File.WriteAllText(Path.Combine(_service.Model.TargetFolder, fileName), formatted.ToSystemNewLine());
     }
@@ -92,7 +94,7 @@ public class ModelGenerator
         parameters["CONSTRUCTORS"] = CreateConstructors(item, otherClasses);
         parameters["EQUALS_METHODS"] = (item.GenerateEqualsOverload ?? _config.GenerateEqualsMethods) is true ? CreateEquals(item, enumClasses) : "";
         parameters["INHERIT_CONSTRUCTORS"] = _config.UseInheritance is true ? formatter.CreateConstructors(otherClasses) : "ARG";
-        parameters["PROPERTIES"] = FormatProperties(item, enumClasses);
+        parameters["PROPERTIES"] = FormatProperties(item, enumClasses, interfaces);
         parameters["ADDITIONAL_PROPS"] = formatter.GenericAdditionalProperties();
         parameters["DESCRIPTION"] = formatter.Description;
         var formatted = file.FormatDict(parameters);
@@ -155,7 +157,7 @@ public class ModelGenerator
             var isEnum = itemProperty.CanBeEnum() || enumClasses.Exists(ec=>ec.ClassName == itemProperty.TypeName);
             isEnum = isEnum && _config.GetEnumCreationMode() == CaffoaConfig.EnumCreationMode.Default;
             builder.Append(first ? "var result = " : "\n                && ");
-            var name = itemProperty.Name.ToObjectName();
+            var name = itemProperty.FieldName;
             if (itemProperty.IsArray || itemProperty.IsMap)
             {
                 builder.Append($"({name}?.SequenceEqual(other.{name}) ?? other.{name} is null)");
@@ -224,7 +226,7 @@ public class ModelGenerator
         return builder.ToString();
     }
 
-    private string FormatProperties(SchemaItem item, List<SchemaItem> enumClasses)
+    private string FormatProperties(SchemaItem item, List<SchemaItem> enumClasses, List<SchemaItem> interfaces)
     {
         var properties = new List<string>();
         if (item.Properties is null)
@@ -243,7 +245,7 @@ public class ModelGenerator
             format["JSON_EXTRA_PROPERTIES"] = formatter.JsonExtraProperties();
             format["TYPE"] = type;
             format["VIRTUAL"] = _config.SealClasses(item.GenerateEqualsOverload) ? "" : " virtual";
-            format["NAMEUPPER"] = property.Name.ToObjectName();
+            format["NAMEUPPER"] = property.FieldName;
             format["NAMELOWER"] = property.Name;
 
             if (property.Alias != null || property.AliasGet != null)
@@ -288,7 +290,7 @@ public class ModelGenerator
 
             else
             {
-                format["DEFAULT"] = formatter.Default(false, enumClasses, _config.ConstructorOnRequiredObjects is not false);
+                format["DEFAULT"] = formatter.Default(false, enumClasses, interfaces, _config.ConstructorOnRequiredObjects is not false);
                 var enumType = enumClasses.Find(c => c.ClassName == type);
                 if (enumType != null)
                 {
@@ -324,7 +326,7 @@ public class ModelGenerator
         var file = Templates.GetTemplate("ModelEnumPropertyTemplate.tpl");
         if (property.TypeName == "string")
             format["TRANSFORM"] =
-                $"{property.Name.ToObjectName()}Values.AllowedValues.FirstOrDefault(v=>String.Compare(v, value, StringComparison.OrdinalIgnoreCase) == 0, value)";
+                $"{property.FieldName}Values.AllowedValues.FirstOrDefault(v=>String.Compare(v, value, StringComparison.OrdinalIgnoreCase) == 0, value)";
         else
             format["TRANSFORM"] = "value";
         format["NO_CHECK_MSG"] = _config.GetEnumCreationMode() == CaffoaConfig.EnumCreationMode.StaticValues
@@ -392,7 +394,7 @@ public class ModelGenerator
             ["CLASS"] = className,
             ["OBSOLETE_LIST_NAME"] = $"AllowedValuesFor{propName}",
             ["OBSOLETE_ENUMS"] = string.Join("\n        ", obsoleteEnumDefs),
-            ["NAMEUPPER"] = propName,
+            ["NAMEUPPER"] = property.FieldName,
             ["NAMELOWER"] = property.Name,
             ["TYPE"] = formatter.Type(),
             ["ENUMS"] = string.Join("\n            ", enumDefs),

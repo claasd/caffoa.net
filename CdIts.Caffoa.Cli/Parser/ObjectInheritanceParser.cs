@@ -13,11 +13,11 @@ public class ObjectInheritanceParser : ObjectParser
     {
     }
 
-    protected override OpenApiSchema UpdateSchemaForAllOff(OpenApiSchema schema)
+    protected override OpenApiSchema UpdateSchemaForAllOff(OpenApiSchema schema, IList<OpenApiSchema> schemas)
     {
         string? parent = null;
         OpenApiSchema? newSchema = null;
-        foreach (var localSchema in schema.AllOf)
+        foreach (var localSchema in schemas)
         {
             if (localSchema.Reference != null)
             {

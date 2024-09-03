@@ -121,8 +121,15 @@ public class ServiceParser
             ObjectParser parser = _config.UseInheritance is true
                 ? new ObjectInheritanceParser(new SchemaItem(name, className), _config.GetEnumCreationMode(), ClassName, nullableIsDefault)
                 : new ObjectStandaloneParser(new SchemaItem(name, className), _config.GetEnumCreationMode(), ClassName, nullableIsDefault);
-            objects.Add(parser.Parse(apiSchema));
-            Duplicates.Add(className);
+            var item = parser.Parse(apiSchema, _logger);
+            foreach (var property in item.Properties ?? new List<PropertyData>())
+            {
+                if (property.FieldName == item.ClassName)
+                    property.FieldName += "_";
+            }
+            objects.Add(item);
+            
+            Duplicates.Add(item.ClassName);
         }
 
         return objects;
