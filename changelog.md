@@ -1,4 +1,7 @@
 # caffoa changelog
+## 4.9.1
+* AnyOf parsing now removes all required properties from the object
+
 ## 4.9.0
 * Fix regression from 4.8.1 that would generate wrong copy methods for object arrays
 * extracted AzFuncTestHelper to a separate repository

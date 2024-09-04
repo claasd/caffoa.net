@@ -12,10 +12,21 @@ public class ObjectStandaloneParser : ObjectParser
     {
     }
 
-    protected override OpenApiSchema UpdateSchemaForAllOff(OpenApiSchema schema, IList<OpenApiSchema> list)
+    protected override OpenApiSchema UpdateSchemaForAllOff(OpenApiSchema schema)
     {
-        AddSubProperties(list, schema.Properties, schema.Required);
-        Item.SubItems = SubItems(list);
+        AddSubProperties(schema.AllOf, schema.Properties, schema.Required);
+        Item.SubItems = SubItems(schema.AllOf);
+        return schema;
+    }
+    
+    protected override OpenApiSchema UpdateSchemaForAnyOff(OpenApiSchema schema)
+    {
+        AddSubProperties(schema.AnyOf, schema.Properties, new HashSet<string>());
+        Item.SubItems = SubItems(schema.AnyOf);
+        foreach (var property in schema.Properties)
+        {
+            property.Value.Nullable = true;
+        }
         return schema;
     }
 
@@ -24,6 +35,10 @@ public class ObjectStandaloneParser : ObjectParser
         foreach (var subSchema in schemaAllOf.Select(ResolveExternal))
         {
             if (subSchema.AllOf.Any())
+            {
+                AddSubProperties(subSchema.AllOf, properties,required);
+            }
+            if (subSchema.AnyOf.Any())
             {
                 AddSubProperties(subSchema.AllOf, properties,required);
             }

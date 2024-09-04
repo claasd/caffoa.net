@@ -13,11 +13,11 @@ public class ObjectInheritanceParser : ObjectParser
     {
     }
 
-    protected override OpenApiSchema UpdateSchemaForAllOff(OpenApiSchema schema, IList<OpenApiSchema> schemas)
+    protected override OpenApiSchema UpdateSchemaForAllOff(OpenApiSchema schema)
     {
         string? parent = null;
         OpenApiSchema? newSchema = null;
-        foreach (var localSchema in schemas)
+        foreach (var localSchema in schema.AllOf)
         {
             if (localSchema.Reference != null)
             {
@@ -39,5 +39,10 @@ public class ObjectInheritanceParser : ObjectParser
             throw new CaffoaParserException("allOf is implemented as inheritance; Cannot create class without content, no child of allOf is type object");
         Item.Parent = parent;
         return newSchema;
+    }
+
+    protected override OpenApiSchema UpdateSchemaForAnyOff(OpenApiSchema schema)
+    {
+        throw new CaffoaParserException("anyOf is not supported in inheritance mode");
     }
 }

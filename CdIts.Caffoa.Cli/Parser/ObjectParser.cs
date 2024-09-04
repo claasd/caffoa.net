@@ -48,9 +48,9 @@ public abstract class ObjectParser
             }
 
             if (schema.AllOf.Count > 0)
-                schema = UpdateSchemaForAllOff(schema, schema.AllOf);
+                schema = UpdateSchemaForAllOff(schema);
             if (schema.AnyOf.Count > 0)
-                schema = UpdateSchemaForAllOff(schema, schema.AnyOf);
+                schema = UpdateSchemaForAnyOff(schema);
             if (schema.OneOf.Count > 0)
                 Item.Interface = ExtractInterface(schema.OneOf, schema.Discriminator);
             else if (schema.Properties.Count > 0)
@@ -226,5 +226,6 @@ public abstract class ObjectParser
         return subSchema;
     }
 
-    protected abstract OpenApiSchema UpdateSchemaForAllOff(OpenApiSchema schema, IList<OpenApiSchema> list);
+    protected abstract OpenApiSchema UpdateSchemaForAllOff(OpenApiSchema schema);
+    protected abstract OpenApiSchema UpdateSchemaForAnyOff(OpenApiSchema schema);
 }
