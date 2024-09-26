@@ -1,4 +1,8 @@
 # caffoa changelog
+
+## 4.10.0
+* allow to use more complex x-caffoa-alias set by using `{ setcode }` in the expression
+
 ## 4.9.1
 * AnyOf parsing now removes all required properties from the object
 

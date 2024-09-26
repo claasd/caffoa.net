@@ -289,7 +289,9 @@ public class ModelGenerator
                 if (enumClasses.Find(c => c.ClassName == type)?.NullableEnum ?? false)
                     format["TYPE"] = type + "?";
                 format["GETALIAS"] = property.AliasGet ?? property.Alias;
-                if (property.AliasSet != null || property.Alias != null)
+                if (property.AliasSet != null && property.AliasSet.Trim().StartsWith("{"))
+                    format["SETALIAS"] = property.AliasSet;
+                else if (property.AliasSet != null || property.Alias != null)
                     format["SETALIAS"] = "=> " + (property.AliasSet ?? $"{property.Alias} = value") + ";";
                 else
                     format["SETALIAS"] ="{}";
