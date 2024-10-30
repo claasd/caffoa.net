@@ -46,7 +46,7 @@ namespace DemoV2.Model {
             if (ReferenceEquals(this, other)) return true;
             var result = Single == other.Single
                 && WithDefault == other.WithDefault
-                && (Array?.SequenceEqual(other.Array) ?? other.Array is null)
+                && (other.Array is null ? Array is null : Array?.SequenceEqual(other.Array) ?? other.Array is null)
                 && Nullable == other.Nullable
                 && NullableReferenced == other.NullableReferenced;
             if(result) _PartialEquals(other, ref result);

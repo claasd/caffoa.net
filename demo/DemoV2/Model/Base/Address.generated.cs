@@ -66,7 +66,7 @@ namespace DemoV2.Model.Base {
                 && City == other.City
                 && Country == other.Country
                 && AddressType == other.AddressType
-                && (Flags?.SequenceEqual(other.Flags) ?? other.Flags is null);
+                && (other.Flags is null ? Flags is null : Flags?.SequenceEqual(other.Flags) ?? other.Flags is null);
             if(result) _PartialEquals(other, ref result);
             return result;
         }

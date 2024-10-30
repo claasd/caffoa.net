@@ -34,7 +34,7 @@ namespace DemoV2.Model {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
             var result = Price == other.Price
-                && (Taxes?.SequenceEqual(other.Taxes) ?? other.Taxes is null);
+                && (other.Taxes is null ? Taxes is null : Taxes?.SequenceEqual(other.Taxes) ?? other.Taxes is null);
             if(result) _PartialEquals(other, ref result);
             return result;
         }

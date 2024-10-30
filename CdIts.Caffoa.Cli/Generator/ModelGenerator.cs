@@ -194,7 +194,7 @@ public class ModelGenerator
             }
             else if (itemProperty.IsArray || itemProperty.IsMap)
             {
-                builder.Append($"({name}?.SequenceEqual(other.{name}) ?? other.{name} is null)");
+                builder.Append($"(other.{name} is null ? {name} is null : {name}?.SequenceEqual(other.{name}) ?? other.{name} is null)");
             }
             else if(itemProperty.TypeName.TrimEnd('?') is "string" or "int" or "double" or "decimal" or "boolean" or "real" or "long" or "bool" || isEnum)
                 builder.Append($"{name} == other.{name}");

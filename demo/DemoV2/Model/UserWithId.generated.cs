@@ -106,8 +106,8 @@ namespace DemoV2.Model {
             var result = Name == other.Name
                 && (Address?.Equals(other.Address) ?? other.Address is null)
                 && (Birthdate?.Equals(other.Birthdate) ?? other.Birthdate is null)
-                && (Emails?.SequenceEqual(other.Emails) ?? other.Emails is null)
-                && (Descriptions?.SequenceEqual(other.Descriptions) ?? other.Descriptions is null)
+                && (other.Emails is null ? Emails is null : Emails?.SequenceEqual(other.Emails) ?? other.Emails is null)
+                && (other.Descriptions is null ? Descriptions is null : Descriptions?.SequenceEqual(other.Descriptions) ?? other.Descriptions is null)
                 && Type == other.Type
                 && Role == other.Role
                 && AgeGroup == other.AgeGroup

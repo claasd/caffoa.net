@@ -1,5 +1,8 @@
 # caffoa changelog
 
+## 4.10.1
+* fix for equals method if first array is not null but second is null
+
 ## 4.10.0
 * allow to use more complex x-caffoa-alias set by using `{ setcode }` in the expression
 
