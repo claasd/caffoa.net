@@ -48,6 +48,11 @@ components:
     user:
       type: object
       properties:
+        someEnums:
+          type: array
+          nullable: true
+          items:
+            $ref: "#/components/schemas/someEnum"
         name:
           $ref: "#/components/schemas/fancyString"
         address:
@@ -93,7 +98,12 @@ components:
       required:
         - type
         - name
-
+    someEnum:
+      type: string
+      enum:
+        - first
+        - second
+      default: "first"
     guestUser:
       type: object
       properties:
@@ -122,7 +132,7 @@ components:
             registrationDate:
               type: string
               format: date-time
-            diffs: {}
+            diffs: { }
 
     anyUser:
       oneOf:
@@ -171,7 +181,7 @@ components:
     longRunningfunctionStatus:
       x-caffoa-default-nullable: true
       type: object
-      properties: 
+      properties:
         status:
           type: string
           enum:
@@ -184,7 +194,7 @@ components:
       type: string
       format: uuid
       description: a tag id
-      
+    
     tagInfo:
       type: object
       additionalProperties:
@@ -204,8 +214,8 @@ components:
               "<userId_1>": [ "<tagId_1>", "<tagId_2>" ],
               "<userId_2>": [ "<tagId_2>", "<tagId_3>" ],
             },
-          }
-      
+        }
+    
     myEnumType:
       type: string
       enum:
@@ -220,9 +230,9 @@ components:
     
     myEnumTypeArray:
       type: array
-      items: 
+      items:
         $ref: "#/components/schemas/myEnumType"
-        
+    
     myEnumTypeWithDefault:
       type: string
       enum:
@@ -238,8 +248,8 @@ components:
       nullable: true
     enumObject:
       type: object
-      properties: 
-        single: 
+      properties:
+        single:
           $ref: "#/components/schemas/myEnumType"
         withDefault:
           $ref: "#/components/schemas/myEnumTypeWithDefault"
@@ -251,12 +261,12 @@ components:
           $ref: "#/components/schemas/myNullableEnum"
         nullableReferenced:
           $ref: "./base.openapi.yml#/components/schemas/nullableEnum"
-            
+    
     extendedAddress:
       allOf:
         - $ref: "base.openapi.yml#/components/schemas/address"
         - type: object
-          properties: 
+          properties:
             addressType2:
               type: string
       additionalProperties: false
@@ -399,20 +409,20 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/userWithId"
-    
+  
   "/users/{userId}/uploadImage":
     parameters:
-    - name: userId
-      in: path
-      required: true
-      description: the user id.
-      schema:
-        type: string
+      - name: userId
+        in: path
+        required: true
+        description: the user id.
+        schema:
+          type: string
     post:
       tags:
         - user
       operationId: upload-image
-      requestBody: 
+      requestBody:
         content:
           multipart/form-data:
             schema:
@@ -423,11 +433,11 @@ paths:
                 image:
                   type: string
                   format: binary
-      responses: 
+      responses:
         201:
           description: Image was created
-                
-
+  
+  
   "/users/born-before/{date}":
     parameters:
       - name: date
@@ -500,14 +510,14 @@ paths:
           format: uuid
         required: true
     post:
-      tags: 
+      tags:
         - maintainance
       operationId: long-running-function
       description: start a long running function via durable functions
       responses:
         202:
           description: started long running function
-          content: 
+          content:
             'application/json':
               schema:
                 $ref: "#/components/schemas/longRunningfunctionStatus"
@@ -517,12 +527,12 @@ paths:
       tags:
         - user
       operationId: get-tags
-      responses: 
+      responses:
         200:
           description: list of elements that have the requested tag
-          content: 
+          content:
             application/json:
-              schema: 
+              schema:
                 $ref: "#/components/schemas/tagInfos"
 
   "/tags/users":
@@ -537,13 +547,13 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/tagInfo"
-                  
+  
   /enums/list:
-    parameters: 
+    parameters:
       - name: filter
         in: query
         required: false
-        schema: 
+        schema:
           $ref: "#/components/schemas/myEnumType"
       - name: include[]
         in: query
@@ -563,22 +573,22 @@ paths:
         in: query
         required: false
         schema:
-         $ref: "#/components/schemas/myEnumTypeArray"
+          $ref: "#/components/schemas/myEnumTypeArray"
 
     get:
       operationId: listEnums
       tags:
         - user
-      responses: 
+      responses:
         200:
           description: a list of neum
-          content: 
+          content:
             application/json:
-              schema: 
+              schema:
                 type: array
-                items: 
+                items:
                   $ref: "#/components/schemas/myEnumType"
-                  
+  
   /enums/list/filter/{filter}:
     parameters:
       - name: filter
@@ -605,8 +615,8 @@ paths:
       operationId: EchoOneOf
       tags:
         - user
-      requestBody: 
-        content: 
+      requestBody:
+        content:
           application/json:
             schema:
               $ref: "#/components/schemas/groupedOneOf"
@@ -622,8 +632,8 @@ paths:
       operationId: EchoOneOfArray
       tags:
         - user
-      requestBody: 
-        content: 
+      requestBody:
+        content:
           application/json:
             schema:
               type: array

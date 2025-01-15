@@ -15,6 +15,9 @@ namespace DemoV1a.Model {
 /// AUTOGENERED BY caffoa ///
     public partial class L1User : L1AnyUser {
         public const string L1UserObjectName = "user";
+        [JsonProperty("someEnums")]
+        public virtual ICollection<string> SomeEnums { get; set; }
+
         /// <summary>
         /// A fancy string with description
         /// </summary>
@@ -88,6 +91,7 @@ namespace DemoV1a.Model {
 
         public L1User(){}
         public L1User(L1User other) {
+            SomeEnums = other.SomeEnums?.ToList();
             Name = other.Name;
             Address = other.Address?.ToL1Address();
             Birthdate = other.Birthdate;

@@ -41,6 +41,7 @@ namespace DemoV2.Text.Json.Model {
         /// Replaces all fields with the data of the passed object
         /// </summary>
         public static void UpdateWithSTJUser(this STJUser item, STJUser other, bool deepClone = true) {
+            item.SomeEnums = deepClone ? other.SomeEnums?.ToList() : other.SomeEnums;
             item.Name = other.Name;
             item.Address = deepClone ? other.Address?.ToSTJAddress() : other.Address;
             item.Birthdate = other.Birthdate;
@@ -59,6 +60,7 @@ namespace DemoV2.Text.Json.Model {
         /// if deepClone is set to false, a shallow copy will be created.
         /// </summary>
         public static STJUser ToSTJUser(this STJUser other, bool deepClone = true) => new STJUser() { 
+            SomeEnums = deepClone ? other.SomeEnums?.ToList() : other.SomeEnums,
             Name = other.Name,
             Address = deepClone ? other.Address?.ToSTJAddress() : other.Address,
             Birthdate = other.Birthdate,
@@ -76,6 +78,7 @@ namespace DemoV2.Text.Json.Model {
         /// Selects the type STJUser from a IQueryable<STJUser>
         /// </summary>
         public static IQueryable<STJUser> SelectAsSTJUser(this IQueryable<STJUser> query) => query.Select(other => new STJUser() { 
+            SomeEnums = other.SomeEnums,
             Name = other.Name,
             Address = other.Address,
             Birthdate = other.Birthdate,
@@ -124,6 +127,7 @@ namespace DemoV2.Text.Json.Model {
         /// Replaces all fields with the data of the passed object
         /// </summary>
         public static void UpdateWithSTJUserWithId(this STJUserWithId item, STJUserWithId other, bool deepClone = true) {
+            item.SomeEnums = deepClone ? other.SomeEnums?.ToList() : other.SomeEnums;
             item.Name = other.Name;
             item.Address = deepClone ? other.Address?.ToSTJAddress() : other.Address;
             item.Birthdate = other.Birthdate;
@@ -145,6 +149,7 @@ namespace DemoV2.Text.Json.Model {
         /// if deepClone is set to false, a shallow copy will be created.
         /// </summary>
         public static STJUserWithId ToSTJUserWithId(this STJUserWithId other, bool deepClone = true) => new STJUserWithId() { 
+            SomeEnums = deepClone ? other.SomeEnums?.ToList() : other.SomeEnums,
             Name = other.Name,
             Address = deepClone ? other.Address?.ToSTJAddress() : other.Address,
             Birthdate = other.Birthdate,
@@ -165,6 +170,7 @@ namespace DemoV2.Text.Json.Model {
         /// Selects the type STJUserWithId from a IQueryable<STJUserWithId>
         /// </summary>
         public static IQueryable<STJUserWithId> SelectAsSTJUserWithId(this IQueryable<STJUserWithId> query) => query.Select(other => new STJUserWithId() { 
+            SomeEnums = other.SomeEnums,
             Name = other.Name,
             Address = other.Address,
             Birthdate = other.Birthdate,
@@ -185,6 +191,7 @@ namespace DemoV2.Text.Json.Model {
         /// Replaces all fields with the data of the passed object
         /// </summary>
         public static void UpdateWithSTJUserWithId(this STJUser item, STJUserWithId other, bool deepClone = true) {
+            item.SomeEnums = deepClone ? other.SomeEnums?.ToList() : other.SomeEnums;
             item.Name = other.Name;
             item.Address = deepClone ? other.Address?.ToSTJAddress() : other.Address;
             item.Birthdate = other.Birthdate;
@@ -203,6 +210,7 @@ namespace DemoV2.Text.Json.Model {
         /// if deepClone is set to false, a shallow copy will be created.
         /// </summary>
         public static STJUserWithId ToSTJUserWithId(this STJUser other, bool deepClone = true) => new STJUserWithId() { 
+            SomeEnums = deepClone ? other.SomeEnums?.ToList() : other.SomeEnums,
             Name = other.Name,
             Address = deepClone ? other.Address?.ToSTJAddress() : other.Address,
             Birthdate = other.Birthdate,
@@ -220,6 +228,7 @@ namespace DemoV2.Text.Json.Model {
         /// Selects the type STJUserWithId from a IQueryable<STJUser>
         /// </summary>
         public static IQueryable<STJUserWithId> SelectAsSTJUserWithId(this IQueryable<STJUser> query) => query.Select(other => new STJUserWithId() { 
+            SomeEnums = other.SomeEnums,
             Name = other.Name,
             Address = other.Address,
             Birthdate = other.Birthdate,
@@ -237,6 +246,7 @@ namespace DemoV2.Text.Json.Model {
         /// Replaces all fields with the data of the passed object
         /// </summary>
         public static void UpdateWithSTJUser(this STJUserWithId item, STJUser other, bool deepClone = true) {
+            item.SomeEnums = deepClone ? other.SomeEnums?.ToList() : other.SomeEnums;
             item.Name = other.Name;
             item.Address = deepClone ? other.Address?.ToSTJAddress() : other.Address;
             item.Birthdate = other.Birthdate;
@@ -255,6 +265,7 @@ namespace DemoV2.Text.Json.Model {
         /// if deepClone is set to false, a shallow copy will be created.
         /// </summary>
         public static STJUser ToSTJUser(this STJUserWithId other, bool deepClone = true) => new STJUser() { 
+            SomeEnums = deepClone ? other.SomeEnums?.ToList() : other.SomeEnums,
             Name = other.Name,
             Address = deepClone ? other.Address?.ToSTJAddress() : other.Address,
             Birthdate = other.Birthdate,
@@ -272,6 +283,7 @@ namespace DemoV2.Text.Json.Model {
         /// Selects the type STJUser from a IQueryable<STJUserWithId>
         /// </summary>
         public static IQueryable<STJUser> SelectAsSTJUser(this IQueryable<STJUserWithId> query) => query.Select(other => new STJUser() { 
+            SomeEnums = other.SomeEnums,
             Name = other.Name,
             Address = other.Address,
             Birthdate = other.Birthdate,

@@ -41,6 +41,7 @@ namespace DemoV2.Model {
         /// Replaces all fields with the data of the passed object
         /// </summary>
         public static void UpdateWithUser(this User item, User other, bool deepClone = false) {
+            item.SomeEnums = deepClone ? other.SomeEnums?.ToList() : other.SomeEnums;
             item.Name = other.Name;
             item.Address = deepClone ? other.Address?.ToAddress() : other.Address;
             item.Birthdate = other.Birthdate;
@@ -59,6 +60,7 @@ namespace DemoV2.Model {
         /// if deepClone is set to false, a shallow copy will be created.
         /// </summary>
         public static User ToUser(this User other, bool deepClone = false) => new User() { 
+            SomeEnums = deepClone ? other.SomeEnums?.ToList() : other.SomeEnums,
             Name = other.Name,
             Address = deepClone ? other.Address?.ToAddress() : other.Address,
             Birthdate = other.Birthdate,
@@ -76,6 +78,7 @@ namespace DemoV2.Model {
         /// Selects the type User from a IQueryable<User>
         /// </summary>
         public static IQueryable<User> SelectAsUser(this IQueryable<User> query) => query.Select(other => new User() { 
+            SomeEnums = other.SomeEnums,
             Name = other.Name,
             Address = other.Address,
             Birthdate = other.Birthdate,
@@ -124,6 +127,7 @@ namespace DemoV2.Model {
         /// Replaces all fields with the data of the passed object
         /// </summary>
         public static void UpdateWithUserWithId(this UserWithId item, UserWithId other, bool deepClone = false) {
+            item.SomeEnums = deepClone ? other.SomeEnums?.ToList() : other.SomeEnums;
             item.Name = other.Name;
             item.Address = deepClone ? other.Address?.ToAddress() : other.Address;
             item.Birthdate = other.Birthdate;
@@ -145,6 +149,7 @@ namespace DemoV2.Model {
         /// if deepClone is set to false, a shallow copy will be created.
         /// </summary>
         public static UserWithId ToUserWithId(this UserWithId other, bool deepClone = false) => new UserWithId() { 
+            SomeEnums = deepClone ? other.SomeEnums?.ToList() : other.SomeEnums,
             Name = other.Name,
             Address = deepClone ? other.Address?.ToAddress() : other.Address,
             Birthdate = other.Birthdate,
@@ -165,6 +170,7 @@ namespace DemoV2.Model {
         /// Selects the type UserWithId from a IQueryable<UserWithId>
         /// </summary>
         public static IQueryable<UserWithId> SelectAsUserWithId(this IQueryable<UserWithId> query) => query.Select(other => new UserWithId() { 
+            SomeEnums = other.SomeEnums,
             Name = other.Name,
             Address = other.Address,
             Birthdate = other.Birthdate,
@@ -185,6 +191,7 @@ namespace DemoV2.Model {
         /// Replaces all fields with the data of the passed object
         /// </summary>
         public static void UpdateWithUserWithId(this User item, UserWithId other, bool deepClone = false) {
+            item.SomeEnums = deepClone ? other.SomeEnums?.ToList() : other.SomeEnums;
             item.Name = other.Name;
             item.Address = deepClone ? other.Address?.ToAddress() : other.Address;
             item.Birthdate = other.Birthdate;
@@ -203,6 +210,7 @@ namespace DemoV2.Model {
         /// if deepClone is set to false, a shallow copy will be created.
         /// </summary>
         public static UserWithId ToUserWithId(this User other, bool deepClone = false) => new UserWithId() { 
+            SomeEnums = deepClone ? other.SomeEnums?.ToList() : other.SomeEnums,
             Name = other.Name,
             Address = deepClone ? other.Address?.ToAddress() : other.Address,
             Birthdate = other.Birthdate,
@@ -220,6 +228,7 @@ namespace DemoV2.Model {
         /// Selects the type UserWithId from a IQueryable<User>
         /// </summary>
         public static IQueryable<UserWithId> SelectAsUserWithId(this IQueryable<User> query) => query.Select(other => new UserWithId() { 
+            SomeEnums = other.SomeEnums,
             Name = other.Name,
             Address = other.Address,
             Birthdate = other.Birthdate,
@@ -237,6 +246,7 @@ namespace DemoV2.Model {
         /// Replaces all fields with the data of the passed object
         /// </summary>
         public static void UpdateWithUser(this UserWithId item, User other, bool deepClone = false) {
+            item.SomeEnums = deepClone ? other.SomeEnums?.ToList() : other.SomeEnums;
             item.Name = other.Name;
             item.Address = deepClone ? other.Address?.ToAddress() : other.Address;
             item.Birthdate = other.Birthdate;
@@ -255,6 +265,7 @@ namespace DemoV2.Model {
         /// if deepClone is set to false, a shallow copy will be created.
         /// </summary>
         public static User ToUser(this UserWithId other, bool deepClone = false) => new User() { 
+            SomeEnums = deepClone ? other.SomeEnums?.ToList() : other.SomeEnums,
             Name = other.Name,
             Address = deepClone ? other.Address?.ToAddress() : other.Address,
             Birthdate = other.Birthdate,
@@ -272,6 +283,7 @@ namespace DemoV2.Model {
         /// Selects the type User from a IQueryable<UserWithId>
         /// </summary>
         public static IQueryable<User> SelectAsUser(this IQueryable<UserWithId> query) => query.Select(other => new User() { 
+            SomeEnums = other.SomeEnums,
             Name = other.Name,
             Address = other.Address,
             Birthdate = other.Birthdate,

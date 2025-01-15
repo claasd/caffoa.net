@@ -15,6 +15,9 @@ namespace DemoIsolated.Model {
 /// AUTOGENERED BY caffoa ///
     public partial class IsoUser : IsoAnyUser {
         public const string IsoUserObjectName = "user";
+        [JsonProperty("someEnums")]
+        public virtual ICollection<IsoSomeEnum> SomeEnums { get; set; }
+
         /// <summary>
         /// A fancy string with description
         /// </summary>
@@ -58,6 +61,7 @@ namespace DemoIsolated.Model {
 
         public IsoUser(){}
         public IsoUser(IsoUser other) {
+            SomeEnums = other.SomeEnums?.ToList();
             Name = other.Name;
             Address = other.Address?.ToIsoAddress();
             Birthdate = other.Birthdate;

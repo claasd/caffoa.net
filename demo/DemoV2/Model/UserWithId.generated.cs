@@ -16,6 +16,9 @@ namespace DemoV2.Model {
 /// AUTOGENERED BY caffoa ///
     public sealed  partial class UserWithId : AnyUser, AnyCompleteUser, IEquatable<UserWithId> {
         public const string UserWithIdObjectName = "userWithId";
+        [JsonProperty("someEnums")]
+        public ICollection<SomeEnum> SomeEnums { get; set; }
+
         /// <summary>
         /// A fancy string with description
         /// </summary>
@@ -68,6 +71,7 @@ namespace DemoV2.Model {
 
         public UserWithId(){}
         public UserWithId(UserWithId other) {
+            SomeEnums = other.SomeEnums?.ToList();
             Name = other.Name;
             Address = other.Address?.ToAddress();
             Birthdate = other.Birthdate;
@@ -84,6 +88,7 @@ namespace DemoV2.Model {
             AdditionalProperties = other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null;
         }
         public UserWithId(User other, bool deepClone = false) {
+            SomeEnums = deepClone ? other.SomeEnums?.ToList() : other.SomeEnums;
             Name = other.Name;
             Address = deepClone ? other.Address?.ToAddress() : other.Address;
             Birthdate = other.Birthdate;
@@ -103,7 +108,8 @@ namespace DemoV2.Model {
         public bool Equals(UserWithId other) {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
-            var result = Name == other.Name
+            var result = (other.SomeEnums is null ? SomeEnums is null : SomeEnums?.SequenceEqual(other.SomeEnums) ?? other.SomeEnums is null)
+                && Name == other.Name
                 && (Address?.Equals(other.Address) ?? other.Address is null)
                 && (Birthdate?.Equals(other.Birthdate) ?? other.Birthdate is null)
                 && (other.Emails is null ? Emails is null : Emails?.SequenceEqual(other.Emails) ?? other.Emails is null)
@@ -123,6 +129,7 @@ namespace DemoV2.Model {
         public override bool Equals(object obj) => Equals(obj as UserWithId);
         public override int GetHashCode() {
             var hashCode = new HashCode();
+            hashCode.Add(SomeEnums);
             hashCode.Add(Name);
             hashCode.Add(Address);
             hashCode.Add(Birthdate);

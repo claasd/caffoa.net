@@ -16,6 +16,9 @@ namespace DemoV2.AspNet.Model {
 /// AUTOGENERED BY caffoa ///
     public partial class ASPUserWithId : ASPAnyUser, ASPAnyCompleteUser {
         public const string ASPUserWithIdObjectName = "userWithId";
+        [JsonPropertyName("someEnums")]
+        public virtual ICollection<ASPSomeEnum> SomeEnums { get; set; }
+
         /// <summary>
         /// A fancy string with description
         /// </summary>
@@ -70,6 +73,7 @@ namespace DemoV2.AspNet.Model {
 
         public ASPUserWithId(){}
         public ASPUserWithId(ASPUserWithId other) {
+            SomeEnums = other.SomeEnums?.ToList();
             Name = other.Name;
             Address = other.Address?.ToASPAddress();
             Birthdate = other.Birthdate;
@@ -86,6 +90,7 @@ namespace DemoV2.AspNet.Model {
             AdditionalProperties = other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null;
         }
         public ASPUserWithId(ASPUser other, bool deepClone = true) {
+            SomeEnums = deepClone ? other.SomeEnums?.ToList() : other.SomeEnums;
             Name = other.Name;
             Address = deepClone ? other.Address?.ToASPAddress() : other.Address;
             Birthdate = other.Birthdate;

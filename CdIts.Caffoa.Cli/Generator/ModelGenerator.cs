@@ -384,7 +384,7 @@ public class ModelGenerator
             typeName += "?";
         format["TYPE"] = typeName;
         var defaultValue = "";
-        if (property.Default != null)
+        if (property is { Default: not null, IsArray: false, IsMap: false })
             defaultValue = $" = {enumType}.{EnumNameForValue(property.Default)};";
         format["DEFAULT"] = defaultValue;
         return file.FormatDict(format);

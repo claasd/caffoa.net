@@ -15,6 +15,9 @@ namespace DemoV2.Model {
 /// AUTOGENERED BY caffoa ///
     public sealed  partial class User : AnyUser, IEquatable<User> {
         public const string UserObjectName = "user";
+        [JsonProperty("someEnums")]
+        public ICollection<SomeEnum> SomeEnums { get; set; }
+
         /// <summary>
         /// A fancy string with description
         /// </summary>
@@ -58,6 +61,7 @@ namespace DemoV2.Model {
 
         public User(){}
         public User(User other) {
+            SomeEnums = other.SomeEnums?.ToList();
             Name = other.Name;
             Address = other.Address?.ToAddress();
             Birthdate = other.Birthdate;
@@ -76,7 +80,8 @@ namespace DemoV2.Model {
         public bool Equals(User other) {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
-            var result = Name == other.Name
+            var result = (other.SomeEnums is null ? SomeEnums is null : SomeEnums?.SequenceEqual(other.SomeEnums) ?? other.SomeEnums is null)
+                && Name == other.Name
                 && (Address?.Equals(other.Address) ?? other.Address is null)
                 && (Birthdate?.Equals(other.Birthdate) ?? other.Birthdate is null)
                 && (other.Emails is null ? Emails is null : Emails?.SequenceEqual(other.Emails) ?? other.Emails is null)
@@ -93,6 +98,7 @@ namespace DemoV2.Model {
         public override bool Equals(object obj) => Equals(obj as User);
         public override int GetHashCode() {
             var hashCode = new HashCode();
+            hashCode.Add(SomeEnums);
             hashCode.Add(Name);
             hashCode.Add(Address);
             hashCode.Add(Birthdate);

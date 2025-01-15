@@ -16,6 +16,9 @@ namespace DemoIsolated.Model {
 /// AUTOGENERED BY caffoa ///
     public partial class IsoUserWithId : IsoAnyUser, IsoAnyCompleteUser {
         public const string IsoUserWithIdObjectName = "userWithId";
+        [JsonProperty("someEnums")]
+        public virtual ICollection<IsoSomeEnum> SomeEnums { get; set; }
+
         /// <summary>
         /// A fancy string with description
         /// </summary>
@@ -68,6 +71,7 @@ namespace DemoIsolated.Model {
 
         public IsoUserWithId(){}
         public IsoUserWithId(IsoUserWithId other) {
+            SomeEnums = other.SomeEnums?.ToList();
             Name = other.Name;
             Address = other.Address?.ToIsoAddress();
             Birthdate = other.Birthdate;
@@ -84,6 +88,7 @@ namespace DemoIsolated.Model {
             AdditionalProperties = other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null;
         }
         public IsoUserWithId(IsoUser other, bool deepClone = true) {
+            SomeEnums = deepClone ? other.SomeEnums?.ToList() : other.SomeEnums;
             Name = other.Name;
             Address = deepClone ? other.Address?.ToIsoAddress() : other.Address;
             Birthdate = other.Birthdate;

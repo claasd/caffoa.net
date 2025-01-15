@@ -82,7 +82,7 @@ public class PropertyFormatter
         if (_property is { Nullable: false, IsOtherSchema: true } && constructorOnRequired && (interfaces == null || interfaces.All(c => c.ClassName != name)))
             return $" = new {name}();";
         var enumClass = enumClasses?.Find(c => c.ClassName == name);
-        if (enumClass?.Default != null)
+        if (enumClass?.Default != null && _property is { IsArray: false, IsMap: false })
         {
             return $" = {enumClass.ClassName}.{ModelGenerator.EnumNameForValue(enumClass.Default)};";
         }

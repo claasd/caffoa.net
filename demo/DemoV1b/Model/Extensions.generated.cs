@@ -41,6 +41,7 @@ namespace DemoV1b.Model {
         /// Replaces all fields with the data of the passed object
         /// </summary>
         public static void UpdateWithL2User(this L2User item, L2User other, bool deepClone = true) {
+            item.SomeEnums = deepClone ? other.SomeEnums?.ToList() : other.SomeEnums;
             item.Name = other.Name;
             item.Address = deepClone ? other.Address?.ToL2Address() : other.Address;
             item.Birthdate = other.Birthdate;
@@ -59,6 +60,7 @@ namespace DemoV1b.Model {
         /// if deepClone is set to false, a shallow copy will be created.
         /// </summary>
         public static L2User ToL2User(this L2User other, bool deepClone = true) => new L2User() { 
+            SomeEnums = deepClone ? other.SomeEnums?.ToList() : other.SomeEnums,
             Name = other.Name,
             Address = deepClone ? other.Address?.ToL2Address() : other.Address,
             Birthdate = other.Birthdate,
@@ -76,6 +78,7 @@ namespace DemoV1b.Model {
         /// Selects the type L2User from a IQueryable<L2User>
         /// </summary>
         public static IQueryable<L2User> SelectAsL2User(this IQueryable<L2User> query) => query.Select(other => new L2User() { 
+            SomeEnums = other.SomeEnums,
             Name = other.Name,
             Address = other.Address,
             Birthdate = other.Birthdate,
@@ -124,6 +127,7 @@ namespace DemoV1b.Model {
         /// Replaces all fields with the data of the passed object
         /// </summary>
         public static void UpdateWithL2UserWithId(this L2UserWithId item, L2UserWithId other, bool deepClone = true) {
+            item.SomeEnums = deepClone ? other.SomeEnums?.ToList() : other.SomeEnums;
             item.Name = other.Name;
             item.Address = deepClone ? other.Address?.ToL2Address() : other.Address;
             item.Birthdate = other.Birthdate;
@@ -145,6 +149,7 @@ namespace DemoV1b.Model {
         /// if deepClone is set to false, a shallow copy will be created.
         /// </summary>
         public static L2UserWithId ToL2UserWithId(this L2UserWithId other, bool deepClone = true) => new L2UserWithId() { 
+            SomeEnums = deepClone ? other.SomeEnums?.ToList() : other.SomeEnums,
             Name = other.Name,
             Address = deepClone ? other.Address?.ToL2Address() : other.Address,
             Birthdate = other.Birthdate,
@@ -165,6 +170,7 @@ namespace DemoV1b.Model {
         /// Selects the type L2UserWithId from a IQueryable<L2UserWithId>
         /// </summary>
         public static IQueryable<L2UserWithId> SelectAsL2UserWithId(this IQueryable<L2UserWithId> query) => query.Select(other => new L2UserWithId() { 
+            SomeEnums = other.SomeEnums,
             Name = other.Name,
             Address = other.Address,
             Birthdate = other.Birthdate,
@@ -185,6 +191,7 @@ namespace DemoV1b.Model {
         /// Replaces all fields with the data of the passed object
         /// </summary>
         public static void UpdateWithL2UserWithId(this L2User item, L2UserWithId other, bool deepClone = true) {
+            item.SomeEnums = deepClone ? other.SomeEnums?.ToList() : other.SomeEnums;
             item.Name = other.Name;
             item.Address = deepClone ? other.Address?.ToL2Address() : other.Address;
             item.Birthdate = other.Birthdate;
@@ -203,6 +210,7 @@ namespace DemoV1b.Model {
         /// if deepClone is set to false, a shallow copy will be created.
         /// </summary>
         public static L2UserWithId ToL2UserWithId(this L2User other, bool deepClone = true) => new L2UserWithId() { 
+            SomeEnums = deepClone ? other.SomeEnums?.ToList() : other.SomeEnums,
             Name = other.Name,
             Address = deepClone ? other.Address?.ToL2Address() : other.Address,
             Birthdate = other.Birthdate,
@@ -220,6 +228,7 @@ namespace DemoV1b.Model {
         /// Selects the type L2UserWithId from a IQueryable<L2User>
         /// </summary>
         public static IQueryable<L2UserWithId> SelectAsL2UserWithId(this IQueryable<L2User> query) => query.Select(other => new L2UserWithId() { 
+            SomeEnums = other.SomeEnums,
             Name = other.Name,
             Address = other.Address,
             Birthdate = other.Birthdate,
@@ -237,6 +246,7 @@ namespace DemoV1b.Model {
         /// Replaces all fields with the data of the passed object
         /// </summary>
         public static void UpdateWithL2User(this L2UserWithId item, L2User other, bool deepClone = true) {
+            item.SomeEnums = deepClone ? other.SomeEnums?.ToList() : other.SomeEnums;
             item.Name = other.Name;
             item.Address = deepClone ? other.Address?.ToL2Address() : other.Address;
             item.Birthdate = other.Birthdate;
@@ -255,6 +265,7 @@ namespace DemoV1b.Model {
         /// if deepClone is set to false, a shallow copy will be created.
         /// </summary>
         public static L2User ToL2User(this L2UserWithId other, bool deepClone = true) => new L2User() { 
+            SomeEnums = deepClone ? other.SomeEnums?.ToList() : other.SomeEnums,
             Name = other.Name,
             Address = deepClone ? other.Address?.ToL2Address() : other.Address,
             Birthdate = other.Birthdate,
@@ -272,6 +283,7 @@ namespace DemoV1b.Model {
         /// Selects the type L2User from a IQueryable<L2UserWithId>
         /// </summary>
         public static IQueryable<L2User> SelectAsL2User(this IQueryable<L2UserWithId> query) => query.Select(other => new L2User() { 
+            SomeEnums = other.SomeEnums,
             Name = other.Name,
             Address = other.Address,
             Birthdate = other.Birthdate,

@@ -41,6 +41,7 @@ namespace DemoV1a.Model {
         /// Replaces all fields with the data of the passed object
         /// </summary>
         public static void UpdateWithL1User(this L1User item, L1User other, bool deepClone = true) {
+            item.SomeEnums = deepClone ? other.SomeEnums?.ToList() : other.SomeEnums;
             item.Name = other.Name;
             item.Address = deepClone ? other.Address?.ToL1Address() : other.Address;
             item.Birthdate = other.Birthdate;
@@ -59,6 +60,7 @@ namespace DemoV1a.Model {
         /// if deepClone is set to false, a shallow copy will be created.
         /// </summary>
         public static L1User ToL1User(this L1User other, bool deepClone = true) => new L1User() { 
+            SomeEnums = deepClone ? other.SomeEnums?.ToList() : other.SomeEnums,
             Name = other.Name,
             Address = deepClone ? other.Address?.ToL1Address() : other.Address,
             Birthdate = other.Birthdate,
@@ -76,6 +78,7 @@ namespace DemoV1a.Model {
         /// Selects the type L1User from a IQueryable<L1User>
         /// </summary>
         public static IQueryable<L1User> SelectAsL1User(this IQueryable<L1User> query) => query.Select(other => new L1User() { 
+            SomeEnums = other.SomeEnums,
             Name = other.Name,
             Address = other.Address,
             Birthdate = other.Birthdate,

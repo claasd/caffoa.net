@@ -15,6 +15,9 @@ namespace DemoV2.Text.Json.Model {
 /// AUTOGENERED BY caffoa ///
     public partial class STJUser : STJAnyUser {
         public const string STJUserObjectName = "user";
+        [JsonPropertyName("someEnums")]
+        public virtual ICollection<STJSomeEnum> SomeEnums { get; set; }
+
         /// <summary>
         /// A fancy string with description
         /// </summary>
@@ -58,6 +61,7 @@ namespace DemoV2.Text.Json.Model {
 
         public STJUser(){}
         public STJUser(STJUser other) {
+            SomeEnums = other.SomeEnums?.ToList();
             Name = other.Name;
             Address = other.Address?.ToSTJAddress();
             Birthdate = other.Birthdate;

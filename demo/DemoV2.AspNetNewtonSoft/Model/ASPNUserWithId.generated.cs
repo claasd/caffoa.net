@@ -16,6 +16,9 @@ namespace DemoV2.AspNetNewtonSoft.Model {
 /// AUTOGENERED BY caffoa ///
     public partial class ASPNUserWithId : ASPNAnyUser, ASPNAnyCompleteUser {
         public const string ASPNUserWithIdObjectName = "userWithId";
+        [JsonProperty("someEnums")]
+        public virtual ICollection<ASPNSomeEnum> SomeEnums { get; set; }
+
         /// <summary>
         /// A fancy string with description
         /// </summary>
@@ -68,6 +71,7 @@ namespace DemoV2.AspNetNewtonSoft.Model {
 
         public ASPNUserWithId(){}
         public ASPNUserWithId(ASPNUserWithId other) {
+            SomeEnums = other.SomeEnums?.ToList();
             Name = other.Name;
             Address = other.Address?.ToASPNAddress();
             Birthdate = other.Birthdate;
@@ -84,6 +88,7 @@ namespace DemoV2.AspNetNewtonSoft.Model {
             AdditionalProperties = other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null;
         }
         public ASPNUserWithId(ASPNUser other, bool deepClone = true) {
+            SomeEnums = deepClone ? other.SomeEnums?.ToList() : other.SomeEnums;
             Name = other.Name;
             Address = deepClone ? other.Address?.ToASPNAddress() : other.Address;
             Birthdate = other.Birthdate;

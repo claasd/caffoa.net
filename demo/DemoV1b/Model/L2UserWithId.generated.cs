@@ -16,6 +16,9 @@ namespace DemoV1b.Model {
 /// AUTOGENERED BY caffoa ///
     public partial class L2UserWithId : L2AnyUser, L2AnyCompleteUser {
         public const string L2UserWithIdObjectName = "userWithId";
+        [JsonProperty("someEnums")]
+        public virtual ICollection<string> SomeEnums { get; set; }
+
         /// <summary>
         /// A fancy string with description
         /// </summary>
@@ -100,6 +103,7 @@ namespace DemoV1b.Model {
 
         public L2UserWithId(){}
         public L2UserWithId(L2UserWithId other) {
+            SomeEnums = other.SomeEnums?.ToList();
             Name = other.Name;
             Address = other.Address?.ToL2Address();
             Birthdate = other.Birthdate;
@@ -116,6 +120,7 @@ namespace DemoV1b.Model {
             AdditionalProperties = other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null;
         }
         public L2UserWithId(L2User other, bool deepClone = true) {
+            SomeEnums = deepClone ? other.SomeEnums?.ToList() : other.SomeEnums;
             Name = other.Name;
             Address = deepClone ? other.Address?.ToL2Address() : other.Address;
             Birthdate = other.Birthdate;

@@ -15,6 +15,9 @@ namespace DemoV2.AspNet.Model {
 /// AUTOGENERED BY caffoa ///
     public partial class ASPUser : ASPAnyUser {
         public const string ASPUserObjectName = "user";
+        [JsonPropertyName("someEnums")]
+        public virtual ICollection<ASPSomeEnum> SomeEnums { get; set; }
+
         /// <summary>
         /// A fancy string with description
         /// </summary>
@@ -60,6 +63,7 @@ namespace DemoV2.AspNet.Model {
 
         public ASPUser(){}
         public ASPUser(ASPUser other) {
+            SomeEnums = other.SomeEnums?.ToList();
             Name = other.Name;
             Address = other.Address?.ToASPAddress();
             Birthdate = other.Birthdate;

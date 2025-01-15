@@ -15,6 +15,9 @@ namespace DemoV2.AspNetNewtonSoft.Model {
 /// AUTOGENERED BY caffoa ///
     public partial class ASPNUser : ASPNAnyUser {
         public const string ASPNUserObjectName = "user";
+        [JsonProperty("someEnums")]
+        public virtual ICollection<ASPNSomeEnum> SomeEnums { get; set; }
+
         /// <summary>
         /// A fancy string with description
         /// </summary>
@@ -58,6 +61,7 @@ namespace DemoV2.AspNetNewtonSoft.Model {
 
         public ASPNUser(){}
         public ASPNUser(ASPNUser other) {
+            SomeEnums = other.SomeEnums?.ToList();
             Name = other.Name;
             Address = other.Address?.ToASPNAddress();
             Birthdate = other.Birthdate;

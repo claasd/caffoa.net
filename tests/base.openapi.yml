@@ -10,10 +10,10 @@ components:
     flags:
       x-caffoa-generate-equals: true
       type: object
-      properties: 
+      properties:
         id:
           type: string
-        desc: 
+        desc:
           type: string
       additionalProperties: false
     flagRef:
@@ -22,19 +22,20 @@ components:
       x-caffoa-aliases:
         flag2: flag
       allOf:
-      - type: object
-        properties: 
-          flag:
-            $ref: "#/components/schemas/flags"
-          flag2:
-            $ref: "#/components/schemas/flags"
+        - type: object
+          properties:
+            flag:
+              $ref: "#/components/schemas/flags"
+            flag2:
+              $ref: "#/components/schemas/flags"
+    
     nullableEnum:
       type: string
       enum:
         - first
         - second
       nullable: true
-      
+    
     address:
       type: object
       properties:
@@ -46,7 +47,7 @@ components:
         numericPostalCode:
           type: integer
           x-caffoa-alias-get: "int.Parse(PostalCode)"
-          x-caffoa-alias-set: 'PostalCode = $"{value:D5}"' 
+          x-caffoa-alias-set: 'PostalCode = $"{value:D5}"'
         postalCode:
           type: string
         city:
@@ -58,9 +59,9 @@ components:
           enum:
             - regular
         flags:
-          additionalProperties: 
+          additionalProperties:
             $ref: "#/components/schemas/flags"
-        
+      
       required:
         - street
         - postalCode
@@ -71,7 +72,7 @@ paths:
   "/dummy":
     get:
       description: dummy
-      responses: 
+      responses:
         200:
           description: dummy
         

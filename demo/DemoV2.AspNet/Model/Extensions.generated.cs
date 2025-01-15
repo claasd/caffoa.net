@@ -41,6 +41,7 @@ namespace DemoV2.AspNet.Model {
         /// Replaces all fields with the data of the passed object
         /// </summary>
         public static void UpdateWithASPUser(this ASPUser item, ASPUser other, bool deepClone = true) {
+            item.SomeEnums = deepClone ? other.SomeEnums?.ToList() : other.SomeEnums;
             item.Name = other.Name;
             item.Address = deepClone ? other.Address?.ToASPAddress() : other.Address;
             item.Birthdate = other.Birthdate;
@@ -59,6 +60,7 @@ namespace DemoV2.AspNet.Model {
         /// if deepClone is set to false, a shallow copy will be created.
         /// </summary>
         public static ASPUser ToASPUser(this ASPUser other, bool deepClone = true) => new ASPUser() { 
+            SomeEnums = deepClone ? other.SomeEnums?.ToList() : other.SomeEnums,
             Name = other.Name,
             Address = deepClone ? other.Address?.ToASPAddress() : other.Address,
             Birthdate = other.Birthdate,
@@ -76,6 +78,7 @@ namespace DemoV2.AspNet.Model {
         /// Selects the type ASPUser from a IQueryable<ASPUser>
         /// </summary>
         public static IQueryable<ASPUser> SelectAsASPUser(this IQueryable<ASPUser> query) => query.Select(other => new ASPUser() { 
+            SomeEnums = other.SomeEnums,
             Name = other.Name,
             Address = other.Address,
             Birthdate = other.Birthdate,
@@ -124,6 +127,7 @@ namespace DemoV2.AspNet.Model {
         /// Replaces all fields with the data of the passed object
         /// </summary>
         public static void UpdateWithASPUserWithId(this ASPUserWithId item, ASPUserWithId other, bool deepClone = true) {
+            item.SomeEnums = deepClone ? other.SomeEnums?.ToList() : other.SomeEnums;
             item.Name = other.Name;
             item.Address = deepClone ? other.Address?.ToASPAddress() : other.Address;
             item.Birthdate = other.Birthdate;
@@ -145,6 +149,7 @@ namespace DemoV2.AspNet.Model {
         /// if deepClone is set to false, a shallow copy will be created.
         /// </summary>
         public static ASPUserWithId ToASPUserWithId(this ASPUserWithId other, bool deepClone = true) => new ASPUserWithId() { 
+            SomeEnums = deepClone ? other.SomeEnums?.ToList() : other.SomeEnums,
             Name = other.Name,
             Address = deepClone ? other.Address?.ToASPAddress() : other.Address,
             Birthdate = other.Birthdate,
@@ -165,6 +170,7 @@ namespace DemoV2.AspNet.Model {
         /// Selects the type ASPUserWithId from a IQueryable<ASPUserWithId>
         /// </summary>
         public static IQueryable<ASPUserWithId> SelectAsASPUserWithId(this IQueryable<ASPUserWithId> query) => query.Select(other => new ASPUserWithId() { 
+            SomeEnums = other.SomeEnums,
             Name = other.Name,
             Address = other.Address,
             Birthdate = other.Birthdate,
@@ -185,6 +191,7 @@ namespace DemoV2.AspNet.Model {
         /// Replaces all fields with the data of the passed object
         /// </summary>
         public static void UpdateWithASPUserWithId(this ASPUser item, ASPUserWithId other, bool deepClone = true) {
+            item.SomeEnums = deepClone ? other.SomeEnums?.ToList() : other.SomeEnums;
             item.Name = other.Name;
             item.Address = deepClone ? other.Address?.ToASPAddress() : other.Address;
             item.Birthdate = other.Birthdate;
@@ -203,6 +210,7 @@ namespace DemoV2.AspNet.Model {
         /// if deepClone is set to false, a shallow copy will be created.
         /// </summary>
         public static ASPUserWithId ToASPUserWithId(this ASPUser other, bool deepClone = true) => new ASPUserWithId() { 
+            SomeEnums = deepClone ? other.SomeEnums?.ToList() : other.SomeEnums,
             Name = other.Name,
             Address = deepClone ? other.Address?.ToASPAddress() : other.Address,
             Birthdate = other.Birthdate,
@@ -220,6 +228,7 @@ namespace DemoV2.AspNet.Model {
         /// Selects the type ASPUserWithId from a IQueryable<ASPUser>
         /// </summary>
         public static IQueryable<ASPUserWithId> SelectAsASPUserWithId(this IQueryable<ASPUser> query) => query.Select(other => new ASPUserWithId() { 
+            SomeEnums = other.SomeEnums,
             Name = other.Name,
             Address = other.Address,
             Birthdate = other.Birthdate,
@@ -237,6 +246,7 @@ namespace DemoV2.AspNet.Model {
         /// Replaces all fields with the data of the passed object
         /// </summary>
         public static void UpdateWithASPUser(this ASPUserWithId item, ASPUser other, bool deepClone = true) {
+            item.SomeEnums = deepClone ? other.SomeEnums?.ToList() : other.SomeEnums;
             item.Name = other.Name;
             item.Address = deepClone ? other.Address?.ToASPAddress() : other.Address;
             item.Birthdate = other.Birthdate;
@@ -255,6 +265,7 @@ namespace DemoV2.AspNet.Model {
         /// if deepClone is set to false, a shallow copy will be created.
         /// </summary>
         public static ASPUser ToASPUser(this ASPUserWithId other, bool deepClone = true) => new ASPUser() { 
+            SomeEnums = deepClone ? other.SomeEnums?.ToList() : other.SomeEnums,
             Name = other.Name,
             Address = deepClone ? other.Address?.ToASPAddress() : other.Address,
             Birthdate = other.Birthdate,
@@ -272,6 +283,7 @@ namespace DemoV2.AspNet.Model {
         /// Selects the type ASPUser from a IQueryable<ASPUserWithId>
         /// </summary>
         public static IQueryable<ASPUser> SelectAsASPUser(this IQueryable<ASPUserWithId> query) => query.Select(other => new ASPUser() { 
+            SomeEnums = other.SomeEnums,
             Name = other.Name,
             Address = other.Address,
             Birthdate = other.Birthdate,

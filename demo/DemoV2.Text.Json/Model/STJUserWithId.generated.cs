@@ -16,6 +16,9 @@ namespace DemoV2.Text.Json.Model {
 /// AUTOGENERED BY caffoa ///
     public partial class STJUserWithId : STJAnyUser, STJAnyCompleteUser {
         public const string STJUserWithIdObjectName = "userWithId";
+        [JsonPropertyName("someEnums")]
+        public virtual ICollection<STJSomeEnum> SomeEnums { get; set; }
+
         /// <summary>
         /// A fancy string with description
         /// </summary>
@@ -68,6 +71,7 @@ namespace DemoV2.Text.Json.Model {
 
         public STJUserWithId(){}
         public STJUserWithId(STJUserWithId other) {
+            SomeEnums = other.SomeEnums?.ToList();
             Name = other.Name;
             Address = other.Address?.ToSTJAddress();
             Birthdate = other.Birthdate;
@@ -84,6 +88,7 @@ namespace DemoV2.Text.Json.Model {
             AdditionalProperties = other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null;
         }
         public STJUserWithId(STJUser other, bool deepClone = true) {
+            SomeEnums = deepClone ? other.SomeEnums?.ToList() : other.SomeEnums;
             Name = other.Name;
             Address = deepClone ? other.Address?.ToSTJAddress() : other.Address;
             Birthdate = other.Birthdate;
