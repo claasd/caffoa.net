@@ -19,7 +19,7 @@ jobs:
       - name: Build
         run: dotnet build --configuration Release --no-restore
       - name: Execute caffoa
-        run: CdIts.Caffoa.Cli/bin/Release/net7.0/CdIts.Caffoa.Cli
+        run: CdIts.Caffoa.Cli/bin/Release/net8.0/CdIts.Caffoa.Cli
       - name: Build with changes
         run: dotnet build --configuration Release --no-restore
       - name: Tests
