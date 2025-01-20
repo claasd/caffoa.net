@@ -8,15 +8,17 @@ public class SinglePropertyUpdateBuilder
 {
     private readonly StringBuilder _sb = new();
     private readonly PropertyData _property;
+    private readonly string? _genericTypeName;
     private readonly string _targetClassName;
     private readonly string _shallowBase;
     private bool _hasCloning;
     private readonly string _name;
 
     public SinglePropertyUpdateBuilder(string prefix, string? targetClassName, PropertyData property, bool useEnums,
-        bool useOther = true)
+        bool useOther = true, string? genericTypeName = null)
     {
         _property = property;
+        _genericTypeName = genericTypeName;
         _name = $"{prefix}{_property.FieldName}";
         _targetClassName = targetClassName is null ? "" : $"{targetClassName}.";
         if (useEnums && property.CanBeEnum())
@@ -54,7 +56,8 @@ public class SinglePropertyUpdateBuilder
 
     public SinglePropertyUpdateBuilder AppendJTokenDeepClone(CaffoaConfig.GenerationFlavor? flavor)
     {
-        if (_property.TypeName is not "object" || _property.IsMap || _property.IsArray) return this;
+        if (_property.TypeName is not "object" || _property.IsMap || _property.IsArray || _genericTypeName != null) return this;
+        
         _sb.Append(flavor switch
         {
             CaffoaConfig.GenerationFlavor.SystemTextJsonPre7 => "?.Clone()",

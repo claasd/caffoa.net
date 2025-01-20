@@ -8,7 +8,7 @@ using Newtonsoft.Json.Linq;
 
 namespace DemoIsolated.Model.Base {
 /// AUTOGENERED BY caffoa ///
-    public sealed  partial class IsoFlags {
+    public sealed  partial class IsoFlags : IEquatable<IsoFlags> {
         public const string IsoFlagsObjectName = "flags";
         [JsonProperty("id")]
         public string Id { get; set; }

@@ -1,5 +1,18 @@
 # caffoa changelog
 
+## 4.11.0
+* allow to set a new config value `genericType` (example: `genericType : object`) that allows to define the generic type for objects where no type is specified
+* new config value: `useIList` will use IList data type for lists instead of ICollection (model only)
+
+## 4.10.4
+* Fix error when overriding equals method from true to false
+
+## 4.10.3
+* Fix an issue when generating a default value for an array of enums
+
+## 4.10.2
+No release, due to a nuget issue
+
 ## 4.10.1
 * fix for equals method if first array is not null but second is null
 

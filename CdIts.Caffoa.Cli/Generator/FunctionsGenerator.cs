@@ -221,7 +221,7 @@ public class FunctionsGenerator
         parameter["DISC"] = model.Disriminator;
         parameter["CASES_ALLOWED_VALUES"] = string.Join(", ", model.Mapping.Keys.Select(k => $"\"{k}\""));
         parameter["CASES"] = string.Join("\n                    ", cases.Select(c => $"{c},"));
-        parameter["GENERIC_TYPE"] = _config.GetGenericType();
+        parameter["GENERIC_TYPE"] = _config.GetBasicGenericType();
         parameter["DISC_READ"] = _config.Flavor switch
         {
             CaffoaConfig.GenerationFlavor.SystemTextJsonPre7 => $"jsonToken?.GetProperty(\"{model.Disriminator}\").GetString()?.ToLower()",

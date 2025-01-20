@@ -44,7 +44,7 @@ public class PropertyUpdateBuilder
             if(_config.UseConstants is true && property.CanBeConstant())
                 continue;
             var builder = new SinglePropertyUpdateBuilder(Prefix, ClassName, property,
-                _config.GetEnumCreationMode() == CaffoaConfig.EnumCreationMode.Default, UseOther);
+                _config.GetEnumCreationMode() == CaffoaConfig.EnumCreationMode.Default, UseOther, _config.GenericType);
             if(!ShallowCopy)
                 builder = builder.AppendOtherSchemaCopy()
                     .AppendJTokenDeepClone(_config.Flavor)

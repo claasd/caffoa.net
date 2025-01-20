@@ -8,7 +8,7 @@ using Newtonsoft.Json.Linq;
 
 namespace DemoV2.AspNetNewtonSoft.Model.Base {
 /// AUTOGENERED BY caffoa ///
-    public sealed  partial class ASPNFlags {
+    public sealed  partial class ASPNFlags : IEquatable<ASPNFlags> {
         public const string ASPNFlagsObjectName = "flags";
         [JsonProperty("id")]
         public string Id { get; set; }

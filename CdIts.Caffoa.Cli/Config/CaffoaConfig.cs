@@ -17,10 +17,12 @@ public class CaffoaConfig
     public bool? GenericAdditionalProperties { get; set; }
 
     public string? GenericAdditionalPropertiesType { get; set; }
+    public string? GenericType { get; set; }
 
     public string GetGenericAdditionalPropertiesType() => GenericAdditionalPropertiesType ?? GetGenericType();
 
-    public string GetGenericType() => Flavor switch
+    public string GetGenericType() => GenericType ?? GetBasicGenericType(); 
+    public string GetBasicGenericType() => Flavor switch
     {
         GenerationFlavor.SystemTextJsonPre7 => "JsonElement?",
         GenerationFlavor.SystemTextJson => "JsonElement?",
@@ -79,6 +81,8 @@ public class CaffoaConfig
     
     public bool? ParseArrayTypes { get; set; }
     
+    public bool? UseIList { get; set; }
+    
     public CaffoaGlobalConfig MergedWith(CaffoaGlobalConfig general)
     {
         return new CaffoaGlobalConfig()
@@ -121,7 +125,9 @@ public class CaffoaConfig
             SealClassesWithEqualsMethods = SealClassesWithEqualsMethods ?? general.SealClassesWithEqualsMethods,
             NullableIsDefault = NullableIsDefault ?? general.NullableIsDefault,
             JsonContentTypes = JsonContentTypes ?? general.JsonContentTypes,
-            ParseArrayTypes = ParseArrayTypes ?? general.ParseArrayTypes
+            ParseArrayTypes = ParseArrayTypes ?? general.ParseArrayTypes,
+            GenericType = GenericType ?? general.GenericType,
+            UseIList = UseIList ?? general.UseIList
         };
     }
 }

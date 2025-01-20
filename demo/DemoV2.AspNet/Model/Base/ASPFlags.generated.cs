@@ -8,7 +8,7 @@ using System.Text.Json.Serialization;
 
 namespace DemoV2.AspNet.Model.Base {
 /// AUTOGENERED BY caffoa ///
-    public sealed  partial class ASPFlags {
+    public sealed  partial class ASPFlags : IEquatable<ASPFlags> {
         public const string ASPFlagsObjectName = "flags";
         [JsonPropertyName("id")]
         public string Id { get; set; }

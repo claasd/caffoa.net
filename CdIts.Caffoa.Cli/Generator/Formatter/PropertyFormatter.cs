@@ -50,7 +50,7 @@ public class PropertyFormatter
     {
         var name = HandleDateTypes(_property.TypeName);
         if (_property.IsArray)
-            return $"ICollection<{name}>";
+            return _config.UseIList is true ?  $"IList<{name}>":  $"ICollection<{name}>";
         if (_property.IsMap)
             return $"Dictionary<string, {name}>";
         if (_property.TypeName == "object")
