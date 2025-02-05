@@ -70,7 +70,7 @@ public class ClientGenerator
         var file = Templates.GetTemplate("ClientMethod.tpl");
         foreach (var endpoint in endpoints)
         {
-            foreach (var parameter in InterfaceGenerator.GetMethodParams(endpoint, _config, false, true, forceCancellation: true))
+            foreach (var parameter in InterfaceGenerator.GetMethodParams(endpoint, _config, false, true, forceCancellation: true, addHttpContent: true))
             {
                 var errorHandling = string.Join("",
                     endpoint.Responses.Where(r => r.Code >= 400 && r.TypeName != null).Select(FormatErrorHandling));
@@ -87,7 +87,7 @@ public class ClientGenerator
                 format["DOC"] = string.Join("\n        /// ", endpoint.DocumentationLines);
                 format["METHOD"] = endpoint.Operation.ToLower().FirstCharUpper();
                 format["ROUTE"] = FormatRoute(endpoint.Route, endpoint.Parameters);
-                format["PAYLOAD"] = RequestBody(endpoint);
+                format["PAYLOAD"] = RequestBody(endpoint, parameter.BodyParameter);
                 format["RESULTCODE"] = Result(endpoint);
                 format["QUERYPARAMS"] = FormatQueryParams(endpoint.Parameters);
                 format["ERRORHANDLING"] = errorHandling;
@@ -219,11 +219,13 @@ public class ClientGenerator
         return result;
     }
 
-    private string RequestBody(EndPointModel endpoint)
+    private string RequestBody(EndPointModel endpoint, ParameterBuilder.Parameter? parameterType)
     {
         if (!endpoint.HasRequestBody)
             return "";
-        if (endpoint.RequestBodyType is NullBodyModel)
+        if (endpoint.RequestBodyType is NullBodyModel && parameterType.Type == "HttpContent")
+            return "\n            httpRequest.Content = payload;";
+        if (endpoint.RequestBodyType is NullBodyModel && parameterType.Type == "Stream")
             return "\n            httpRequest.Content = new StreamContent(stream);";
         var contentType = endpoint.RequestBodyType.ContentType ?? "application/json";
         return

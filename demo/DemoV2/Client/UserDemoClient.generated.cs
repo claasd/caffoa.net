@@ -225,6 +225,22 @@ namespace DemoV2.Client
         }
 
         /// <summary>
+        /// 201 -> Image was created
+        /// </summary>
+        public virtual async Task UploadImageAsync(string userId, HttpContent payload, CancellationToken cancellationToken = default) {
+            var uriBuilder = new UriBuilder(Invariant($"{BaseUri}users/{userId}/uploadImage"));
+            using var httpRequest = new HttpRequestMessage(HttpMethod.Post, uriBuilder.ToString());
+            httpRequest.Content = payload;
+            PrepareRequest(httpRequest);
+            using var httpResult = await Client.SendAsync(httpRequest, cancellationToken);
+            ProcessResponse(httpResult);
+            if(!httpResult.IsSuccessStatusCode) {
+                var errorData = await httpResult.Content.ReadAsStringAsync(cancellationToken);
+                throw new CaffoaWebClientException((int)httpResult.StatusCode, errorData);
+            }
+        }
+
+        /// <summary>
         /// get
         /// 200 -> return user object
         /// 400 -> Error

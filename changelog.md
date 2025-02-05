@@ -1,5 +1,8 @@
 # caffoa changelog
 
+## 4.12.0
+* Client generator now creates and additioanl overlaod for non-json payloads that allows to directly pass a HttpContent object
+ 
 ## 4.11.0
 * allow to set a new config value `genericType` (example: `genericType : object`) that allows to define the generic type for objects where no type is specified
 * new config value: `useIList` will use IList data type for lists instead of ICollection (model only)

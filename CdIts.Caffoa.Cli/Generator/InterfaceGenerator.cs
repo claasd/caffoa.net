@@ -91,7 +91,7 @@ public class InterfaceGenerator
 
     public List<ParameterBuilder.Overload> GetParams(EndPointModel endpoint) => GetMethodParams(endpoint, _config);
     
-    public static List<ParameterBuilder.Overload> GetMethodParams(EndPointModel endpoint, CaffoaConfig config, bool withDurable = true, bool nullableDefaults = false, bool addAspNetAttributes = false, bool forceCancellation = false)
+    public static List<ParameterBuilder.Overload> GetMethodParams(EndPointModel endpoint, CaffoaConfig config, bool withDurable = true, bool nullableDefaults = false, bool addAspNetAttributes = false, bool forceCancellation = false, bool addHttpContent = false)
     {
         var builder = ParameterBuilder.Instance(config.UseDateOnly is true && config.ParsePathParameters is not false, config.UseDateTime is true, addAspNetAttributes)
             .AddPathParameters(endpoint.Parameters);
@@ -121,6 +121,8 @@ public class InterfaceGenerator
                     break;
                 default:
                     builder.AddBody("Stream", "stream");
+                    if(addHttpContent)
+                        builder.AddBody("HttpContent", "payload");
                     break;
             }
         }
