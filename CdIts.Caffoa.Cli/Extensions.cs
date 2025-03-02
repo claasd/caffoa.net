@@ -58,7 +58,7 @@ public static class Extensions
     {
         if (!apiSchema.IsPrimitiveType() && !apiSchema.HasOnlyAdditionalProperties() && !apiSchema.IsArray())
             return true;
-        if (apiSchema.CanBeEnum() && mode == CaffoaConfig.EnumCreationMode.Default)
+        if (apiSchema.CanBeEnum() && mode <= CaffoaConfig.EnumCreationMode.Default)
             return true;
         return false;
     }

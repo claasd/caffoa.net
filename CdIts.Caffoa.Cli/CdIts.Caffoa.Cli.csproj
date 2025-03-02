@@ -40,10 +40,12 @@
         <EmbeddedResource Include="data\ControllerTemplate.tpl" />
         <EmbeddedResource Include="data\InterfaceTemplate.tpl" />
         <EmbeddedResource Include="data\ModelConstTemplate.tpl" />
+        <EmbeddedResource Include="data\ModelEnumClassWrapperTemplate.tpl" />
         <EmbeddedResource Include="data\ModelEnumPropertyClassTemplate.string.tpl" />
         <EmbeddedResource Include="data\ModelEnumPropertyClassTemplate.tpl" />
         <EmbeddedResource Include="data\ModelEnumClassTemplate.tpl" />
         <EmbeddedResource Include="data\ModelEnumPropertyTemplate.tpl" />
+        <EmbeddedResource Include="data\ModelEnumWrapperPropertyClassTemplate.tpl" />
         <EmbeddedResource Include="data\ModelExtensionContentTemplate.tpl" />
         <EmbeddedResource Include="data\ModelInterfaceTemplate.tpl" />
         <EmbeddedResource Include="data\ModelPropertyAliasTemplate.tpl" />

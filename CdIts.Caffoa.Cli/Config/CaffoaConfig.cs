@@ -53,6 +53,7 @@ public class CaffoaConfig
     public bool SealClasses(bool? localEqualsOverride) => !(SealClassesWithEqualsMethods ?? UseInheritance is true) && (localEqualsOverride ?? GenerateEqualsMethods ?? false);
     public enum EnumCreationMode
     {
+        Class,
         Default,
         StaticValues,
         StaticValuesWithoutCheck

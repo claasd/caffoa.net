@@ -14,15 +14,17 @@ public class SinglePropertyUpdateBuilder
     private bool _hasCloning;
     private readonly string _name;
 
-    public SinglePropertyUpdateBuilder(string prefix, string? targetClassName, PropertyData property, bool useEnums,
+    public SinglePropertyUpdateBuilder(string prefix, string? targetClassName, PropertyData property, CaffoaConfig.EnumCreationMode enumMode,
         bool useOther = true, string? genericTypeName = null)
     {
         _property = property;
         _genericTypeName = genericTypeName;
         _name = $"{prefix}{_property.FieldName}";
         _targetClassName = targetClassName is null ? "" : $"{targetClassName}.";
-        if (useEnums && property.CanBeEnum())
+        if (enumMode == CaffoaConfig.EnumCreationMode.Default && property.CanBeEnum())
             EnumCopy(useOther);
+        else if (enumMode == CaffoaConfig.EnumCreationMode.Class && property.CanBeEnum())
+            EnumClassCopy(useOther);
         else
             DefaultCopy(useOther);
         _shallowBase = _sb.ToString();
@@ -36,6 +38,16 @@ public class SinglePropertyUpdateBuilder
             _sb.Append($"{other}{name} == null ? null : ({_targetClassName}{name}Value){other}{name}");
         else
             _sb.Append($"({_targetClassName}{name}Value){other}{name}");
+    }
+    
+    private void EnumClassCopy(bool useOther)
+    {
+        var name = _property.FieldName;
+        var other = useOther ? "other." : "";
+        if (_property.Nullable)
+            _sb.Append($"{other}{name} == null ? null : new {_targetClassName}{name}ValueWrapper(({_targetClassName}{name}Value){other}{name}.Value)");
+        else
+            _sb.Append($"new {_targetClassName}{name}ValueWrapper(({_targetClassName}{name}Value){other}{name}.Value)");
     }
 
     private void DefaultCopy(bool useOther)

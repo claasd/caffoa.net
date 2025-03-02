@@ -23,7 +23,7 @@ config:
           - patch
   authorizationLevel: function # function | user | anonymous | system | admin
   extensions: true
-#  enumMode: Default
+#  enumMode: Class
 services:
   - apiPath: tests/base.openapi.yml
     config:
@@ -33,6 +33,7 @@ services:
       generateEqualsMethods : true
 #      sealClassesWithEqualsMethods: false
       generateCompareOverloads : true
+#      enumMode: Class
     model:
       namespace: DemoV2.Model.Base
       targetFolder: ./demo/DemoV2/Model/Base

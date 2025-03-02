@@ -119,6 +119,8 @@ public class SchemaItemFormatter
                 var result = $"        public{virtualStr} string {d}Discriminator => {d}";
                 if ((_config.UseConstants is not true || !prop.CanBeConstant()) && _config.GetEnumCreationMode() == CaffoaConfig.EnumCreationMode.Default && (prop.CanBeEnum()))
                     result += ".Value();\n";
+                else if ((_config.UseConstants is not true || !prop.CanBeConstant()) && _config.GetEnumCreationMode() == CaffoaConfig.EnumCreationMode.Class && (prop.CanBeEnum()))
+                    result += ".StringValue;\n";
                 else if(prop!.TypeName.StartsWith("string"))
                 {
                     result += ";\n";

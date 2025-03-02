@@ -183,7 +183,8 @@ public class ModelGenerator
         foreach (var itemProperty in item.Properties!)
         {
             var isEnum = itemProperty.CanBeEnum() || enumClasses.Exists(ec=>ec.ClassName == itemProperty.TypeName);
-            isEnum = isEnum && _config.GetEnumCreationMode() == CaffoaConfig.EnumCreationMode.Default;
+            var isEnumWrapper = isEnum && _config.GetEnumCreationMode() == CaffoaConfig.EnumCreationMode.Class; 
+            isEnum = isEnum && _config.GetEnumCreationMode() <= CaffoaConfig.EnumCreationMode.Default;
             builder.Append(first ? "var result = " : "\n                && ");
             var name = itemProperty.FieldName;
             if (item.Type == SchemaItem.ObjectType.Array)
@@ -204,8 +205,10 @@ public class ModelGenerator
                 builder.Append($"({name}?.Equals(other.{name}) ?? other.{name} is null)");
 
             var cast = isEnum && !itemProperty.IsMap && !itemProperty.IsArray ? "(int) " : "";
-            
-            hashBuilder.Append($"            hashCode.Add({cast}{name});\n");
+            var suffix = "";
+            if (isEnumWrapper && !itemProperty.IsMap && !itemProperty.IsArray)
+                suffix = ".Value";
+            hashBuilder.Append($"            hashCode.Add({cast}{name}{suffix});\n");
             first = false;
         }
 
@@ -315,7 +318,7 @@ public class ModelGenerator
                 properties.Add(formatted);
             }
 
-            else if (_config.GetEnumCreationMode() == CaffoaConfig.EnumCreationMode.Default && property.CanBeEnum())
+            else if (_config.GetEnumCreationMode() <= CaffoaConfig.EnumCreationMode.Default && property.CanBeEnum())
             {
                 properties.Add(FormatEnumProperty(property, format));
             }
@@ -332,6 +335,8 @@ public class ModelGenerator
                 var enumType = enumClasses.Find(c => c.ClassName == type);
                 if (enumType != null)
                 {
+                    if(_config.EnumMode == CaffoaConfig.EnumCreationMode.Class)
+                        format["TYPE"] = type = $"{type}Wrapper";
                     if(enumType.NullableEnum)
                         format["TYPE"] = type + "?";
                 }
@@ -352,7 +357,7 @@ public class ModelGenerator
         {
             if (_config.UseConstants is true && property.CanBeConstant())
                 continue;
-            if (_config.GetEnumCreationMode() == CaffoaConfig.EnumCreationMode.Default && property.CanBeEnum())
+            if (_config.GetEnumCreationMode() <= CaffoaConfig.EnumCreationMode.Default && property.CanBeEnum())
                 WriteEnumPropertyClass(property, item.ClassName);
             else if (property.CanBeEnum())
                 WriteEnumAsStringClass(property, item.ClassName);
@@ -375,11 +380,13 @@ public class ModelGenerator
         return file.FormatDict(format);
     }
 
-    private static string FormatEnumProperty(PropertyData property, Dictionary<string, object> format)
+    private string FormatEnumProperty(PropertyData property, Dictionary<string, object> format)
     {
         var file = Templates.GetTemplate("ModelPropertyTemplate.tpl");
         var enumType = property.Name.ToObjectName() + "Value";
         var typeName = enumType;
+        if(_config.EnumMode == CaffoaConfig.EnumCreationMode.Class)
+            typeName = $"{enumType}Wrapper";
         if (property.Nullable)
             typeName += "?";
         format["TYPE"] = typeName;
@@ -445,7 +452,7 @@ public class ModelGenerator
 
     private void WriteEnumPropertyClass(PropertyData property, string className)
     {
-        var file = Templates.GetTemplate("ModelEnumPropertyClassTemplate.tpl");
+        var file = Templates.GetTemplate(_config.EnumMode == CaffoaConfig.EnumCreationMode.Class ?"ModelEnumWrapperPropertyClassTemplate.tpl" : "ModelEnumPropertyClassTemplate.tpl");
         var enums = new Dictionary<string, string>();
         var propName = property.Name.ToObjectName() + "Value";
         foreach (var value in property.Enums)
@@ -503,7 +510,7 @@ public class ModelGenerator
 
     private void WriteEnumClass(SchemaItem item)
     {
-        var file = Templates.GetTemplate("ModelEnumClassTemplate.tpl");
+        var file = Templates.GetTemplate(_config.EnumMode == CaffoaConfig.EnumCreationMode.Class ? "ModelEnumClassWrapperTemplate.tpl" : "ModelEnumClassTemplate.tpl");
         var enums = new Dictionary<string, string>();
         foreach (var value in item.Enums)
         {
