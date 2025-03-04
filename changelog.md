@@ -1,5 +1,9 @@
 # caffoa changelog
 
+## 4.13.0
+* experimental support for enum wrapper classes (`enumMode: Class`)
+* new config value `initCollections`. If set to true, all collections will be initialized, not just required ones 
+
 ## 4.12.0
 * Client generator now creates and additioanl overlaod for non-json payloads that allows to directly pass a HttpContent object
  

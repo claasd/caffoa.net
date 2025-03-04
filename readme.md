@@ -247,6 +247,7 @@ config:
   nullableIsDefault: false # If set to true, all non-required properties with no will be treated as nullable, and the default value will be null if no default is defined. the option can be overriden either way by setting `x-caffoa-default-nullable` to true or false on an schema item.
   generateResolvedApiFile: false # will resolve all references (internal and external) and generate a single file named `originalName.generated.yml` besides the original file
   simplifyResolvedApiFile: false # will remove all schema declarations from requestBodies and responses in the generated API file. This is useful for Azure APIM, to work around the bicep file size restrictions.
+  initCollections: false # if set to true, all collections will be initialized. If set to false, only required collections will be initialized
 services:
   - apiPath: userservice.openapi.yml
     config: null # optional, can be any config option. That option is then overriden for this api only

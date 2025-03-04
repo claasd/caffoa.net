@@ -84,6 +84,8 @@ public class CaffoaConfig
     
     public bool? UseIList { get; set; }
     
+    public bool? InitCollections { get; set; }
+    
     public CaffoaGlobalConfig MergedWith(CaffoaGlobalConfig general)
     {
         return new CaffoaGlobalConfig()
@@ -128,7 +130,8 @@ public class CaffoaConfig
             JsonContentTypes = JsonContentTypes ?? general.JsonContentTypes,
             ParseArrayTypes = ParseArrayTypes ?? general.ParseArrayTypes,
             GenericType = GenericType ?? general.GenericType,
-            UseIList = UseIList ?? general.UseIList
+            UseIList = UseIList ?? general.UseIList,
+            InitCollections = InitCollections ?? general.InitCollections,
         };
     }
 }

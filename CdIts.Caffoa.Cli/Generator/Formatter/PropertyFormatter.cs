@@ -72,9 +72,9 @@ public class PropertyFormatter
         var name = HandleDateTypes(_property.TypeName);
         if (_property.IsArray && _property.ArrayDefaults.Any())
             return $" = new {name}[] {{ {string.Join(", ", _property.ArrayDefaults)} }};";
-        if (_property.IsArray && !_property.Nullable)
+        if (_property.IsArray && (!_property.Nullable || _config.InitCollections is true))
             return $" = new List<{name}>();";
-        if (_property.IsMap && !_property.Nullable)
+        if (_property.IsMap && (!_property.Nullable || _config.InitCollections is true))
             return $" = new Dictionary<string, {name}>();";
         if (_property.Default != null)
             return DefaultFor(name, _property.Default);

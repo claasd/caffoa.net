@@ -23,6 +23,7 @@ config:
           - patch
   authorizationLevel: function # function | user | anonymous | system | admin
   extensions: true
+  initCollections: false
 #  enumMode: Class
 services:
   - apiPath: tests/base.openapi.yml
