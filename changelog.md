@@ -1,4 +1,6 @@
 # caffoa changelog
+## 4.14.0
+* Change of behavior in the error handler: No error will be logged if the RequestAborted cancellation token is used. This avoids logging exceptions due to the requested cancellation (e.g. RequestCancelledException or various backend cancellation exceptions). 
 
 ## 4.13.0
 * experimental support for enum wrapper classes (`enumMode: Class`)

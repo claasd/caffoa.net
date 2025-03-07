@@ -51,14 +51,22 @@ public class DefaultCaffoaErrorHandler : ICaffoaErrorHandler
         var valueString = value == null ? "<null>" : value.ToString();
         return new DefaultCaffoaClientError($"Error during JSON parsing of payload: Could not find correct value to parse for discriminator '{fieldName}'. Must be one of [{allowedValuesString}], not '{valueString}'");
     }
-
+    
     /// <summary>
-    /// Does nat handle the error. Instead, all information about the request is logged and then the error
+    /// Checks if the request was aborted by the user. If not, all information about the request is logged and then the error
     /// is thrown. This results in an Internal server error and the exception is passed to ApplicationInsights.
     /// </summary>
     public virtual bool TryHandleFunctionException(Exception e, out IActionResult result, HttpRequest request, string functionName, string route, string operation,
         params (string, object)[] namedParams)
     {
+        if (request.HttpContext.RequestAborted.IsCancellationRequested)
+        {
+            result = new ContentResult()
+            {
+                Content = "Request was aborted"
+            };
+            return true;
+        }
         var debugInformation = new Dictionary<string,  string>();
         debugInformation["Error"] = e.Message;
         debugInformation["ExecptionType"] = e.GetType().Name;
@@ -91,4 +99,5 @@ public class DefaultCaffoaErrorHandler : ICaffoaErrorHandler
             return "error while reading payload: " + e.Message;
         }
     }
+
 }
