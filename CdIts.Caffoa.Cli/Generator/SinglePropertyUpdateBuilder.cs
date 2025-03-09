@@ -72,7 +72,6 @@ public class SinglePropertyUpdateBuilder
         
         _sb.Append(flavor switch
         {
-            CaffoaConfig.GenerationFlavor.SystemTextJsonPre7 => "?.Clone()",
             CaffoaConfig.GenerationFlavor.SystemTextJson => "?.Clone()",
             _ => "?.DeepClone()"
         });

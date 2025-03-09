@@ -12,13 +12,13 @@ using DemoV1b.Model.Base;
 
 namespace DemoV1b.Model {
 /// AUTOGENERED BY caffoa ///
-    public partial class L2LongRunningfunctionStatus {
+    public sealed  partial class L2LongRunningfunctionStatus : IEquatable<L2LongRunningfunctionStatus> {
         public const string L2LongRunningfunctionStatusObjectName = "longRunningfunctionStatus";
         [JsonIgnore]
         private string _status;
 
         [JsonProperty("status")]
-        public virtual string Status {
+        public string Status {
             get => _status;
             set {
                 var _value = StatusValues.AllowedValues.FirstOrDefault(v=>String.Compare(v, value, StringComparison.OrdinalIgnoreCase) == 0, value);
@@ -34,7 +34,7 @@ namespace DemoV1b.Model {
         }
 
         [JsonProperty("result")]
-        public virtual L2AnyUser Result { get; set; }
+        public L2AnyUser Result { get; set; }
 
         [JsonExtensionData]
         public Dictionary<string, object> AdditionalProperties;
@@ -46,5 +46,23 @@ namespace DemoV1b.Model {
             AdditionalProperties = other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null;
         }
         public L2LongRunningfunctionStatus ToL2LongRunningfunctionStatus() => new L2LongRunningfunctionStatus(this);
+        public bool Equals(L2LongRunningfunctionStatus other) {
+            if (ReferenceEquals(null, other)) return false;
+            if (ReferenceEquals(this, other)) return true;
+            var result = Status == other.Status
+                && (Result?.Equals(other.Result) ?? other.Result is null);
+            if(result) _PartialEquals(other, ref result);
+            return result;
+        }
+        partial void _PartialEquals(L2LongRunningfunctionStatus other, ref bool result);
+        public override bool Equals(object obj) => Equals(obj as L2LongRunningfunctionStatus);
+        public override int GetHashCode() {
+            var hashCode = new HashCode();
+            hashCode.Add(Status);
+            hashCode.Add(Result);
+            _PartialHashCode(ref hashCode);
+            return hashCode.ToHashCode();
+        }
+        partial void _PartialHashCode(ref HashCode hashCode);
     }
 }

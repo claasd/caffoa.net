@@ -10,10 +10,10 @@ using System.Linq;
 
 namespace DemoV2.AspNet.Model.Base {
 /// AUTOGENERED BY caffoa ///
-    public partial class ASPFlagRef {
+    public sealed  partial class ASPFlagRef : IEquatable<ASPFlagRef> {
         public const string ASPFlagRefObjectName = "flagRef";
         [JsonPropertyName("flag")]
-        public virtual ASPFlags Flag { 
+        public ASPFlags Flag { 
             get => GetFlag(); 
             set => SetFlag(value);
         }
@@ -21,7 +21,7 @@ namespace DemoV2.AspNet.Model.Base {
         partial void SetFlag(ASPFlags value);
 
         [JsonPropertyName("flag2")]
-        public virtual ASPFlags Flag2 { 
+        public ASPFlags Flag2 { 
             get => Flag; 
             set => Flag = value;
         }
@@ -36,5 +36,23 @@ namespace DemoV2.AspNet.Model.Base {
             AdditionalProperties = other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null;
         }
         public ASPFlagRef ToASPFlagRef() => new ASPFlagRef(this);
+        public bool Equals(ASPFlagRef other) {
+            if (ReferenceEquals(null, other)) return false;
+            if (ReferenceEquals(this, other)) return true;
+            var result = (Flag?.Equals(other.Flag) ?? other.Flag is null)
+                && (Flag2?.Equals(other.Flag2) ?? other.Flag2 is null);
+            if(result) _PartialEquals(other, ref result);
+            return result;
+        }
+        partial void _PartialEquals(ASPFlagRef other, ref bool result);
+        public override bool Equals(object obj) => Equals(obj as ASPFlagRef);
+        public override int GetHashCode() {
+            var hashCode = new HashCode();
+            hashCode.Add(Flag);
+            hashCode.Add(Flag2);
+            _PartialHashCode(ref hashCode);
+            return hashCode.ToHashCode();
+        }
+        partial void _PartialHashCode(ref HashCode hashCode);
     }
 }

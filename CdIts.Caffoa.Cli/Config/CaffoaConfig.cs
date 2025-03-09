@@ -24,7 +24,6 @@ public class CaffoaConfig
     public string GetGenericType() => GenericType ?? GetBasicGenericType(); 
     public string GetBasicGenericType() => Flavor switch
     {
-        GenerationFlavor.SystemTextJsonPre7 => "JsonElement?",
         GenerationFlavor.SystemTextJson => "JsonElement?",
         _ => "JToken"
     };
@@ -50,7 +49,7 @@ public class CaffoaConfig
     public bool? GenerateEqualsMethods { get; set; }
     public bool? GenerateCompareOverloads { get; set; }
     public bool? SealClassesWithEqualsMethods { get; set; }
-    public bool SealClasses(bool? localEqualsOverride) => !(SealClassesWithEqualsMethods ?? UseInheritance is true) && (localEqualsOverride ?? GenerateEqualsMethods ?? false);
+    public bool SealClasses(bool? localEqualsOverride) => !(SealClassesWithEqualsMethods ?? UseInheritance is true) && (localEqualsOverride ?? GenerateEqualsMethods ?? true);
     public enum EnumCreationMode
     {
         Class,
@@ -65,8 +64,6 @@ public class CaffoaConfig
     public enum GenerationFlavor
     {
         [EnumMember(Value = "Json.NET")] JsonNet,
-
-        [EnumMember(Value = "System.Text.Json.Pre7")] SystemTextJsonPre7,
 
         [EnumMember(Value = "System.Text.Json")] SystemTextJson,
 

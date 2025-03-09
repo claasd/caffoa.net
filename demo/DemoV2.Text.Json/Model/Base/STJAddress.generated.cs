@@ -11,34 +11,34 @@ using System.Collections.Immutable;
 
 namespace DemoV2.Text.Json.Model.Base {
 /// AUTOGENERED BY caffoa ///
-    public partial class STJAddress {
+    public sealed  partial class STJAddress : IEquatable<STJAddress> {
         public const string STJAddressObjectName = "address";
         [JsonPropertyName("street")]
-        public virtual string Street { get; set; }
+        public string Street { get; set; }
 
         [JsonPropertyName("street.extra")]
-        public virtual string StreetExtra { get; set; }
+        public string StreetExtra { get; set; }
 
         [JsonPropertyName("numericPostalCode")]
-        public virtual int NumericPostalCode { 
+        public int NumericPostalCode { 
             get => int.Parse(PostalCode); 
             set => PostalCode = $"{value:D5}";
         }
 
         [JsonPropertyName("postalCode")]
-        public virtual string PostalCode { get; set; }
+        public string PostalCode { get; set; }
 
         [JsonPropertyName("city")]
-        public virtual string City { get; set; }
+        public string City { get; set; }
 
         [JsonPropertyName("country")]
-        public virtual string Country { get; set; }
+        public string Country { get; set; }
 
         [JsonPropertyName("addressType")]
-        public virtual AddressTypeValue AddressType { get; set; }
+        public AddressTypeValue AddressType { get; set; }
 
         [JsonPropertyName("flags")]
-        public virtual Dictionary<string, STJFlags> Flags { get; set; } = new Dictionary<string, STJFlags>();
+        public Dictionary<string, STJFlags> Flags { get; set; } = new Dictionary<string, STJFlags>();
 
         [JsonExtensionData]
         public Dictionary<string, object> AdditionalProperties;
@@ -56,5 +56,35 @@ namespace DemoV2.Text.Json.Model.Base {
             AdditionalProperties = other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null;
         }
         public STJAddress ToSTJAddress() => new STJAddress(this);
+        public bool Equals(STJAddress other) {
+            if (ReferenceEquals(null, other)) return false;
+            if (ReferenceEquals(this, other)) return true;
+            var result = Street == other.Street
+                && StreetExtra == other.StreetExtra
+                && NumericPostalCode == other.NumericPostalCode
+                && PostalCode == other.PostalCode
+                && City == other.City
+                && Country == other.Country
+                && AddressType == other.AddressType
+                && (other.Flags is null ? Flags is null : Flags?.SequenceEqual(other.Flags) ?? other.Flags is null);
+            if(result) _PartialEquals(other, ref result);
+            return result;
+        }
+        partial void _PartialEquals(STJAddress other, ref bool result);
+        public override bool Equals(object obj) => Equals(obj as STJAddress);
+        public override int GetHashCode() {
+            var hashCode = new HashCode();
+            hashCode.Add(Street);
+            hashCode.Add(StreetExtra);
+            hashCode.Add(NumericPostalCode);
+            hashCode.Add(PostalCode);
+            hashCode.Add(City);
+            hashCode.Add(Country);
+            hashCode.Add((int) AddressType);
+            hashCode.Add(Flags);
+            _PartialHashCode(ref hashCode);
+            return hashCode.ToHashCode();
+        }
+        partial void _PartialHashCode(ref HashCode hashCode);
     }
 }

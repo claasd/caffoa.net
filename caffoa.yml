@@ -12,6 +12,7 @@ config:
   useConstants: false
   removeRequiredOnReadonly: false
   nullableIsDefault: false
+  useIsolatedWorkerModel: false
 #   passTags: true
   requestBodyType: # overwrite the JSON type that is passed to the method for some operations
     - type: JObject

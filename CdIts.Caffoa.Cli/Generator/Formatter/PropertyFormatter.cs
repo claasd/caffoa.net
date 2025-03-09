@@ -28,7 +28,6 @@ public class PropertyFormatter
     {
         return _config.Flavor switch
         {
-            CaffoaConfig.GenerationFlavor.SystemTextJsonPre7 => "",
             CaffoaConfig.GenerationFlavor.SystemTextJson => "",
             _ => ResolvedRequired switch
             {
@@ -72,9 +71,10 @@ public class PropertyFormatter
         var name = HandleDateTypes(_property.TypeName);
         if (_property.IsArray && _property.ArrayDefaults.Any())
             return $" = new {name}[] {{ {string.Join(", ", _property.ArrayDefaults)} }};";
-        if (_property.IsArray && (!_property.Nullable || _config.InitCollections is true))
+        var initCollections = _config.InitCollections ?? true;
+        if (_property.IsArray && (!_property.Nullable || initCollections))
             return $" = new List<{name}>();";
-        if (_property.IsMap && (!_property.Nullable || _config.InitCollections is true))
+        if (_property.IsMap && (!_property.Nullable || initCollections))
             return $" = new Dictionary<string, {name}>();";
         if (_property.Default != null)
             return DefaultFor(name, _property.Default);
@@ -134,7 +134,6 @@ public class PropertyFormatter
     public string JsonTagName() =>
         _config.Flavor switch
         {
-            CaffoaConfig.GenerationFlavor.SystemTextJsonPre7 => "JsonPropertyName",
             CaffoaConfig.GenerationFlavor.SystemTextJson => "JsonPropertyName",
             _ => "JsonProperty"
         };
@@ -145,7 +144,6 @@ public class PropertyFormatter
     {
         return flavor switch
         {
-            CaffoaConfig.GenerationFlavor.SystemTextJsonPre7 => "using System.Text.Json.Serialization;\nusing Caffoa.JsonConverter;",
             CaffoaConfig.GenerationFlavor.SystemTextJson => "using System.Text.Json.Serialization;\nusing Caffoa.JsonConverter;",
             _ => "using Newtonsoft.Json;\nusing Newtonsoft.Json.Converters;" + (addSubtypes ? "\nusing Caffoa.JsonSubTypes;" : "")
         };

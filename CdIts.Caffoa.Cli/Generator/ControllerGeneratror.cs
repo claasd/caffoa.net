@@ -89,7 +89,6 @@ public class ControllerGenerator
                 var bodyIndex = signature.FindIndex(p => p.IsBody);
                 signature[bodyIndex] = new ParameterBuilder.Parameter(_config.Flavor switch
                 {
-                    CaffoaConfig.GenerationFlavor.SystemTextJsonPre7 => "JsonDocument",
                     CaffoaConfig.GenerationFlavor.SystemTextJson => "JsonDocument",
                     _ => "JToken"
                 }, "payload");
@@ -124,7 +123,6 @@ public class ControllerGenerator
             var bodyIndex = callParams.IndexOf(bodyParameter.Name);
             callParams[bodyIndex] = _config.Flavor switch
             {
-                CaffoaConfig.GenerationFlavor.SystemTextJsonPre7 => $"{bodyParameter.Name}.RootElement.Deserialize<{bodyParameter.Type}>()",
                 CaffoaConfig.GenerationFlavor.SystemTextJson => $"{bodyParameter.Name}.RootElement.Deserialize<{bodyParameter.Type}>()",
                 _ => $"{bodyParameter.Name}.ToObject<{bodyParameter.Type}>()"
             };
@@ -135,7 +133,6 @@ public class ControllerGenerator
         {
             ["SWITCHON"] = _config.Flavor switch
             {
-                CaffoaConfig.GenerationFlavor.SystemTextJsonPre7 => $"payload.RootElement.GetProperty({selectionBodyModel.Disriminator.Quote()}).GetString()",
                 CaffoaConfig.GenerationFlavor.SystemTextJson => $"payload.RootElement.GetProperty({selectionBodyModel.Disriminator.Quote()}).GetString()",
                 _ => $"payload.Value<string>({selectionBodyModel.Disriminator.Quote()})"
             },

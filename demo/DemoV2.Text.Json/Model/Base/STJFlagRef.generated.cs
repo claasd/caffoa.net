@@ -10,10 +10,10 @@ using System.Linq;
 
 namespace DemoV2.Text.Json.Model.Base {
 /// AUTOGENERED BY caffoa ///
-    public partial class STJFlagRef {
+    public sealed  partial class STJFlagRef : IEquatable<STJFlagRef> {
         public const string STJFlagRefObjectName = "flagRef";
         [JsonPropertyName("flag")]
-        public virtual STJFlags Flag { 
+        public STJFlags Flag { 
             get => GetFlag(); 
             set => SetFlag(value);
         }
@@ -21,7 +21,7 @@ namespace DemoV2.Text.Json.Model.Base {
         partial void SetFlag(STJFlags value);
 
         [JsonPropertyName("flag2")]
-        public virtual STJFlags Flag2 { 
+        public STJFlags Flag2 { 
             get => Flag; 
             set => Flag = value;
         }
@@ -36,5 +36,23 @@ namespace DemoV2.Text.Json.Model.Base {
             AdditionalProperties = other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null;
         }
         public STJFlagRef ToSTJFlagRef() => new STJFlagRef(this);
+        public bool Equals(STJFlagRef other) {
+            if (ReferenceEquals(null, other)) return false;
+            if (ReferenceEquals(this, other)) return true;
+            var result = (Flag?.Equals(other.Flag) ?? other.Flag is null)
+                && (Flag2?.Equals(other.Flag2) ?? other.Flag2 is null);
+            if(result) _PartialEquals(other, ref result);
+            return result;
+        }
+        partial void _PartialEquals(STJFlagRef other, ref bool result);
+        public override bool Equals(object obj) => Equals(obj as STJFlagRef);
+        public override int GetHashCode() {
+            var hashCode = new HashCode();
+            hashCode.Add(Flag);
+            hashCode.Add(Flag2);
+            _PartialHashCode(ref hashCode);
+            return hashCode.ToHashCode();
+        }
+        partial void _PartialHashCode(ref HashCode hashCode);
     }
 }

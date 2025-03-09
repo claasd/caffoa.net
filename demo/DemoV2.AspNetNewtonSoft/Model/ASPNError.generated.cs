@@ -11,19 +11,19 @@ using DemoV2.AspNetNewtonSoft.Model.Base;
 
 namespace DemoV2.AspNetNewtonSoft.Model {
 /// AUTOGENERED BY caffoa ///
-    public partial class ASPNError {
+    public sealed  partial class ASPNError : IEquatable<ASPNError> {
         public const string ASPNErrorObjectName = "error";
         /// <summary>
         /// Single string based code describing the error.
         /// </summary>
         [JsonProperty("status", Required = Required.Always)]
-        public virtual string Status { get; set; }
+        public string Status { get; set; }
 
         /// <summary>
         /// Human readable error message.
         /// </summary>
         [JsonProperty("message", Required = Required.Always)]
-        public virtual string Message { get; set; }
+        public string Message { get; set; }
 
         [JsonExtensionData]
         public Dictionary<string, object> AdditionalProperties;
@@ -35,5 +35,23 @@ namespace DemoV2.AspNetNewtonSoft.Model {
             AdditionalProperties = other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null;
         }
         public ASPNError ToASPNError() => new ASPNError(this);
+        public bool Equals(ASPNError other) {
+            if (ReferenceEquals(null, other)) return false;
+            if (ReferenceEquals(this, other)) return true;
+            var result = Status == other.Status
+                && Message == other.Message;
+            if(result) _PartialEquals(other, ref result);
+            return result;
+        }
+        partial void _PartialEquals(ASPNError other, ref bool result);
+        public override bool Equals(object obj) => Equals(obj as ASPNError);
+        public override int GetHashCode() {
+            var hashCode = new HashCode();
+            hashCode.Add(Status);
+            hashCode.Add(Message);
+            _PartialHashCode(ref hashCode);
+            return hashCode.ToHashCode();
+        }
+        partial void _PartialHashCode(ref HashCode hashCode);
     }
 }

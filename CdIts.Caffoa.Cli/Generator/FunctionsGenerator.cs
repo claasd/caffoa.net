@@ -37,19 +37,20 @@ public class FunctionsGenerator
     public void GenerateFunctions(List<EndPointModel> endpoints, string namePrefix)
     {
         var imports = new List<string>();
-        if (_config.UseIsolatedWorkerModel is true)
+        if (_config.UseIsolatedWorkerModel is false)
+        {
+            imports.Add("Microsoft.Azure.WebJobs");
+            imports.Add("Microsoft.Azure.WebJobs.Extensions.Http");
+            if (endpoints.Find(e => e.DurableClient) != null)
+                imports.Add("Microsoft.Azure.WebJobs.Extensions.DurableTask");
+        }
+        else
         {
             imports.Add("Microsoft.Azure.Functions.Worker");
             if (endpoints.Find(e => e.DurableClient) != null)
                 imports.Add("Microsoft.DurableTask.Client");
         }
-        else
-        {
-            imports.Add("Microsoft.Azure.WebJobs");
-            imports.Add("Microsoft.Azure.WebJobs.Extensions.Http");
-            if (endpoints.Find(e => e.DurableClient) != null)
-                imports.Add("Microsoft.Azure.WebJobs.Extensions.DurableTask");    
-        }
+
         endpoints.ForEach(e => imports.AddRange(e.Imports));
         if (_functionConfig.InterfaceNamespace != null)
             imports.Add(_functionConfig.InterfaceNamespace);
@@ -125,13 +126,13 @@ public class FunctionsGenerator
                 return $", {type} {p.Name}";
             }).ToList();
 
-        if (endpoint.DurableClient && _config.UseIsolatedWorkerModel is true)
-            pathParams.Add(", [DurableClient] DurableTaskClient durableClient");
-        else if (endpoint.DurableClient)
+        if (endpoint.DurableClient && _config.UseIsolatedWorkerModel is false)
             pathParams.Add(", [DurableClient] IDurableOrchestrationClient durableClient");
+        else if (endpoint.DurableClient)
+            pathParams.Add(", [DurableClient] DurableTaskClient durableClient");
 
         parameters["NAME"] = endpoint.Name;
-        parameters["FUNCATTRIBUTE"] = _config.UseIsolatedWorkerModel is true ? "Function" : "FunctionName";
+        parameters["FUNCATTRIBUTE"] = _config.UseIsolatedWorkerModel is false ? "FunctionName" : "Function";
         parameters["AUTHORIZATION_LEVEL"] = _config.AuthorizationLevel!.FirstCharUpper();
         parameters["PREFIX"] = _config.FunctionNamePrefix ?? "";
         parameters["OPERATION"] = endpoint.Operation;
@@ -224,7 +225,6 @@ public class FunctionsGenerator
         parameter["GENERIC_TYPE"] = _config.GetBasicGenericType();
         parameter["DISC_READ"] = _config.Flavor switch
         {
-            CaffoaConfig.GenerationFlavor.SystemTextJsonPre7 => $"jsonToken?.GetProperty(\"{model.Disriminator}\").GetString()?.ToLower()",
             CaffoaConfig.GenerationFlavor.SystemTextJson => $"jsonToken?.GetProperty(\"{model.Disriminator}\").GetString()?.ToLower()",
             _ => $"jsonToken[\"{model.Disriminator}\"]?.ToString()?.ToLower()"
         };

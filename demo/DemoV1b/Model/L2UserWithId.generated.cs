@@ -14,36 +14,36 @@ using DemoV1b.Model;
 
 namespace DemoV1b.Model {
 /// AUTOGENERED BY caffoa ///
-    public partial class L2UserWithId : L2AnyUser, L2AnyCompleteUser {
+    public sealed  partial class L2UserWithId : L2AnyUser, L2AnyCompleteUser, IEquatable<L2UserWithId> {
         public const string L2UserWithIdObjectName = "userWithId";
         [JsonProperty("someEnums")]
-        public virtual ICollection<string> SomeEnums { get; set; }
+        public ICollection<string> SomeEnums { get; set; }
 
         /// <summary>
         /// A fancy string with description
         /// </summary>
         [JsonProperty("name", Required = Required.Always)]
-        public virtual string Name { get; set; }
+        public string Name { get; set; }
 
         [JsonProperty("address")]
-        public virtual L2Address Address { get; set; }
+        public L2Address Address { get; set; }
 
         [Obsolete]
         [JsonConverter(typeof(CaffoaDateOnlyConverter))]
         [JsonProperty("birthdate")]
-        public virtual DateOnly? Birthdate { get; set; }
+        public DateOnly? Birthdate { get; set; }
 
         [JsonProperty("emails")]
-        public virtual ICollection<string> Emails { get; set; } = new List<string>();
+        public ICollection<string> Emails { get; set; } = new List<string>();
 
         [JsonProperty("descriptions")]
-        public virtual Dictionary<string, string> Descriptions { get; set; } = new Dictionary<string, string>();
+        public Dictionary<string, string> Descriptions { get; set; } = new Dictionary<string, string>();
 
         [JsonIgnore]
         private string _type = "simple";
 
         [JsonProperty("type", Required = Required.Always)]
-        public virtual string Type {
+        public string Type {
             get => _type;
             set {
                 var _value = TypeValues.AllowedValues.FirstOrDefault(v=>String.Compare(v, value, StringComparison.OrdinalIgnoreCase) == 0, value);
@@ -62,7 +62,7 @@ namespace DemoV1b.Model {
         private string _role = "reader";
 
         [JsonProperty("role")]
-        public virtual string Role {
+        public string Role {
             get => _role;
             set {
                 var _value = RoleValues.AllowedValues.FirstOrDefault(v=>String.Compare(v, value, StringComparison.OrdinalIgnoreCase) == 0, value);
@@ -79,24 +79,24 @@ namespace DemoV1b.Model {
 
         [Obsolete("do not use this")]
         [JsonProperty("ageGroup")]
-        public virtual int? AgeGroup { get; set; } = 40;
+        public int? AgeGroup { get; set; } = 40;
 
         [Obsolete("do not use this")]
         [JsonConverter(typeof(CustomTimeConverter))]
         [JsonProperty("preferredContactTime")]
-        public virtual TimeOnly PreferredContactTime { get; set; } = TimeOnly.Parse("12:00");
+        public TimeOnly PreferredContactTime { get; set; } = TimeOnly.Parse("12:00");
 
         [JsonProperty("lastSessionLength")]
-        public virtual TimeSpan LastSessionLength { get; set; }
+        public TimeSpan LastSessionLength { get; set; }
 
         [JsonProperty("id")]
-        public virtual string Id { get; set; }
+        public string Id { get; set; }
 
         [JsonProperty("registrationDate")]
-        public virtual DateTimeOffset RegistrationDate { get; set; }
+        public DateTimeOffset RegistrationDate { get; set; }
 
         [JsonProperty("diffs")]
-        public virtual JToken Diffs { get; set; }
+        public JToken Diffs { get; set; }
 
         [JsonExtensionData]
         public Dictionary<string, object> AdditionalProperties;
@@ -134,8 +134,50 @@ namespace DemoV1b.Model {
             AdditionalProperties = deepClone ? (other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null) : other.AdditionalProperties;
         }
         public L2UserWithId ToL2UserWithId() => new L2UserWithId(this);
-        public virtual L2AnyUser ToL2AnyUser() => ToL2UserWithId();
-        public virtual L2AnyCompleteUser ToL2AnyCompleteUser() => ToL2UserWithId();
-        public virtual string TypeDiscriminator => Type;
+        public L2AnyUser ToL2AnyUser() => ToL2UserWithId();
+        public L2AnyCompleteUser ToL2AnyCompleteUser() => ToL2UserWithId();
+        public string TypeDiscriminator => Type;
+        public bool Equals(L2UserWithId other) {
+            if (ReferenceEquals(null, other)) return false;
+            if (ReferenceEquals(this, other)) return true;
+            var result = (other.SomeEnums is null ? SomeEnums is null : SomeEnums?.SequenceEqual(other.SomeEnums) ?? other.SomeEnums is null)
+                && Name == other.Name
+                && (Address?.Equals(other.Address) ?? other.Address is null)
+                && (Birthdate?.Equals(other.Birthdate) ?? other.Birthdate is null)
+                && (other.Emails is null ? Emails is null : Emails?.SequenceEqual(other.Emails) ?? other.Emails is null)
+                && (other.Descriptions is null ? Descriptions is null : Descriptions?.SequenceEqual(other.Descriptions) ?? other.Descriptions is null)
+                && Type == other.Type
+                && Role == other.Role
+                && AgeGroup == other.AgeGroup
+                && PreferredContactTime == other.PreferredContactTime
+                && LastSessionLength == other.LastSessionLength
+                && Id == other.Id
+                && RegistrationDate == other.RegistrationDate
+                && (Diffs?.Equals(other.Diffs) ?? other.Diffs is null);
+            if(result) _PartialEquals(other, ref result);
+            return result;
+        }
+        partial void _PartialEquals(L2UserWithId other, ref bool result);
+        public override bool Equals(object obj) => Equals(obj as L2UserWithId);
+        public override int GetHashCode() {
+            var hashCode = new HashCode();
+            hashCode.Add(SomeEnums);
+            hashCode.Add(Name);
+            hashCode.Add(Address);
+            hashCode.Add(Birthdate);
+            hashCode.Add(Emails);
+            hashCode.Add(Descriptions);
+            hashCode.Add(Type);
+            hashCode.Add(Role);
+            hashCode.Add(AgeGroup);
+            hashCode.Add(PreferredContactTime);
+            hashCode.Add(LastSessionLength);
+            hashCode.Add(Id);
+            hashCode.Add(RegistrationDate);
+            hashCode.Add(Diffs);
+            _PartialHashCode(ref hashCode);
+            return hashCode.ToHashCode();
+        }
+        partial void _PartialHashCode(ref HashCode hashCode);
     }
 }

@@ -11,22 +11,22 @@ using DemoV2.AspNetNewtonSoft.Model.Base;
 
 namespace DemoV2.AspNetNewtonSoft.Model {
 /// AUTOGENERED BY caffoa ///
-    public partial class ASPNEnumObject {
+    public sealed  partial class ASPNEnumObject : IEquatable<ASPNEnumObject> {
         public const string ASPNEnumObjectObjectName = "enumObject";
         [JsonProperty("single")]
-        public virtual ASPNMyEnumType Single { get; set; }
+        public ASPNMyEnumType Single { get; set; }
 
         [JsonProperty("withDefault")]
-        public virtual ASPNMyEnumTypeWithDefault WithDefault { get; set; } = ASPNMyEnumTypeWithDefault.Undefined;
+        public ASPNMyEnumTypeWithDefault WithDefault { get; set; } = ASPNMyEnumTypeWithDefault.Undefined;
 
         [JsonProperty("array")]
-        public virtual ICollection<ASPNMyEnumType> Array { get; set; } = new List<ASPNMyEnumType>();
+        public ICollection<ASPNMyEnumType> Array { get; set; } = new List<ASPNMyEnumType>();
 
         [JsonProperty("nullable")]
-        public virtual ASPNMyNullableEnum? Nullable { get; set; }
+        public ASPNMyNullableEnum? Nullable { get; set; }
 
         [JsonProperty("nullableReferenced")]
-        public virtual ASPNNullableEnum? NullableReferenced { get; set; }
+        public ASPNNullableEnum? NullableReferenced { get; set; }
 
         [JsonExtensionData]
         public Dictionary<string, object> AdditionalProperties;
@@ -41,5 +41,29 @@ namespace DemoV2.AspNetNewtonSoft.Model {
             AdditionalProperties = other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null;
         }
         public ASPNEnumObject ToASPNEnumObject() => new ASPNEnumObject(this);
+        public bool Equals(ASPNEnumObject other) {
+            if (ReferenceEquals(null, other)) return false;
+            if (ReferenceEquals(this, other)) return true;
+            var result = Single == other.Single
+                && WithDefault == other.WithDefault
+                && (other.Array is null ? Array is null : Array?.SequenceEqual(other.Array) ?? other.Array is null)
+                && Nullable == other.Nullable
+                && NullableReferenced == other.NullableReferenced;
+            if(result) _PartialEquals(other, ref result);
+            return result;
+        }
+        partial void _PartialEquals(ASPNEnumObject other, ref bool result);
+        public override bool Equals(object obj) => Equals(obj as ASPNEnumObject);
+        public override int GetHashCode() {
+            var hashCode = new HashCode();
+            hashCode.Add((int) Single);
+            hashCode.Add((int) WithDefault);
+            hashCode.Add(Array);
+            hashCode.Add((int) Nullable);
+            hashCode.Add((int) NullableReferenced);
+            _PartialHashCode(ref hashCode);
+            return hashCode.ToHashCode();
+        }
+        partial void _PartialHashCode(ref HashCode hashCode);
     }
 }

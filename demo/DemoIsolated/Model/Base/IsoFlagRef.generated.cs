@@ -10,10 +10,10 @@ using System.Linq;
 
 namespace DemoIsolated.Model.Base {
 /// AUTOGENERED BY caffoa ///
-    public partial class IsoFlagRef {
+    public sealed  partial class IsoFlagRef : IEquatable<IsoFlagRef> {
         public const string IsoFlagRefObjectName = "flagRef";
         [JsonProperty("flag")]
-        public virtual IsoFlags Flag { 
+        public IsoFlags Flag { 
             get => GetFlag(); 
             set => SetFlag(value);
         }
@@ -21,7 +21,7 @@ namespace DemoIsolated.Model.Base {
         partial void SetFlag(IsoFlags value);
 
         [JsonProperty("flag2")]
-        public virtual IsoFlags Flag2 { 
+        public IsoFlags Flag2 { 
             get => Flag; 
             set => Flag = value;
         }
@@ -36,5 +36,23 @@ namespace DemoIsolated.Model.Base {
             AdditionalProperties = other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null;
         }
         public IsoFlagRef ToIsoFlagRef() => new IsoFlagRef(this);
+        public bool Equals(IsoFlagRef other) {
+            if (ReferenceEquals(null, other)) return false;
+            if (ReferenceEquals(this, other)) return true;
+            var result = (Flag?.Equals(other.Flag) ?? other.Flag is null)
+                && (Flag2?.Equals(other.Flag2) ?? other.Flag2 is null);
+            if(result) _PartialEquals(other, ref result);
+            return result;
+        }
+        partial void _PartialEquals(IsoFlagRef other, ref bool result);
+        public override bool Equals(object obj) => Equals(obj as IsoFlagRef);
+        public override int GetHashCode() {
+            var hashCode = new HashCode();
+            hashCode.Add(Flag);
+            hashCode.Add(Flag2);
+            _PartialHashCode(ref hashCode);
+            return hashCode.ToHashCode();
+        }
+        partial void _PartialHashCode(ref HashCode hashCode);
     }
 }

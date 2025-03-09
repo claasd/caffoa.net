@@ -35,7 +35,7 @@ public class SchemaItemFormatter
         if(_item.Parent != null)
             parents.Add(_item.Parent);
         parents.AddRange(MatchingInterfaces(allObjects));
-        if((_item.GenerateEqualsOverload ?? _config.GenerateEqualsMethods) is true)
+        if(_item.GenerateEqualsOverload ?? _config.GenerateEqualsMethods ?? true)
             parents.Add("IEquatable<" + _item.ClassName + ">");
         if (parents.Count > 0)
             return " : " + string.Join(", ", parents);
@@ -48,7 +48,7 @@ public class SchemaItemFormatter
     public string Imports(List<string>? modelImports, List<string>? configImports)
     {
         var imports = new List<string>();
-        if (_config.Flavor is CaffoaConfig.GenerationFlavor.SystemTextJsonPre7 || _config.Flavor is CaffoaConfig.GenerationFlavor.SystemTextJson)
+        if (_config.Flavor is CaffoaConfig.GenerationFlavor.SystemTextJson)
         {
             imports.Add("System.Text.Json");
             imports.Add("System.Text.Json.Serialization");

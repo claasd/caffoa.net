@@ -89,7 +89,6 @@ public class Main
 
                 generator.Imports.Add(builder.Config.Flavor switch
                 {
-                    CaffoaConfig.GenerationFlavor.SystemTextJsonPre7 => "System.Text.Json",
                     CaffoaConfig.GenerationFlavor.SystemTextJson => "System.Text.Json",
                     _ => "Newtonsoft.Json.Linq"
                 });

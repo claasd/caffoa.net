@@ -12,7 +12,7 @@ using DemoV1a.Model.Base;
 
 namespace DemoV1a.Model {
 /// AUTOGENERED BY caffoa ///
-    public partial class L1EnumObject {
+    public partial class L1EnumObject : IEquatable<L1EnumObject> {
         public const string L1EnumObjectObjectName = "enumObject";
         [JsonIgnore]
         private string _single;
@@ -102,5 +102,29 @@ namespace DemoV1a.Model {
             AdditionalProperties = other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null;
         }
         public L1EnumObject ToL1EnumObject() => new L1EnumObject(this);
+        public bool Equals(L1EnumObject other) {
+            if (ReferenceEquals(null, other)) return false;
+            if (ReferenceEquals(this, other)) return true;
+            var result = Single == other.Single
+                && WithDefault == other.WithDefault
+                && (other.Array is null ? Array is null : Array?.SequenceEqual(other.Array) ?? other.Array is null)
+                && Nullable == other.Nullable
+                && NullableReferenced == other.NullableReferenced;
+            if(result) _PartialEquals(other, ref result);
+            return result;
+        }
+        partial void _PartialEquals(L1EnumObject other, ref bool result);
+        public override bool Equals(object obj) => Equals(obj as L1EnumObject);
+        public override int GetHashCode() {
+            var hashCode = new HashCode();
+            hashCode.Add(Single);
+            hashCode.Add(WithDefault);
+            hashCode.Add(Array);
+            hashCode.Add(Nullable);
+            hashCode.Add(NullableReferenced);
+            _PartialHashCode(ref hashCode);
+            return hashCode.ToHashCode();
+        }
+        partial void _PartialHashCode(ref HashCode hashCode);
     }
 }

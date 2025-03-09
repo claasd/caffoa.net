@@ -13,7 +13,7 @@ using DemoV1a.Model.Base;
 
 namespace DemoV1a.Model {
 /// AUTOGENERED BY caffoa ///
-    public partial class L1User : L1AnyUser {
+    public partial class L1User : L1AnyUser, IEquatable<L1User> {
         public const string L1UserObjectName = "user";
         [JsonProperty("someEnums")]
         public virtual ICollection<string> SomeEnums { get; set; }
@@ -107,5 +107,41 @@ namespace DemoV1a.Model {
         public L1User ToL1User() => new L1User(this);
         public virtual L1AnyUser ToL1AnyUser() => ToL1User();
         public virtual string TypeDiscriminator => Type;
+        public bool Equals(L1User other) {
+            if (ReferenceEquals(null, other)) return false;
+            if (ReferenceEquals(this, other)) return true;
+            var result = (other.SomeEnums is null ? SomeEnums is null : SomeEnums?.SequenceEqual(other.SomeEnums) ?? other.SomeEnums is null)
+                && Name == other.Name
+                && (Address?.Equals(other.Address) ?? other.Address is null)
+                && (Birthdate?.Equals(other.Birthdate) ?? other.Birthdate is null)
+                && (other.Emails is null ? Emails is null : Emails?.SequenceEqual(other.Emails) ?? other.Emails is null)
+                && (other.Descriptions is null ? Descriptions is null : Descriptions?.SequenceEqual(other.Descriptions) ?? other.Descriptions is null)
+                && Type == other.Type
+                && Role == other.Role
+                && AgeGroup == other.AgeGroup
+                && PreferredContactTime == other.PreferredContactTime
+                && LastSessionLength == other.LastSessionLength;
+            if(result) _PartialEquals(other, ref result);
+            return result;
+        }
+        partial void _PartialEquals(L1User other, ref bool result);
+        public override bool Equals(object obj) => Equals(obj as L1User);
+        public override int GetHashCode() {
+            var hashCode = new HashCode();
+            hashCode.Add(SomeEnums);
+            hashCode.Add(Name);
+            hashCode.Add(Address);
+            hashCode.Add(Birthdate);
+            hashCode.Add(Emails);
+            hashCode.Add(Descriptions);
+            hashCode.Add(Type);
+            hashCode.Add(Role);
+            hashCode.Add(AgeGroup);
+            hashCode.Add(PreferredContactTime);
+            hashCode.Add(LastSessionLength);
+            _PartialHashCode(ref hashCode);
+            return hashCode.ToHashCode();
+        }
+        partial void _PartialHashCode(ref HashCode hashCode);
     }
 }

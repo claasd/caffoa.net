@@ -1,4 +1,16 @@
 # caffoa changelog
+## 5.0.0
+* Support for net9.0
+* Dropped support for netcore 3.1 and net7.0
+* Dropped support for System.Text.Json net6.0 (allow to drop legacy support for missing feature that where introduced in net7.0)
+* Drop support for `flavor: SystemTextJsonPre7` (use `flavor: SystemTextJson` instead)
+* Change of default values:
+   * `useIsolatedWorkerModel` now defaults to true, as this is the recommended way to use Azure Functions
+   * `nullableIsDefault` not defaults to true, making non required properties `nullable`by default, even if they are not defined as nullable in the openapi definition
+   * `initCollections` now defaults to true, initializing all collections, not just required ones. Be careful: collections may still be set to null inf they are explicitly set to null in the payload
+   * `generateEqualsMethods` now defaults to true, generating Equals and GetHashCode methods for all model classes.
+* Added `using Caffoa` to interfaces and extensions, to be able to use Caffoa extensions without having to add the Caffoa import
+
 ## 4.14.0
 * Change of behavior in the error handler: No error will be logged if the RequestAborted cancellation token is used. This avoids logging exceptions due to the requested cancellation (e.g. RequestCancelledException or various backend cancellation exceptions). 
 

@@ -110,7 +110,7 @@ public class ServiceParser
     private List<SchemaItem> ParseObjects(IDictionary<string, OpenApiSchema> schemas)
     {
         var objects = new List<SchemaItem>();
-        bool nullableIsDefault = _config.NullableIsDefault ?? false;
+        bool nullableIsDefault = _config.NullableIsDefault ?? true;
         foreach (var (name, apiSchema) in schemas)
         {
             var className = ClassName(name);

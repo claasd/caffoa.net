@@ -11,7 +11,7 @@ using System.Collections.Immutable;
 
 namespace DemoV1a.Model.Base {
 /// AUTOGENERED BY caffoa ///
-    public partial class L1Address {
+    public partial class L1Address : IEquatable<L1Address> {
         public const string L1AddressObjectName = "address";
         [JsonProperty("street", Required = Required.Always)]
         public virtual string Street { get; set; }
@@ -71,5 +71,35 @@ namespace DemoV1a.Model.Base {
             AdditionalProperties = other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null;
         }
         public L1Address ToL1Address() => new L1Address(this);
+        public bool Equals(L1Address other) {
+            if (ReferenceEquals(null, other)) return false;
+            if (ReferenceEquals(this, other)) return true;
+            var result = Street == other.Street
+                && StreetExtra == other.StreetExtra
+                && NumericPostalCode == other.NumericPostalCode
+                && PostalCode == other.PostalCode
+                && City == other.City
+                && Country == other.Country
+                && AddressType == other.AddressType
+                && (other.Flags is null ? Flags is null : Flags?.SequenceEqual(other.Flags) ?? other.Flags is null);
+            if(result) _PartialEquals(other, ref result);
+            return result;
+        }
+        partial void _PartialEquals(L1Address other, ref bool result);
+        public override bool Equals(object obj) => Equals(obj as L1Address);
+        public override int GetHashCode() {
+            var hashCode = new HashCode();
+            hashCode.Add(Street);
+            hashCode.Add(StreetExtra);
+            hashCode.Add(NumericPostalCode);
+            hashCode.Add(PostalCode);
+            hashCode.Add(City);
+            hashCode.Add(Country);
+            hashCode.Add(AddressType);
+            hashCode.Add(Flags);
+            _PartialHashCode(ref hashCode);
+            return hashCode.ToHashCode();
+        }
+        partial void _PartialHashCode(ref HashCode hashCode);
     }
 }

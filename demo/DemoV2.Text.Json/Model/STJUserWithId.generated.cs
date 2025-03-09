@@ -14,57 +14,57 @@ using DemoV2.Text.Json.Model;
 
 namespace DemoV2.Text.Json.Model {
 /// AUTOGENERED BY caffoa ///
-    public partial class STJUserWithId : STJAnyUser, STJAnyCompleteUser {
+    public sealed  partial class STJUserWithId : STJAnyUser, STJAnyCompleteUser, IEquatable<STJUserWithId> {
         public const string STJUserWithIdObjectName = "userWithId";
         [JsonPropertyName("someEnums")]
-        public virtual ICollection<STJSomeEnum> SomeEnums { get; set; }
+        public ICollection<STJSomeEnum> SomeEnums { get; set; }
 
         /// <summary>
         /// A fancy string with description
         /// </summary>
         [JsonPropertyName("name")]
-        public virtual string Name { get; set; }
+        public string Name { get; set; }
 
         [JsonPropertyName("address")]
-        public virtual STJAddress Address { get; set; }
+        public STJAddress Address { get; set; }
 
         [Obsolete]
         [JsonConverter(typeof(CaffoaDateOnlyConverter))]
         [JsonPropertyName("birthdate")]
-        public virtual DateOnly? Birthdate { get; set; }
+        public DateOnly? Birthdate { get; set; }
 
         [JsonPropertyName("emails")]
-        public virtual ICollection<string> Emails { get; set; } = new List<string>();
+        public ICollection<string> Emails { get; set; } = new List<string>();
 
         [JsonPropertyName("descriptions")]
-        public virtual Dictionary<string, string> Descriptions { get; set; } = new Dictionary<string, string>();
+        public Dictionary<string, string> Descriptions { get; set; } = new Dictionary<string, string>();
 
         [JsonPropertyName("type")]
-        public virtual TypeValue Type { get; set; } = TypeValue.Simple;
+        public TypeValue Type { get; set; } = TypeValue.Simple;
 
         [JsonPropertyName("role")]
-        public virtual RoleValue Role { get; set; } = RoleValue.Reader;
+        public RoleValue Role { get; set; } = RoleValue.Reader;
 
         [Obsolete("do not use this")]
         [JsonPropertyName("ageGroup")]
-        public virtual int? AgeGroup { get; set; } = 40;
+        public int? AgeGroup { get; set; } = 40;
 
         [Obsolete("do not use this")]
         [JsonConverter(typeof(CustomTimeConverter))]
         [JsonPropertyName("preferredContactTime")]
-        public virtual TimeOnly PreferredContactTime { get; set; } = TimeOnly.Parse("12:00");
+        public TimeOnly PreferredContactTime { get; set; } = TimeOnly.Parse("12:00");
 
         [JsonPropertyName("lastSessionLength")]
-        public virtual TimeSpan LastSessionLength { get; set; }
+        public TimeSpan LastSessionLength { get; set; }
 
         [JsonPropertyName("id")]
-        public virtual string Id { get; set; }
+        public string Id { get; set; }
 
         [JsonPropertyName("registrationDate")]
-        public virtual DateTimeOffset RegistrationDate { get; set; }
+        public DateTimeOffset RegistrationDate { get; set; }
 
         [JsonPropertyName("diffs")]
-        public virtual JsonElement? Diffs { get; set; }
+        public JsonElement? Diffs { get; set; }
 
         [JsonExtensionData]
         public Dictionary<string, object> AdditionalProperties;
@@ -102,8 +102,50 @@ namespace DemoV2.Text.Json.Model {
             AdditionalProperties = deepClone ? (other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null) : other.AdditionalProperties;
         }
         public STJUserWithId ToSTJUserWithId() => new STJUserWithId(this);
-        public virtual STJAnyUser ToSTJAnyUser() => ToSTJUserWithId();
-        public virtual STJAnyCompleteUser ToSTJAnyCompleteUser() => ToSTJUserWithId();
-        public virtual string TypeDiscriminator => Type.Value();
+        public STJAnyUser ToSTJAnyUser() => ToSTJUserWithId();
+        public STJAnyCompleteUser ToSTJAnyCompleteUser() => ToSTJUserWithId();
+        public string TypeDiscriminator => Type.Value();
+        public bool Equals(STJUserWithId other) {
+            if (ReferenceEquals(null, other)) return false;
+            if (ReferenceEquals(this, other)) return true;
+            var result = (other.SomeEnums is null ? SomeEnums is null : SomeEnums?.SequenceEqual(other.SomeEnums) ?? other.SomeEnums is null)
+                && Name == other.Name
+                && (Address?.Equals(other.Address) ?? other.Address is null)
+                && (Birthdate?.Equals(other.Birthdate) ?? other.Birthdate is null)
+                && (other.Emails is null ? Emails is null : Emails?.SequenceEqual(other.Emails) ?? other.Emails is null)
+                && (other.Descriptions is null ? Descriptions is null : Descriptions?.SequenceEqual(other.Descriptions) ?? other.Descriptions is null)
+                && Type == other.Type
+                && Role == other.Role
+                && AgeGroup == other.AgeGroup
+                && PreferredContactTime == other.PreferredContactTime
+                && LastSessionLength == other.LastSessionLength
+                && Id == other.Id
+                && RegistrationDate == other.RegistrationDate
+                && (Diffs?.Equals(other.Diffs) ?? other.Diffs is null);
+            if(result) _PartialEquals(other, ref result);
+            return result;
+        }
+        partial void _PartialEquals(STJUserWithId other, ref bool result);
+        public override bool Equals(object obj) => Equals(obj as STJUserWithId);
+        public override int GetHashCode() {
+            var hashCode = new HashCode();
+            hashCode.Add(SomeEnums);
+            hashCode.Add(Name);
+            hashCode.Add(Address);
+            hashCode.Add(Birthdate);
+            hashCode.Add(Emails);
+            hashCode.Add(Descriptions);
+            hashCode.Add((int) Type);
+            hashCode.Add((int) Role);
+            hashCode.Add(AgeGroup);
+            hashCode.Add(PreferredContactTime);
+            hashCode.Add(LastSessionLength);
+            hashCode.Add(Id);
+            hashCode.Add(RegistrationDate);
+            hashCode.Add(Diffs);
+            _PartialHashCode(ref hashCode);
+            return hashCode.ToHashCode();
+        }
+        partial void _PartialHashCode(ref HashCode hashCode);
     }
 }

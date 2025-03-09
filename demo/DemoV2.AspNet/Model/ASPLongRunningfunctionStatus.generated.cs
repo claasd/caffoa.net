@@ -12,13 +12,13 @@ using DemoV2.AspNet.Model.Base;
 
 namespace DemoV2.AspNet.Model {
 /// AUTOGENERED BY caffoa ///
-    public partial class ASPLongRunningfunctionStatus {
+    public sealed  partial class ASPLongRunningfunctionStatus : IEquatable<ASPLongRunningfunctionStatus> {
         public const string ASPLongRunningfunctionStatusObjectName = "longRunningfunctionStatus";
         [JsonPropertyName("status")]
-        public virtual StatusValue? Status { get; set; }
+        public StatusValue? Status { get; set; }
 
         [JsonPropertyName("result")]
-        public virtual ASPAnyUser Result { get; set; }
+        public ASPAnyUser Result { get; set; }
 
         [JsonExtensionData]
         public Dictionary<string, object> AdditionalProperties;
@@ -30,5 +30,23 @@ namespace DemoV2.AspNet.Model {
             AdditionalProperties = other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null;
         }
         public ASPLongRunningfunctionStatus ToASPLongRunningfunctionStatus() => new ASPLongRunningfunctionStatus(this);
+        public bool Equals(ASPLongRunningfunctionStatus other) {
+            if (ReferenceEquals(null, other)) return false;
+            if (ReferenceEquals(this, other)) return true;
+            var result = Status == other.Status
+                && (Result?.Equals(other.Result) ?? other.Result is null);
+            if(result) _PartialEquals(other, ref result);
+            return result;
+        }
+        partial void _PartialEquals(ASPLongRunningfunctionStatus other, ref bool result);
+        public override bool Equals(object obj) => Equals(obj as ASPLongRunningfunctionStatus);
+        public override int GetHashCode() {
+            var hashCode = new HashCode();
+            hashCode.Add((int) Status);
+            hashCode.Add(Result);
+            _PartialHashCode(ref hashCode);
+            return hashCode.ToHashCode();
+        }
+        partial void _PartialHashCode(ref HashCode hashCode);
     }
 }

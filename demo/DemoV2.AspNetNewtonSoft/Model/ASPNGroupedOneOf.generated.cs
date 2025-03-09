@@ -11,10 +11,10 @@ using DemoV2.AspNetNewtonSoft.Model.Base;
 
 namespace DemoV2.AspNetNewtonSoft.Model {
 /// AUTOGENERED BY caffoa ///
-    public partial class ASPNGroupedOneOf {
+    public sealed  partial class ASPNGroupedOneOf : IEquatable<ASPNGroupedOneOf> {
         public const string ASPNGroupedOneOfObjectName = "groupedOneOf";
         [JsonProperty("element")]
-        public virtual ASPNAnyUser Element { get; set; }
+        public ASPNAnyUser Element { get; set; }
 
         [JsonExtensionData]
         public Dictionary<string, object> AdditionalProperties;
@@ -25,5 +25,21 @@ namespace DemoV2.AspNetNewtonSoft.Model {
             AdditionalProperties = other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null;
         }
         public ASPNGroupedOneOf ToASPNGroupedOneOf() => new ASPNGroupedOneOf(this);
+        public bool Equals(ASPNGroupedOneOf other) {
+            if (ReferenceEquals(null, other)) return false;
+            if (ReferenceEquals(this, other)) return true;
+            var result = (Element?.Equals(other.Element) ?? other.Element is null);
+            if(result) _PartialEquals(other, ref result);
+            return result;
+        }
+        partial void _PartialEquals(ASPNGroupedOneOf other, ref bool result);
+        public override bool Equals(object obj) => Equals(obj as ASPNGroupedOneOf);
+        public override int GetHashCode() {
+            var hashCode = new HashCode();
+            hashCode.Add(Element);
+            _PartialHashCode(ref hashCode);
+            return hashCode.ToHashCode();
+        }
+        partial void _PartialHashCode(ref HashCode hashCode);
     }
 }

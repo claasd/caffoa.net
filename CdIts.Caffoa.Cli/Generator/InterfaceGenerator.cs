@@ -42,10 +42,10 @@ public class InterfaceGenerator
         var imports = new List<string>();
         if (endpoints.Find(e => e.DurableClient) != null)
         {
-            if (_config.UseIsolatedWorkerModel is true)
-                imports.Add("Microsoft.DurableTask.Client");
-            else
+            if (_config.UseIsolatedWorkerModel is false)
                 imports.Add("Microsoft.Azure.WebJobs.Extensions.DurableTask");
+            else
+                imports.Add("Microsoft.DurableTask.Client");
         }
             
         endpoints.ForEach(e => imports.AddRange(e.Imports));
@@ -98,7 +98,7 @@ public class InterfaceGenerator
         if (config.PassTags is true)
             builder.AddTags();
         if (endpoint.DurableClient && withDurable)
-            builder.AddDurableClient(config.UseIsolatedWorkerModel is true);
+            builder.AddDurableClient(config.UseIsolatedWorkerModel is false);
         if (config.ParseQueryParameters is not false)
             builder.AddQueryParameters(endpoint.QueryParameters(), nullableDefaults);
         if (config.WithCancellation is not false || forceCancellation)

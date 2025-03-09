@@ -54,7 +54,6 @@ public class ModelGenerator
         parameters["DESCRIPTION"] = formatter.Description;
         parameters["ATTRIBUTES"] = _config.Flavor switch
         {
-            CaffoaConfig.GenerationFlavor.SystemTextJsonPre7 => "",
             CaffoaConfig.GenerationFlavor.SystemTextJson => string.Join("\n    ",
                 item.Interface!.Mapping.Select(c => $"[JsonDerivedType(typeof({c.Value}), \"{c.Key}\")]")),
             _ => JsonNetSubtypes(item.Interface!),
@@ -94,7 +93,7 @@ public class ModelGenerator
         parameters["INTERFACE_METHODS"] = formatter.InterfaceMethods(interfaces, seal);
         parameters["RAWNAME"] = item.Name;
         parameters["CONSTRUCTORS"] = CreateConstructors(item, otherClasses);
-        parameters["EQUALS_METHODS"] = (item.GenerateEqualsOverload ?? _config.GenerateEqualsMethods) is true ? CreateEquals(item, enumClasses) : "";
+        parameters["EQUALS_METHODS"] = item.GenerateEqualsOverload ?? _config.GenerateEqualsMethods ?? true ? CreateEquals(item, enumClasses) : "";
         parameters["INHERIT_CONSTRUCTORS"] = _config.UseInheritance is true ? formatter.CreateConstructors(otherClasses) : "ARG";
         parameters["PROPERTIES"] = FormatProperties(item, enumClasses, interfaces);
         parameters["ADDITIONAL_PROPS"] = formatter.GenericAdditionalProperties();
@@ -118,7 +117,7 @@ public class ModelGenerator
         parameters["INTERFACE_METHODS"] = formatter.InterfaceMethods(interfaces, seal);
         parameters["RAWNAME"] = item.Name;
         parameters["CONSTRUCTORS"] = CreateConstructors(item, null);
-        parameters["EQUALS_METHODS"] = (item.GenerateEqualsOverload ?? _config.GenerateEqualsMethods) is true ? CreateEquals(item, null) : "";
+        parameters["EQUALS_METHODS"] = item.GenerateEqualsOverload ?? _config.GenerateEqualsMethods ?? true ? CreateEquals(item, null) : "";
         parameters["INHERIT_CONSTRUCTORS"] = "";
         parameters["PROPERTIES"] = "";
         parameters["ADDITIONAL_PROPS"] = "";
@@ -471,7 +470,6 @@ public class ModelGenerator
         {
             jsonproperty = _config.Flavor switch
             {
-                CaffoaConfig.GenerationFlavor.SystemTextJsonPre7 => "JsonStringEnumConverter",
                 CaffoaConfig.GenerationFlavor.SystemTextJson => "JsonStringEnumConverter",
                 _ => "StringEnumConverter",
             };

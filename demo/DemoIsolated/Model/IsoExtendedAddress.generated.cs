@@ -12,37 +12,37 @@ using DemoIsolated.Model.Base;
 
 namespace DemoIsolated.Model {
 /// AUTOGENERED BY caffoa ///
-    public partial class IsoExtendedAddress {
+    public sealed  partial class IsoExtendedAddress : IEquatable<IsoExtendedAddress> {
         public const string IsoExtendedAddressObjectName = "extendedAddress";
         [JsonProperty("street", Required = Required.Always)]
-        public virtual string Street { get; set; }
+        public string Street { get; set; }
 
         [JsonProperty("street.extra")]
-        public virtual string StreetExtra { get; set; }
+        public string StreetExtra { get; set; }
 
         [JsonProperty("numericPostalCode")]
-        public virtual int NumericPostalCode { 
+        public int NumericPostalCode { 
             get => int.Parse(PostalCode); 
             set => PostalCode = $"{value:D5}";
         }
 
         [JsonProperty("postalCode", Required = Required.Always)]
-        public virtual string PostalCode { get; set; }
+        public string PostalCode { get; set; }
 
         [JsonProperty("city", Required = Required.Always)]
-        public virtual string City { get; set; }
+        public string City { get; set; }
 
         [JsonProperty("country", Required = Required.Always)]
-        public virtual string Country { get; set; }
+        public string Country { get; set; }
 
         [JsonProperty("addressType")]
-        public virtual AddressTypeValue AddressType { get; set; }
+        public AddressTypeValue AddressType { get; set; }
 
         [JsonProperty("flags")]
-        public virtual Dictionary<string, IsoFlags> Flags { get; set; } = new Dictionary<string, IsoFlags>();
+        public Dictionary<string, IsoFlags> Flags { get; set; } = new Dictionary<string, IsoFlags>();
 
         [JsonProperty("addressType2")]
-        public virtual string AddressType2 { get; set; }
+        public string AddressType2 { get; set; }
 
         public IsoExtendedAddress(){}
         public IsoExtendedAddress(IsoExtendedAddress other) {
@@ -67,5 +67,37 @@ namespace DemoIsolated.Model {
             Flags = deepClone ? other.Flags?.ToDictionary(entry => entry.Key, entry => entry.Value?.ToIsoFlags()) : other.Flags;
         }
         public IsoExtendedAddress ToIsoExtendedAddress() => new IsoExtendedAddress(this);
+        public bool Equals(IsoExtendedAddress other) {
+            if (ReferenceEquals(null, other)) return false;
+            if (ReferenceEquals(this, other)) return true;
+            var result = Street == other.Street
+                && StreetExtra == other.StreetExtra
+                && NumericPostalCode == other.NumericPostalCode
+                && PostalCode == other.PostalCode
+                && City == other.City
+                && Country == other.Country
+                && AddressType == other.AddressType
+                && (other.Flags is null ? Flags is null : Flags?.SequenceEqual(other.Flags) ?? other.Flags is null)
+                && AddressType2 == other.AddressType2;
+            if(result) _PartialEquals(other, ref result);
+            return result;
+        }
+        partial void _PartialEquals(IsoExtendedAddress other, ref bool result);
+        public override bool Equals(object obj) => Equals(obj as IsoExtendedAddress);
+        public override int GetHashCode() {
+            var hashCode = new HashCode();
+            hashCode.Add(Street);
+            hashCode.Add(StreetExtra);
+            hashCode.Add(NumericPostalCode);
+            hashCode.Add(PostalCode);
+            hashCode.Add(City);
+            hashCode.Add(Country);
+            hashCode.Add((int) AddressType);
+            hashCode.Add(Flags);
+            hashCode.Add(AddressType2);
+            _PartialHashCode(ref hashCode);
+            return hashCode.ToHashCode();
+        }
+        partial void _PartialHashCode(ref HashCode hashCode);
     }
 }
