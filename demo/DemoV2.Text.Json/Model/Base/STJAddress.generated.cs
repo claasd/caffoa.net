@@ -14,6 +14,7 @@ namespace DemoV2.Text.Json.Model.Base {
     public sealed  partial class STJAddress : IEquatable<STJAddress> {
         public const string STJAddressObjectName = "address";
         [JsonPropertyName("street")]
+        [JsonRequired]
         public string Street { get; set; }
 
         [JsonPropertyName("street.extra")]
@@ -26,12 +27,15 @@ namespace DemoV2.Text.Json.Model.Base {
         }
 
         [JsonPropertyName("postalCode")]
+        [JsonRequired]
         public string PostalCode { get; set; }
 
         [JsonPropertyName("city")]
+        [JsonRequired]
         public string City { get; set; }
 
         [JsonPropertyName("country")]
+        [JsonRequired]
         public string Country { get; set; }
 
         [JsonPropertyName("addressType")]

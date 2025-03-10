@@ -17,12 +17,14 @@ namespace DemoV2.Text.Json.Model {
         /// Single string based code describing the error.
         /// </summary>
         [JsonPropertyName("status")]
+        [JsonRequired]
         public string Status { get; set; }
 
         /// <summary>
         /// Human readable error message.
         /// </summary>
         [JsonPropertyName("message")]
+        [JsonRequired]
         public string Message { get; set; }
 
         [JsonExtensionData]

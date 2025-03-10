@@ -23,6 +23,7 @@ namespace DemoV2.Text.Json.Model {
         /// A fancy string with description
         /// </summary>
         [JsonPropertyName("name")]
+        [JsonRequired]
         public string Name { get; set; }
 
         [JsonPropertyName("address")]
@@ -40,6 +41,7 @@ namespace DemoV2.Text.Json.Model {
         public Dictionary<string, string> Descriptions { get; set; } = new Dictionary<string, string>();
 
         [JsonPropertyName("type")]
+        [JsonRequired]
         public TypeValue Type { get; set; } = TypeValue.Simple;
 
         [JsonPropertyName("role")]

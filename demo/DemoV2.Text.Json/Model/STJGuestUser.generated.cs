@@ -15,9 +15,11 @@ namespace DemoV2.Text.Json.Model {
     public sealed  partial class STJGuestUser : STJAnyUser, STJAnyCompleteUser, IEquatable<STJGuestUser> {
         public const string STJGuestUserObjectName = "guestUser";
         [JsonPropertyName("email")]
+        [JsonRequired]
         public string Email { get; set; }
 
         [JsonPropertyName("type")]
+        [JsonRequired]
         public TypeValue Type { get; set; } = TypeValue.Guest;
 
         [JsonPropertyName("constInt")]
