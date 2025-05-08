@@ -52,7 +52,7 @@ namespace DemoV2.AspNetNewtonSoft
         Task<(ASPNAnyCompleteUser, int)> UserPutAsync(string userId, ASPNGuestUser payload, CancellationToken cancellationToken = default);
 
         /// <summary>
-        /// update a user
+        /// Use UserPut instead
         /// 200 -> User was updated
         /// </summary>
         Task<ASPNUserWithId> UserPatchAsync(string userId, JToken payload, CancellationToken cancellationToken = default);
@@ -67,6 +67,11 @@ namespace DemoV2.AspNetNewtonSoft
         /// 201 -> Image was created
         /// </summary>
         Task UploadImageAsync(string userId, Stream stream, CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// 201 -> Image was created
+        /// </summary>
+        Task UploadImage2Async(string userId, Stream stream, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// get

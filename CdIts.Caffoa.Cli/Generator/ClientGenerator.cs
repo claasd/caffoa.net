@@ -28,7 +28,7 @@ public class ClientGenerator
             var tags = endpoints.Select(e => e.Tag).Distinct();
             foreach (var tag in tags)
             {
-                if(_clientConfig.IncludeTags is null || _clientConfig.IncludeTags.Length == 0 || _clientConfig.IncludeTags.Contains(tag))
+                if (_clientConfig.IncludeTags is null || _clientConfig.IncludeTags.Length == 0 || _clientConfig.IncludeTags.Contains(tag))
                     GenerateClient(servers, endpoints.Where(e => e.Tag == tag).ToList(), tag.ToObjectName());
             }
         }
@@ -37,6 +37,7 @@ public class ClientGenerator
             GenerateClient(servers, endpoints, "");
         }
     }
+
     public void GenerateClient(List<Server> servers, List<EndPointModel> endpoints, string namePrefix)
     {
         var imports = new List<string>();
@@ -51,7 +52,7 @@ public class ClientGenerator
         var name = _clientConfig.GetName(namePrefix);
         Directory.CreateDirectory(_clientConfig.TargetFolder);
         var format = new Dictionary<string, object>();
-        format["SERVERS"] = string.Join(", ", servers.Select(s=>s.Uri.Escaped()));
+        format["SERVERS"] = string.Join(", ", servers.Select(s => s.Uri.Escaped()));
         format["NAMESPACE"] = _clientConfig.Namespace;
         format["CLASSNAME"] = name;
         format["CONSTRUCTOR_VISIBILITY"] = _clientConfig.ConstructorVisibility;
@@ -91,6 +92,11 @@ public class ClientGenerator
                 format["RESULTCODE"] = Result(endpoint);
                 format["QUERYPARAMS"] = FormatQueryParams(endpoint.Parameters);
                 format["ERRORHANDLING"] = errorHandling;
+                format["OBSOLETE"] = "";
+                if (endpoint.Deprecated && !string.IsNullOrWhiteSpace(endpoint.Description))
+                    format["OBSOLETE"] = $"\n        [Obsolete(\"{endpoint.Description}\", {endpoint.DeprecatedAsError.ToString().ToLower()})]\n        ";
+                else if (endpoint is { Deprecated: true })
+                    format["OBSOLETE"] = $"\n        [Obsolete(\"marked as deprecated in openAPI\", {endpoint.DeprecatedAsError.ToString().ToLower()})]\n        ";
                 var formatted = file.FormatDict(format);
                 methods.Add(formatted);
             }
@@ -196,7 +202,8 @@ public class ClientGenerator
             return "";
         if (responses[0].Unknown)
         {
-            return "\n             var memoryStream = new MemoryStream();\n             await httpResult.Content.CopyToAsync(memoryStream);\n             memoryStream.Position = 0;\n             return memoryStream;";
+            return
+                "\n             var memoryStream = new MemoryStream();\n             await httpResult.Content.CopyToAsync(memoryStream);\n             memoryStream.Position = 0;\n             return memoryStream;";
         }
 
         var type = responses[0].TypeName;

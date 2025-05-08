@@ -52,7 +52,7 @@ namespace DemoV2
         Task<(AnyCompleteUser, int)> UserPutAsync(string userId, GuestUser payload, CancellationToken cancellationToken = default);
 
         /// <summary>
-        /// update a user
+        /// Use UserPut instead
         /// 200 -> User was updated
         /// </summary>
         Task<UserWithId> UserPatchAsync(string userId, JObject payload, CancellationToken cancellationToken = default);
@@ -67,6 +67,11 @@ namespace DemoV2
         /// 201 -> Image was created
         /// </summary>
         Task UploadImageAsync(string userId, Stream stream, CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// 201 -> Image was created
+        /// </summary>
+        Task UploadImage2Async(string userId, Stream stream, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// get

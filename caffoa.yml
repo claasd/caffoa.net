@@ -235,6 +235,9 @@ services:
       targetFolder: demo/DemoIsolated
       namespace: DemoIsolated
       name: DemoIsolated
+    client:
+      targetFolder: demo/DemoIsolated/Client
+      name: MyClient
       
       
       

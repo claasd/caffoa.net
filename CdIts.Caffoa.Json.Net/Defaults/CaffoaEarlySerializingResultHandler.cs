@@ -1,9 +1,8 @@
-﻿using System.Net.Mime;
-using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 
 namespace Caffoa.Defaults;
 
+[Obsolete("This class is deprecated. Use DefaultCaffoaResultHandler instead. DefaultCaffoaResultHandler now uses early serialization by default.")]
 public class CaffoaEarlySerializingResultHandler : DefaultCaffoaResultHandler
 {
     public CaffoaEarlySerializingResultHandler()
@@ -13,13 +12,4 @@ public class CaffoaEarlySerializingResultHandler : DefaultCaffoaResultHandler
     public CaffoaEarlySerializingResultHandler(JsonSerializerSettings serializerSettings) : base(serializerSettings)
     {
     }
-
-    public override IActionResult Json(object data, int statusCode) =>
-        new ContentResult()
-        {
-            Content = JsonString(data),
-            StatusCode = statusCode,
-            ContentType = MediaTypeNames.Application.Json
-        };
-    public override IActionResult Json<T>(IEnumerable<T> data, int statusCode) => Json((object)data, statusCode);
 }

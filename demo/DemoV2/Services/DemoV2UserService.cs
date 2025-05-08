@@ -34,6 +34,11 @@ namespace DemoV2.Services
             return Task.CompletedTask;
         }
 
+        public Task UploadImage2Async(string userId, Stream stream, CancellationToken cancellationToken = default)
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task<IEnumerable<User>> UsersGetByBirthdateAsync(DateOnly date,
             CancellationToken cancellationToken = default)
         {

@@ -82,7 +82,7 @@ paths:
     patch:
       tags:
         - user
-      description: update a user
+      description: Use UserPut instead
       operationId: user-patch
       requestBody:
         description: a full user
@@ -93,6 +93,8 @@ paths:
           description: User was updated
           content:
             application/json: { }
+      deprecated: true
+      x-caffoa-deprecated-as-error: true
     get:
       tags:
         - user
@@ -121,6 +123,17 @@ paths:
       responses:
         '201':
           description: Image was created
+    put:
+      tags:
+        - user
+      operationId: upload-image2
+      requestBody:
+        content:
+          multipart/form-data: { }
+      responses:
+        '201':
+          description: Image was created
+      deprecated: true
     parameters:
       - name: userId
         in: path

@@ -1,3 +1,4 @@
+using System.Net.Mime;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
@@ -25,11 +26,14 @@ public class DefaultCaffoaResultHandler : ICaffoaResultHandler
 
 
     public virtual string JsonString(object o) => JsonConvert.SerializeObject(o, SerializerSettings);
-    public virtual IActionResult Json<T>(IEnumerable<T> data, int statusCode)
-        => Handle(new JsonResult(data) { StatusCode = statusCode, SerializerSettings = SerializerSettings });
-    public virtual IActionResult Json(object data, int statusCode)
-        => Handle(new JsonResult(data) { StatusCode = statusCode, SerializerSettings = SerializerSettings });
-
+    public IActionResult Json(object data, int statusCode) =>
+        new ContentResult()
+        {
+            Content = JsonString(data),
+            StatusCode = statusCode,
+            ContentType = MediaTypeNames.Application.Json
+        };
+    public IActionResult Json<T>(IEnumerable<T> data, int statusCode) => Json((object)data, statusCode);
 
     public virtual IActionResult StatusCode(int statusCode)
         => Handle(new StatusCodeResult(statusCode));

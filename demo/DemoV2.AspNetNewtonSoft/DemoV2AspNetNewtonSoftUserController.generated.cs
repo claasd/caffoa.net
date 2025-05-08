@@ -67,7 +67,7 @@ public class DemoV2AspNetNewtonSoftUserController : ControllerBase
 
 
     /// <summary>
-    /// update a user
+    /// Use UserPut instead
     /// 200 -> User was updated
     ///</summary>
     [HttpPatch("users/{userId}")]
@@ -87,6 +87,13 @@ public class DemoV2AspNetNewtonSoftUserController : ControllerBase
     ///</summary>
     [HttpPost("users/{userId}/uploadImage")]
     public async Task<IActionResult> UploadImageAsync([FromRoute] string userId, [FromBody] Stream stream, CancellationToken cancellationToken = default) { await GetService().UploadImageAsync(userId, stream, cancellationToken); return StatusCode(201); }
+
+
+    /// <summary>
+    /// 201 -> Image was created
+    ///</summary>
+    [HttpPut("users/{userId}/uploadImage")]
+    public async Task<IActionResult> UploadImage2Async([FromRoute] string userId, [FromBody] Stream stream, CancellationToken cancellationToken = default) { await GetService().UploadImage2Async(userId, stream, cancellationToken); return StatusCode(201); }
 
 
     /// <summary>

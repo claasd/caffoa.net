@@ -382,7 +382,9 @@ paths:
       tags:
         - user
       operationId: user-patch
-      description: update a user
+      deprecated: true
+      x-caffoa-deprecate-as-error: true
+      description: Use UserPut instead
       requestBody:
         description: a full user
         content:
@@ -437,6 +439,25 @@ paths:
         201:
           description: Image was created
   
+    put:
+      tags:
+        - user
+      operationId: upload-image2
+      deprecated: true
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                image:
+                  type: string
+                  format: binary
+      responses:
+        201:
+          description: Image was created
   
   "/users/born-before/{date}":
     parameters:

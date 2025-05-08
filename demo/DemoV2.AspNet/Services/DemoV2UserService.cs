@@ -27,6 +27,11 @@ namespace DemoV2.AspNet.Services
             return Task.CompletedTask;
         }
 
+        public Task UploadImage2Async(string userId, Stream stream, CancellationToken cancellationToken = default)
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task<IEnumerable<ASPUser>> UsersGetByBirthdateAsync(DateOnly date,
             CancellationToken cancellationToken = default)
         {

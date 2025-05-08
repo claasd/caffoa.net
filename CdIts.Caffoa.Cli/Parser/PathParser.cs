@@ -44,6 +44,9 @@ public class PathParser
         var name = operationItem.OperationId.ToObjectName();
         var tags = operationItem.Tags.Select(t => t.Name).ToArray();
         var result = new EndPointModel(operation.ToString(), name, path.Trim('/'), tags);
+        result.Deprecated = operationItem.Deprecated;
+        result.DeprecatedAsError = operationItem.Extensions.ParseCaffoaOption("x-caffoa-deprecate-as-error") ?? false;
+        result.Description = operationItem.Description;
         try
         {
             result.Parameters.AddRange(baseParams);

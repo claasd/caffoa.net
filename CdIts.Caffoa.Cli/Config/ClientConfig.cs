@@ -11,7 +11,7 @@ public class ClientConfig
 
     public string Name
     {
-        get => _name ?? throw new ConfigurationMissingException("Missing 'name' of configuration 'function'");
+        get => _name ?? throw new ConfigurationMissingException("Missing 'name' of configuration 'client'");
         set => _name = value;
     }
 

@@ -15,15 +15,15 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using static System.FormattableString;
 using Newtonsoft.Json.Linq;
-using DemoV2.Model.Base;
-using DemoV2.Model;
+using DemoIsolated.Model.Base;
+using DemoIsolated.Model;
 
 #nullable enable
 
-namespace DemoV2.Client
+namespace demo.DemoIsolated.Client
 {
     /// AUTO GENERATED CLASS
-    public partial class UserDemoClient
+    public partial class UserMyClient
     {
         /// <summary>
         /// all servers from the openapi definition  
@@ -31,16 +31,16 @@ namespace DemoV2.Client
         public static string[] Servers => new string[] { "https://api.demoserver.cloud", "https://{prefix}.testserver.cloud/{version}" };
         
         private string _baseUri = null!;
-        internal string BaseUri {
+        public string BaseUri {
             get => _baseUri;
             set => _baseUri = value.EndsWith("/") ? value : $"{value}/";
         }
-        internal HttpClient Client { get; }
-        internal ILogger Logger { get; }
-        internal ICaffoaParseErrorHandler ErrorHandler  { get; }
-        internal ICaffoaJsonParser JsonParser { get; }
-        internal ICaffoaJsonSerializer JsonSerializer { get; }
-        private UserDemoClient(string baseUri, HttpClient? client = null, ILogger? logger = null, ICaffoaParseErrorHandler? errorHandler = null, ICaffoaJsonParser? jsonParser = null, ICaffoaJsonSerializer? jsonSerializer = null) {
+        public HttpClient Client { get; }
+        public ILogger Logger { get; }
+        public ICaffoaParseErrorHandler ErrorHandler  { get; }
+        public ICaffoaJsonParser JsonParser { get; }
+        public ICaffoaJsonSerializer JsonSerializer { get; }
+        public UserMyClient(string baseUri, HttpClient? client = null, ILogger? logger = null, ICaffoaParseErrorHandler? errorHandler = null, ICaffoaJsonParser? jsonParser = null, ICaffoaJsonSerializer? jsonSerializer = null) {
             BaseUri = baseUri;
             Client = client ?? new HttpClient();
             Logger = logger ?? NullLogger.Instance;
@@ -56,7 +56,7 @@ namespace DemoV2.Client
         /// 200 -> return user object
         /// 400 -> Error
         /// </summary>
-        public virtual async Task<IReadOnlyList<AnyCompleteUser>> UsersGetAsync(int? offset = 0, int? limit = 1000, CancellationToken cancellationToken = default) {
+        public virtual async Task<IReadOnlyList<IsoAnyCompleteUser>> UsersGetAsync(int? offset = 0, int? limit = 1000, CancellationToken cancellationToken = default) {
             var uriBuilder = new UriBuilder(Invariant($"{BaseUri}users"));
             var queryBuilder = new QueryBuilder();
             if(offset != null)
@@ -73,7 +73,7 @@ namespace DemoV2.Client
                 try
                 {
                     if((int)httpResult.StatusCode == 400)
-                        throw new CaffoaWebClientException<Error>(400, JsonParser.Parse<Error>(errorData), errorData);
+                        throw new CaffoaWebClientException<IsoError>(400, JsonParser.Parse<IsoError>(errorData), errorData);
                 }
                 catch (Exception e) when(e is not CaffoaWebClientException)
                 {
@@ -83,7 +83,7 @@ namespace DemoV2.Client
                 throw new CaffoaWebClientException((int)httpResult.StatusCode, errorData);
             }
             await using var resultStream = await httpResult.Content.ReadAsStreamAsync(cancellationToken);
-            var resultObject = await JsonParser.Parse<List<AnyCompleteUser>>(resultStream);
+            var resultObject = await JsonParser.Parse<List<IsoAnyCompleteUser>>(resultStream);
             return resultObject;
         }
 
@@ -91,7 +91,7 @@ namespace DemoV2.Client
         /// create or update a user without return test
         /// 201 -> User was created
         /// </summary>
-        public virtual async Task<IReadOnlyList<AnyCompleteUser>> UserPostAsync(User payload, CancellationToken cancellationToken = default) {
+        public virtual async Task<IReadOnlyList<IsoAnyCompleteUser>> UserPostAsync(IsoUser payload, CancellationToken cancellationToken = default) {
             var uriBuilder = new UriBuilder(Invariant($"{BaseUri}users"));
             using var httpRequest = new HttpRequestMessage(HttpMethod.Post, uriBuilder.ToString());
             httpRequest.Content = new StringContent(JsonSerializer.JsonString(payload), Encoding.UTF8, "application/json");
@@ -103,7 +103,7 @@ namespace DemoV2.Client
                 throw new CaffoaWebClientException((int)httpResult.StatusCode, errorData);
             }
             await using var resultStream = await httpResult.Content.ReadAsStreamAsync(cancellationToken);
-            var resultObject = await JsonParser.Parse<List<AnyCompleteUser>>(resultStream);
+            var resultObject = await JsonParser.Parse<List<IsoAnyCompleteUser>>(resultStream);
             return resultObject;
         }
 
@@ -111,7 +111,7 @@ namespace DemoV2.Client
         /// create or update a user without return test
         /// 201 -> User was created
         /// </summary>
-        public virtual async Task<IReadOnlyList<AnyCompleteUser>> UserPostAsync(GuestUser payload, CancellationToken cancellationToken = default) {
+        public virtual async Task<IReadOnlyList<IsoAnyCompleteUser>> UserPostAsync(IsoGuestUser payload, CancellationToken cancellationToken = default) {
             var uriBuilder = new UriBuilder(Invariant($"{BaseUri}users"));
             using var httpRequest = new HttpRequestMessage(HttpMethod.Post, uriBuilder.ToString());
             httpRequest.Content = new StringContent(JsonSerializer.JsonString(payload), Encoding.UTF8, "application/json");
@@ -123,7 +123,7 @@ namespace DemoV2.Client
                 throw new CaffoaWebClientException((int)httpResult.StatusCode, errorData);
             }
             await using var resultStream = await httpResult.Content.ReadAsStreamAsync(cancellationToken);
-            var resultObject = await JsonParser.Parse<List<AnyCompleteUser>>(resultStream);
+            var resultObject = await JsonParser.Parse<List<IsoAnyCompleteUser>>(resultStream);
             return resultObject;
         }
 
@@ -132,7 +132,7 @@ namespace DemoV2.Client
         /// 200 -> User was updated
         /// 201 -> User was created
         /// </summary>
-        public virtual async Task<(AnyCompleteUser, int)> UserPutAsync(string userId, User payload, CancellationToken cancellationToken = default) {
+        public virtual async Task<(IsoAnyCompleteUser, int)> UserPutAsync(string userId, IsoUser payload, CancellationToken cancellationToken = default) {
             var uriBuilder = new UriBuilder(Invariant($"{BaseUri}users/{userId}"));
             using var httpRequest = new HttpRequestMessage(HttpMethod.Put, uriBuilder.ToString());
             httpRequest.Content = new StringContent(JsonSerializer.JsonString(payload), Encoding.UTF8, "application/json");
@@ -144,7 +144,7 @@ namespace DemoV2.Client
                 throw new CaffoaWebClientException((int)httpResult.StatusCode, errorData);
             }
             await using var resultStream = await httpResult.Content.ReadAsStreamAsync(cancellationToken);
-            var resultObject = await JsonParser.Parse<AnyCompleteUser>(resultStream);
+            var resultObject = await JsonParser.Parse<IsoAnyCompleteUser>(resultStream);
             return (resultObject, (int)httpResult.StatusCode);
         }
 
@@ -153,7 +153,7 @@ namespace DemoV2.Client
         /// 200 -> User was updated
         /// 201 -> User was created
         /// </summary>
-        public virtual async Task<(AnyCompleteUser, int)> UserPutAsync(string userId, GuestUser payload, CancellationToken cancellationToken = default) {
+        public virtual async Task<(IsoAnyCompleteUser, int)> UserPutAsync(string userId, IsoGuestUser payload, CancellationToken cancellationToken = default) {
             var uriBuilder = new UriBuilder(Invariant($"{BaseUri}users/{userId}"));
             using var httpRequest = new HttpRequestMessage(HttpMethod.Put, uriBuilder.ToString());
             httpRequest.Content = new StringContent(JsonSerializer.JsonString(payload), Encoding.UTF8, "application/json");
@@ -165,7 +165,7 @@ namespace DemoV2.Client
                 throw new CaffoaWebClientException((int)httpResult.StatusCode, errorData);
             }
             await using var resultStream = await httpResult.Content.ReadAsStreamAsync(cancellationToken);
-            var resultObject = await JsonParser.Parse<AnyCompleteUser>(resultStream);
+            var resultObject = await JsonParser.Parse<IsoAnyCompleteUser>(resultStream);
             return (resultObject, (int)httpResult.StatusCode);
         }
 
@@ -175,7 +175,7 @@ namespace DemoV2.Client
         /// </summary>
         
         [Obsolete("Use UserPut instead", true)]
-        public virtual async Task<UserWithId> UserPatchAsync(string userId, JObject payload, CancellationToken cancellationToken = default) {
+        public virtual async Task<IsoUserWithId> UserPatchAsync(string userId, JObject payload, CancellationToken cancellationToken = default) {
             var uriBuilder = new UriBuilder(Invariant($"{BaseUri}users/{userId}"));
             using var httpRequest = new HttpRequestMessage(HttpMethod.Patch, uriBuilder.ToString());
             httpRequest.Content = new StringContent(JsonSerializer.JsonString(payload), Encoding.UTF8, "application/json");
@@ -187,7 +187,7 @@ namespace DemoV2.Client
                 throw new CaffoaWebClientException((int)httpResult.StatusCode, errorData);
             }
             await using var resultStream = await httpResult.Content.ReadAsStreamAsync(cancellationToken);
-            var resultObject = await JsonParser.Parse<UserWithId>(resultStream);
+            var resultObject = await JsonParser.Parse<IsoUserWithId>(resultStream);
             return resultObject;
         }
 
@@ -195,7 +195,7 @@ namespace DemoV2.Client
         /// get information about the users
         /// 200 -> return user object
         /// </summary>
-        public virtual async Task<UserWithId> UserGetAsync(string userId, CancellationToken cancellationToken = default) {
+        public virtual async Task<IsoUserWithId> UserGetAsync(string userId, CancellationToken cancellationToken = default) {
             var uriBuilder = new UriBuilder(Invariant($"{BaseUri}users/{userId}"));
             using var httpRequest = new HttpRequestMessage(HttpMethod.Get, uriBuilder.ToString());
             PrepareRequest(httpRequest);
@@ -206,7 +206,7 @@ namespace DemoV2.Client
                 throw new CaffoaWebClientException((int)httpResult.StatusCode, errorData);
             }
             await using var resultStream = await httpResult.Content.ReadAsStreamAsync(cancellationToken);
-            var resultObject = await JsonParser.Parse<UserWithId>(resultStream);
+            var resultObject = await JsonParser.Parse<IsoUserWithId>(resultStream);
             return resultObject;
         }
 
@@ -283,7 +283,7 @@ namespace DemoV2.Client
         /// 200 -> return user object
         /// 400 -> Error
         /// </summary>
-        public virtual async Task<IReadOnlyList<User>> UsersGetByBirthdateAsync(DateOnly date, CancellationToken cancellationToken = default) {
+        public virtual async Task<IReadOnlyList<IsoUser>> UsersGetByBirthdateAsync(DateOnly date, CancellationToken cancellationToken = default) {
             var uriBuilder = new UriBuilder(Invariant($"{BaseUri}users/born-before/{date:yyyy-MM-dd}"));
             using var httpRequest = new HttpRequestMessage(HttpMethod.Get, uriBuilder.ToString());
             PrepareRequest(httpRequest);
@@ -294,7 +294,7 @@ namespace DemoV2.Client
                 try
                 {
                     if((int)httpResult.StatusCode == 400)
-                        throw new CaffoaWebClientException<Error>(400, JsonParser.Parse<Error>(errorData), errorData);
+                        throw new CaffoaWebClientException<IsoError>(400, JsonParser.Parse<IsoError>(errorData), errorData);
                 }
                 catch (Exception e) when(e is not CaffoaWebClientException)
                 {
@@ -304,7 +304,7 @@ namespace DemoV2.Client
                 throw new CaffoaWebClientException((int)httpResult.StatusCode, errorData);
             }
             await using var resultStream = await httpResult.Content.ReadAsStreamAsync(cancellationToken);
-            var resultObject = await JsonParser.Parse<List<User>>(resultStream);
+            var resultObject = await JsonParser.Parse<List<IsoUser>>(resultStream);
             return resultObject;
         }
 
@@ -313,7 +313,7 @@ namespace DemoV2.Client
         /// 200 -> return user object
         /// 400 -> Error
         /// </summary>
-        public virtual async Task<IReadOnlyList<User>> UsersSearchByDateAsync(DateOnly before, DateOnly after, int? maxResults = null, CancellationToken cancellationToken = default) {
+        public virtual async Task<IReadOnlyList<IsoUser>> UsersSearchByDateAsync(DateOnly before, DateOnly after, int? maxResults = null, CancellationToken cancellationToken = default) {
             var uriBuilder = new UriBuilder(Invariant($"{BaseUri}users/filter/byAge"));
             var queryBuilder = new QueryBuilder();
             queryBuilder.Add("before", before.ToString("yyyy-MM-dd"));
@@ -330,7 +330,7 @@ namespace DemoV2.Client
                 try
                 {
                     if((int)httpResult.StatusCode == 400)
-                        throw new CaffoaWebClientException<Error>(400, JsonParser.Parse<Error>(errorData), errorData);
+                        throw new CaffoaWebClientException<IsoError>(400, JsonParser.Parse<IsoError>(errorData), errorData);
                 }
                 catch (Exception e) when(e is not CaffoaWebClientException)
                 {
@@ -340,14 +340,14 @@ namespace DemoV2.Client
                 throw new CaffoaWebClientException((int)httpResult.StatusCode, errorData);
             }
             await using var resultStream = await httpResult.Content.ReadAsStreamAsync(cancellationToken);
-            var resultObject = await JsonParser.Parse<List<User>>(resultStream);
+            var resultObject = await JsonParser.Parse<List<IsoUser>>(resultStream);
             return resultObject;
         }
 
         /// <summary>
         /// 200 -> list of elements that have the requested tag
         /// </summary>
-        public virtual async Task<TagInfos> GetTagsAsync(CancellationToken cancellationToken = default) {
+        public virtual async Task<IsoTagInfos> GetTagsAsync(CancellationToken cancellationToken = default) {
             var uriBuilder = new UriBuilder(Invariant($"{BaseUri}tags"));
             using var httpRequest = new HttpRequestMessage(HttpMethod.Get, uriBuilder.ToString());
             PrepareRequest(httpRequest);
@@ -358,7 +358,7 @@ namespace DemoV2.Client
                 throw new CaffoaWebClientException((int)httpResult.StatusCode, errorData);
             }
             await using var resultStream = await httpResult.Content.ReadAsStreamAsync(cancellationToken);
-            var resultObject = await JsonParser.Parse<TagInfos>(resultStream);
+            var resultObject = await JsonParser.Parse<IsoTagInfos>(resultStream);
             return resultObject;
         }
 
@@ -383,7 +383,7 @@ namespace DemoV2.Client
         /// <summary>
         /// 200 -> a list of neum
         /// </summary>
-        public virtual async Task<IReadOnlyList<MyEnumType>> ListEnumsAsync(MyEnumType? filter = null, ICollection<MyEnumType>? include = null, ICollection<string>? flags = null, ICollection<MyEnumType>? exclude = null, CancellationToken cancellationToken = default) {
+        public virtual async Task<IReadOnlyList<IsoMyEnumType>> ListEnumsAsync(IsoMyEnumType? filter = null, ICollection<IsoMyEnumType>? include = null, ICollection<string>? flags = null, ICollection<IsoMyEnumType>? exclude = null, CancellationToken cancellationToken = default) {
             var uriBuilder = new UriBuilder(Invariant($"{BaseUri}enums/list"));
             var queryBuilder = new QueryBuilder();
             if(filter != null)
@@ -404,14 +404,14 @@ namespace DemoV2.Client
                 throw new CaffoaWebClientException((int)httpResult.StatusCode, errorData);
             }
             await using var resultStream = await httpResult.Content.ReadAsStreamAsync(cancellationToken);
-            var resultObject = await JsonParser.Parse<List<MyEnumType>>(resultStream);
+            var resultObject = await JsonParser.Parse<List<IsoMyEnumType>>(resultStream);
             return resultObject;
         }
 
         /// <summary>
         /// 200 -> a list of neum
         /// </summary>
-        public virtual async Task<IReadOnlyList<MyEnumType>> ListEnums2Async(MyEnumType filter, CancellationToken cancellationToken = default) {
+        public virtual async Task<IReadOnlyList<IsoMyEnumType>> ListEnums2Async(IsoMyEnumType filter, CancellationToken cancellationToken = default) {
             var uriBuilder = new UriBuilder(Invariant($"{BaseUri}enums/list/filter/{filter.Value()}"));
             using var httpRequest = new HttpRequestMessage(HttpMethod.Get, uriBuilder.ToString());
             PrepareRequest(httpRequest);
@@ -422,14 +422,14 @@ namespace DemoV2.Client
                 throw new CaffoaWebClientException((int)httpResult.StatusCode, errorData);
             }
             await using var resultStream = await httpResult.Content.ReadAsStreamAsync(cancellationToken);
-            var resultObject = await JsonParser.Parse<List<MyEnumType>>(resultStream);
+            var resultObject = await JsonParser.Parse<List<IsoMyEnumType>>(resultStream);
             return resultObject;
         }
 
         /// <summary>
         /// 200 -> a list of neum
         /// </summary>
-        public virtual async Task<GroupedOneOf> EchoOneOfAsync(GroupedOneOf payload, CancellationToken cancellationToken = default) {
+        public virtual async Task<IsoGroupedOneOf> EchoOneOfAsync(IsoGroupedOneOf payload, CancellationToken cancellationToken = default) {
             var uriBuilder = new UriBuilder(Invariant($"{BaseUri}echo/oneOfTest"));
             using var httpRequest = new HttpRequestMessage(HttpMethod.Get, uriBuilder.ToString());
             httpRequest.Content = new StringContent(JsonSerializer.JsonString(payload), Encoding.UTF8, "application/json");
@@ -441,14 +441,14 @@ namespace DemoV2.Client
                 throw new CaffoaWebClientException((int)httpResult.StatusCode, errorData);
             }
             await using var resultStream = await httpResult.Content.ReadAsStreamAsync(cancellationToken);
-            var resultObject = await JsonParser.Parse<GroupedOneOf>(resultStream);
+            var resultObject = await JsonParser.Parse<IsoGroupedOneOf>(resultStream);
             return resultObject;
         }
 
         /// <summary>
         /// 200 -> a list of neum
         /// </summary>
-        public virtual async Task<IReadOnlyList<AnyUser>> EchoOneOfArrayAsync(IEnumerable<AnyUser> payload, CancellationToken cancellationToken = default) {
+        public virtual async Task<IReadOnlyList<IsoAnyUser>> EchoOneOfArrayAsync(IEnumerable<IsoAnyUser> payload, CancellationToken cancellationToken = default) {
             var uriBuilder = new UriBuilder(Invariant($"{BaseUri}echo/oneOfTestArray"));
             using var httpRequest = new HttpRequestMessage(HttpMethod.Get, uriBuilder.ToString());
             httpRequest.Content = new StringContent(JsonSerializer.JsonString(payload), Encoding.UTF8, "application/json");
@@ -460,7 +460,7 @@ namespace DemoV2.Client
                 throw new CaffoaWebClientException((int)httpResult.StatusCode, errorData);
             }
             await using var resultStream = await httpResult.Content.ReadAsStreamAsync(cancellationToken);
-            var resultObject = await JsonParser.Parse<List<AnyUser>>(resultStream);
+            var resultObject = await JsonParser.Parse<List<IsoAnyUser>>(resultStream);
             return resultObject;
         }
     }

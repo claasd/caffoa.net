@@ -52,7 +52,7 @@ namespace DemoIsolated
         Task<(IsoAnyCompleteUser, int)> UserPutAsync(string userId, IsoGuestUser payload, CancellationToken cancellationToken = default);
 
         /// <summary>
-        /// update a user
+        /// Use UserPut instead
         /// 200 -> User was updated
         /// </summary>
         Task<IsoUserWithId> UserPatchAsync(string userId, JObject payload, CancellationToken cancellationToken = default);
@@ -67,6 +67,11 @@ namespace DemoIsolated
         /// 201 -> Image was created
         /// </summary>
         Task UploadImageAsync(string userId, Stream stream, CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// 201 -> Image was created
+        /// </summary>
+        Task UploadImage2Async(string userId, Stream stream, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// get

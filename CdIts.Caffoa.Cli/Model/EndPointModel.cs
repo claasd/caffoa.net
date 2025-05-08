@@ -15,6 +15,9 @@ public class EndPointModel
     public IBodyModel RequestBodyType { get; set; } = new NullBodyModel();
     public List<string> Imports { get; } = new();
     public bool DurableClient { get; set; }
+    public bool Deprecated { get; set; }
+    public bool DeprecatedAsError { get; set; }
+    public string? Description { get; set; }
 
     public EndPointModel(string operation, string name, string route, string[] tags)
     {

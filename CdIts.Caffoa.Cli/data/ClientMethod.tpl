@@ -2,7 +2,7 @@
         /// <summary>
         /// {DOC}
         /// </summary>
-        public virtual async {RESULT} {NAME}Async({PARAMS}) {{
+        {OBSOLETE}public virtual async {RESULT} {NAME}Async({PARAMS}) {{
             var uriBuilder = new UriBuilder(Invariant($"{{BaseUri}}{ROUTE}"));{QUERYPARAMS}
             using var httpRequest = new HttpRequestMessage(HttpMethod.{METHOD}, uriBuilder.ToString());{PAYLOAD}
             PrepareRequest(httpRequest);
