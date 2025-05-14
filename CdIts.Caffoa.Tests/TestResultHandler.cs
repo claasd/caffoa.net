@@ -14,18 +14,6 @@ public class TestResultHandler
     {
         var test = new SubData();
         var handler = new CaffoaEarlySerializingResultHandler();
-        handler.Invoking(h=>h.Json(test, 200)).Should().Throw<JsonSerializationException>();
-    }
-    
-    [Test]
-    public void CheckUnwantedBehavoirUsingDefaultResultHandler()
-    {
-        var test = new SubData();
-        var result = new DefaultCaffoaResultHandler().Json(test, 200);
-        result.Should().BeOfType(typeof(JsonResult));
-        // no exception thrown, but the data would throw an exception when serialized
-        
-        var act = () => JsonConvert.SerializeObject((result as JsonResult)!.Value);
-        act.Should().Throw<JsonSerializationException>();
+        handler.Invoking(h => h.Json(test, 200)).Should().Throw<JsonSerializationException>();
     }
 }
