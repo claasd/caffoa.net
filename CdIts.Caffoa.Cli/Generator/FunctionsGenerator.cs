@@ -293,6 +293,8 @@ public class FunctionsGenerator
             return $"_converter.ParseEnumArray<{innerType}>(_jsonParser, {variableName}, \"{objectName}\")";
         if (arrayType == ParameterArrayType.StringArray)
             return $"{variableName}.ToArray()";
+        if (arrayType == ParameterArrayType.IntArray)
+            return $"{variableName}.ToArray()";
         return $"_converter.Parse<{typeName}>({variableName}, \"{objectName}\")";
     }
 

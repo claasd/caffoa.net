@@ -1,6 +1,5 @@
 ﻿using System.Collections;
 using CdIts.Caffoa.Cli.Config;
-using CdIts.Caffoa.Cli.Generator.Formatter;
 using CdIts.Caffoa.Cli.Model;
 using Microsoft.Extensions.Logging;
 
@@ -174,6 +173,10 @@ public class ClientGenerator
         string baseTypeName = arg.GetTypeName(true, false);
         if (arg.IsEnum)
             queryAdd = $"queryBuilder.Add(\"{arg.Name}\", {arg.VarName}.Value());";
+        else if (arg.ArrayType == ParameterArrayType.IntArray)
+            queryAdd = $"queryBuilder.Add(\"{arg.Name}\", {arg.VarName}.Select(v=>Invariant($\"{{v}}\")));";
+        else if (arg.ArrayType == ParameterArrayType.StringArray)
+            queryAdd = $"queryBuilder.Add(\"{arg.Name}\", {arg.VarName});";
         else if (arg.ArrayType == ParameterArrayType.EnumArray)
             queryAdd = $"queryBuilder.Add(\"{arg.Name}\", {arg.VarName}.AsStringList());";
         else if (baseTypeName == "string")
