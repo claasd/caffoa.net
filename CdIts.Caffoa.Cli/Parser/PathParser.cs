@@ -2,7 +2,6 @@ using CdIts.Caffoa.Cli.Config;
 using CdIts.Caffoa.Cli.Errors;
 using CdIts.Caffoa.Cli.Model;
 using Microsoft.Extensions.Logging;
-using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 
 namespace CdIts.Caffoa.Cli.Parser;
@@ -243,6 +242,12 @@ public class PathParser
                     {
                         arrayType = ParameterArrayType.StringArray;
                         innerType = "string";
+                        type = $"ICollection<{innerType}>";
+                    }
+                    else if (items.Reference is null && items.Type == "integer")
+                    {
+                        arrayType = ParameterArrayType.IntArray;
+                        innerType = "integer";
                         type = $"ICollection<{innerType}>";
                     }
                     else

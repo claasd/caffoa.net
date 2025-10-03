@@ -7,6 +7,7 @@ public enum ParameterArrayType
 {
     NoArray,
     StringArray,
+    IntArray,
     EnumArray
 }
 
