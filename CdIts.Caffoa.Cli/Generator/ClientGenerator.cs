@@ -134,7 +134,12 @@ public class ClientGenerator
 
             typeName = response.TypeName;
             if (response.Unknown)
-                typeName = "Stream";
+                typeName = _clientConfig.DataResult switch
+                {
+                    ClientConfig.DataResultType.Stream => "Stream",
+                    ClientConfig.DataResultType.StreamWithHeaders => "CaffoaStreamResult",
+                    _ => "Stream"
+                };
         }
 
         return FormatResponse(codes, typeName);
@@ -199,7 +204,10 @@ public class ClientGenerator
             return "";
         if (responses[0].Unknown)
         {
-            return "\n             var memoryStream = new MemoryStream();\n             await httpResult.Content.CopyToAsync(memoryStream);\n             memoryStream.Position = 0;\n             return memoryStream;";
+            var streamResult = "\n             var memoryStream = new MemoryStream();\n             await httpResult.Content.CopyToAsync(memoryStream);\n             memoryStream.Position = 0;";
+            if (_clientConfig.DataResult == ClientConfig.DataResultType.StreamWithHeaders)
+                return streamResult + "\n             return new CaffoaStreamResult(memoryStream, httpResult.Headers);";
+            return streamResult + "\n             return memoryStream;";
         }
 
         var type = responses[0].TypeName;

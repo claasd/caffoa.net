@@ -3,7 +3,7 @@
     <PropertyGroup>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>disable</Nullable>
-        <LangVersion>10</LangVersion>
+        <LangVersion>latest</LangVersion>
         <RootNamespace>Caffoa</RootNamespace>
         <IsPackable>true</IsPackable>
         <RepositoryUrl>https://github.com/claasd/caffoa.net.git</RepositoryUrl>
