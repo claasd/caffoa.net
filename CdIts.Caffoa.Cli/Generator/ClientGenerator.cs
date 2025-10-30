@@ -206,7 +206,7 @@ public class ClientGenerator
         {
             var streamResult = "\n             var memoryStream = new MemoryStream();\n             await httpResult.Content.CopyToAsync(memoryStream);\n             memoryStream.Position = 0;";
             if (_clientConfig.DataResult == ClientConfig.DataResultType.StreamWithHeaders)
-                return streamResult + "\n             return new CaffoaStreamResult(memoryStream, httpResult.Headers);";
+                return streamResult + "\n             return new CaffoaStreamResult(memoryStream, httpResult.Content.Headers, httpResult.Headers);";
             return streamResult + "\n             return memoryStream;";
         }
 
