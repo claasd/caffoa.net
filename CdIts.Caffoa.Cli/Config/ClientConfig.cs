@@ -32,6 +32,13 @@ public class ClientConfig
     public string ConstructorVisibility { get; set; } = "public";
     public string FieldVisibility { get; set; } = "public";
 
+    public enum DataResultType
+    {
+        Stream,
+        StreamWithHeaders
+    }
+    public DataResultType DataResult { get; set; } = DataResultType.Stream;
+
     public string GetName(string prefix)
     {
         var name = Name;
