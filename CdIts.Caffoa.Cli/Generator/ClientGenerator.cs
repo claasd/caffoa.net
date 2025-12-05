@@ -240,9 +240,9 @@ public class ClientGenerator
     {
         if (!endpoint.HasRequestBody)
             return "";
-        if (endpoint.RequestBodyType is NullBodyModel && parameterType.Type == "HttpContent")
+        if (endpoint.RequestBodyType is NullBodyModel && parameterType?.Type == "HttpContent")
             return "\n            httpRequest.Content = payload;";
-        if (endpoint.RequestBodyType is NullBodyModel && parameterType.Type == "Stream")
+        if (endpoint.RequestBodyType is NullBodyModel && parameterType?.Type == "Stream")
             return "\n            httpRequest.Content = new StreamContent(stream);";
         var contentType = endpoint.RequestBodyType.ContentType ?? "application/json";
         return

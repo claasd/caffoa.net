@@ -4,7 +4,6 @@ using CdIts.Caffoa.Cli.Config;
 using CdIts.Caffoa.Cli.Generator.Formatter;
 using CdIts.Caffoa.Cli.Model;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Primitives;
 
 namespace CdIts.Caffoa.Cli.Generator;
 
@@ -290,7 +289,7 @@ public class ModelGenerator
             {
                 if (enumClasses.Find(c => c.ClassName == type)?.NullableEnum ?? false)
                     format["TYPE"] = type + "?";
-                format["GETALIAS"] = property.AliasGet ?? property.Alias;
+                format["GETALIAS"] = property.AliasGet ?? property.Alias ?? "";
                 if (property.AliasSet != null && property.AliasSet.Trim().StartsWith("{"))
                     format["SETALIAS"] = property.AliasSet;
                 else if (property.AliasSet != null || property.Alias != null)

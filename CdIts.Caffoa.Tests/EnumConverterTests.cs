@@ -1,5 +1,5 @@
-﻿using CdIts.Caffoa.Tests.TestClasses;
-using FluentAssertions;
+﻿using AwesomeAssertions;
+using CdIts.Caffoa.Tests.TestClasses;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using NUnit.Framework;

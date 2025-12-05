@@ -35,8 +35,7 @@ public static class EnumConverter
     public static T FromString<T>(string value, StringComparison comparer = StringComparison.OrdinalIgnoreCase)
         where T : Enum => (T)FromString(typeof(T), value, comparer);
 
-    public static object FromString(Type type, string value,
-        StringComparison comparer = StringComparison.OrdinalIgnoreCase)
+    public static object FromString(Type type, string value, StringComparison comparer = StringComparison.OrdinalIgnoreCase)
     {
         var names = Enum.GetNames(type);
         foreach (var name in names)
@@ -55,5 +54,27 @@ public static class EnumConverter
 
         throw new InvalidEnumArgumentException(
             $"The value of argument '{nameof(value)}' ('{value}') is invalid for Enum type '{type}'.");
+    }
+    
+    extension(string data)
+    {
+        public T? ToEnum<T>() where T : struct, Enum
+        {
+            if (string.IsNullOrEmpty(data))
+                return null;
+            try
+            {
+                return FromString<T>(data);
+            }
+            catch (InvalidEnumArgumentException)
+            {
+                return null;
+            }
+        }
+
+        public string ToEnumString<T>() where T : struct, Enum
+        {
+            return data.ToEnum<T>()?.ToString() ?? data;
+        }
     }
 }

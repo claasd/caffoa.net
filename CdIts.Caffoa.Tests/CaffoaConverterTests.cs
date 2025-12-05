@@ -1,11 +1,10 @@
 using System;
 using System.ComponentModel;
-using System.Linq;
 using System.Runtime.Serialization;
+using AwesomeAssertions;
 using Caffoa;
 using Caffoa.Defaults;
 using CdIts.Caffoa.Tests.TestClasses;
-using FluentAssertions;
 using Microsoft.Extensions.Logging.Abstractions;
 using Newtonsoft.Json;
 using NUnit.Framework;

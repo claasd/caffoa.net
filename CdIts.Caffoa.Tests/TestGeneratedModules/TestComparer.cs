@@ -1,7 +1,5 @@
-﻿using DemoV2.Model;
-using DemoV2.Model.Base;
-using FluentAssertions;
-using FluentAssertions.Execution;
+﻿using AwesomeAssertions;
+using DemoV2.Model;
 using NUnit.Framework;
 
 namespace CdIts.Caffoa.Tests.TestGeneratedModules;

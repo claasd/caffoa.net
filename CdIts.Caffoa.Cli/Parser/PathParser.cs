@@ -265,9 +265,6 @@ public class PathParser
                     ArrayType = arrayType,
                     InnerType = innerType
                 };
-                if (p.Name.Contains("["))
-                    ;
-                
                 return result;
             })
             .ToList();

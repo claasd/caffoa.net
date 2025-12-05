@@ -1,9 +1,8 @@
-﻿using CdIts.AzFuncTestHelper;
+﻿using AwesomeAssertions;
+using CdIts.AzFuncTestHelper;
 using DemoV2.Text.Json;
 using DemoV2.Text.Json.Model;
 using DemoV2.Text.Json.Services;
-using FluentAssertions;
-using Microsoft.ApplicationInsights;
 using Microsoft.Extensions.Logging.Abstractions;
 
 namespace CdIts.Caffoa.Tests.System.Text.Json;

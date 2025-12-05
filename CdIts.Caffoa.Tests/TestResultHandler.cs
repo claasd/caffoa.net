@@ -1,7 +1,6 @@
-﻿using Caffoa.Defaults;
+﻿using AwesomeAssertions;
+using Caffoa.Defaults;
 using CdIts.Caffoa.Tests.TestClasses;
-using FluentAssertions;
-using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using NUnit.Framework;
 

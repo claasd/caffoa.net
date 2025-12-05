@@ -94,7 +94,7 @@ paths:
           content:
             application/json: { }
       deprecated: true
-      x-caffoa-deprecated-as-error: true
+      x-caffoa-deprecate-as-error: true
     get:
       tags:
         - user

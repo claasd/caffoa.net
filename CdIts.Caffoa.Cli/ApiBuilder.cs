@@ -14,7 +14,7 @@ public class ApiBuilder
     public CaffoaGlobalConfig Config { get; }
     private List<EndPointModel>? _endpoints;
     private readonly ServiceParser _parser;
-    private List<Server> _servers;
+    private List<Server> _servers = [];
     public IEnumerable<string> ExtensionData { get; private set; } = Array.Empty<string>();
     public string ExtensionNamespace => _service.Model!.Namespace;
     public string ExtensionFolder => _service.Model!.TargetFolder;

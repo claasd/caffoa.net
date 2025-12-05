@@ -391,7 +391,7 @@ namespace DemoV2.Client
             if(include != null)
                 queryBuilder.Add("include[]", include.AsStringList());
             if(flags != null)
-                queryBuilder.Add("flags[]", Invariant($"{flags}"));
+                queryBuilder.Add("flags[]", flags);
             if(exclude != null)
                 queryBuilder.Add("exclude", exclude.AsStringList());
             uriBuilder.Query = queryBuilder.ToString() ?? string.Empty;

@@ -1,6 +1,6 @@
 ﻿using System;
+using AwesomeAssertions;
 using DemoV2.Model;
-using FluentAssertions;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using NUnit.Framework;

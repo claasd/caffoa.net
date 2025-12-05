@@ -1,9 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using AwesomeAssertions;
 using CdIts.AzFuncTestHelper;
 using DemoV2;
 using DemoV2.Model;
-using FluentAssertions;
+using DemoV2.Services;
 using Microsoft.Extensions.Logging.Abstractions;
 using NUnit.Framework;
 
@@ -18,7 +19,7 @@ public class RoundtripTest
         {
             Name = "Claas"
         };
-        var functions = new DemoV2UserFunctions(NullLogger<DemoV2UserFunctions>.Instance, new DemoV2.Services.UserServiceFactory());
+        var functions = new DemoV2UserFunctions(NullLogger<DemoV2UserFunctions>.Instance, new UserServiceFactory());
         await functions.UserPostAsync(new RequestBuilder().Content(user).Build()).Check();
         var users = await functions.UsersGetAsync(RequestBuilder.Default).Json<List<User>>();
         users.Should().HaveCount(1);
@@ -35,7 +36,7 @@ public class RoundtripTest
                 Email = "guest@email.de",
             }
         };
-        var functions = new DemoV2UserFunctions(NullLogger<DemoV2UserFunctions>.Instance, new DemoV2.Services.UserServiceFactory());
+        var functions = new DemoV2UserFunctions(NullLogger<DemoV2UserFunctions>.Instance, new UserServiceFactory());
         var result = await functions.EchoOneOfAsync(new RequestBuilder().Content(data).Build()).Json<GroupedOneOf>();
         result.Element.Should().BeOfType<GuestUser>();
     }
@@ -50,7 +51,7 @@ public class RoundtripTest
                 Name = "Test"
             }
         };
-        var functions = new DemoV2UserFunctions(NullLogger<DemoV2UserFunctions>.Instance, new DemoV2.Services.UserServiceFactory());
+        var functions = new DemoV2UserFunctions(NullLogger<DemoV2UserFunctions>.Instance, new UserServiceFactory());
         var result = await functions.EchoOneOfAsync(new RequestBuilder().Content(data).Build()).Json<GroupedOneOf>();
         result.Element.Should().BeOfType<User>();
     }
@@ -68,7 +69,7 @@ public class RoundtripTest
         {
             Name = "TestUser"
         });
-        var functions = new DemoV2UserFunctions(NullLogger<DemoV2UserFunctions>.Instance, new DemoV2.Services.UserServiceFactory());
+        var functions = new DemoV2UserFunctions(NullLogger<DemoV2UserFunctions>.Instance, new UserServiceFactory());
         var result = await functions.EchoOneOfArrayAsync(new RequestBuilder().Content(data).Build()).Json<List<AnyUser>>();
         result.Should().HaveCount(2);
         result[0].Should().BeOfType<GuestUser>();

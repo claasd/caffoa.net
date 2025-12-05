@@ -1,5 +1,4 @@
 using System;
-using System.Runtime.Serialization;
 using DemoV2.Text.Json.Model;
 
 namespace DemoV2.Text.Json.Errors
@@ -14,11 +13,6 @@ namespace DemoV2.Text.Json.Errors
                 Status = "GuestUserNotValid",
                 Message = "The guest user's email must match the user-id"
             };
-        }
-
-        protected GuestUserNotValidClientException(SerializationInfo info, StreamingContext context) : base(info,
-            context)
-        {
         }
     }
 }

@@ -13,12 +13,12 @@
             Instead of generating stubs, the goal is to be able to change the api and re-generate the files without overwriting your code.
 
             This is the library that contains Interfaces and abstract classes.</Description>
-        <TargetFrameworks>net9.0;net8.0;net6.0</TargetFrameworks>
+        <TargetFrameworks>net10.0;net9.0;net8.0;net6.0</TargetFrameworks>
 
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+      <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
     </ItemGroup>
 
     <ItemGroup>

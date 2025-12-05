@@ -1,8 +1,8 @@
+using AwesomeAssertions;
 using Caffoa;
 using Caffoa.Defaults;
 using Caffoa.Extensions;
 using CdIts.Caffoa.Tests.TestClasses;
-using FluentAssertions;
 using Microsoft.Extensions.Logging.Abstractions;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;

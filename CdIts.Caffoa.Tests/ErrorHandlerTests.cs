@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Threading;
+using AwesomeAssertions;
 using Caffoa.Defaults;
 using CdIts.AzFuncTestHelper;
-using FluentAssertions;
 using Microsoft.Extensions.Logging.Abstractions;
 using NUnit.Framework;
 
