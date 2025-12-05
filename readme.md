@@ -13,6 +13,20 @@ If something does not work that you feel should work, create a ticket with your 
 * It uses [OpenAPI.NET](https://github.com/microsoft/OpenAPI.NET) for parsing the openapi spec.
 * It uses a copy of version 2.0.1 of [JsonSubtypes](https://github.com/manuc66/JsonSubTypes)
 
+# Whats new in caffoa 5.x
+* Support for net 10.0 and net9.0
+* Dropped support for netcore 3.1 and net7.0
+* Dropped support for System.Text.Json net6.0 (allow to drop legacy support for missing feature that where introduced in net7.0)
+* Drop support for `flavor: SystemTextJsonPre7` (use `flavor: SystemTextJson` instead)
+* Change of default values:
+    * `useIsolatedWorkerModel` now defaults to true, as this is the recommended way to use Azure Functions
+    * `nullableIsDefault` not defaults to true, making non required properties `nullable` by default, even if they are not defined as nullable in the openapi definition
+    * `initCollections` now defaults to true, initializing all collections, not just required ones. Be careful: collections may still be set to null if they are explicitly set to null in the payload
+    * `generateEqualsMethods` now defaults to true, generating Equals and GetHashCode methods for all model classes.
+    
+* see [changelog](changelog.md) for all changes
+
+
 # Json.NET vs. System.Text.Json
 Caffoa was developed with Json.NET as background framework.
 However, after experimental support for System.Text.Json in version 2.0, caffoa now supports both frameworks. 
