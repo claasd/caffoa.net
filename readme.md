@@ -27,16 +27,6 @@ If something does not work that you feel should work, create a ticket with your 
     
 * see [changelog](changelog.md) for all changes
 
-
-# Json.NET vs. System.Text.Json
-Caffoa was developed with Json.NET as background framework.
-However, after experimental support for System.Text.Json in version 2.0, caffoa now supports both frameworks. 
-Starting with version 4.0, System.Text.Json will become a first class citizen as well, and both frameworks will live side by side.
-There is a page for System.Text.Json: [growing support for System.Text.Json](readme.system.text.json.md)
-
-# Migrating from 1.x
-* The is a [Migration guide](migration_1_to_2.md) to goude you from migrtion from 1.x to a more modern version.
-
 # Required nuget packages
 
 ## isolated worker model (Default since V5):
