@@ -40,7 +40,6 @@ There is a page for System.Text.Json: [growing support for System.Text.Json](rea
 # Required nuget packages
 
 ## isolated worker model (Default since V5):
-To use the isolated worker model, set the global configuration `useIsolatedWorkerModel` to `true`
 
 You will need to install the following nuget packages:
 * `Microsoft.Azure.Functions.Worker` and `Microsoft.Azure.Functions.Worker.Sdk`
@@ -50,6 +49,9 @@ You will need to install the following nuget packages:
 
 
 ## in process model (legacy)
+
+To use the in-process model, set the global configuration `useIsolatedWorkerModel` to `false`
+
 You will need to install the following nuget packages:
 * `Microsoft.NET.Sdk.Functions` obviously
 * `Microsoft.Azure.Functions.Extensions` for function dependency injection
