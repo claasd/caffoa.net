@@ -39,14 +39,7 @@ There is a page for System.Text.Json: [growing support for System.Text.Json](rea
 
 # Required nuget packages
 
-## in process model (default)
-You will need to install the following nuget packages:
-* `Microsoft.NET.Sdk.Functions` obviously
-* `Microsoft.Azure.Functions.Extensions` for function dependency injection
-* `CdIts.Caffoa.Json.Net` or `CdIts.Caffoa.System.Text.Json` for caffoa interfaces and default implementations
-* Optional: `Microsoft.Azure.WebJobs.Extensions.DurableTask` if you want to inject `[DurableClient]` into your methods
-
-## isolated worker model:
+## isolated worker model (Default since V5):
 To use the isolated worker model, set the global configuration `useIsolatedWorkerModel` to `true`
 
 You will need to install the following nuget packages:
@@ -54,6 +47,15 @@ You will need to install the following nuget packages:
 * `Microsoft.Azure.Functions.Worker.Extensions.Http.AspNetCore`, this allows the use of AspNetCore objects
 * `CdIts.Caffoa.Json.Net` or `CdIts.Caffoa.System.Text.Json` for caffoa interfaces and default implementations
 * Optional: `Microsoft.Azure.Functions.Worker.Extensions.DurableTask` if you want to inject `[DurableClient]` into your methods
+
+
+## in process model (legacy)
+You will need to install the following nuget packages:
+* `Microsoft.NET.Sdk.Functions` obviously
+* `Microsoft.Azure.Functions.Extensions` for function dependency injection
+* `CdIts.Caffoa.Json.Net` or `CdIts.Caffoa.System.Text.Json` for caffoa interfaces and default implementations
+* Optional: `Microsoft.Azure.WebJobs.Extensions.DurableTask` if you want to inject `[DurableClient]` into your methods
+
 
 # Usage
 
