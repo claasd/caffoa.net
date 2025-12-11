@@ -132,24 +132,7 @@ namespace MyNamespace {
 Now implement all the logic in your implementation of the interface. You can now change your API, and regenerate the generated files without overwriting your code.
 
 Furthermore, you need to pass your factory to the constructor of the generated function class via dependency injection.
-### in process worker model:
 
-Dependency injection works via the `FunctionsStartup` class (See [Microsoft documentation](https://docs.microsoft.com/en-us/azure/azure-functions/functions-dotnet-dependency-injection#register-services)).
-
-Example:
-```c#
-using Microsoft.Azure.Functions.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection;
-
-[assembly: FunctionsStartup(typeof(Startup))]
-namespace MyNamespace {
-    public class Startup : FunctionsStartup     {
-        public override void Configure(IFunctionsHostBuilder builder) {
-            builder.Services.AddCaffoaFactory<IMyClassNameService, MyFactory>();
-        }
-    }
-}
-```
 ### isolated worker model:
 
 Is the isolated worker model, dependency injection is performed [during default startup](https://learn.microsoft.com/en-us/azure/azure-functions/dotnet-isolated-process-guide#start-up-and-configuration).
@@ -169,7 +152,26 @@ var host = new HostBuilder()
 await host.RunAsync();
 ```
 
-## Alternative: Create ASP.NET Controller template
+### in process worker model:
+
+Dependency injection works via the `FunctionsStartup` class (See [Microsoft documentation](https://docs.microsoft.com/en-us/azure/azure-functions/functions-dotnet-dependency-injection#register-services)).
+
+Example:
+```c#
+using Microsoft.Azure.Functions.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection;
+
+[assembly: FunctionsStartup(typeof(Startup))]
+namespace MyNamespace {
+    public class Startup : FunctionsStartup     {
+        public override void Configure(IFunctionsHostBuilder builder) {
+            builder.Services.AddCaffoaFactory<IMyClassNameService, MyFactory>();
+        }
+    }
+}
+```
+
+## Alternative: Create ASP.NET Controller template (Experimental)
 Since version 3.0, caffoa can also generate code for ASP.NET controller projects. Usually, this is done instead of generating function templatess.
 
 If you specified the `controller` part in the config file, the tool will create files in the specified target folder:
@@ -199,24 +201,22 @@ The file will contain a partial class, with all properties of the schema. You ca
 * The schema must be defined in the components section.
 * Furthermore, schemas may not be nested without reference.
 (You can easily overcome this restriction by defining more schemas in the components section and have them reference each other.)
-* when using object inheritance (`useInheritance: true` not recomended since caffoa 2.x), allOf is implemented as inheritance, and therefore can only handle allOf with one reference and one direct configuration. When using useInheritance=false (default since caffoa 2.x), you can use multiple elements in allOf
 
 ## Advanced configuration options
 There are multiple optional configuration options that you can use (shown values represent the default):
-
-Parameters of the legacy 1.x interface can be found in the [old readme](https://github.com/claasd/caffoa.net/blob/v1.9.0/readme.md#advanced-configuration-options)
 
 ```yaml
 config:
   useIsolatedWorkerModel: false # set to true to use the isolated worker model. This flag will change imports, Attributes and types
   authorizationLevel: function #  function | anonymous | system | admin
+  flavor: json.NET # json.NET  or System.Text.Json
   clearGeneratedFiles: true # default is true, removes all files below the working directory, that end in .generated.cs
   duplicates: override # "once" or "override". once will not generate the same class name twice, even if it occurs in different API Specs.
   prefix: "" # A prefix that is added to all model classes
   suffix: "" # A suffix that is added to all model classes
   enumMode: Default # Default | StaticValues | StaticValuesWithoutCheck. Default creates C# enums, others modes create static values with or without check for allowed values
   routePrefix: "" # a route prefix that is added to all routes in function, e.g. 'frontend/'
-  useDateOnly: true # you can set this to true if you use net6.0 and want date types to be de-serialized as DateOnly instead of DateTime.
+  useDateOnly: true # you can set this to false when you want to use DateTimeOffset for date properties instead of DateOnly
   splitByTag: false # if set to true, multiple function files and interfaces will be generated, based on the first tag of each path item
   parsePathParameters: true # if set to false, the parameter parsing is left to Functions runtime
   parseQueryParameters: true # if set to false, query parameters will not be parsed, you have to do it yourself
@@ -224,9 +224,9 @@ config:
   genericAdditionalPropertiesType: JToken  # Default for System.Text.Json is JsonElement? different type can be used for the additionalProperties dictionary
   withCancellation: true # if set to false, caffoa will not add a CancellationToken to all interface methods. It will be triggered when the HTTP Request gets aborted (for example by the client).
   disposable: false # if set to true, Interfaces will derive from IAsyncDisposable, and functions will use `await using var instance = _factory.Instance(..);`
-  useInheritance: false # When set to false, instead of inheritance, allOf will create a standalone object with converters to objects that are referenced by allOf.
+  useInheritance: false # Deprecated. When set to true, AllOff and OneOf schemas will be generated using inheritance instead of composition.
   imports: [] # a list of imports that will be added to most generated classes
-  requestBodyType:  # Default is NULL you can override the request body type for specific operations or methods
+  requestBodyType:  # Default is NULL. you can override the request body type for specific operations or methods
     type: JToken # the body type that JSON should be de-serialized to
     import: Newtonsoft.Json.Linq # optional import for the type
     filter: # filter for the operations/methods where this type should be used
@@ -244,7 +244,7 @@ config:
   functionNamePrefix: "" # adds a prefix to all function names (Not interfaces). Useful if you have multiple APIs in one function that have identical operation IDs
   extensions: true # set to false to not generate extension methods for models (UpdateWith* methods).
   asyncArrays: false # if set to true, functions that return arrays will use IAsyncEnumerable instead if Task<IEnumerable>
-  constructorOnRequiredObjects: true # if set to false, no constructor will be generated for objects that have required properties, useful if oyu use external classes that do not have constructors without parameters
+  constructorOnRequiredObjects: true # if set to false, no initialization with default constructor will be generated for objects that have required properties, useful if oyu use external classes that do not have constructors without parameters
   useConstants: false # When set to true, values with one single enum and a matching default value will be generated as constants for strings and integer types.
   passTags: false # When set to true, The interface function will have a parameter that contains all openapi tags of that function
   removeRequiredOnReadonly: false # when set to true, required attributes will not be generated on members that are required and readOnly
@@ -255,28 +255,24 @@ config:
   generateResolvedApiFile: false # will resolve all references (internal and external) and generate a single file named `originalName.generated.yml` besides the original file
   simplifyResolvedApiFile: false # will remove all schema declarations from requestBodies and responses in the generated API file. This is useful for Azure APIM, to work around the bicep file size restrictions.
   initCollections: true # if set to true, all collections will be initialized. If set to false, only required collections will be initialized
+  convertibleContentTypes: # list of content types that will accepted in your openapi definition for result specifications. Default is only application/json. You can add more types here, useful if you use your own ResultHandler classes
+    - application/json
+  useIList: false # if set to true, IList<T> will be used for collections instead of ICollection<T>
+  deepCopyDefaultValue: true # if set to false, the generated deepClose parameter default value for the copy constructors and To{ObjectName} methods is set to false
 services:
   - apiPath: userservice.openapi.yml
     config: null # optional, can be any config option. That option is then overriden for this api only
     function: # Generate Azure Functions for the API
       name: MyClassName
-      namespace: MyNamespace
-      targetFolder: ./output
+      namespace: Demo.RestApi.Function # if left empty, will be generated from targetFolder
+      targetFolder: Demo.RestApi/Function
       functionsName: null # name of the functions class. defaults to {name}Functions 
       interfaceName: null # name of the interface class. defaults to I{name}Service. 
       interfaceNamespace: null # defaults to 'namespace'. If given, the interface uses this namespace
       interfaceTargetFolder: null # defaults to 'targetFolder'. If given, the interface is written to this folder
-    controller: # Generate ASP.NET Controller for the API
-      name: MyClassName
-      namespace: MyNamespace
-      targetFolder: ./output
-      controllerName: null # name of the ASP.NET controller class. defaults to {name}Controller
-      interfaceName: null # name of the interface class. defaults to I{name}Service. 
-      interfaceNamespace: null # defaults to 'namespace'. If given, the interface uses this namespace
-      interfaceTargetFolder: null # defaults to 'targetFolder'. If given, the interface is written to this folder
     model:
-      namespace: MyNamespace.Model
-      targetFolder: ./output/Model
+      namespace: Demo.RestApi.Model # if left empty, will be generated from targetFolder
+      targetFolder: Demo.RestApi/Model
       # you can exclude objects from generation:
       excludes: # default is an empty array
        - objectToExclude
@@ -286,7 +282,7 @@ services:
         - otherObjectToInclude
       imports: # imports that are added in addition to the config section. Default is an empty array
         - someImport
-    client: # Experimental client generation
+    client: # Client generation
       name: MYClientName
       namespace: MyNamespace.Client
       targetFolder: ./output/Client
@@ -294,6 +290,7 @@ services:
       fieldVisibility: public
       splitByTag: null # if set to true of false, this will override the global setting when generating clients
       IncludeTags: [] # if set, only paths with these tags will be included in the client
+      dataResult: stream # by default, unknown types will be returned as Stream. You can change to streamWithHeaders to return an object that contains the stream, the headers and the content headers
 ```
 
 # Typed parameters and returns
@@ -311,27 +308,28 @@ Caffoa takes over a lot of boilerplate code for you. Furthermore, it forces you 
 
 For simple straightforward use, you only need to pass your factory as Dependency Injection. You can, however, change the behavior of parsing, serialisation and error handling through DI.
 The constructor of the generated function class takes three optional interfaces, that you can implement or inherit from the default implementation. 
-Simply create an implementation of either [one of the the interfaces](https://github.com/claasd/caffoa.net/tree/main/CdIts.Caffoa.Abstractions), or inherit one of the [default implementations](https://github.com/claasd/caffoa.net/tree/main/CdIts.Caffoa/Defaults) if you only need to change a small portion.
+Simply create an implementation of either [one of the the interfaces](https://github.com/claasd/caffoa.net/tree/main/CdIts.Caffoa.Base), or inherit one of the 
+[default implementations](https://github.com/claasd/caffoa.net/tree/main/CdIts.Caffoa.Base/Defaults)
+([Json.NET](https://github.com/claasd/caffoa.net/tree/main/CdIts.Caffoa.Json.Net/Defaults), [System.Text.Json](https://github.com/claasd/caffoa.net/tree/main/CdIts.Caffoa.System.Text.Json/Defaults))
+if you only need to change a small portion.
 * `ICaffoaErrorHandler` / `CaffoaDefaultErrorHandler`: handles errors that may occur during parsing. Default implementation returns BadRequest with a human readable error string
 * `ICaffoaJsonParser` / `DefaultCaffoaJsonParser`: Parses incoming JSON objects to model objects.
-* `ICaffoaResultHandler` / `CaffoaDefaultResultHandler`: Creates Json and result code actions from objects. Overwrite if you want to customize your JSON output.
+* `ICaffoaResultHandler` / `CaffoaDefaultResultHandler`: Creates Result data and result code actions from objects. Overwrite if you want to customize your JSON output or want to support other types than JSON.
 * `ICaffoaConverter` / `DefaultCaffoaConverter`: Converts incoming string parameters to the required type, if either `parsePathParameters`or `parseQueryParameters` are set to true. 
 
 Then, add your implementation through DI:
 
 ```c#
-using Microsoft.Azure.Functions.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection;
-
-[assembly: FunctionsStartup(typeof(Startup))]
-namespace MyNamespace {
-    public class Startup : FunctionsStartup     {
-        public override void Configure(IFunctionsHostBuilder builder) {
-            builder.Services.AddCaffoaFactory<IMyClassNameService, MyFactory>();
-            builder.Services.AddCaffoaResultHandler<MyResultHandler>();
-        }
-    }
-}
+var host = new HostBuilder()
+    .ConfigureFunctionsWebApplication() // <-- this is important
+    .ConfigureServices(s => { 
+        s.AddCaffoaFactory<IMyClassNameService, MyFactory>();
+        s.AddCaffoaResultHandler<MyResultHandler>();
+        s.AddCaffoaConverter<MyConverter>();
+        s.AddCaffoaErrorHandler<MyErrorHandler>();
+        s.AddCaffoaJsonParser<MyJsonParser>();
+    })
+    .Build();
 ```
 
 # custom converters and annotations
@@ -358,7 +356,7 @@ user:
         - Obsolete("Do not set this attribute, it is automatically genereated")
 
 ```
-this will add the annotation `[PrimaryKey]` the the `id` property.
+this will add the annotation `[PrimaryKey]` the the `id` property, and the annotations `[Computed]` and `[Obsolete(...)]` to the `someAttribute` property.
 
 ## Removing generation of schema properties
 it is possible to add a `x-caffoa-generate: false` annotation to a schema property. Then this property, as well as any copying, will not be generated.
@@ -501,45 +499,17 @@ components:
           $ref: "#/components/schemas/data"
         dataList:
           $ref: "#/components/schemas/data"
-      x-caffoa-delegates:
+      x-caffoa-aliases:
         - dataList: data
 ```
 
 This annotation must be set at the root level of an object, it cannot be parsed through allOf/oneOf references 
 
+## Overrides on object level
 
-## advanced enum configuration
-You can use the `x-caffoa-enum-aliases` attribute on a string enum, to define value aliases. This is useful if you have different names for the same value in different APIs, such as "asc" and "ascending".
+You can selectively enable/disable the generation of Equals and GetHashCode methods on object level by setting `x-caffoa-generate-equals: false|true` on the schema.
 
-Furthermore, you can also introduce server-only enums that point to existing enums. This is usefull if you remove an enum in favor or a new one, but backen system still use the old enum, or to do automatic mapping of backen system enums.
-
-openapi example:
-```yaml
-    myEnumType:
-      type: string
-      enum:
-        - enum1
-        - enum2
-        - deprecated_enum
-      x-caffoa-enum-aliases:
-        deprecated_enum: enum1
-        deprecated_enum2: enum2
-
-```
-
-will generate the following code:
-```csharp
-namespace DemoV2.Model {
-    [JsonConverter(typeof(StringEnumConverter))]
-    public enum MyEnumType {
-        [EnumMember(Value = "enum1")] Enum1,
-        [EnumMember(Value = "enum2")] Enum2,
-        [EnumMember(Value = "deprecated_enum")] Deprecated_enum = Enum1,
-        [EnumMember(Value = "deprecated_enum2")] Deprecated_enum2 = Enum2
-    }
-}
-```
-You mast make sure that the enum values that are referenced are defined before the enum that references them.
+Furthermore, you can overwrite the generateCompareOverloads  settings on object level by setting `x-caffoa-generate-comparer: false|true` on the schema.
 
 # Client generation
 additionally to the functions, you can generate a client that will use the same model classes for your API.

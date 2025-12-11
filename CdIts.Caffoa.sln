@@ -11,8 +11,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionItems", "SolutionIt
 		LICENSE = LICENSE
 		readme.md = readme.md
 		changelog.md = changelog.md
-		readme.system.text.json.md = readme.system.text.json.md
-		migration_1_to_2.md = migration_1_to_2.md
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DemoV2", "demo\DemoV2\DemoV2.csproj", "{382FB737-ADE4-40B3-B8B6-631B1D58A819}"
