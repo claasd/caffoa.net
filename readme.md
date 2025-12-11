@@ -124,9 +124,7 @@ Example:
 using Caffoa;
 namespace MyNamespace {
     class MyClassNameService : IMyClassNameService, ICaffoaFactory<IMyClassNameService>{
-        IMyClassName Instance(HttpRequest request) {
-            return new MyClassNameService();
-        }
+        IMyClassName Instance(HttpRequest request) => this;
     }
     // implementation of your interface
 }
