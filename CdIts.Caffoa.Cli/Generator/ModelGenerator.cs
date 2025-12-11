@@ -180,6 +180,8 @@ public class ModelGenerator
         
         foreach (var itemProperty in item.Properties!)
         {
+            if(_config.UseConstants is true && itemProperty.CanBeConstant())
+               continue;
             var isEnum = itemProperty.CanBeEnum() || enumClasses.Exists(ec=>ec.ClassName == itemProperty.TypeName);
             var isEnumWrapper = isEnum && _config.GetEnumCreationMode() == CaffoaConfig.EnumCreationMode.Class; 
             isEnum = isEnum && _config.GetEnumCreationMode() <= CaffoaConfig.EnumCreationMode.Default;
