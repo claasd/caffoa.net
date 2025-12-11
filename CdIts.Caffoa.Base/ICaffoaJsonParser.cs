@@ -21,7 +21,7 @@ public interface ICaffoaJsonParser
     
     /// <summary>
     /// Should parse the passed object to T with errorHandling.
-    /// For Json.NET, this is a jRokwn. For System.Text.Json, it is an JsonElement
+    /// For Json.NET, this is a jToken. For System.Text.Json, it is an JsonElement
     /// Should throw an CaffoaClientError for parsing errors.
     /// (See <see cref="ICaffoaErrorHandler"/> for error handling via CI)
     /// </summary>

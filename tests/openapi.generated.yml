@@ -42,6 +42,7 @@ paths:
           description: return user object
           content:
             application/json: { }
+            application/xml: { }
         '400':
           description: Error
           content:

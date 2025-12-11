@@ -25,10 +25,10 @@ public class DefaultCaffoaResultHandler : ICaffoaResultHandler
 
     public string JsonString(object o) => JsonSerializer.Serialize(Convert.ChangeType(o, o.GetType()), SerializerOptions); // System.Text.Json does not handle polymorphy of interfaces
 
-    public IActionResult Json<T>(IEnumerable<T> data, int statusCode) =>
-        Json((object)data.Select(item => Convert.ChangeType(item, item.GetType())), statusCode); // System.Text.Json does not handle polymorphy of interfaces
+    public IActionResult Result<T>(IEnumerable<T> data, int statusCode, string[] acceptedMimeTypes) =>
+        Result((object)data.Select(item => Convert.ChangeType(item, item.GetType())), statusCode, acceptedMimeTypes); // System.Text.Json does not handle polymorphy of interfaces
 
-    public virtual IActionResult Json(object data, int statusCode)
+    public virtual IActionResult Result(object data, int statusCode, string[] acceptedMimeTypes)
         => Handle(new JsonResult(data) { StatusCode = statusCode, SerializerSettings = SerializerOptions });
 
 

@@ -8,11 +8,11 @@ namespace Caffoa;
 public interface ICaffoaResultHandler : ICaffoaJsonSerializer
 {
     /// <summary>
-    /// Should return a valid JSON result with the passed object as payload and the passed statusCode as statusCode
+    /// should return a valid result for the requested mime type.
+    /// implement these if you support different mime types
     /// </summary>
-    IActionResult Json(object data, int statusCode);
-    IActionResult Json<T>(IEnumerable<T> data, int statusCode);
-
+    IActionResult Result(object data, int statusCode, string[] acceptedMimeTypes);
+    IActionResult Result<T>(IEnumerable<T> data, int statusCode, string[] acceptedMimeTypes);
     /// <summary>
     /// Should return a valid result without payload and the passed statusCode as statusCode
     /// </summary>

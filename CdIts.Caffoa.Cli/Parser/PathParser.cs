@@ -18,9 +18,9 @@ public class PathParser
         _config = config;
         _classNameFunc = classNameFunc;
         _logger = logger;
-        _contentTypes = new List<string> {"application/json"};
-        if(config.JsonContentTypes != null)
-            _contentTypes.AddRange(config.JsonContentTypes);
+        _contentTypes = ["application/json"];
+        if(config.ConvertibleContentTypes != null)
+            _contentTypes.AddRange(config.ConvertibleContentTypes);
     }
 
     public List<EndPointModel> Parse(string path, OpenApiPathItem item)
@@ -169,7 +169,13 @@ public class PathParser
     private ResponseModel ParseResponse(string code, OpenApiResponse responseItem)
     {
         var response = new ResponseModel(code);
-        if (responseItem.Content.Count > 1)
+        if (responseItem.Content.Count > 1 &&
+            responseItem.Content.All(c => _contentTypes.Contains(c.Key, StringComparer.OrdinalIgnoreCase)))
+        {
+            _logger.LogWarning(
+                $"Multiple possible responses found. All content types are matching supported content types. First type is used date-type generation. Make sure to register a ResultHandler that can handle the data.");
+        }
+        else if (responseItem.Content.Count > 1)
         {
             _logger.LogWarning(
                 $"Multiple possible responses found. Only a single application/json response is currently supported for objects. Using IActionResult as return value");

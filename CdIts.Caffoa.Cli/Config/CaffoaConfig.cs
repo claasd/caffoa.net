@@ -1,5 +1,4 @@
 using System.Runtime.Serialization;
-using CdIts.Caffoa.Cli.Model;
 
 namespace CdIts.Caffoa.Cli.Config;
 
@@ -21,7 +20,8 @@ public class CaffoaConfig
 
     public string GetGenericAdditionalPropertiesType() => GenericAdditionalPropertiesType ?? GetGenericType();
 
-    public string GetGenericType() => GenericType ?? GetBasicGenericType(); 
+    public string GetGenericType() => GenericType ?? GetBasicGenericType();
+
     public string GetBasicGenericType() => Flavor switch
     {
         GenerationFlavor.SystemTextJson => "JsonElement?",
@@ -49,7 +49,10 @@ public class CaffoaConfig
     public bool? GenerateEqualsMethods { get; set; }
     public bool? GenerateCompareOverloads { get; set; }
     public bool? SealClassesWithEqualsMethods { get; set; }
-    public bool SealClasses(bool? localEqualsOverride) => !(SealClassesWithEqualsMethods ?? UseInheritance is true) && (localEqualsOverride ?? GenerateEqualsMethods ?? true);
+
+    public bool SealClasses(bool? localEqualsOverride) => !(SealClassesWithEqualsMethods ?? UseInheritance is true) &&
+                                                          (localEqualsOverride ?? GenerateEqualsMethods ?? true);
+
     public enum EnumCreationMode
     {
         Class,
@@ -65,24 +68,27 @@ public class CaffoaConfig
     {
         [EnumMember(Value = "Json.NET")] JsonNet,
 
-        [EnumMember(Value = "System.Text.Json")] SystemTextJson,
-
-        [EnumMember(Value = "System.Text.Json_NET70")] SystemTextJson70 = SystemTextJson,
-
-        [EnumMember(Value = "System.Text.Json_NET80")] SystemTextJson80 = SystemTextJson,
+        [EnumMember(Value = "System.Text.Json")]
+        SystemTextJson,
     }
 
     public bool? ConstructorOnRequiredObjects { get; set; }
     public GenerationFlavor? Flavor { get; set; }
 
-    public string[]? JsonContentTypes { get; set; }
-    
+    public string[]? JsonContentTypes
+    {
+        get => ConvertibleContentTypes;
+        set => ConvertibleContentTypes = value;
+    }
+
+    public string[]? ConvertibleContentTypes { get; set; }
+
     public bool? ParseArrayTypes { get; set; }
-    
+
     public bool? UseIList { get; set; }
-    
+
     public bool? InitCollections { get; set; }
-    
+
     public CaffoaGlobalConfig MergedWith(CaffoaGlobalConfig general)
     {
         return new CaffoaGlobalConfig()
@@ -124,7 +130,7 @@ public class CaffoaConfig
             GenerateCompareOverloads = GenerateCompareOverloads ?? general.GenerateCompareOverloads,
             SealClassesWithEqualsMethods = SealClassesWithEqualsMethods ?? general.SealClassesWithEqualsMethods,
             NullableIsDefault = NullableIsDefault ?? general.NullableIsDefault,
-            JsonContentTypes = JsonContentTypes ?? general.JsonContentTypes,
+            ConvertibleContentTypes = ConvertibleContentTypes ?? general.ConvertibleContentTypes,
             ParseArrayTypes = ParseArrayTypes ?? general.ParseArrayTypes,
             GenericType = GenericType ?? general.GenericType,
             UseIList = UseIList ?? general.UseIList,

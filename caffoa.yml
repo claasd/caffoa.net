@@ -13,6 +13,9 @@ config:
   removeRequiredOnReadonly: false
   nullableIsDefault: false
   useIsolatedWorkerModel: false
+  convertibleContentTypes:
+    - application/json
+    - application/xml
 #   passTags: true
   requestBodyType: # overwrite the JSON type that is passed to the method for some operations
     - type: JObject

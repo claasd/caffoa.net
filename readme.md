@@ -17,6 +17,7 @@ If something does not work that you feel should work, create a ticket with your 
 * Support for net 10.0 and net9.0
 * Dropped support for netcore 3.1 and net7.0
 * Dropped support for System.Text.Json net6.0 (allow to drop legacy support for missing feature that where introduced in net7.0)
+* Renamed interface method `Json` to `Result` in `ICaffoaResultHandler`, and added accept header data. This can be used to return different content data than json.
 * Drop support for `flavor: SystemTextJsonPre7` (use `flavor: SystemTextJson` instead)
 * Change of default values:
     * `useIsolatedWorkerModel` now defaults to true, as this is the recommended way to use Azure Functions

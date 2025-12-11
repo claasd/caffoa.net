@@ -313,6 +313,10 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/anyCompleteUser"
+            application/xml:
+              schema:
+                type: string
+                format: binary
         "400":
           $ref: "#/components/responses/error"
     
