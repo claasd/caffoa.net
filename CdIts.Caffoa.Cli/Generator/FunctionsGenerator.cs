@@ -323,9 +323,9 @@ public class FunctionsGenerator
         if (codes.Count == 1 && typeName is null)
             return ($"_resultHandler.StatusCode({codes[0]})", "");
         if (codes.Count == 1)
-            return ($"_resultHandler.Result(result, {codes[0]}, request.Headers?.Accept ??  Array.Empty<string>())", "var result = ");
+            return ($"_resultHandler.Result(result, {codes[0]}, new CaffoaResultHandlerParameter(request.Headers?.Accept ??  Array.Empty<string>()))", "var result = ");
         if (typeName is null)
             return ($"_resultHandler.StatusCode(result)", "var result = ");
-        return ("_resultHandler.Result(result, code, request.Headers?.Accept ??  Array.Empty<string>())", "var (result, code) = ");
+        return ("_resultHandler.Result(result, code, new CaffoaResultHandlerParameter (request.Headers?.Accept ??  Array.Empty<string>()))", "var (result, code) = ");
     }
 }

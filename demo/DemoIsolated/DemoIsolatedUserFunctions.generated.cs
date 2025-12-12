@@ -49,7 +49,7 @@ namespace DemoIsolated
                     limitValue = _converter.Parse<int>(limitQueryValue, "limit");
                 var instance = _factory.Instance(request);
                 var result = await instance.UsersGetAsync(offsetValue, limitValue, request.HttpContext.RequestAborted);
-                return _resultHandler.Result(result, 200, request.Headers?.Accept ??  Array.Empty<string>());
+                return _resultHandler.Result(result, 200, new CaffoaResultHandlerParameter(request.Headers?.Accept ??  Array.Empty<string>()));
             } catch(CaffoaClientError err) {
                 return err.Result;
             } catch (Exception e) {
@@ -77,7 +77,7 @@ namespace DemoIsolated
                     _ => throw _errorHandler.WrongContent("type", discriminator, new [] { "simple", "guest" })
                 };
                 var result = await task;
-                return _resultHandler.Result(result, 201, request.Headers?.Accept ??  Array.Empty<string>());
+                return _resultHandler.Result(result, 201, new CaffoaResultHandlerParameter(request.Headers?.Accept ??  Array.Empty<string>()));
             } catch(CaffoaClientError err) {
                 return err.Result;
             } catch (Exception e) {
@@ -105,7 +105,7 @@ namespace DemoIsolated
                     _ => throw _errorHandler.WrongContent("type", discriminator, new [] { "simple", "guest" })
                 };
                 var (result, code) = await task;
-                return _resultHandler.Result(result, code, request.Headers?.Accept ??  Array.Empty<string>());
+                return _resultHandler.Result(result, code, new CaffoaResultHandlerParameter (request.Headers?.Accept ??  Array.Empty<string>()));
             } catch(CaffoaClientError err) {
                 return err.Result;
             } catch (Exception e) {
@@ -125,7 +125,7 @@ namespace DemoIsolated
             try {
                 var instance = _factory.Instance(request);
                 var result = await instance.UserPatchAsync(userId, await _jsonParser.Parse<JObject>(request.Body), request.HttpContext.RequestAborted);
-                return _resultHandler.Result(result, 200, request.Headers?.Accept ??  Array.Empty<string>());
+                return _resultHandler.Result(result, 200, new CaffoaResultHandlerParameter(request.Headers?.Accept ??  Array.Empty<string>()));
             } catch(CaffoaClientError err) {
                 return err.Result;
             } catch (Exception e) {
@@ -145,7 +145,7 @@ namespace DemoIsolated
             try {
                 var instance = _factory.Instance(request);
                 var result = await instance.UserGetAsync(userId, request.HttpContext.RequestAborted);
-                return _resultHandler.Result(result, 200, request.Headers?.Accept ??  Array.Empty<string>());
+                return _resultHandler.Result(result, 200, new CaffoaResultHandlerParameter(request.Headers?.Accept ??  Array.Empty<string>()));
             } catch(CaffoaClientError err) {
                 return err.Result;
             } catch (Exception e) {
@@ -205,7 +205,7 @@ namespace DemoIsolated
             try {
                 var instance = _factory.Instance(request);
                 var result = await instance.UsersGetByBirthdateAsync(_converter.ParseDateOnly(date, "date"), request.HttpContext.RequestAborted);
-                return _resultHandler.Result(result, 200, request.Headers?.Accept ??  Array.Empty<string>());
+                return _resultHandler.Result(result, 200, new CaffoaResultHandlerParameter(request.Headers?.Accept ??  Array.Empty<string>()));
             } catch(CaffoaClientError err) {
                 return err.Result;
             } catch (Exception e) {
@@ -238,7 +238,7 @@ namespace DemoIsolated
                     maxResultsValue = _converter.Parse<int>(maxResultsQueryValue, "maxResults");
                 var instance = _factory.Instance(request);
                 var result = await instance.UsersSearchByDateAsync(beforeValue, afterValue, maxResultsValue, request.HttpContext.RequestAborted);
-                return _resultHandler.Result(result, 200, request.Headers?.Accept ??  Array.Empty<string>());
+                return _resultHandler.Result(result, 200, new CaffoaResultHandlerParameter(request.Headers?.Accept ??  Array.Empty<string>()));
             } catch(CaffoaClientError err) {
                 return err.Result;
             } catch (Exception e) {
@@ -258,7 +258,7 @@ namespace DemoIsolated
             try {
                 var instance = _factory.Instance(request);
                 var result = await instance.GetTagsAsync(request.HttpContext.RequestAborted);
-                return _resultHandler.Result(result, 200, request.Headers?.Accept ??  Array.Empty<string>());
+                return _resultHandler.Result(result, 200, new CaffoaResultHandlerParameter(request.Headers?.Accept ??  Array.Empty<string>()));
             } catch(CaffoaClientError err) {
                 return err.Result;
             } catch (Exception e) {
@@ -278,7 +278,7 @@ namespace DemoIsolated
             try {
                 var instance = _factory.Instance(request);
                 var result = await instance.GetUserTagsAsync(request.HttpContext.RequestAborted);
-                return _resultHandler.Result(result, 200, request.Headers?.Accept ??  Array.Empty<string>());
+                return _resultHandler.Result(result, 200, new CaffoaResultHandlerParameter(request.Headers?.Accept ??  Array.Empty<string>()));
             } catch(CaffoaClientError err) {
                 return err.Result;
             } catch (Exception e) {
@@ -310,7 +310,7 @@ namespace DemoIsolated
                     excludeValue = _converter.ParseEnumArray<IsoMyEnumType>(_jsonParser, excludeQueryValue, "exclude");
                 var instance = _factory.Instance(request);
                 var result = await instance.ListEnumsAsync(filterValue, includeValue, flagsValue, excludeValue, request.HttpContext.RequestAborted);
-                return _resultHandler.Result(result, 200, request.Headers?.Accept ??  Array.Empty<string>());
+                return _resultHandler.Result(result, 200, new CaffoaResultHandlerParameter(request.Headers?.Accept ??  Array.Empty<string>()));
             } catch(CaffoaClientError err) {
                 return err.Result;
             } catch (Exception e) {
@@ -330,7 +330,7 @@ namespace DemoIsolated
             try {
                 var instance = _factory.Instance(request);
                 var result = await instance.ListEnums2Async(_converter.ParseEnum<IsoMyEnumType>(filter, "filter"), request.HttpContext.RequestAborted);
-                return _resultHandler.Result(result, 200, request.Headers?.Accept ??  Array.Empty<string>());
+                return _resultHandler.Result(result, 200, new CaffoaResultHandlerParameter(request.Headers?.Accept ??  Array.Empty<string>()));
             } catch(CaffoaClientError err) {
                 return err.Result;
             } catch (Exception e) {
@@ -350,7 +350,7 @@ namespace DemoIsolated
             try {
                 var instance = _factory.Instance(request);
                 var result = await instance.EchoOneOfAsync(await _jsonParser.Parse<IsoGroupedOneOf>(request.Body), request.HttpContext.RequestAborted);
-                return _resultHandler.Result(result, 200, request.Headers?.Accept ??  Array.Empty<string>());
+                return _resultHandler.Result(result, 200, new CaffoaResultHandlerParameter(request.Headers?.Accept ??  Array.Empty<string>()));
             } catch(CaffoaClientError err) {
                 return err.Result;
             } catch (Exception e) {
@@ -370,7 +370,7 @@ namespace DemoIsolated
             try {
                 var instance = _factory.Instance(request);
                 var result = await instance.EchoOneOfArrayAsync(await _jsonParser.Parse<IEnumerable<IsoAnyUser>>(request.Body), request.HttpContext.RequestAborted);
-                return _resultHandler.Result(result, 200, request.Headers?.Accept ??  Array.Empty<string>());
+                return _resultHandler.Result(result, 200, new CaffoaResultHandlerParameter(request.Headers?.Accept ??  Array.Empty<string>()));
             } catch(CaffoaClientError err) {
                 return err.Result;
             } catch (Exception e) {

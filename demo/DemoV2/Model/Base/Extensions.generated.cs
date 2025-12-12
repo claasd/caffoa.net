@@ -12,7 +12,7 @@ namespace DemoV2.Model.Base {
         /// <summary>
         /// Replaces all fields with the data of the passed object
         /// </summary>
-        public static void UpdateWithFlags(this Flags item, Flags other, bool deepClone = true) {
+        public static void UpdateWithFlags(this Flags item, Flags other, bool deepClone = false) {
             item.Id = other.Id;
             item.Desc = other.Desc;
         }
@@ -21,7 +21,7 @@ namespace DemoV2.Model.Base {
         /// Returns a new object of Flags with fileds filled from Flags. 
         /// if deepClone is set to false, a shallow copy will be created.
         /// </summary>
-        public static Flags ToFlags(this Flags other, bool deepClone = true) => new Flags() { 
+        public static Flags ToFlags(this Flags other, bool deepClone = false) => new Flags() { 
             Id = other.Id,
             Desc = other.Desc
         };
@@ -37,7 +37,7 @@ namespace DemoV2.Model.Base {
         /// <summary>
         /// Replaces all fields with the data of the passed object
         /// </summary>
-        public static void UpdateWithFlagRef(this FlagRef item, FlagRef other, bool deepClone = true) {
+        public static void UpdateWithFlagRef(this FlagRef item, FlagRef other, bool deepClone = false) {
             item.Flag = deepClone ? other.Flag?.ToFlags() : other.Flag;
             item.Flag2 = deepClone ? other.Flag2?.ToFlags() : other.Flag2;
             item.AdditionalProperties = deepClone ? (other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null) : other.AdditionalProperties;
@@ -47,7 +47,7 @@ namespace DemoV2.Model.Base {
         /// Returns a new object of FlagRef with fileds filled from FlagRef. 
         /// if deepClone is set to false, a shallow copy will be created.
         /// </summary>
-        public static FlagRef ToFlagRef(this FlagRef other, bool deepClone = true) => new FlagRef() { 
+        public static FlagRef ToFlagRef(this FlagRef other, bool deepClone = false) => new FlagRef() { 
             Flag = deepClone ? other.Flag?.ToFlags() : other.Flag,
             Flag2 = deepClone ? other.Flag2?.ToFlags() : other.Flag2,
             AdditionalProperties = deepClone ? (other.AdditionalProperties != null ? new Dictionary<string, object>(other.AdditionalProperties) : null) : other.AdditionalProperties
@@ -65,7 +65,7 @@ namespace DemoV2.Model.Base {
         /// <summary>
         /// Replaces all fields with the data of the passed object
         /// </summary>
-        public static void UpdateWithAddress(this Address item, Address other, bool deepClone = true) {
+        public static void UpdateWithAddress(this Address item, Address other, bool deepClone = false) {
             item.Street = other.Street;
             item.StreetExtra = other.StreetExtra;
             item.NumericPostalCode = other.NumericPostalCode;
@@ -81,7 +81,7 @@ namespace DemoV2.Model.Base {
         /// Returns a new object of Address with fileds filled from Address. 
         /// if deepClone is set to false, a shallow copy will be created.
         /// </summary>
-        public static Address ToAddress(this Address other, bool deepClone = true) => new Address() { 
+        public static Address ToAddress(this Address other, bool deepClone = false) => new Address() { 
             Street = other.Street,
             StreetExtra = other.StreetExtra,
             NumericPostalCode = other.NumericPostalCode,

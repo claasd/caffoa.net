@@ -44,7 +44,7 @@ namespace DemoV2
             try {
                 await using var instance = _factory.Instance(request);
                 var result = await instance.LongRunningFunctionAsync(durableClient, _converter.ParseGuid(id, "id"), request.HttpContext.RequestAborted);
-                return _resultHandler.Result(result, 202, request.Headers?.Accept ??  Array.Empty<string>());
+                return _resultHandler.Result(result, 202, new CaffoaResultHandlerParameter(request.Headers?.Accept ??  Array.Empty<string>()));
             } catch(CaffoaClientError err) {
                 return err.Result;
             } catch (Exception e) {

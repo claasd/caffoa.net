@@ -1,4 +1,5 @@
 ﻿using AwesomeAssertions;
+using Caffoa;
 using Caffoa.Defaults;
 using CdIts.Caffoa.Tests.TestClasses;
 using Newtonsoft.Json;
@@ -13,6 +14,6 @@ public class TestResultHandler
     {
         var test = new SubData();
         var handler = new CaffoaEarlySerializingResultHandler();
-        handler.Invoking(h => h.Result(test, 200, [])).Should().Throw<JsonSerializationException>();
+        handler.Invoking(h => h.Result(test, 200, new CaffoaResultHandlerParameter([]))).Should().Throw<JsonSerializationException>();
     }
 }
