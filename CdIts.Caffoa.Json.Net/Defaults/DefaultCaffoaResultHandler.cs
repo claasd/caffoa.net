@@ -26,14 +26,14 @@ public class DefaultCaffoaResultHandler : ICaffoaResultHandler
 
 
     public virtual string JsonString(object o) => JsonConvert.SerializeObject(o, SerializerSettings);
-    public IActionResult Result(object data, int statusCode, CaffoaResultHandlerParameter parameter) =>
+    public virtual IActionResult Result(object data, int statusCode, CaffoaResultHandlerParameter parameter) =>
         new ContentResult()
         {
             Content = JsonString(data),
             StatusCode = statusCode,
             ContentType = MediaTypeNames.Application.Json
         };
-    public IActionResult Result<T>(IEnumerable<T> data, int statusCode, CaffoaResultHandlerParameter parameter) => Result((object)data, statusCode, parameter);
+    public virtual IActionResult Result<T>(IEnumerable<T> data, int statusCode, CaffoaResultHandlerParameter parameter) => Result((object)data, statusCode, parameter);
 
     public virtual IActionResult StatusCode(int statusCode)
         => Handle(new StatusCodeResult(statusCode));
