@@ -83,7 +83,7 @@ public class ModelGenerator
         var formatter = new SchemaItemFormatter(item, _config, otherClasses);
         var fileName = $"{item.ClassName}.generated.cs";
         var parameters = new Dictionary<string, object>();
-        var seal = _config.SealClasses(item.GenerateEqualsOverload);
+        var seal = item.SealClass ?? _config.SealClasses(item.GenerateEqualsOverload);
         parameters["NAMESPACE"] = _service.Model!.Namespace;
         parameters["IMPORTS"] = formatter.Imports(_service.Model.Imports, _config.Imports);
         parameters["NAME"] = item.ClassName;
@@ -107,7 +107,7 @@ public class ModelGenerator
         var formatter = new SchemaItemFormatter(item, _config);
         var fileName = $"{item.ClassName}.generated.cs";
         var parameters = new Dictionary<string, object>();
-        var seal = _config.SealClasses(item.GenerateEqualsOverload);
+        var seal = item.SealClass ?? _config.SealClasses(item.GenerateEqualsOverload);
         parameters["NAMESPACE"] = _service.Model!.Namespace;
         parameters["IMPORTS"] = formatter.Imports(_service.Model.Imports, _config.Imports);
         parameters["NAME"] = item.ClassName;
@@ -283,7 +283,7 @@ public class ModelGenerator
             format["JSON_PROPERTY_EXTRA"] = formatter.JsonProperty();
             format["JSON_EXTRA_PROPERTIES"] = formatter.JsonExtraProperties();
             format["TYPE"] = type;
-            format["VIRTUAL"] = _config.SealClasses(item.GenerateEqualsOverload) ? "" : " virtual";
+            format["VIRTUAL"] = item.SealClass ?? _config.SealClasses(item.GenerateEqualsOverload) ? "" : " virtual";
             format["NAMEUPPER"] = property.FieldName;
             format["NAMELOWER"] = property.Name;
 

@@ -511,6 +511,8 @@ You can selectively enable/disable the generation of Equals and GetHashCode meth
 
 Furthermore, you can overwrite the generateCompareOverloads  settings on object level by setting `x-caffoa-generate-comparer: false|true` on the schema.
 
+You can also specify if an object should be sealed or not by setting `x-caffoa-seal: false|true` on the schema. This will override any other sealing logic.
+
 # Client generation
 additionally to the functions, you can generate a client that will use the same model classes for your API.
 The client is generated as a partial class, so you can add your own methods to it.

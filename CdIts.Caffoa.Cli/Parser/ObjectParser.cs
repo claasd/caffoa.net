@@ -33,6 +33,7 @@ public abstract class ObjectParser
         {
             schema = ResolveExternal(schema);
             Item.GenerateEqualsOverload = schema.Extensions.ParseCaffoaOption("x-caffoa-generate-equals");
+            Item.SealClass = schema.Extensions.ParseCaffoaOption("x-caffoa-seal");
             Item.GenerateComparerOverload = schema.Extensions.ParseCaffoaOption("x-caffoa-generate-comparer");
             var nullableIsDefault = schema.Extensions.ParseCaffoaOption("x-caffoa-default-nullable") ?? _nullableIsDefault;
             if (schema.IsArray())

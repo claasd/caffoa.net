@@ -31,4 +31,5 @@ public class SchemaItem
     public bool NullableEnum { get; set; }
     public bool? GenerateEqualsOverload { get; set; }
     public bool? GenerateComparerOverload { get; set; }
+    public bool? SealClass { get; set; }
 }

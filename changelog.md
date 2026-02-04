@@ -1,4 +1,7 @@
 # caffoa changelog
+## 5.1.0
+* allow to manually override sealing on object level by setting 'x-caffoa-sealed: true|false' on the schema item. This can be used to unseal classes that have equals methods generated, or to seal classes that do not have equals methods generated.
+
 ## 5.0.0
 * Support for net 10.0 and net9.0
 * Dropped support for netcore 3.1 and net7.0
