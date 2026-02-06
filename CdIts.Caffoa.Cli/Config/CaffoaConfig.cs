@@ -50,7 +50,7 @@ public class CaffoaConfig
     public bool? GenerateCompareOverloads { get; set; }
     public bool? SealClassesWithEqualsMethods { get; set; }
 
-    public bool SealClasses(bool? localEqualsOverride) => !(SealClassesWithEqualsMethods ?? UseInheritance is true) &&
+    public bool SealClasses(bool? localEqualsOverride) => !(!SealClassesWithEqualsMethods ?? UseInheritance is true) &&
                                                           (localEqualsOverride ?? GenerateEqualsMethods ?? true);
 
     public enum EnumCreationMode
