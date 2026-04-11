@@ -194,19 +194,21 @@ namespace DemoIsolated
             HttpRequest request, string userId)
         {
             try {
+                var parsedRequestBody = await _jsonParser.Parse<JObject>(request.Body);
                 var caffoaResultParameter = new CaffoaResultHandlerParameter(
                     new int[] { 200 },
                     new string[] { "application/json" },
                     request.Headers?.Accept ??  Array.Empty<string>(),
                     request.Query,
                     HttpMethod.Patch,
-                    "api/users/{userId}"
+                    "api/users/{userId}",
+                    parsedRequestBody
                 );
                 var cachedResult = await _cachingHandler.GetCachedResult(caffoaResultParameter);
                 if(cachedResult != null)
                     return cachedResult;
                 var instance = _factory.Instance(request);
-                var result = await instance.UserPatchAsync(userId, await _jsonParser.Parse<JObject>(request.Body), request.HttpContext.RequestAborted);
+                var result = await instance.UserPatchAsync(userId, parsedRequestBody, request.HttpContext.RequestAborted);
                 return await _cachingHandler.Result(result, 200, caffoaResultParameter);
             } catch(CaffoaClientError err) {
                 return err.Result;
@@ -507,19 +509,21 @@ namespace DemoIsolated
             HttpRequest request)
         {
             try {
+                var parsedRequestBody = await _jsonParser.Parse<IsoGroupedOneOf>(request.Body);
                 var caffoaResultParameter = new CaffoaResultHandlerParameter(
                     new int[] { 200 },
                     new string[] { "application/json" },
                     request.Headers?.Accept ??  Array.Empty<string>(),
                     request.Query,
                     HttpMethod.Get,
-                    "api/echo/oneOfTest"
+                    "api/echo/oneOfTest",
+                    parsedRequestBody
                 );
                 var cachedResult = await _cachingHandler.GetCachedResult(caffoaResultParameter);
                 if(cachedResult != null)
                     return cachedResult;
                 var instance = _factory.Instance(request);
-                var result = await instance.EchoOneOfAsync(await _jsonParser.Parse<IsoGroupedOneOf>(request.Body), request.HttpContext.RequestAborted);
+                var result = await instance.EchoOneOfAsync(parsedRequestBody, request.HttpContext.RequestAborted);
                 return await _cachingHandler.Result(result, 200, caffoaResultParameter);
             } catch(CaffoaClientError err) {
                 return err.Result;
@@ -538,19 +542,21 @@ namespace DemoIsolated
             HttpRequest request)
         {
             try {
+                var parsedRequestBody = await _jsonParser.Parse<IEnumerable<IsoAnyUser>>(request.Body);
                 var caffoaResultParameter = new CaffoaResultHandlerParameter(
                     new int[] { 200 },
                     new string[] { "application/json" },
                     request.Headers?.Accept ??  Array.Empty<string>(),
                     request.Query,
                     HttpMethod.Get,
-                    "api/echo/oneOfTestArray"
+                    "api/echo/oneOfTestArray",
+                    parsedRequestBody
                 );
                 var cachedResult = await _cachingHandler.GetCachedResult(caffoaResultParameter);
                 if(cachedResult != null)
                     return cachedResult;
                 var instance = _factory.Instance(request);
-                var result = await instance.EchoOneOfArrayAsync(await _jsonParser.Parse<IEnumerable<IsoAnyUser>>(request.Body), request.HttpContext.RequestAborted);
+                var result = await instance.EchoOneOfArrayAsync(parsedRequestBody, request.HttpContext.RequestAborted);
                 return await _cachingHandler.Result(result, 200, caffoaResultParameter);
             } catch(CaffoaClientError err) {
                 return err.Result;

@@ -4,6 +4,6 @@
                     request.Headers?.Accept ??  Array.Empty<string>(),
                     request.Query,
                     HttpMethod.{OPERATION},
-                    "{PATH}"
+                    "{PATH}"{BODY}
                 );
                 

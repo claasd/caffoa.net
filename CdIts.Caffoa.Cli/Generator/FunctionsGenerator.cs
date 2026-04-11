@@ -108,13 +108,23 @@ public class FunctionsGenerator
     {
         var file = Templates.GetTemplate("FunctionsMethod.tpl");
         var parameters = new Dictionary<string, object>();
+        parameters["PARSED_BODY"] = "";
         var (result, variable) = GenerateResult(endpoint);
         string call;
         var noAwait = _config.AsyncArrays is true && endpoint.HasArrayResult();
+        var hasParsedBody = false;
         if (endpoint.HasRequestBody && endpoint.RequestBodyType is SelectionBodyModel)
             call = FormatSelectionCall(endpoint, variable, !noAwait);
         else
-            call = FormatCall(endpoint, variable, ParseParameters(endpoint), !noAwait);
+        {
+            if (endpoint.HasRequestBody && endpoint.RequestBodyType is SimpleBodyModel simple)
+            {
+                parameters["PARSED_BODY"] = $"var parsedRequestBody = await _jsonParser.Parse<{simple.TypeName}>(request.Body);\n                ";
+                hasParsedBody = true;
+            }
+
+            call = FormatCall(endpoint, variable, ParseParameters(endpoint, hasParsedBody), !noAwait);
+        }
 
         List<string> pathParams;
         var filteredParams = endpoint.Parameters.Where(p => !p.IsQueryParameter);
@@ -138,7 +148,7 @@ public class FunctionsGenerator
         var contentTypes = endpoint.Responses.Where(r=>r.Code is >= 200 and < 300).SelectMany(r => r.ContentTypes).ToList();
         if (contentTypes.Count > 0)
         {
-            parameters["RESULT_PARAMETER"] = GetResultData(endpoint, contentTypes);
+            parameters["RESULT_PARAMETER"] = GetResultData(endpoint, contentTypes, hasParsedBody);
             if (_config.UseCaching is true)
                 parameters["CACHING"] = Templates.GetTemplate("ResultCaching.tpl");
         }
@@ -164,7 +174,7 @@ public class FunctionsGenerator
         return file.FormatDict(parameters);
     }
 
-    private string GetResultData(EndPointModel endpoint, List<string> contentTypes)
+    private string GetResultData(EndPointModel endpoint, List<string> contentTypes, bool hasParsedBody)
     {
         var file = Templates.GetTemplate("ResultParameter.tpl");
         var parameters = new Dictionary<string, object>();
@@ -172,6 +182,7 @@ public class FunctionsGenerator
         parameters["CONTENT_TYPES"] = string.Join(", ", contentTypes.Distinct().Select(ct => $"\"{ct.ToLower()}\""));
         parameters["OPERATION"] = endpoint.Operation.ToLower().FirstCharUpper();
         parameters["PATH"] = _config.RoutePrefix + endpoint.Route;
+        parameters["BODY"] = hasParsedBody ? ",\n                    parsedRequestBody" : "";
         return file.FormatDict(parameters);
     }
 
@@ -257,13 +268,15 @@ public class FunctionsGenerator
         return file.FormatDict(parameter);
     }
 
-    private IEnumerable<string> ParseParameters(EndPointModel endpoint)
+    private IEnumerable<string> ParseParameters(EndPointModel endpoint, bool hasParsedBody = false)
     {
         var callParams = BuildCallParameterList(endpoint);
-        if (endpoint.HasRequestBody && endpoint.RequestBodyType is SimpleBodyModel simple)
-            callParams.Add($"await _jsonParser.Parse<{simple.TypeName}>(request.Body)");
+        if(hasParsedBody)
+            callParams.Add("parsedRequestBody");
+        else if (endpoint.HasRequestBody && endpoint.RequestBodyType is SimpleBodyModel simple)
+            callParams.Add($"var parsedRequestBody = await _jsonParser.Parse<{simple.TypeName}>(request.Body)");
         else if (endpoint.HasRequestBody)
-            callParams.Add($"request.Body");
+            callParams.Add("request.Body");
         if (_config.ParseQueryParameters is not false)
         {
             callParams.AddRange(endpoint.QueryParameters().Select(p => $"{p.VarName}Value"));

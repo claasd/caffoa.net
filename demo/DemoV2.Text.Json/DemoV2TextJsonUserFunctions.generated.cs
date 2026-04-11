@@ -183,16 +183,18 @@ namespace DemoV2.Text.Json
             HttpRequest request, string userId)
         {
             try {
+                var parsedRequestBody = await _jsonParser.Parse<JsonElement>(request.Body);
                 var caffoaResultParameter = new CaffoaResultHandlerParameter(
                     new int[] { 200 },
                     new string[] { "application/json" },
                     request.Headers?.Accept ??  Array.Empty<string>(),
                     request.Query,
                     HttpMethod.Patch,
-                    "api/users/{userId}"
+                    "api/users/{userId}",
+                    parsedRequestBody
                 );
                 var instance = _factory.Instance(request);
-                var result = await instance.UserPatchAsync(userId, await _jsonParser.Parse<JsonElement>(request.Body), request.HttpContext.RequestAborted);
+                var result = await instance.UserPatchAsync(userId, parsedRequestBody, request.HttpContext.RequestAborted);
                 return _resultHandler.Result(result, 200, caffoaResultParameter);
             } catch(CaffoaClientError err) {
                 return err.Result;
@@ -472,16 +474,18 @@ namespace DemoV2.Text.Json
             HttpRequest request)
         {
             try {
+                var parsedRequestBody = await _jsonParser.Parse<STJGroupedOneOf>(request.Body);
                 var caffoaResultParameter = new CaffoaResultHandlerParameter(
                     new int[] { 200 },
                     new string[] { "application/json" },
                     request.Headers?.Accept ??  Array.Empty<string>(),
                     request.Query,
                     HttpMethod.Get,
-                    "api/echo/oneOfTest"
+                    "api/echo/oneOfTest",
+                    parsedRequestBody
                 );
                 var instance = _factory.Instance(request);
-                var result = await instance.EchoOneOfAsync(await _jsonParser.Parse<STJGroupedOneOf>(request.Body), request.HttpContext.RequestAborted);
+                var result = await instance.EchoOneOfAsync(parsedRequestBody, request.HttpContext.RequestAborted);
                 return _resultHandler.Result(result, 200, caffoaResultParameter);
             } catch(CaffoaClientError err) {
                 return err.Result;
@@ -500,16 +504,18 @@ namespace DemoV2.Text.Json
             HttpRequest request)
         {
             try {
+                var parsedRequestBody = await _jsonParser.Parse<IEnumerable<STJAnyUser>>(request.Body);
                 var caffoaResultParameter = new CaffoaResultHandlerParameter(
                     new int[] { 200 },
                     new string[] { "application/json" },
                     request.Headers?.Accept ??  Array.Empty<string>(),
                     request.Query,
                     HttpMethod.Get,
-                    "api/echo/oneOfTestArray"
+                    "api/echo/oneOfTestArray",
+                    parsedRequestBody
                 );
                 var instance = _factory.Instance(request);
-                var result = await instance.EchoOneOfArrayAsync(await _jsonParser.Parse<IEnumerable<STJAnyUser>>(request.Body), request.HttpContext.RequestAborted);
+                var result = await instance.EchoOneOfArrayAsync(parsedRequestBody, request.HttpContext.RequestAborted);
                 return _resultHandler.Result(result, 200, caffoaResultParameter);
             } catch(CaffoaClientError err) {
                 return err.Result;
