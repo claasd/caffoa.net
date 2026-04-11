@@ -36,6 +36,7 @@
         <EmbeddedResource Include="data\FunctionsMethod.tpl" />
         <EmbeddedResource Include="data\FunctionsSwitchMethod.tpl" />
         <EmbeddedResource Include="data\FunctionsTemplate.tpl" />
+        <EmbeddedResource Include="data\FunctionsTemplateCaching.tpl" />
         <EmbeddedResource Include="data\InterfaceMethod.tpl" />
         <EmbeddedResource Include="data\ControllerTemplate.tpl" />
         <EmbeddedResource Include="data\InterfaceTemplate.tpl" />
@@ -53,6 +54,8 @@
         <EmbeddedResource Include="data\ModelPropertyTemplate.tpl" />
         <EmbeddedResource Include="data\ModelTemplate.tpl" />
         <EmbeddedResource Include="data\ModelExtensionTemplate.tpl" />
+        <EmbeddedResource Include="data\ResultCaching.tpl" />
+        <EmbeddedResource Include="data\ResultParameter.tpl" />
     </ItemGroup>
 
 </Project>

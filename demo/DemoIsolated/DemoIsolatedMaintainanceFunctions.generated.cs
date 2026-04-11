@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -22,13 +23,13 @@ namespace DemoIsolated
         private readonly ICaffoaFactory<IDemoIsolatedMaintainanceService> _factory;
         private readonly ICaffoaErrorHandler _errorHandler;
         private readonly ICaffoaJsonParser _jsonParser;
-        private readonly ICaffoaResultHandler _resultHandler;
+        private readonly ICaffoaCachingHandler _cachingHandler;
         private readonly ICaffoaConverter _converter;
-        public DemoIsolatedMaintainanceFunctions(ILogger<DemoIsolatedMaintainanceFunctions> logger, ICaffoaFactory<IDemoIsolatedMaintainanceService> factory, ICaffoaErrorHandler errorHandler = null, ICaffoaJsonParser jsonParser = null, ICaffoaResultHandler resultHandler = null, ICaffoaConverter converter = null) {
+        public DemoIsolatedMaintainanceFunctions(ILogger<DemoIsolatedMaintainanceFunctions> logger, ICaffoaFactory<IDemoIsolatedMaintainanceService> factory, ICaffoaErrorHandler errorHandler = null, ICaffoaJsonParser jsonParser = null, ICaffoaCachingHandler cachingHandler = null, ICaffoaResultHandler resultHandler = null, ICaffoaConverter converter = null) {
             _logger = logger;
             _factory = factory;
-            _resultHandler = resultHandler ?? new DefaultCaffoaResultHandler();
-            _errorHandler = errorHandler ?? new DefaultCaffoaErrorHandler(_logger, _resultHandler);
+            _cachingHandler = cachingHandler ?? new DefaultCaffoaCachingHandler(resultHandler ?? new DefaultCaffoaResultHandler());
+            _errorHandler = errorHandler ?? new DefaultCaffoaErrorHandler(_logger, _cachingHandler);
             _jsonParser = jsonParser ?? new DefaultCaffoaJsonParser(_errorHandler);
             _converter = converter ?? new DefaultCaffoaConverter(_errorHandler);
         }
@@ -41,9 +42,20 @@ namespace DemoIsolated
             HttpRequest request, string id, [DurableClient] DurableTaskClient durableClient)
         {
             try {
+                var caffoaResultParameter = new CaffoaResultHandlerParameter(
+                    new int[] { 202 },
+                    new string[] { "application/json" },
+                    request.Headers?.Accept ??  Array.Empty<string>(),
+                    request.Query,
+                    HttpMethod.Post,
+                    "api/startLongRunningFunction/{id}"
+                );
+                var cachedResult = await _cachingHandler.GetCachedResult(caffoaResultParameter);
+                if(cachedResult != null)
+                    return cachedResult;
                 var instance = _factory.Instance(request);
                 var result = await instance.LongRunningFunctionAsync(durableClient, _converter.ParseGuid(id, "id"), request.HttpContext.RequestAborted);
-                return _resultHandler.Result(result, 202, new CaffoaResultHandlerParameter(request.Headers?.Accept ??  Array.Empty<string>()));
+                return await _cachingHandler.Result(result, 202, caffoaResultParameter);
             } catch(CaffoaClientError err) {
                 return err.Result;
             } catch (Exception e) {

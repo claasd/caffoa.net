@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -22,13 +23,13 @@ namespace DemoIsolated
         private readonly ICaffoaFactory<IDemoIsolatedUserService> _factory;
         private readonly ICaffoaErrorHandler _errorHandler;
         private readonly ICaffoaJsonParser _jsonParser;
-        private readonly ICaffoaResultHandler _resultHandler;
+        private readonly ICaffoaCachingHandler _cachingHandler;
         private readonly ICaffoaConverter _converter;
-        public DemoIsolatedUserFunctions(ILogger<DemoIsolatedUserFunctions> logger, ICaffoaFactory<IDemoIsolatedUserService> factory, ICaffoaErrorHandler errorHandler = null, ICaffoaJsonParser jsonParser = null, ICaffoaResultHandler resultHandler = null, ICaffoaConverter converter = null) {
+        public DemoIsolatedUserFunctions(ILogger<DemoIsolatedUserFunctions> logger, ICaffoaFactory<IDemoIsolatedUserService> factory, ICaffoaErrorHandler errorHandler = null, ICaffoaJsonParser jsonParser = null, ICaffoaCachingHandler cachingHandler = null, ICaffoaResultHandler resultHandler = null, ICaffoaConverter converter = null) {
             _logger = logger;
             _factory = factory;
-            _resultHandler = resultHandler ?? new DefaultCaffoaResultHandler();
-            _errorHandler = errorHandler ?? new DefaultCaffoaErrorHandler(_logger, _resultHandler);
+            _cachingHandler = cachingHandler ?? new DefaultCaffoaCachingHandler(resultHandler ?? new DefaultCaffoaResultHandler());
+            _errorHandler = errorHandler ?? new DefaultCaffoaErrorHandler(_logger, _cachingHandler);
             _jsonParser = jsonParser ?? new DefaultCaffoaJsonParser(_errorHandler);
             _converter = converter ?? new DefaultCaffoaConverter(_errorHandler);
         }
@@ -41,15 +42,26 @@ namespace DemoIsolated
             HttpRequest request)
         {
             try {
+                var caffoaResultParameter = new CaffoaResultHandlerParameter(
+                    new int[] { 200 },
+                    new string[] { "application/json", "application/xml" },
+                    request.Headers?.Accept ??  Array.Empty<string>(),
+                    request.Query,
+                    HttpMethod.Get,
+                    "api/users"
+                );
                 int offsetValue = 0;
                 if(request.Query.TryGetValue("offset", out var offsetQueryValue))
                     offsetValue = _converter.Parse<int>(offsetQueryValue, "offset");
                 int limitValue = 1000;
                 if(request.Query.TryGetValue("limit", out var limitQueryValue))
                     limitValue = _converter.Parse<int>(limitQueryValue, "limit");
+                var cachedResult = await _cachingHandler.GetCachedResult(caffoaResultParameter);
+                if(cachedResult != null)
+                    return cachedResult;
                 var instance = _factory.Instance(request);
                 var result = await instance.UsersGetAsync(offsetValue, limitValue, request.HttpContext.RequestAborted);
-                return _resultHandler.Result(result, 200, new CaffoaResultHandlerParameter(request.Headers?.Accept ??  Array.Empty<string>()));
+                return await _cachingHandler.Result(result, 200, caffoaResultParameter);
             } catch(CaffoaClientError err) {
                 return err.Result;
             } catch (Exception e) {
@@ -61,12 +73,60 @@ namespace DemoIsolated
         /// <summary>
         /// auto-generated function invocation.
         ///</summary>
-        [Function("UserPostAsync")]
-        public async Task<IActionResult> UserPostAsync(
-            [HttpTrigger(AuthorizationLevel.Function, "post", Route = "api/users")]
+        [Function("UsersGetXmlAsync")]
+        public async Task<IActionResult> UsersGetXmlAsync(
+            [HttpTrigger(AuthorizationLevel.Function, "get", Route = "api/users/xml")]
             HttpRequest request)
         {
             try {
+                var caffoaResultParameter = new CaffoaResultHandlerParameter(
+                    new int[] { 200 },
+                    new string[] { "application/xml" },
+                    request.Headers?.Accept ??  Array.Empty<string>(),
+                    request.Query,
+                    HttpMethod.Get,
+                    "api/users/xml"
+                );
+                int offsetValue = 0;
+                if(request.Query.TryGetValue("offset", out var offsetQueryValue))
+                    offsetValue = _converter.Parse<int>(offsetQueryValue, "offset");
+                int limitValue = 1000;
+                if(request.Query.TryGetValue("limit", out var limitQueryValue))
+                    limitValue = _converter.Parse<int>(limitQueryValue, "limit");
+                var cachedResult = await _cachingHandler.GetCachedResult(caffoaResultParameter);
+                if(cachedResult != null)
+                    return cachedResult;
+                var instance = _factory.Instance(request);
+                var result = await instance.UsersGetAsync(offsetValue, limitValue, request.HttpContext.RequestAborted);
+                return await _cachingHandler.Result(result, 200, caffoaResultParameter);
+            } catch(CaffoaClientError err) {
+                return err.Result;
+            } catch (Exception e) {
+                if(_errorHandler.TryHandleFunctionException(e, out var errorHandlerResult, request, "UsersGetXml", "api/users/xml", "get"))
+                    return errorHandlerResult;
+                throw;
+            }
+        }
+        /// <summary>
+        /// auto-generated function invocation.
+        ///</summary>
+        [Function("UserPostAsync")]
+        public async Task<IActionResult> UserPostAsync(
+            [HttpTrigger(AuthorizationLevel.Function, "post", Route = "api/users/xml")]
+            HttpRequest request)
+        {
+            try {
+                var caffoaResultParameter = new CaffoaResultHandlerParameter(
+                    new int[] { 201 },
+                    new string[] { "application/json" },
+                    request.Headers?.Accept ??  Array.Empty<string>(),
+                    request.Query,
+                    HttpMethod.Post,
+                    "api/users/xml"
+                );
+                var cachedResult = await _cachingHandler.GetCachedResult(caffoaResultParameter);
+                if(cachedResult != null)
+                    return cachedResult;
                 var instance = _factory.Instance(request);
                 var jsonToken = await _jsonParser.Parse<JToken>(request.Body);
                 var discriminator = jsonToken["type"]?.ToString()?.ToLower();
@@ -77,11 +137,11 @@ namespace DemoIsolated
                     _ => throw _errorHandler.WrongContent("type", discriminator, new [] { "simple", "guest" })
                 };
                 var result = await task;
-                return _resultHandler.Result(result, 201, new CaffoaResultHandlerParameter(request.Headers?.Accept ??  Array.Empty<string>()));
+                return await _cachingHandler.Result(result, 201, caffoaResultParameter);
             } catch(CaffoaClientError err) {
                 return err.Result;
             } catch (Exception e) {
-                if(_errorHandler.TryHandleFunctionException(e, out var errorHandlerResult, request, "UserPost", "api/users", "post"))
+                if(_errorHandler.TryHandleFunctionException(e, out var errorHandlerResult, request, "UserPost", "api/users/xml", "post"))
                     return errorHandlerResult;
                 throw;
             }
@@ -95,6 +155,17 @@ namespace DemoIsolated
             HttpRequest request, string userId)
         {
             try {
+                var caffoaResultParameter = new CaffoaResultHandlerParameter(
+                    new int[] { 200, 201 },
+                    new string[] { "application/json" },
+                    request.Headers?.Accept ??  Array.Empty<string>(),
+                    request.Query,
+                    HttpMethod.Put,
+                    "api/users/{userId}"
+                );
+                var cachedResult = await _cachingHandler.GetCachedResult(caffoaResultParameter);
+                if(cachedResult != null)
+                    return cachedResult;
                 var instance = _factory.Instance(request);
                 var jsonToken = await _jsonParser.Parse<JToken>(request.Body);
                 var discriminator = jsonToken["type"]?.ToString()?.ToLower();
@@ -105,7 +176,7 @@ namespace DemoIsolated
                     _ => throw _errorHandler.WrongContent("type", discriminator, new [] { "simple", "guest" })
                 };
                 var (result, code) = await task;
-                return _resultHandler.Result(result, code, new CaffoaResultHandlerParameter (request.Headers?.Accept ??  Array.Empty<string>()));
+                return await _cachingHandler.Result(result, code, caffoaResultParameter);
             } catch(CaffoaClientError err) {
                 return err.Result;
             } catch (Exception e) {
@@ -123,9 +194,20 @@ namespace DemoIsolated
             HttpRequest request, string userId)
         {
             try {
+                var caffoaResultParameter = new CaffoaResultHandlerParameter(
+                    new int[] { 200 },
+                    new string[] { "application/json" },
+                    request.Headers?.Accept ??  Array.Empty<string>(),
+                    request.Query,
+                    HttpMethod.Patch,
+                    "api/users/{userId}"
+                );
+                var cachedResult = await _cachingHandler.GetCachedResult(caffoaResultParameter);
+                if(cachedResult != null)
+                    return cachedResult;
                 var instance = _factory.Instance(request);
                 var result = await instance.UserPatchAsync(userId, await _jsonParser.Parse<JObject>(request.Body), request.HttpContext.RequestAborted);
-                return _resultHandler.Result(result, 200, new CaffoaResultHandlerParameter(request.Headers?.Accept ??  Array.Empty<string>()));
+                return await _cachingHandler.Result(result, 200, caffoaResultParameter);
             } catch(CaffoaClientError err) {
                 return err.Result;
             } catch (Exception e) {
@@ -143,9 +225,20 @@ namespace DemoIsolated
             HttpRequest request, string userId)
         {
             try {
+                var caffoaResultParameter = new CaffoaResultHandlerParameter(
+                    new int[] { 200 },
+                    new string[] { "application/json" },
+                    request.Headers?.Accept ??  Array.Empty<string>(),
+                    request.Query,
+                    HttpMethod.Get,
+                    "api/users/{userId}"
+                );
+                var cachedResult = await _cachingHandler.GetCachedResult(caffoaResultParameter);
+                if(cachedResult != null)
+                    return cachedResult;
                 var instance = _factory.Instance(request);
                 var result = await instance.UserGetAsync(userId, request.HttpContext.RequestAborted);
-                return _resultHandler.Result(result, 200, new CaffoaResultHandlerParameter(request.Headers?.Accept ??  Array.Empty<string>()));
+                return await _cachingHandler.Result(result, 200, caffoaResultParameter);
             } catch(CaffoaClientError err) {
                 return err.Result;
             } catch (Exception e) {
@@ -165,7 +258,7 @@ namespace DemoIsolated
             try {
                 var instance = _factory.Instance(request);
                 await instance.UploadImageAsync(userId, request.Body, request.HttpContext.RequestAborted);
-                return _resultHandler.StatusCode(201);
+                return await _cachingHandler.StatusCode(201);
             } catch(CaffoaClientError err) {
                 return err.Result;
             } catch (Exception e) {
@@ -185,7 +278,7 @@ namespace DemoIsolated
             try {
                 var instance = _factory.Instance(request);
                 await instance.UploadImage2Async(userId, request.Body, request.HttpContext.RequestAborted);
-                return _resultHandler.StatusCode(201);
+                return await _cachingHandler.StatusCode(201);
             } catch(CaffoaClientError err) {
                 return err.Result;
             } catch (Exception e) {
@@ -203,9 +296,20 @@ namespace DemoIsolated
             HttpRequest request, string date)
         {
             try {
+                var caffoaResultParameter = new CaffoaResultHandlerParameter(
+                    new int[] { 200 },
+                    new string[] { "application/json" },
+                    request.Headers?.Accept ??  Array.Empty<string>(),
+                    request.Query,
+                    HttpMethod.Get,
+                    "api/users/born-before/{date}"
+                );
+                var cachedResult = await _cachingHandler.GetCachedResult(caffoaResultParameter);
+                if(cachedResult != null)
+                    return cachedResult;
                 var instance = _factory.Instance(request);
                 var result = await instance.UsersGetByBirthdateAsync(_converter.ParseDateOnly(date, "date"), request.HttpContext.RequestAborted);
-                return _resultHandler.Result(result, 200, new CaffoaResultHandlerParameter(request.Headers?.Accept ??  Array.Empty<string>()));
+                return await _cachingHandler.Result(result, 200, caffoaResultParameter);
             } catch(CaffoaClientError err) {
                 return err.Result;
             } catch (Exception e) {
@@ -223,6 +327,14 @@ namespace DemoIsolated
             HttpRequest request)
         {
             try {
+                var caffoaResultParameter = new CaffoaResultHandlerParameter(
+                    new int[] { 200 },
+                    new string[] { "application/json" },
+                    request.Headers?.Accept ??  Array.Empty<string>(),
+                    request.Query,
+                    HttpMethod.Get,
+                    "api/users/filter/byAge"
+                );
                 DateOnly beforeValue;
                 if(request.Query.TryGetValue("before", out var beforeQueryValue))
                     beforeValue = _converter.ParseDateOnly(beforeQueryValue, "before");
@@ -236,9 +348,12 @@ namespace DemoIsolated
                 int? maxResultsValue = null;
                 if(request.Query.TryGetValue("maxResults", out var maxResultsQueryValue))
                     maxResultsValue = _converter.Parse<int>(maxResultsQueryValue, "maxResults");
+                var cachedResult = await _cachingHandler.GetCachedResult(caffoaResultParameter);
+                if(cachedResult != null)
+                    return cachedResult;
                 var instance = _factory.Instance(request);
                 var result = await instance.UsersSearchByDateAsync(beforeValue, afterValue, maxResultsValue, request.HttpContext.RequestAborted);
-                return _resultHandler.Result(result, 200, new CaffoaResultHandlerParameter(request.Headers?.Accept ??  Array.Empty<string>()));
+                return await _cachingHandler.Result(result, 200, caffoaResultParameter);
             } catch(CaffoaClientError err) {
                 return err.Result;
             } catch (Exception e) {
@@ -256,9 +371,20 @@ namespace DemoIsolated
             HttpRequest request)
         {
             try {
+                var caffoaResultParameter = new CaffoaResultHandlerParameter(
+                    new int[] { 200 },
+                    new string[] { "application/json" },
+                    request.Headers?.Accept ??  Array.Empty<string>(),
+                    request.Query,
+                    HttpMethod.Get,
+                    "api/tags"
+                );
+                var cachedResult = await _cachingHandler.GetCachedResult(caffoaResultParameter);
+                if(cachedResult != null)
+                    return cachedResult;
                 var instance = _factory.Instance(request);
                 var result = await instance.GetTagsAsync(request.HttpContext.RequestAborted);
-                return _resultHandler.Result(result, 200, new CaffoaResultHandlerParameter(request.Headers?.Accept ??  Array.Empty<string>()));
+                return await _cachingHandler.Result(result, 200, caffoaResultParameter);
             } catch(CaffoaClientError err) {
                 return err.Result;
             } catch (Exception e) {
@@ -276,9 +402,20 @@ namespace DemoIsolated
             HttpRequest request)
         {
             try {
+                var caffoaResultParameter = new CaffoaResultHandlerParameter(
+                    new int[] { 200 },
+                    new string[] { "application/json" },
+                    request.Headers?.Accept ??  Array.Empty<string>(),
+                    request.Query,
+                    HttpMethod.Get,
+                    "api/tags/users"
+                );
+                var cachedResult = await _cachingHandler.GetCachedResult(caffoaResultParameter);
+                if(cachedResult != null)
+                    return cachedResult;
                 var instance = _factory.Instance(request);
                 var result = await instance.GetUserTagsAsync(request.HttpContext.RequestAborted);
-                return _resultHandler.Result(result, 200, new CaffoaResultHandlerParameter(request.Headers?.Accept ??  Array.Empty<string>()));
+                return await _cachingHandler.Result(result, 200, caffoaResultParameter);
             } catch(CaffoaClientError err) {
                 return err.Result;
             } catch (Exception e) {
@@ -296,6 +433,14 @@ namespace DemoIsolated
             HttpRequest request)
         {
             try {
+                var caffoaResultParameter = new CaffoaResultHandlerParameter(
+                    new int[] { 200 },
+                    new string[] { "application/json" },
+                    request.Headers?.Accept ??  Array.Empty<string>(),
+                    request.Query,
+                    HttpMethod.Get,
+                    "api/enums/list"
+                );
                 IsoMyEnumType? filterValue = null;
                 if(request.Query.TryGetValue("filter", out var filterQueryValue))
                     filterValue = _converter.ParseEnum<IsoMyEnumType>(filterQueryValue, "filter");
@@ -308,9 +453,12 @@ namespace DemoIsolated
                 ICollection<IsoMyEnumType> excludeValue = null;
                 if(request.Query.TryGetValue("exclude", out var excludeQueryValue))
                     excludeValue = _converter.ParseEnumArray<IsoMyEnumType>(_jsonParser, excludeQueryValue, "exclude");
+                var cachedResult = await _cachingHandler.GetCachedResult(caffoaResultParameter);
+                if(cachedResult != null)
+                    return cachedResult;
                 var instance = _factory.Instance(request);
                 var result = await instance.ListEnumsAsync(filterValue, includeValue, flagsValue, excludeValue, request.HttpContext.RequestAborted);
-                return _resultHandler.Result(result, 200, new CaffoaResultHandlerParameter(request.Headers?.Accept ??  Array.Empty<string>()));
+                return await _cachingHandler.Result(result, 200, caffoaResultParameter);
             } catch(CaffoaClientError err) {
                 return err.Result;
             } catch (Exception e) {
@@ -328,9 +476,20 @@ namespace DemoIsolated
             HttpRequest request, string filter)
         {
             try {
+                var caffoaResultParameter = new CaffoaResultHandlerParameter(
+                    new int[] { 200 },
+                    new string[] { "application/json" },
+                    request.Headers?.Accept ??  Array.Empty<string>(),
+                    request.Query,
+                    HttpMethod.Get,
+                    "api/enums/list/filter/{filter}"
+                );
+                var cachedResult = await _cachingHandler.GetCachedResult(caffoaResultParameter);
+                if(cachedResult != null)
+                    return cachedResult;
                 var instance = _factory.Instance(request);
                 var result = await instance.ListEnums2Async(_converter.ParseEnum<IsoMyEnumType>(filter, "filter"), request.HttpContext.RequestAborted);
-                return _resultHandler.Result(result, 200, new CaffoaResultHandlerParameter(request.Headers?.Accept ??  Array.Empty<string>()));
+                return await _cachingHandler.Result(result, 200, caffoaResultParameter);
             } catch(CaffoaClientError err) {
                 return err.Result;
             } catch (Exception e) {
@@ -348,9 +507,20 @@ namespace DemoIsolated
             HttpRequest request)
         {
             try {
+                var caffoaResultParameter = new CaffoaResultHandlerParameter(
+                    new int[] { 200 },
+                    new string[] { "application/json" },
+                    request.Headers?.Accept ??  Array.Empty<string>(),
+                    request.Query,
+                    HttpMethod.Get,
+                    "api/echo/oneOfTest"
+                );
+                var cachedResult = await _cachingHandler.GetCachedResult(caffoaResultParameter);
+                if(cachedResult != null)
+                    return cachedResult;
                 var instance = _factory.Instance(request);
                 var result = await instance.EchoOneOfAsync(await _jsonParser.Parse<IsoGroupedOneOf>(request.Body), request.HttpContext.RequestAborted);
-                return _resultHandler.Result(result, 200, new CaffoaResultHandlerParameter(request.Headers?.Accept ??  Array.Empty<string>()));
+                return await _cachingHandler.Result(result, 200, caffoaResultParameter);
             } catch(CaffoaClientError err) {
                 return err.Result;
             } catch (Exception e) {
@@ -368,9 +538,20 @@ namespace DemoIsolated
             HttpRequest request)
         {
             try {
+                var caffoaResultParameter = new CaffoaResultHandlerParameter(
+                    new int[] { 200 },
+                    new string[] { "application/json" },
+                    request.Headers?.Accept ??  Array.Empty<string>(),
+                    request.Query,
+                    HttpMethod.Get,
+                    "api/echo/oneOfTestArray"
+                );
+                var cachedResult = await _cachingHandler.GetCachedResult(caffoaResultParameter);
+                if(cachedResult != null)
+                    return cachedResult;
                 var instance = _factory.Instance(request);
                 var result = await instance.EchoOneOfArrayAsync(await _jsonParser.Parse<IEnumerable<IsoAnyUser>>(request.Body), request.HttpContext.RequestAborted);
-                return _resultHandler.Result(result, 200, new CaffoaResultHandlerParameter(request.Headers?.Accept ??  Array.Empty<string>()));
+                return await _cachingHandler.Result(result, 200, caffoaResultParameter);
             } catch(CaffoaClientError err) {
                 return err.Result;
             } catch (Exception e) {

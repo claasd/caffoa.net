@@ -58,7 +58,8 @@ public class FunctionsGenerator
             imports.AddRange(_config.Imports);
         if (_modelNamespace != null)
             imports.Add(_modelNamespace);
-        if (endpoints.Find(e => e.RequestBodyType is SelectionBodyModel) != null && (_config.Flavor ?? CaffoaConfig.GenerationFlavor.JsonNet) is CaffoaConfig.GenerationFlavor.JsonNet)
+        if (endpoints.Find(e => e.RequestBodyType is SelectionBodyModel) != null &&
+            (_config.Flavor ?? CaffoaConfig.GenerationFlavor.JsonNet) is CaffoaConfig.GenerationFlavor.JsonNet)
             imports.Add("Newtonsoft.Json.Linq");
         var extraVars = new List<AdditionalInterfaceModel>();
         if (_config.ParsePathParameters is not false || _config.ParseQueryParameters is not false)
@@ -73,7 +74,8 @@ public class FunctionsGenerator
 
         var name = _functionConfig.GetFunctionName(namePrefix);
         Directory.CreateDirectory(_functionConfig.TargetFolder);
-        var file = Templates.GetTemplate("FunctionsTemplate.tpl");
+        var file = Templates.GetTemplate(_config.UseCaching is true ? "FunctionsTemplateCaching.tpl" : "FunctionsTemplate.tpl");
+
         var format = new Dictionary<string, object>();
         format["NAMESPACE"] = _functionConfig.Namespace;
         format["CLASSNAME"] = name;
@@ -131,11 +133,24 @@ public class FunctionsGenerator
         else if (endpoint.DurableClient)
             pathParams.Add(", [DurableClient] DurableTaskClient durableClient");
 
+        parameters["RESULT_PARAMETER"] = "";
+        parameters["CACHING"] = "";
+        var contentTypes = endpoint.Responses.Where(r=>r.Code is >= 200 and < 300).SelectMany(r => r.ContentTypes).ToList();
+        if (contentTypes.Count > 0)
+        {
+            parameters["RESULT_PARAMETER"] = GetResultData(endpoint, contentTypes);
+            if (_config.UseCaching is true)
+                parameters["CACHING"] = Templates.GetTemplate("ResultCaching.tpl");
+        }
+            
+        
         parameters["NAME"] = endpoint.Name;
         parameters["FUNCATTRIBUTE"] = _config.UseIsolatedWorkerModel is false ? "FunctionName" : "Function";
         parameters["AUTHORIZATION_LEVEL"] = _config.AuthorizationLevel!.FirstCharUpper();
         parameters["PREFIX"] = _config.FunctionNamePrefix ?? "";
         parameters["OPERATION"] = endpoint.Operation;
+        parameters["CONTENT_TYPES"] = string.Join(", ", contentTypes.Distinct().Select(ct => $"\"{ct}\""));
+        parameters["STATUS_CODES"] = string.Join(", ", endpoint.Responses.Select(r => r.Code).Where(c=>c is >= 200 and < 300).Distinct());
         parameters["PATH"] = _config.RoutePrefix + endpoint.Route;
         parameters["RESULT"] = result;
         parameters["INSTANTIATION"] = _config.Disposable is true
@@ -149,6 +164,17 @@ public class FunctionsGenerator
         return file.FormatDict(parameters);
     }
 
+    private string GetResultData(EndPointModel endpoint, List<string> contentTypes)
+    {
+        var file = Templates.GetTemplate("ResultParameter.tpl");
+        var parameters = new Dictionary<string, object>();
+        parameters["STATUS_CODES"] = string.Join(", ", endpoint.Responses.Select(r => r.Code).Where(c => c is >= 200 and < 300).Distinct());
+        parameters["CONTENT_TYPES"] = string.Join(", ", contentTypes.Distinct().Select(ct => $"\"{ct.ToLower()}\""));
+        parameters["OPERATION"] = endpoint.Operation.ToLower().FirstCharUpper();
+        parameters["PATH"] = _config.RoutePrefix + endpoint.Route;
+        return file.FormatDict(parameters);
+    }
+
     private string GenerateQueryVariables(EndPointModel endpoint)
     {
         if (_config.ParseQueryParameters is false)
@@ -159,9 +185,9 @@ public class FunctionsGenerator
             var sb = new StringBuilder();
             var typeName = parameter.GetTypeName(_config);
             sb.Append($"{typeName} {parameter.VarName}Value");
-            if(parameter.IsEnum && parameter.DefaultValue != null)
+            if (parameter.IsEnum && parameter.DefaultValue != null)
                 sb.Append($" = {typeName}.{ModelGenerator.EnumNameForValue(parameter.DefaultValue)};");
-            else if (parameter.DefaultValue != null) 
+            else if (parameter.DefaultValue != null)
                 sb.Append($" = {parameter.DefaultValue}");
             else if (!parameter.Required)
                 sb.Append($" = null");
@@ -189,7 +215,7 @@ public class FunctionsGenerator
     {
         var callParams = string.Join(", ", parameters);
         var awaitStr = addAwait ? "await " : "";
-        return $"{variable}{awaitStr}instance.{endpoint.Name}Async({callParams})";
+        return $"{variable}{awaitStr}instance.{endpoint.Alias ?? endpoint.Name}Async({callParams})";
     }
 
     private string FormatSelectionCall(EndPointModel endpoint, string variable, bool useAwait)
@@ -212,13 +238,13 @@ public class FunctionsGenerator
             {
                 caseParams.Add("request.HttpContext.RequestAborted");
             }
-            
+
             var call = FormatCall(endpoint, "", caseParams, false);
             cases.Add($"\"{key.ToLower()}\" => {call}");
         }
 
         parameter["VARNAME"] = useAwait ? "var task = " : variable;
-        parameter["AWAIT"] = useAwait ?  $";\n                {variable}await task" : "";
+        parameter["AWAIT"] = useAwait ? $";\n                {variable}await task" : "";
         parameter["DISC"] = model.Disriminator;
         parameter["CASES_ALLOWED_VALUES"] = string.Join(", ", model.Mapping.Keys.Select(k => $"\"{k}\""));
         parameter["CASES"] = string.Join("\n                    ", cases.Select(c => $"{c},"));
@@ -299,8 +325,9 @@ public class FunctionsGenerator
     }
 
 
-    private static (string, string) GenerateResult(EndPointModel endpoint)
+    private (string, string) GenerateResult(EndPointModel endpoint)
     {
+        var handlerCall = _config.UseCaching is true ? "await _cachingHandler" : "_resultHandler";
         var codes = new List<int>();
         string? typeName = null;
         foreach (var response in endpoint.Responses)
@@ -310,22 +337,24 @@ public class FunctionsGenerator
             codes.Add(response.Code);
             if (typeName != null && typeName != response.TypeName)
             {
-                return ("_resultHandler.Handle(result)", "var result = ");
+                return ($"{handlerCall}.Handle(result)", "var result = ");
             }
 
             typeName = response.TypeName;
             if (response.Unknown)
-                return ("_resultHandler.Handle(result)", "var result = ");
+                return ($"{handlerCall}.Handle(result)", "var result = ");
         }
 
         if (codes.Count == 0)
-            return ("_resultHandler.Handle(result)", "var result = ");
+            return ($"{handlerCall}.Handle(result)", "var result = ");
         if (codes.Count == 1 && typeName is null)
-            return ($"_resultHandler.StatusCode({codes[0]})", "");
+            return ($"{handlerCall}.StatusCode({codes[0]})", "");
         if (codes.Count == 1)
-            return ($"_resultHandler.Result(result, {codes[0]}, new CaffoaResultHandlerParameter(request.Headers?.Accept ??  Array.Empty<string>()))", "var result = ");
+            return ($"{handlerCall}.Result(result, {codes[0]}, caffoaResultParameter)",
+                "var result = ");
         if (typeName is null)
-            return ($"_resultHandler.StatusCode(result)", "var result = ");
-        return ("_resultHandler.Result(result, code, new CaffoaResultHandlerParameter (request.Headers?.Accept ??  Array.Empty<string>()))", "var (result, code) = ");
+            return ($"{handlerCall}.StatusCode(result)", "var result = ");
+        return ($"{handlerCall}.Result(result, code, caffoaResultParameter)",
+            "var (result, code) = ");
     }
 }

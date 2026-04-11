@@ -88,6 +88,7 @@ public class CaffoaConfig
     public bool? UseIList { get; set; }
 
     public bool? InitCollections { get; set; }
+    public bool? UseCaching { get; set; }
 
     public CaffoaGlobalConfig MergedWith(CaffoaGlobalConfig general)
     {
@@ -135,6 +136,7 @@ public class CaffoaConfig
             GenericType = GenericType ?? general.GenericType,
             UseIList = UseIList ?? general.UseIList,
             InitCollections = InitCollections ?? general.InitCollections,
+            UseCaching = UseCaching ?? general.UseCaching,
         };
     }
 }

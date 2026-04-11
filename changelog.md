@@ -1,4 +1,15 @@
 # caffoa changelog
+
+## 5.2.0
+* You can now use caching handlers instead of result handler. Set `useCaching` to true and register a cacing handler using `AddCaffoaCachingHandler`. The default implementation does no caching and delegates everything to the result handler.
+* You can now define two different functions and have them route to the same implementation. Use `x-caffoa-alias` on an function and point it to a different oeration id.
+  * the functions must have the same signatures
+  * the functions must be in the same tags if `splitByTag` is set to true
+  * This is useful when you want to have the same function available with different paths, or when using it tohether with specialized result handlers.
+
+## 5.1.1
+fix: Boolean logic error with sealClassesWithEqualsMethods
+
 ## 5.1.0
 * allow to manually override sealing on object level by setting 'x-caffoa-sealed: true|false' on the schema item. This can be used to unseal classes that have equals methods generated, or to seal classes that do not have equals methods generated.
 

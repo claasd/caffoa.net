@@ -187,7 +187,7 @@ public static class Extensions
         if (!extensions.TryGetValue(flag, out var data)) return null;
         if (data is OpenApiString converterStr)
             return converterStr.Value;
-        throw new CaffoaParserException($"could not parse {flag}: not a string type on field {fieldName}");
+        throw new CaffoaParserException($"could not parse {flag}: not a string type on field/operation {fieldName}");
     }
 
     public static string[] ParseCaffoaList(this IDictionary<string, IOpenApiExtension> extensions, string flag, string fieldName)

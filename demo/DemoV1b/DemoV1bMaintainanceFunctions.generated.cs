@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -42,9 +43,17 @@ namespace DemoV1b
             HttpRequest request, string id, [DurableClient] IDurableOrchestrationClient durableClient)
         {
             try {
+                var caffoaResultParameter = new CaffoaResultHandlerParameter(
+                    new int[] { 202 },
+                    new string[] { "application/json" },
+                    request.Headers?.Accept ??  Array.Empty<string>(),
+                    request.Query,
+                    HttpMethod.Post,
+                    "api/startLongRunningFunction/{id}"
+                );
                 var instance = _factory.Instance(request);
                 var result = await instance.LongRunningFunctionAsync(durableClient, _converter.ParseGuid(id, "id"), request.HttpContext.RequestAborted);
-                return _resultHandler.Result(result, 202, new CaffoaResultHandlerParameter(request.Headers?.Accept ??  Array.Empty<string>()));
+                return _resultHandler.Result(result, 202, caffoaResultParameter);
             } catch(CaffoaClientError err) {
                 return err.Result;
             } catch (Exception e) {

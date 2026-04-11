@@ -88,11 +88,47 @@ namespace demo.DemoIsolated.Client
         }
 
         /// <summary>
+        /// get information about the users
+        /// 200 -> return user object
+        /// 400 -> Error
+        /// </summary>
+        public virtual async Task<IReadOnlyList<IsoAnyCompleteUser>> UsersGetXmlAsync(int? offset = 0, int? limit = 1000, CancellationToken cancellationToken = default) {
+            var uriBuilder = new UriBuilder(Invariant($"{BaseUri}users/xml"));
+            var queryBuilder = new QueryBuilder();
+            if(offset != null)
+                queryBuilder.Add("offset", Invariant($"{offset}"));
+            if(limit != null)
+                queryBuilder.Add("limit", Invariant($"{limit}"));
+            uriBuilder.Query = queryBuilder.ToString() ?? string.Empty;
+            using var httpRequest = new HttpRequestMessage(HttpMethod.Get, uriBuilder.ToString());
+            PrepareRequest(httpRequest);
+            using var httpResult = await Client.SendAsync(httpRequest, cancellationToken);
+            ProcessResponse(httpResult);
+            if(!httpResult.IsSuccessStatusCode) {
+                var errorData = await httpResult.Content.ReadAsStringAsync(cancellationToken);
+                try
+                {
+                    if((int)httpResult.StatusCode == 400)
+                        throw new CaffoaWebClientException<IsoError>(400, JsonParser.Parse<IsoError>(errorData), errorData);
+                }
+                catch (Exception e) when(e is not CaffoaWebClientException)
+                {
+                    throw new CaffoaWebClientException((int)httpResult.StatusCode, errorData);
+                }
+
+                throw new CaffoaWebClientException((int)httpResult.StatusCode, errorData);
+            }
+            await using var resultStream = await httpResult.Content.ReadAsStreamAsync(cancellationToken);
+            var resultObject = await JsonParser.Parse<List<IsoAnyCompleteUser>>(resultStream);
+            return resultObject;
+        }
+
+        /// <summary>
         /// create or update a user without return test
         /// 201 -> User was created
         /// </summary>
         public virtual async Task<IReadOnlyList<IsoAnyCompleteUser>> UserPostAsync(IsoUser payload, CancellationToken cancellationToken = default) {
-            var uriBuilder = new UriBuilder(Invariant($"{BaseUri}users"));
+            var uriBuilder = new UriBuilder(Invariant($"{BaseUri}users/xml"));
             using var httpRequest = new HttpRequestMessage(HttpMethod.Post, uriBuilder.ToString());
             httpRequest.Content = new StringContent(JsonSerializer.JsonString(payload), Encoding.UTF8, "application/json");
             PrepareRequest(httpRequest);
@@ -112,7 +148,7 @@ namespace demo.DemoIsolated.Client
         /// 201 -> User was created
         /// </summary>
         public virtual async Task<IReadOnlyList<IsoAnyCompleteUser>> UserPostAsync(IsoGuestUser payload, CancellationToken cancellationToken = default) {
-            var uriBuilder = new UriBuilder(Invariant($"{BaseUri}users"));
+            var uriBuilder = new UriBuilder(Invariant($"{BaseUri}users/xml"));
             using var httpRequest = new HttpRequestMessage(HttpMethod.Post, uriBuilder.ToString());
             httpRequest.Content = new StringContent(JsonSerializer.JsonString(payload), Encoding.UTF8, "application/json");
             PrepareRequest(httpRequest);

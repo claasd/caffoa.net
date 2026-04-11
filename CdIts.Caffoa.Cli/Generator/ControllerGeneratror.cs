@@ -1,7 +1,4 @@
 using System.Collections;
-using System.Reflection.Metadata;
-using System.Text;
-using System.Text.RegularExpressions;
 using CdIts.Caffoa.Cli.Config;
 using CdIts.Caffoa.Cli.Generator.Formatter;
 using CdIts.Caffoa.Cli.Model;
@@ -146,7 +143,7 @@ public class ControllerGenerator
         var callParams = interfaceSignature.ParametersIncludingBody.Select(p => p.Name).ToList();
         var tagsIndex = callParams.IndexOf(ParameterBuilder.OpenapiTagsParameterName);
         if (tagsIndex > 0) callParams[tagsIndex] = $"new string[] {{ {string.Join(", ", endpoint.Tags.Quote())} }}";
-        var body = string.Format(bodyFormatString, $"GetService().{endpoint.Name}Async({string.Join(", ", callParams)})");
+        var body = string.Format(bodyFormatString, $"GetService().{endpoint.Alias ?? endpoint.Name}Async({string.Join(", ", callParams)})");
         return body;
     }
     public (string response, string body) GetResponseType(EndPointModel endpoint, bool asyncArrays)

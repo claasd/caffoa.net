@@ -319,7 +319,42 @@ paths:
                 format: binary
         "400":
           $ref: "#/components/responses/error"
-    
+
+  "/users/xml":
+    get:
+       
+      parameters:
+        - name: offset
+          schema:
+            type: integer
+            default: 0
+          required: false
+          in: query
+        - name: limit
+          schema:
+            type: integer
+            default: 1000
+          required: false
+          in: query
+      tags:
+        - user
+        - testTag
+        - otherTag
+      operationId: users-get-xml
+      x-caffoa-alias: users-get
+      description: get information about the users
+      responses:
+        "200":
+          description: return user object
+          content:
+            application/xml:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/anyCompleteUser"
+        "400":
+          $ref: "#/components/responses/error"
+
     post:
       tags:
         - user

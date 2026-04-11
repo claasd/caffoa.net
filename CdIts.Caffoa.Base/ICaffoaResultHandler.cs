@@ -1,8 +1,9 @@
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Caffoa;
 
-public record CaffoaResultHandlerParameter(string[] AcceptedMimeTypes);
+public record CaffoaResultHandlerParameter(int[] ReturnedStatusCodes, string[] DefinedMimeTypes, string[] AcceptedMimeTypes, IQueryCollection Query, HttpMethod Method, string Path);
 
 /// <summary>
 /// interface for serializing outgoing data

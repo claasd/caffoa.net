@@ -47,6 +47,35 @@ paths:
           description: Error
           content:
             application/json: { }
+  /users/xml:
+    get:
+      tags:
+        - user
+        - testTag
+        - otherTag
+      description: get information about the users
+      operationId: users-get-xml
+      parameters:
+        - name: offset
+          in: query
+          schema:
+            type: integer
+            default: 0
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 1000
+      responses:
+        '200':
+          description: return user object
+          content:
+            application/xml: { }
+        '400':
+          description: Error
+          content:
+            application/json: { }
+      x-caffoa-alias: users-get
     post:
       tags:
         - user

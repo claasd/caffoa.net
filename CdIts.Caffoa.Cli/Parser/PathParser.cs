@@ -43,6 +43,9 @@ public class PathParser
         var name = operationItem.OperationId.ToObjectName();
         var tags = operationItem.Tags.Select(t => t.Name).ToArray();
         var result = new EndPointModel(operation.ToString(), name, path.Trim('/'), tags);
+        result.Alias = operationItem.Extensions.ParseCaffoaValue("x-caffoa-alias", operationItem.OperationId)?.ToObjectName();
+        if (result.Alias != null)
+            ;
         result.Deprecated = operationItem.Deprecated;
         result.DeprecatedAsError = operationItem.Extensions.ParseCaffoaOption("x-caffoa-deprecate-as-error") ?? false;
         result.Description = operationItem.Description;
@@ -169,6 +172,7 @@ public class PathParser
     private ResponseModel ParseResponse(string code, OpenApiResponse responseItem)
     {
         var response = new ResponseModel(code);
+        response.ContentTypes = responseItem.Content.Select(c => c.Key.ToLower()).ToList();
         if (responseItem.Content.Count > 1 &&
             responseItem.Content.All(c => _contentTypes.Contains(c.Key, StringComparer.OrdinalIgnoreCase)))
         {

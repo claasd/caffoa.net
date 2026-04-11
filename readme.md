@@ -259,6 +259,7 @@ config:
     - application/json
   useIList: false # if set to true, IList<T> will be used for collections instead of ICollection<T>
   deepCopyDefaultValue: true # if set to false, the generated deepClose parameter default value for the copy constructors and To{ObjectName} methods is set to false
+  useCaching: false # allows you to use a ICaffoaCachingHandler instead of a ICaffoaResult handler. The new handler supports async operations on result handling, as well as returning cached results based on the query parameters.
 services:
   - apiPath: userservice.openapi.yml
     config: null # optional, can be any config option. That option is then overriden for this api only
@@ -404,6 +405,36 @@ components:
 ```
 
 This annotation must be set at the root level of an object, it cannot be parsed through allOf/oneOf references
+
+## Function aliases
+
+it is possible to add a `x-caffoa-alias: other-operation-id` annotation to a path item. This function the call the alias operation from the implemented method instead of the original operation. The interface will not contain the operationId of this operation.
+Example:
+```yaml
+paths:
+  /data:
+    get:
+      operationId: getData
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/dataContainer"
+  /data/legacyPath:
+    get:
+      operationId: getDataLegacy
+      x-caffoa-alias: getData
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                  $ref: "#/components/schemas/dataContainer"
+  
+```
+
+This will generate the function code for `getDataLegacy`, but will call the `getData` method in the implementation, and the interface will only contain `getData`.
 
 ## Property aliases
 

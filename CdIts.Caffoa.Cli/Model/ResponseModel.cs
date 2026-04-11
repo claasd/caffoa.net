@@ -5,6 +5,7 @@ public class ResponseModel
     public int Code { get; }
     public string? TypeName { get; set; }
     public bool Unknown { get; set; }
+    public List<string> ContentTypes { get; set; }
 
     public ResponseModel(string code)
     {

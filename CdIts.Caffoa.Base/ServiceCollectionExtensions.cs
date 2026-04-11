@@ -63,4 +63,16 @@ public static class ServiceCollectionExtensions
     {
         return services.AddScoped<ICaffoaResultHandler, T>(implementationFactory);
     }
+
+    public static IServiceCollection AddCaffoaCachingHandler<T>(this IServiceCollection services)
+        where T : class, ICaffoaCachingHandler
+    {
+        return services.AddScoped<ICaffoaCachingHandler, T>();
+    }
+
+    public static IServiceCollection AddCaffoaCachingHandler<T>(this IServiceCollection services,
+        Func<IServiceProvider, T> implementationFactory) where T : class, ICaffoaCachingHandler
+    {
+        return services.AddScoped<ICaffoaCachingHandler, T>(implementationFactory);
+    }
 }

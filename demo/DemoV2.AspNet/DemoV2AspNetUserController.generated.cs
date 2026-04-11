@@ -38,10 +38,19 @@ public class DemoV2AspNetUserController : ControllerBase
 
 
     /// <summary>
+    /// get information about the users
+    /// 200 -> return user object
+    /// 400 -> Error
+    ///</summary>
+    [HttpGet("users/xml")]
+    public async Task<ActionResult<IEnumerable<ASPAnyCompleteUser>>> UsersGetXmlAsync([FromQuery] int offset = 0, [FromQuery] int limit = 1000, CancellationToken cancellationToken = default) { return StatusCode(200, await GetService().UsersGetAsync(offset, limit, cancellationToken)); }
+
+
+    /// <summary>
     /// create or update a user without return test
     /// 201 -> User was created
     ///</summary>
-    [HttpPost("users")]
+    [HttpPost("users/xml")]
     public async Task<ActionResult<IEnumerable<ASPAnyCompleteUser>>> UserPostAsync(JsonDocument payload, CancellationToken cancellationToken = default) {         switch (payload.RootElement.GetProperty("type").GetString())
         {
         case "simple": { return StatusCode(201, await GetService().UserPostAsync(payload.RootElement.Deserialize<ASPUser>(), cancellationToken)); }

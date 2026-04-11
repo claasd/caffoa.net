@@ -74,6 +74,8 @@ public class InterfaceGenerator
         var file = Templates.GetTemplate("InterfaceMethod.tpl");
         foreach (var endpoint in endpoints)
         {
+            if(endpoint.Alias != null)
+                continue;
             foreach (var parameter in GetParams(endpoint))
             {
                 var format = new Dictionary<string, object>();
