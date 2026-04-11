@@ -226,6 +226,7 @@ services:
     config:
       useIsolatedWorkerModel: true
       useCaching: true
+      perFunctionAccessCheck: false
       imports:
         - DemoIsolated.Model.Base
       durableClient:

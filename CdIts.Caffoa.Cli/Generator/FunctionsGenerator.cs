@@ -109,12 +109,15 @@ public class FunctionsGenerator
         var file = Templates.GetTemplate("FunctionsMethod.tpl");
         var parameters = new Dictionary<string, object>();
         parameters["PARSED_BODY"] = "";
+        parameters["ACCESS_CHECK"] = "";
         var (result, variable) = GenerateResult(endpoint);
         string call;
         var noAwait = _config.AsyncArrays is true && endpoint.HasArrayResult();
         var hasParsedBody = false;
-        if (endpoint.HasRequestBody && endpoint.RequestBodyType is SelectionBodyModel)
+        if (endpoint is { HasRequestBody: true, RequestBodyType: SelectionBodyModel })
+        {
             call = FormatSelectionCall(endpoint, variable, !noAwait);
+        }
         else
         {
             if (endpoint.HasRequestBody && endpoint.RequestBodyType is SimpleBodyModel simple)
@@ -122,8 +125,12 @@ public class FunctionsGenerator
                 parameters["PARSED_BODY"] = $"var parsedRequestBody = await _jsonParser.Parse<{simple.TypeName}>(request.Body);\n                ";
                 hasParsedBody = true;
             }
-
             call = FormatCall(endpoint, variable, ParseParameters(endpoint, hasParsedBody), !noAwait);
+            if (_config.PerFunctionAccessCheck is true)
+            {
+                var accessCheck = FormatCall(endpoint,  hasParsedBody? "parsedRequestBody = " : "", ParseParameters(endpoint, hasParsedBody), true, "AccessCheck");
+                parameters["ACCESS_CHECK"] = $"{accessCheck};\n                ";
+            }
         }
 
         List<string> pathParams;
@@ -182,6 +189,11 @@ public class FunctionsGenerator
         parameters["CONTENT_TYPES"] = string.Join(", ", contentTypes.Distinct().Select(ct => $"\"{ct.ToLower()}\""));
         parameters["OPERATION"] = endpoint.Operation.ToLower().FirstCharUpper();
         parameters["PATH"] = _config.RoutePrefix + endpoint.Route;
+        var pathParams = endpoint.Parameters.Where(p => !p.IsQueryParameter).Select(p => $"\n                        {{ nameof({p.Name}), {p.Name} }}").ToList();
+        if (pathParams.Count == 0)
+            parameters["PATH_PARAMS"] = "";
+        else        
+            parameters["PATH_PARAMS"] = " {" + string.Join(", ", pathParams)+ "\n                    }";
         parameters["BODY"] = hasParsedBody ? ",\n                    parsedRequestBody" : "";
         return file.FormatDict(parameters);
     }
@@ -222,11 +234,11 @@ public class FunctionsGenerator
         return string.Join("", parameters);
     }
 
-    private static string FormatCall(EndPointModel endpoint, string variable, IEnumerable<string> parameters, bool addAwait)
+    private static string FormatCall(EndPointModel endpoint, string variable, IEnumerable<string> parameters, bool addAwait, string suffix = "")
     {
         var callParams = string.Join(", ", parameters);
         var awaitStr = addAwait ? "await " : "";
-        return $"{variable}{awaitStr}instance.{endpoint.Alias ?? endpoint.Name}Async({callParams})";
+        return $"{variable}{awaitStr}instance.{endpoint.Alias ?? endpoint.Name}{suffix}Async({callParams})";
     }
 
     private string FormatSelectionCall(EndPointModel endpoint, string variable, bool useAwait)

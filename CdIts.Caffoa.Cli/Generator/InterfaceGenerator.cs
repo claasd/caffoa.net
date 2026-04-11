@@ -79,12 +79,22 @@ public class InterfaceGenerator
             foreach (var parameter in GetParams(endpoint))
             {
                 var format = new Dictionary<string, object>();
+                if (_config.PerFunctionAccessCheck is true && endpoint is not { HasRequestBody: true, RequestBodyType: SelectionBodyModel })
+                {
+                    format["RESULT"] = parameter.BodyParameter != null ? $"ValueTask<{parameter.BodyParameter.Type}>" : "ValueTask";
+                    format["NAME"] = endpoint.Name + "AccessCheck";
+                    format["PARAMS"] = parameter.Declaration;
+                    format["DOC"] = "access check method for " + endpoint.Name;
+                    var formattedCheck = file.FormatDict(format);
+                    methods.Add(formattedCheck);
+                }
                 format["RESULT"] = GetResponseType(endpoint, _config.AsyncArrays is true);
                 format["NAME"] = endpoint.Name;
                 format["PARAMS"] = parameter.Declaration;
                 format["DOC"] = string.Join("\n        /// ", endpoint.DocumentationLines);
                 var formatted = file.FormatDict(format);
                 methods.Add(formatted);
+                    
             }
         }
 

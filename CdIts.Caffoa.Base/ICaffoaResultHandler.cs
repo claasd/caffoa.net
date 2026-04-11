@@ -3,7 +3,17 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Caffoa;
 
-public record CaffoaResultHandlerParameter(int[] ReturnedStatusCodes, string[] DefinedMimeTypes, string[] AcceptedMimeTypes, IQueryCollection Query, HttpMethod Method, string Path, object RequestObject = null);
+public record CaffoaResultHandlerParameter(
+    int[] ReturnedStatusCodes,
+    string[] DefinedMimeTypes,
+    HttpRequest Request,
+    HttpMethod Method,
+    string Path,
+    Dictionary<string, object> PathParameters,
+    object RequestObject = null)
+{
+    public string[] AcceptedMimeTypes => Request?.Headers?.Accept ?? Array.Empty<string>();
+}
 
 /// <summary>
 /// interface for serializing outgoing data

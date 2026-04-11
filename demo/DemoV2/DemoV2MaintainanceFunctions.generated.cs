@@ -43,15 +43,18 @@ namespace DemoV2
             HttpRequest request, string id, [DurableClient] IDurableOrchestrationClient durableClient)
         {
             try {
+                await using var instance = _factory.Instance(request);
                 var caffoaResultParameter = new CaffoaResultHandlerParameter(
                     new int[] { 202 },
                     new string[] { "application/json" },
-                    request.Headers?.Accept ??  Array.Empty<string>(),
-                    request.Query,
+                    request,
                     HttpMethod.Post,
-                    "api/startLongRunningFunction/{id}"
+                    "api/startLongRunningFunction/{id}",
+                    new Dictionary<string, object>() {
+                        { nameof(id), id }
+                    }
                 );
-                await using var instance = _factory.Instance(request);
+                
                 var result = await instance.LongRunningFunctionAsync(durableClient, _converter.ParseGuid(id, "id"), request.HttpContext.RequestAborted);
                 return _resultHandler.Result(result, 202, caffoaResultParameter);
             } catch(CaffoaClientError err) {

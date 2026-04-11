@@ -19,10 +19,12 @@ public class ParameterBuilder
         }
     }
 
-    public record Overload(IEnumerable<Parameter> ParametersIncludingBody)
+    public record Overload(IList<Parameter> ParametersIncludingBody)
     {
         public string Declaration => string.Join(", ", ParametersIncludingBody);
         public Parameter? BodyParameter => ParametersIncludingBody.FirstOrDefault(p => p.IsBody);
+        public IEnumerable<Parameter> ParametersWithoutBody => ParametersIncludingBody.Where(p => !p.IsBody);
+
         public static implicit operator string(Overload overload) => overload.Declaration;
         public override string ToString()
         {
@@ -112,8 +114,8 @@ public class ParameterBuilder
     public List<Overload> BuildOverloads()
     {
         if (_bodies.Any()) 
-            return _bodies.Select(b=>new Overload(GetOrderedParameters(b))).ToList();
-        return new() { new Overload(GetOrderedParameters(null)) };
+            return _bodies.Select(b=>new Overload(GetOrderedParameters(b).ToList())).ToList();
+        return new() { new Overload(GetOrderedParameters(null).ToList()) };
 
     }
 

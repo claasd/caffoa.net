@@ -89,6 +89,7 @@ public class CaffoaConfig
 
     public bool? InitCollections { get; set; }
     public bool? UseCaching { get; set; }
+    public bool? PerFunctionAccessCheck { get; set; }
 
     public CaffoaGlobalConfig MergedWith(CaffoaGlobalConfig general)
     {
@@ -137,6 +138,7 @@ public class CaffoaConfig
             UseIList = UseIList ?? general.UseIList,
             InitCollections = InitCollections ?? general.InitCollections,
             UseCaching = UseCaching ?? general.UseCaching,
+            PerFunctionAccessCheck = PerFunctionAccessCheck ?? general.PerFunctionAccessCheck
         };
     }
 }
