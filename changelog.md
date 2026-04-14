@@ -6,6 +6,7 @@
   * the functions must have the same signatures
   * the functions must be in the same tags if `splitByTag` is set to true
   * This is useful when you want to have the same function available with different paths, or when using it tohether with specialized result handlers.
+* new option `perFunctionAccessCheck` will create for each operation an additional {Name}CheckAccess method in the interface. This method can be implemented be used to perform pre-execution checks and can additionally change the data of the payload. The method is executed before caching is performed.
 
 ## 5.1.1
 fix: Boolean logic error with sealClassesWithEqualsMethods

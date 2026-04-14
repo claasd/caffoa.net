@@ -260,6 +260,7 @@ config:
   useIList: false # if set to true, IList<T> will be used for collections instead of ICollection<T>
   deepCopyDefaultValue: true # if set to false, the generated deepClose parameter default value for the copy constructors and To{ObjectName} methods is set to false
   useCaching: false # allows you to use a ICaffoaCachingHandler instead of a ICaffoaResult handler. The new handler supports async operations on result handling, as well as returning cached results based on the query parameters.
+  perFunctionAccessCheck: false # if set to true, for each operation an additional {Name}CheckAccess method in the interface is generated. This method can be implemented be used to perform pre-execution checks and can additionally change the data of the payload. The method is executed before caching is performed.
 services:
   - apiPath: userservice.openapi.yml
     config: null # optional, can be any config option. That option is then overriden for this api only

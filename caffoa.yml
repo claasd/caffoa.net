@@ -225,8 +225,8 @@ services:
   - apiPath: tests/openapi.yml
     config:
       useIsolatedWorkerModel: true
-#      useCaching: true
-#      perFunctionAccessCheck: false
+      useCaching: true
+      perFunctionAccessCheck: false
       imports:
         - DemoIsolated.Model.Base
       durableClient:
