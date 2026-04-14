@@ -43,13 +43,13 @@ namespace DemoV2
             HttpRequest request)
         {
             try {
-                await using var instance = _factory.Instance(request);
                 int offsetValue = 0;
                 if(request.Query.TryGetValue("offset", out var offsetQueryValue))
                     offsetValue = _converter.Parse<int>(offsetQueryValue, "offset");
                 int limitValue = 1000;
                 if(request.Query.TryGetValue("limit", out var limitQueryValue))
                     limitValue = _converter.Parse<int>(limitQueryValue, "limit");
+                await using var instance = _factory.Instance(request);
                 var caffoaResultParameter = new CaffoaResultHandlerParameter(
                     new int[] { 200 },
                     new string[] { "application/json", "application/xml" },
@@ -78,13 +78,13 @@ namespace DemoV2
             HttpRequest request)
         {
             try {
-                await using var instance = _factory.Instance(request);
                 int offsetValue = 0;
                 if(request.Query.TryGetValue("offset", out var offsetQueryValue))
                     offsetValue = _converter.Parse<int>(offsetQueryValue, "offset");
                 int limitValue = 1000;
                 if(request.Query.TryGetValue("limit", out var limitQueryValue))
                     limitValue = _converter.Parse<int>(limitQueryValue, "limit");
+                await using var instance = _factory.Instance(request);
                 var caffoaResultParameter = new CaffoaResultHandlerParameter(
                     new int[] { 200 },
                     new string[] { "application/xml" },
@@ -326,7 +326,6 @@ namespace DemoV2
             HttpRequest request)
         {
             try {
-                await using var instance = _factory.Instance(request);
                 DateOnly beforeValue;
                 if(request.Query.TryGetValue("before", out var beforeQueryValue))
                     beforeValue = _converter.ParseDateOnly(beforeQueryValue, "before");
@@ -340,6 +339,7 @@ namespace DemoV2
                 int? maxResultsValue = null;
                 if(request.Query.TryGetValue("maxResults", out var maxResultsQueryValue))
                     maxResultsValue = _converter.Parse<int>(maxResultsQueryValue, "maxResults");
+                await using var instance = _factory.Instance(request);
                 var caffoaResultParameter = new CaffoaResultHandlerParameter(
                     new int[] { 200 },
                     new string[] { "application/json" },
@@ -426,7 +426,6 @@ namespace DemoV2
             HttpRequest request)
         {
             try {
-                await using var instance = _factory.Instance(request);
                 MyEnumType? filterValue = null;
                 if(request.Query.TryGetValue("filter", out var filterQueryValue))
                     filterValue = _converter.ParseEnum<MyEnumType>(filterQueryValue, "filter");
@@ -439,6 +438,7 @@ namespace DemoV2
                 ICollection<MyEnumType> excludeValue = null;
                 if(request.Query.TryGetValue("exclude", out var excludeQueryValue))
                     excludeValue = _converter.ParseEnumArray<MyEnumType>(_jsonParser, excludeQueryValue, "exclude");
+                await using var instance = _factory.Instance(request);
                 var caffoaResultParameter = new CaffoaResultHandlerParameter(
                     new int[] { 200 },
                     new string[] { "application/json" },

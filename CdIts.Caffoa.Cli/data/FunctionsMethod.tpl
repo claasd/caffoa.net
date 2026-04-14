@@ -7,8 +7,8 @@
             HttpRequest request{PARAM_NAMES})
         {{
             try {{
-                {INSTANTIATION}
-                {PARSED_BODY}{QUERY_VARIABLES}{ACCESS_CHECK}{RESULT_PARAMETER}{CACHING}
+                {QUERY_VARIABLES}{INSTANTIATION}
+                {PARSED_BODY}{ACCESS_CHECK}{RESULT_PARAMETER}{CACHING}
                 {CALL};
                 return {RESULT};
             }} catch(CaffoaClientError err) {{
