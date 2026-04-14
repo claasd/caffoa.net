@@ -3,16 +3,40 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Caffoa;
 
-public record CaffoaResultHandlerParameter(
-    int[] ReturnedStatusCodes,
-    string[] DefinedMimeTypes,
-    HttpRequest Request,
-    HttpMethod Method,
-    string Path,
-    Dictionary<string, object> PathParameters,
-    object RequestObject = null)
+public record CaffoaResultHandlerParameter
 {
-    public string[] AcceptedMimeTypes => Request?.Headers?.Accept ?? Array.Empty<string>();
+    [Obsolete("The called constructor to CaffoaResultHandlerParameter is obsolete. Please upgrade and run caffoa CLI.")]
+    public CaffoaResultHandlerParameter(string[] acceptedMimeTypes)
+    {
+        AcceptedMimeTypes = acceptedMimeTypes;
+    }
+
+    public CaffoaResultHandlerParameter(int[] ReturnedStatusCodes,
+        string[] DefinedMimeTypes,
+        HttpRequest Request,
+        HttpMethod Method,
+        string Path,
+        Dictionary<string, object> PathParameters,
+        object RequestObject = null)
+    {
+        this.ReturnedStatusCodes = ReturnedStatusCodes;
+        this.DefinedMimeTypes = DefinedMimeTypes;
+        this.Request = Request;
+        this.Method = Method;
+        this.Path = Path;
+        this.PathParameters = PathParameters;
+        this.RequestObject = RequestObject;
+        AcceptedMimeTypes = Request?.Headers?.Accept ?? Array.Empty<string>();
+    }
+
+    public string[] AcceptedMimeTypes { get; private set; }
+    public int[] ReturnedStatusCodes { get; init; }
+    public string[] DefinedMimeTypes { get; init; }
+    public HttpRequest Request { get; init; }
+    public HttpMethod Method { get; init; }
+    public string Path { get; init; }
+    public Dictionary<string, object> PathParameters { get; init; }
+    public object RequestObject { get; init; }
 }
 
 /// <summary>
