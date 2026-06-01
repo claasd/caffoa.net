@@ -35,7 +35,8 @@ components:
         - first
         - second
       nullable: true
-    
+
+      
     address:
       type: object
       properties:

@@ -42,7 +42,7 @@ namespace DemoV2.AspNetNewtonSoft.Model {
         public override bool Equals(object obj) => Equals(obj as ASPNLongRunningfunctionStatus);
         public override int GetHashCode() {
             var hashCode = new HashCode();
-            hashCode.Add((int) Status);
+            hashCode.Add((int?) Status);
             hashCode.Add(Result);
             _PartialHashCode(ref hashCode);
             return hashCode.ToHashCode();

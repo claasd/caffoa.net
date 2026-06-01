@@ -84,7 +84,7 @@ namespace DemoV2.Text.Json.Model.Base {
             hashCode.Add(PostalCode);
             hashCode.Add(City);
             hashCode.Add(Country);
-            hashCode.Add((int) AddressType);
+            hashCode.Add((int?) AddressType);
             hashCode.Add(Flags);
             _PartialHashCode(ref hashCode);
             return hashCode.ToHashCode();

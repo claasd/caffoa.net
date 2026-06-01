@@ -42,7 +42,7 @@ namespace DemoV2.Text.Json.Model {
         public override bool Equals(object obj) => Equals(obj as STJLongRunningfunctionStatus);
         public override int GetHashCode() {
             var hashCode = new HashCode();
-            hashCode.Add((int) Status);
+            hashCode.Add((int?) Status);
             hashCode.Add(Result);
             _PartialHashCode(ref hashCode);
             return hashCode.ToHashCode();

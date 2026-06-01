@@ -204,7 +204,7 @@ public class ModelGenerator
             else
                 builder.Append($"({name}?.Equals(other.{name}) ?? other.{name} is null)");
 
-            var cast = isEnum && !itemProperty.IsMap && !itemProperty.IsArray ? "(int) " : "";
+            var cast = isEnum && !itemProperty.IsMap && !itemProperty.IsArray ? "(int?) " : "";
             var suffix = "";
             if (isEnumWrapper && !itemProperty.IsMap && !itemProperty.IsArray)
                 suffix = ".Value";

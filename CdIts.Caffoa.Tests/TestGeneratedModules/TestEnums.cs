@@ -34,4 +34,14 @@ public class TestEnums
         var userObject = JsonConvert.DeserializeObject<User>(user.ToString());
         userObject!.Role.Should().Be(User.RoleValue.Admin);
     }
+
+    [Test]
+    public void TestHashCodeGenerationOfNullableEnums()
+    {
+        var element = new EnumObject
+        {
+            Single = MyEnumType.Enum2
+        };
+        element.GetHashCode().Should().BeGreaterThan(0);
+    }
 }

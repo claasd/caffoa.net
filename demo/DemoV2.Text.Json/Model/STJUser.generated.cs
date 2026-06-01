@@ -106,8 +106,8 @@ namespace DemoV2.Text.Json.Model {
             hashCode.Add(Birthdate);
             hashCode.Add(Emails);
             hashCode.Add(Descriptions);
-            hashCode.Add((int) Type);
-            hashCode.Add((int) Role);
+            hashCode.Add((int?) Type);
+            hashCode.Add((int?) Role);
             hashCode.Add(AgeGroup);
             hashCode.Add(PreferredContactTime);
             hashCode.Add(LastSessionLength);

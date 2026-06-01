@@ -53,7 +53,7 @@ namespace DemoV2.Text.Json.Model {
         public override int GetHashCode() {
             var hashCode = new HashCode();
             hashCode.Add(Email);
-            hashCode.Add((int) Type);
+            hashCode.Add((int?) Type);
             hashCode.Add(ConstInt);
             _PartialHashCode(ref hashCode);
             return hashCode.ToHashCode();

@@ -56,11 +56,11 @@ namespace DemoV2.AspNetNewtonSoft.Model {
         public override bool Equals(object obj) => Equals(obj as ASPNEnumObject);
         public override int GetHashCode() {
             var hashCode = new HashCode();
-            hashCode.Add((int) Single);
-            hashCode.Add((int) WithDefault);
+            hashCode.Add((int?) Single);
+            hashCode.Add((int?) WithDefault);
             hashCode.Add(Array);
-            hashCode.Add((int) Nullable);
-            hashCode.Add((int) NullableReferenced);
+            hashCode.Add((int?) Nullable);
+            hashCode.Add((int?) NullableReferenced);
             _PartialHashCode(ref hashCode);
             return hashCode.ToHashCode();
         }

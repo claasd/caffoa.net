@@ -1,5 +1,8 @@
 # caffoa changelog
 
+## 5.2.1
+* CLI: enums are now cast to `int?` to fix null pointer exception when using enums are null.
+
 ## 5.2.0
 * You can now use caching handlers instead of result handler. Set `useCaching` to true and register a cacing handler using `AddCaffoaCachingHandler`. The default implementation does no caching and delegates everything to the result handler.
 * You can now define two different functions and have them route to the same implementation. Use `x-caffoa-alias` on an function and point it to a different oeration id.
