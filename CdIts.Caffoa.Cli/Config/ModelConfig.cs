@@ -24,4 +24,5 @@ public class ModelConfig
     public List<string>? Excludes { get; set; }
     public List<string>? Includes { get; set; }
     public List<string>? Imports { get; set; }
+    public Dictionary<string, List<string>>? ObjectImports { get; set; }
 }

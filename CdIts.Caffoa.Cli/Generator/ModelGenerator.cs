@@ -85,7 +85,7 @@ public class ModelGenerator
         var parameters = new Dictionary<string, object>();
         var seal = item.SealClass ?? _config.SealClasses(item.GenerateEqualsOverload);
         parameters["NAMESPACE"] = _service.Model!.Namespace;
-        parameters["IMPORTS"] = formatter.Imports(_service.Model.Imports, _config.Imports);
+        parameters["IMPORTS"] = formatter.Imports(_service.Model);
         parameters["NAME"] = item.ClassName;
         parameters["PARENTS"] = formatter.Parents(interfaces);
         parameters["SEALED"] = seal ? " sealed " : "";
@@ -109,7 +109,7 @@ public class ModelGenerator
         var parameters = new Dictionary<string, object>();
         var seal = item.SealClass ?? _config.SealClasses(item.GenerateEqualsOverload);
         parameters["NAMESPACE"] = _service.Model!.Namespace;
-        parameters["IMPORTS"] = formatter.Imports(_service.Model.Imports, _config.Imports);
+        parameters["IMPORTS"] = formatter.Imports(_service.Model);
         parameters["NAME"] = item.ClassName;
         parameters["PARENTS"] = formatter.Parents(interfaces);
         parameters["SEALED"] = seal ? " sealed " : "";

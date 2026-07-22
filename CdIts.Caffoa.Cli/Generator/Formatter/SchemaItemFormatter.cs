@@ -45,7 +45,7 @@ public class SchemaItemFormatter
     public string Parent()=>_item.Parent is null ? "" : $": {_item.Parent}";
     
 
-    public string Imports(List<string>? modelImports, List<string>? configImports)
+    public string Imports(ModelConfig modelConfig)
     {
         var imports = new List<string>();
         if (_config.Flavor is CaffoaConfig.GenerationFlavor.SystemTextJson)
@@ -77,10 +77,13 @@ public class SchemaItemFormatter
         var hasTimes = _item.Properties?.Exists(p => p.TypeName.StartsWith("TimeOnly")) ?? false;
         if (hasDates || hasTimes)
             imports.Add("Caffoa.JsonConverter");
-        if (modelImports != null)
-            imports.AddRange(modelImports);
-        if (configImports != null)
-            imports.AddRange(configImports);
+        if (modelConfig.Imports != null)
+            imports.AddRange(modelConfig.Imports);
+        if(modelConfig.ObjectImports != null && modelConfig.ObjectImports.TryGetValue(_item.Name, out var objectImports))
+            imports.AddRange(objectImports);
+        if (_config.Imports != null)
+            imports.AddRange(_config.Imports);
+        
         foreach (var subItem in _item.SubItems)
         {
             var otherItem = _otherClasses.Find(c => c.ClassName == subItem);

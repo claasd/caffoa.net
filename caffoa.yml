@@ -59,6 +59,9 @@ services:
     model:
       namespace: DemoV2.Model
       targetFolder: ./demo/DemoV2/Model
+      objectImports:
+        user:
+          - System.Drawing
     function:
       targetFolder: demo/DemoV2
       namespace: DemoV2
