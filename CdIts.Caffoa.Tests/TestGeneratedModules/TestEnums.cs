@@ -42,6 +42,6 @@ public class TestEnums
         {
             Single = MyEnumType.Enum2
         };
-        element.GetHashCode().Should().BeGreaterThan(0);
+        element.GetHashCode().Should().NotBe(0);
     }
 }
