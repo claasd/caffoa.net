@@ -1,5 +1,8 @@
 # caffoa changelog
 
+## 5.3.0
+* CLI: allow to set imports only for specific objects
+
 ## 5.2.1
 * CLI: enums are now cast to `int?` to fix null pointer exception when using enums are null.
 
