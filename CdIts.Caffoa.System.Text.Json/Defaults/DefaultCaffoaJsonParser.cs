@@ -9,7 +9,7 @@ namespace Caffoa.Defaults;
 /// </summary>
 public class DefaultCaffoaJsonParser : ICaffoaJsonParser
 {
-    public ICaffoaErrorHandler ErrorHandler { get; }
+    public ICaffoaParseErrorHandler ErrorHandler { get; }
 
     public JsonSerializerOptions Options { get; set; } = new JsonSerializerOptions
     {
@@ -19,7 +19,7 @@ public class DefaultCaffoaJsonParser : ICaffoaJsonParser
         }
     };
 
-    public DefaultCaffoaJsonParser(ICaffoaErrorHandler errorHandler)
+    public DefaultCaffoaJsonParser(ICaffoaParseErrorHandler errorHandler)
     {
         ErrorHandler = errorHandler;
     }
