@@ -4,27 +4,34 @@ on:
     tags:
       - "v*"
 jobs:
-  build:
+  build-and-publish:
+    permissions:
+      id-token: write  # enable GitHub OIDC token issuance for this job
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
-      - name: Extract release notes
-        run: |
-          git log --pretty=format:'%d %s' ${GITHUB_REF} | perl -pe 's| \(.*tag: v(\d+.\d+.\d+(-preview\d{3})?)(, .*?)*\)|\n## \1\n|g' > RELEASE-NOTES
       - name: Set VERSION variable from tag
         run: echo "VERSION=${GITHUB_REF/refs\/tags\/v/}" >> $GITHUB_ENV
-      - name: Setup .NET Core SDK 10.0.x
+
+      - name: Setup .NET Core SDK
         uses: actions/setup-dotnet@v3.0.3
         with:
           dotnet-version: 10.0.x
       - name: Build
         run: dotnet build --configuration Release /p:Version=${VERSION}
       - name: Pack
-        run: dotnet pack --configuration Release /p:Version=${VERSION} --no-build -p:PackageOutputPath=.
-      - name: Push to Nuget.org
-        run: dotnet nuget push **/*.nupkg --source https://api.nuget.org/v3/index.json --api-key "${GITHUB_TOKEN}"
-        env:
-          GITHUB_TOKEN: ${{ secrets.NUGET_KEY }}        
+        run: dotnet pack --configuration Release /p:Version=${VERSION} --no-build --output .
+
+        # Get a short-lived NuGet API key
+      - name: NuGet login (OIDC → temp API key)
+        uses: NuGet/login@v1
+        id: login
+        with:
+          user: claasd
+      
+      # Push the package
+      - name: NuGet push
+        run: dotnet nuget push *.nupkg --api-key ${{steps.login.outputs.NUGET_API_KEY}} --source https://api.nuget.org/v3/index.json
