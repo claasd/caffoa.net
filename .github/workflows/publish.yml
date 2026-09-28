@@ -23,7 +23,7 @@ jobs:
       - name: Build
         run: dotnet build --configuration Release /p:Version=${VERSION}
       - name: Pack
-        run: dotnet pack --configuration Release /p:Version=${VERSION} --no-build -p:PackageOutputPath=.
+        run: dotnet pack --configuration Release /p:Version=${VERSION} --no-build --output .
 
         # Get a short-lived NuGet API key
       - name: NuGet login (OIDC → temp API key)
