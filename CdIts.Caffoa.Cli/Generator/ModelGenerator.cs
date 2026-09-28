@@ -287,9 +287,11 @@ public class ModelGenerator
             format["NAMEUPPER"] = property.FieldName;
             format["NAMELOWER"] = property.Name;
 
+            var enumType = enumClasses.Find(c => c.ClassName == type);
+            var nullableEnum = enumType?.NullableEnum is true || (enumType != null && property.Nullable);
             if (property.Alias != null || property.AliasGet != null)
             {
-                if (enumClasses.Find(c => c.ClassName == type)?.NullableEnum ?? false)
+                if (nullableEnum)
                     format["TYPE"] = type + "?";
                 format["GETALIAS"] = property.AliasGet ?? property.Alias ?? "";
                 if (property.AliasSet != null && property.AliasSet.Trim().StartsWith("{"))
@@ -304,7 +306,7 @@ public class ModelGenerator
             }
             else if (property.Delegate)
             {
-                if (enumClasses.Find(c => c.ClassName == type)?.NullableEnum ?? false)
+                if (nullableEnum)
                     format["TYPE"] = type + "?";
                 var file = Templates.GetTemplate("ModelPropertyDelegateTemplate.tpl");
                 var formatted = file.FormatDict(format);
@@ -332,12 +334,11 @@ public class ModelGenerator
             else
             {
                 format["DEFAULT"] = formatter.Default(false, enumClasses, interfaces, _config.ConstructorOnRequiredObjects is not false);
-                var enumType = enumClasses.Find(c => c.ClassName == type);
                 if (enumType != null)
                 {
                     if(_config.EnumMode == CaffoaConfig.EnumCreationMode.Class)
                         format["TYPE"] = type = $"{type}Wrapper";
-                    if(enumType.NullableEnum)
+                    if(nullableEnum)
                         format["TYPE"] = type + "?";
                 }
                 else if(property is { Nullable: true, IsOtherSchema: false, IsArray: false, IsMap: false } && property.TypeName != "string")
