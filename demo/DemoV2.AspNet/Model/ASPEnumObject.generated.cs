@@ -14,9 +14,10 @@ namespace DemoV2.AspNet.Model {
     public sealed  partial class ASPEnumObject : IEquatable<ASPEnumObject> {
         public const string ASPEnumObjectObjectName = "enumObject";
         [JsonPropertyName("single")]
-        public ASPMyEnumType Single { get; set; }
+        public ASPMyEnumType? Single { get; set; }
 
         [JsonPropertyName("withDefault")]
+        [JsonRequired]
         public ASPMyEnumTypeWithDefault WithDefault { get; set; } = ASPMyEnumTypeWithDefault.Undefined;
 
         [JsonPropertyName("array")]

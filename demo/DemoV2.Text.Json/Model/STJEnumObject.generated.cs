@@ -14,9 +14,10 @@ namespace DemoV2.Text.Json.Model {
     public sealed  partial class STJEnumObject : IEquatable<STJEnumObject> {
         public const string STJEnumObjectObjectName = "enumObject";
         [JsonPropertyName("single")]
-        public STJMyEnumType Single { get; set; }
+        public STJMyEnumType? Single { get; set; }
 
         [JsonPropertyName("withDefault")]
+        [JsonRequired]
         public STJMyEnumTypeWithDefault WithDefault { get; set; } = STJMyEnumTypeWithDefault.Undefined;
 
         [JsonPropertyName("array")]

@@ -14,9 +14,9 @@ namespace DemoIsolated.Model {
     public sealed  partial class IsoEnumObject : IEquatable<IsoEnumObject> {
         public const string IsoEnumObjectObjectName = "enumObject";
         [JsonProperty("single")]
-        public IsoMyEnumType Single { get; set; }
+        public IsoMyEnumType? Single { get; set; }
 
-        [JsonProperty("withDefault")]
+        [JsonProperty("withDefault", Required = Required.Always)]
         public IsoMyEnumTypeWithDefault WithDefault { get; set; } = IsoMyEnumTypeWithDefault.Undefined;
 
         [JsonProperty("array")]

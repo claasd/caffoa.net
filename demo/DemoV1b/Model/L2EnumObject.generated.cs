@@ -36,7 +36,7 @@ namespace DemoV1b.Model {
         [JsonIgnore]
         private string _withDefault = "undefined";
 
-        [JsonProperty("withDefault")]
+        [JsonProperty("withDefault", Required = Required.Always)]
         public string WithDefault {
             get => _withDefault;
             set {

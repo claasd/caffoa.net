@@ -14,9 +14,9 @@ namespace DemoV2.Model {
     public sealed  partial class EnumObject : IEquatable<EnumObject> {
         public const string EnumObjectObjectName = "enumObject";
         [JsonProperty("single")]
-        public MyEnumType Single { get; set; }
+        public MyEnumType? Single { get; set; }
 
-        [JsonProperty("withDefault")]
+        [JsonProperty("withDefault", Required = Required.Always)]
         public MyEnumTypeWithDefault WithDefault { get; set; } = MyEnumTypeWithDefault.Undefined;
 
         [JsonProperty("array")]

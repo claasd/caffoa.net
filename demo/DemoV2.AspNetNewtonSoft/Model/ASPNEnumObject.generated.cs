@@ -14,9 +14,9 @@ namespace DemoV2.AspNetNewtonSoft.Model {
     public sealed  partial class ASPNEnumObject : IEquatable<ASPNEnumObject> {
         public const string ASPNEnumObjectObjectName = "enumObject";
         [JsonProperty("single")]
-        public ASPNMyEnumType Single { get; set; }
+        public ASPNMyEnumType? Single { get; set; }
 
-        [JsonProperty("withDefault")]
+        [JsonProperty("withDefault", Required = Required.Always)]
         public ASPNMyEnumTypeWithDefault WithDefault { get; set; } = ASPNMyEnumTypeWithDefault.Undefined;
 
         [JsonProperty("array")]

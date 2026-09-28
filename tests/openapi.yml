@@ -248,6 +248,8 @@ components:
       nullable: true
     enumObject:
       type: object
+      required: 
+        - withDefault
       properties:
         single:
           $ref: "#/components/schemas/myEnumType"
