@@ -3,7 +3,9 @@
 ## 5.4.0
 * General package upgrades
 * enums that are not required are now nullable if nullableIsDefault is enabled
-* 
+
+## 5.3.1
+* Fix a wrong internal interface usage
 
 ## 5.3.0
 * CLI: allow to set imports only for specific objects
