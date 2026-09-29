@@ -43,6 +43,8 @@ public class CaffoaConfig
     public bool? UseConstants { get; set; }
     public bool? PassTags { get; set; }
     public bool? NullableIsDefault { get; set; }
+    public bool? NullableIsDefaultForEnums { get; set; }
+    
     public bool? DeepCopyDefaultValue { get; set; }
     public bool? RemoveRequiredOnReadonly { get; set; }
     public bool? UseIsolatedWorkerModel { get; set; }
@@ -132,6 +134,7 @@ public class CaffoaConfig
             GenerateCompareOverloads = GenerateCompareOverloads ?? general.GenerateCompareOverloads,
             SealClassesWithEqualsMethods = SealClassesWithEqualsMethods ?? general.SealClassesWithEqualsMethods,
             NullableIsDefault = NullableIsDefault ?? general.NullableIsDefault,
+            NullableIsDefaultForEnums = NullableIsDefaultForEnums ?? general.NullableIsDefaultForEnums,
             ConvertibleContentTypes = ConvertibleContentTypes ?? general.ConvertibleContentTypes,
             ParseArrayTypes = ParseArrayTypes ?? general.ParseArrayTypes,
             GenericType = GenericType ?? general.GenericType,

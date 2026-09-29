@@ -288,7 +288,7 @@ public class ModelGenerator
             format["NAMELOWER"] = property.Name;
 
             var enumType = enumClasses.Find(c => c.ClassName == type);
-            var nullableEnum = enumType?.NullableEnum is true || (enumType != null && property.Nullable);
+            var nullableEnum = enumType?.NullableEnum is true || (enumType != null && property.Nullable && _config.NullableIsDefaultForEnums == true);
             if (property.Alias != null || property.AliasGet != null)
             {
                 if (nullableEnum)

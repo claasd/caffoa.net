@@ -1,5 +1,9 @@
 # caffoa changelog
 
+## 5.4.1
+* fix a problem when nullable enums where delegates breaking existing code
+* enums that are not required are now nullable if nullableIsDefault is enabled AND nullableIsDefaultForEnums is enabled
+
 ## 5.4.0
 * General package upgrades
 * enums that are not required are now nullable if nullableIsDefault is enabled
